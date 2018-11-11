@@ -1,8 +1,8 @@
-
+import bcrypt from 'bcrypt'
 import createClient from './_lib/graphql'
 import createJWT from './_lib/jwt'
 
-const client = createClient('http://auth-graphql-1.auth.dock/v1alpha1/graphql')
+const client = createClient('http://members-graphql-1.dev.dock/v1alpha1/graphql')
 import gql from 'graphql-tag';
 
 
@@ -12,7 +12,7 @@ export async function post(req, res, next) {
     query: gql`
       query($username: String) {
         user(where:{name:{_eq:$username}}) {
-          id name
+          id name password
           user_roles {
             role {
               name
@@ -32,12 +32,14 @@ export async function post(req, res, next) {
     'Content-Type': 'application/json'
   })
 
-  res.end(JSON.stringify({
-    ...req.body,
-    jwt: createJWT({
-      id: 1,
-      name: 'teset'
-    }),
-    user
-  }))
+  const passwordOk = await bcrypt.compare(req.body.password, user.password)
+
+  if (passwordOk) {
+    res.end(JSON.stringify({
+      jwt: createJWT(user),
+    }))
+  } else {
+    res.end()
+  }
+
 }
