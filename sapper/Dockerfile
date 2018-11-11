@@ -1,8 +1,5 @@
 FROM node:11-alpine
 
-RUN apk add --no-cache --update python build-base \
-     && rm -rf /var/cache/apk/*
-
 RUN mkdir /app
 WORKDIR /app
 
