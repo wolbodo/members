@@ -35,6 +35,29 @@
             ],
             "filter": {}
           }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "id",
+              "modified",
+              "name",
+              "phone",
+              "streetname",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
+          }
         }
       ],
       "update_permissions": [],
@@ -70,7 +93,13 @@
           "comment": null,
           "permission": {
             "allow_aggregations": false,
-            "columns": [],
+            "columns": [
+              "user_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
             "filter": {}
           }
         }
@@ -109,6 +138,21 @@
             "allow_aggregations": false,
             "columns": [
               "name"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "description",
+              "id",
+              "modified",
+              "name",
+              "validity"
             ],
             "filter": {}
           }
