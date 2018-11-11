@@ -1,0 +1,6 @@
+CREATE EXTENSION pgcrypto;
+
+
+DROP TABLE IF EXISTS public.user CASCADE;
+DROP TABLE IF EXISTS public.role CASCADE;
+DROP TABLE IF EXISTS public.user_role CASCADE;
