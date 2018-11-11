@@ -22,7 +22,21 @@
         }
       ],
       "insert_permissions": [],
-      "select_permissions": [],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "email",
+              "id",
+              "password"
+            ],
+            "filter": {}
+          }
+        }
+      ],
       "update_permissions": [],
       "delete_permissions": [],
       "event_triggers": []
@@ -50,7 +64,17 @@
       ],
       "array_relationships": [],
       "insert_permissions": [],
-      "select_permissions": [],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [],
+            "filter": {}
+          }
+        }
+      ],
       "update_permissions": [],
       "delete_permissions": [],
       "event_triggers": []
@@ -77,7 +101,19 @@
         }
       ],
       "insert_permissions": [],
-      "select_permissions": [],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "name"
+            ],
+            "filter": {}
+          }
+        }
+      ],
       "update_permissions": [],
       "delete_permissions": [],
       "event_triggers": []
