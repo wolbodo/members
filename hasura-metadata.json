@@ -1,35 +1,20 @@
 {
   "tables": [
     {
-      "table": "role",
-      "object_relationships": [],
-      "array_relationships": [
-        {
-          "using": {
-            "foreign_key_constraint_on": {
-              "column": "role_id",
-              "table": "user_role"
-            }
-          },
-          "name": "role_users",
-          "comment": null
-        }
-      ],
-      "insert_permissions": [],
-      "select_permissions": [],
-      "update_permissions": [],
-      "delete_permissions": [],
-      "event_triggers": []
-    },
-    {
-      "table": "user",
+      "table": {
+        "schema": "account",
+        "name": "user"
+      },
       "object_relationships": [],
       "array_relationships": [
         {
           "using": {
             "foreign_key_constraint_on": {
               "column": "user_id",
-              "table": "user_role"
+              "table": {
+                "schema": "account",
+                "name": "user_role"
+              }
             }
           },
           "name": "user_roles",
@@ -43,7 +28,10 @@
       "event_triggers": []
     },
     {
-      "table": "user_role",
+      "table": {
+        "schema": "account",
+        "name": "user_role"
+      },
       "object_relationships": [
         {
           "using": {
@@ -61,6 +49,33 @@
         }
       ],
       "array_relationships": [],
+      "insert_permissions": [],
+      "select_permissions": [],
+      "update_permissions": [],
+      "delete_permissions": [],
+      "event_triggers": []
+    },
+    {
+      "table": {
+        "schema": "account",
+        "name": "role"
+      },
+      "object_relationships": [],
+      "array_relationships": [
+        {
+          "using": {
+            "foreign_key_constraint_on": {
+              "column": "role_id",
+              "table": {
+                "schema": "account",
+                "name": "user_role"
+              }
+            }
+          },
+          "name": "role_users",
+          "comment": null
+        }
+      ],
       "insert_permissions": [],
       "select_permissions": [],
       "update_permissions": [],
