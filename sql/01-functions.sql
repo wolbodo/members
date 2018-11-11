@@ -17,7 +17,7 @@
 -- END
 -- $function$;
 
-CREATE OR REPLACE FUNCTION update_modified()
+CREATE OR REPLACE FUNCTION account.update_modified()
 RETURNS TRIGGER AS $$
 BEGIN
    NEW.modified = now(); 
@@ -25,7 +25,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE OR REPLACE FUNCTION hash_password()
+CREATE OR REPLACE FUNCTION account.hash_password()
 RETURNS TRIGGER AS $$
 BEGIN
    NEW.password = CRYPT(NEW.password, public.gen_salt('bf')); 
