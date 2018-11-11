@@ -9,9 +9,14 @@ sapper.start({
   target: document.querySelector('#sapper'),
   store: data => {
     // `data` is whatever was in the server-side store
-    return new Store({
-      ...data,
-      graphqlClient: createClient('http://members-graphql-1.dev.dock/v1alpha1/graphql')
-    });
+    const store = new Store(data);
+
+    store.compute(
+      'graphql',
+      ['graphqlUrl', 'authToken'],
+      (url, token) => url && token && createClient(url, token)
+    );
+
+    return store
   }
 });

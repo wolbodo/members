@@ -30,17 +30,27 @@
 			<button type='submit'>
 				Login
 			</button>
-		</div>
+		</div>`
 	</form>
 
 	<pre>
 		{JSON.stringify(form, null, 2)}
 	</pre>
 
-	Result:
-	<pre>
-		{JSON.stringify(result, null, 2)}
-	</pre>
+
+	{#if loginResult}
+		loginResult:
+		<pre>
+			{JSON.stringify(loginResult, null, 2)}
+		</pre>
+	{/if}
+
+	{#if userData}
+		userData:
+		<pre>
+			{JSON.stringify(userData, null, 2)}
+		</pre>
+	{/if}
 
 </section>
 
@@ -58,7 +68,9 @@
 		data() {
 			return {
 				username: '',
-				password: ''
+				password: '',
+				loginResult: undefined,
+				userData: undefined
 			}
 		},
 		computed: {
@@ -79,16 +91,40 @@
 						body: JSON.stringify(form)
 					})
 
-					console.log("Logging in", form, res)
+					const data = await res.json()
 					this.set({
-						result: {
+						loginResult: {
 							status: res.status,
-							data: await res.json()
+							data
 						}
 					})
+
+					await this.test(data.jwt)
 					
 				} catch (e) {
 					console.error(e)
+				}
+			},
+			async test(token) {
+				this.store.set({
+					graphqlUrl: 'http://members-graphql-1.dev.dock/v1alpha1/graphql',
+					authToken: token
+				})
+
+				const { graphql } = this.store.get()
+				console.log("got client:", graphql)
+
+				if (graphql) {
+	        this.set({
+	        	userData: await graphql.query({
+		          query: gql`{
+		              user {
+		                id name
+		              }
+		            }
+		          `
+		        })
+	        })
 				}
 			}
 		}
