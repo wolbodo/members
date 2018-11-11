@@ -1,8 +1,17 @@
-import bcrypt from 'bcrypt'
-import createClient from './_lib/graphql'
-import createJWT from './_lib/jwt'
+import bcrypt from 'bcryptjs'
+import createClient from '../lib/graphql'
+import createJWT from '../lib/jwt'
 
-const client = createClient('http://graphql/v1alpha1/graphql')
+const token = createJWT({
+  id: -1,
+  name: 'login',
+  user_roles: [
+    { role: { name: 'admin'}}
+  ]
+});
+
+
+const client = createClient('http://graphql/v1alpha1/graphql', token)
 import gql from 'graphql-tag';
 
 
@@ -28,23 +37,27 @@ export async function post(req, res, next) {
   const { user: [user, ] } = result.data
 
   console.log("Got post in login:", req.body, user)
-  console.log("Here")
+  if (user) {
 
-  const passwordOk = await bcrypt.compare(req.body.password, user.password)
+    console.log("Here", req.body.password, user.password)
+
+    const passwordOk = await bcrypt.compare(req.body.password, user.password)
       
-  if (passwordOk) {
-    res.writeHead(200, {
-      'Content-Type': 'application/json'
-    })
-    res.end(JSON.stringify({
-      jwt: createJWT(user)
-    }))
-  } else {
-    res.writeHead(401, {
-      'Content-Type': 'application/json'
-    })
-    res.end(JSON.stringify({
-      error: 'Authentication failed'
-    }))
+    if (passwordOk) {
+      res.writeHead(200, {
+        'Content-Type': 'application/json'
+      })
+      res.end(JSON.stringify({
+        jwt: createJWT(user)
+      }))
+      return
+    }
   }
+  
+  res.writeHead(401, {
+    'Content-Type': 'application/json'
+  })
+  res.end(JSON.stringify({
+    error: 'Authentication failed'
+  }))
 }
