@@ -2,7 +2,7 @@
 
 - Driven by [PostgreSQL]
 - Supported by [hasura]
-- Produced by Dexter
+- Produced by The People of Wolbodo
 
 
 Able to sign a token for himself as auth_robot
