@@ -4,30 +4,23 @@ import { setContext } from 'apollo-link-context';
 import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
-import fetch from 'node-fetch';
-
-import createJWT from './jwt'
+import fetch from 'cross-fetch';
 
 // https://www.apollographql.com/docs/react/advanced/boost-migration.html
 
-const authLink = setContext((_, { headers }) => {
-  const token = createJWT({
-    id: -1,
-    name: 'login',
-    user_roles: [
-      { role: { name: 'admin'}}
-    ]
-  });
-  // return the headers to the context so httpLink can read them
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+function createAuthLink(token) {
+  return setContext((_, { headers }) => {
+    // return the headers to the context so httpLink can read them
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      }
     }
-  }
-});
+  });
+}
 
-export default function createClient(uri) {
+export default function createClient(uri, token) {
   const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -39,7 +32,7 @@ export default function createClient(uri) {
           );
         if (networkError) console.log(`[Network error]: ${networkError}`);
       }),
-      authLink.concat(
+      createAuthLink(token).concat(
         new HttpLink({
           uri: uri,
           credentials: 'same-origin',

@@ -7,7 +7,7 @@ services:
       POSTGRES_DB: $POSTGRES_DB
     restart: always
     volumes:
-    - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
   graphql:
     image: hasura/graphql-engine:latest
@@ -33,6 +33,15 @@ services:
 
     environment:
       JWT_SECRET: $JWT_SECRET
+
+  sapper:
+    build: sapper
+    volumes:
+      - ./sapper:/app
+    environment:
+      JWT_SECRET: $JWT_SECRET
+      GRAPHQL_ENDPOINT: $GRAPHQL_ENDPOINT
+
 
 volumes:
   db_data:
