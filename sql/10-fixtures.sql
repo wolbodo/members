@@ -18,10 +18,13 @@ VALUES
 
 INSERT INTO account.user_role
   (user_id, role_id, validity)
-VALUES
-  (1, 1, '[now,)'),
-  (2, 2, '[now,)'),
-  (3, 2, '[now,)')
-;
+SELECT account.user.id, account.role.id, '[now,)' FROM
+    (VALUES
+        ('admin@example.org', array['user','admin']),
+        ('dexter@example.org', array['user']),
+        ('bwb@example.org', array['user'])
+    ) alias (email, role_names)
+    JOIN account.user ON account.user.validity @> NOW() AND account.user.email = alias.email
+    JOIN account.role ON account.role.validity @> NOW() AND account.role.name IN (SELECT unnest(alias.role_names));
 
 COMMIT;
