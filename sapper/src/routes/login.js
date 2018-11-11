@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import createClient from './_lib/graphql'
 import createJWT from './_lib/jwt'
 
-const client = createClient('http://members-graphql-1.dev.dock/v1alpha1/graphql')
+const client = createClient('http://graphql/v1alpha1/graphql')
 import gql from 'graphql-tag';
 
 
@@ -27,19 +27,24 @@ export async function post(req, res, next) {
   })
   const { user: [user, ] } = result.data
 
-  console.log("Got post in login:", req.body)
-  res.writeHead(200, {
-    'Content-Type': 'application/json'
-  })
+  console.log("Got post in login:", req.body, user)
+  console.log("Here")
 
   const passwordOk = await bcrypt.compare(req.body.password, user.password)
-
+      
   if (passwordOk) {
+    res.writeHead(200, {
+      'Content-Type': 'application/json'
+    })
     res.end(JSON.stringify({
-      jwt: createJWT(user),
+      jwt: createJWT(user)
     }))
   } else {
-    res.end()
+    res.writeHead(401, {
+      'Content-Type': 'application/json'
+    })
+    res.end(JSON.stringify({
+      error: 'Authentication failed'
+    }))
   }
-
 }
