@@ -5,14 +5,14 @@
 <section>
 	<form on:submit='login(event)'>
 		<div>
-			<label for='login-name'>
-				Name
+			<label for='login-email'>
+				Email
 			</label>
 			<input
-				id='login-name'
+				id='login-email'
 				type='text'
 				required
-				bind:value=username
+				bind:value=email
 			/>
 		</div>
 		<div>
@@ -67,14 +67,14 @@
 	export default {
 		data() {
 			return {
-				username: '',
+				email: '',
 				password: '',
 				loginResult: undefined,
 				userData: undefined
 			}
 		},
 		computed: {
-			form: ({ username, password }) => ({ username, password })
+			form: ({ email, password }) => ({ email, password })
 		},
 		methods: {
 			async login(e) {
@@ -118,7 +118,7 @@
 	        this.set({
 	        	userData: await graphql.query({
 		          query: gql`{
-		              user {
+		              account_user {
 		                id name
 		              }
 		            }

@@ -6,7 +6,7 @@ const token = createJWT({
   id: -1,
   name: 'login',
   user_roles: [
-    { role: { name: 'admin'}}
+    { role: { name: 'login'}}
   ]
 });
 
@@ -19,9 +19,9 @@ export async function post(req, res, next) {
 
   const result = await client.query({
     query: gql`
-      query($username: String) {
-        user(where:{name:{_eq:$username}}) {
-          id name password
+      query($email: String) {
+        account_user(where:{name:{_eq:$email}}) {
+          email password
           user_roles {
             role {
               name
@@ -31,7 +31,7 @@ export async function post(req, res, next) {
       }
     `,
     variables: {
-      username: req.body.username
+      email: req.body.email
     }
   })
   const { user: [user, ] } = result.data
@@ -53,7 +53,7 @@ export async function post(req, res, next) {
       return
     }
   }
-  
+
   res.writeHead(401, {
     'Content-Type': 'application/json'
   })
