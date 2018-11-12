@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import createClient from '../lib/graphql'
+import createClient, { createServerLink } from '../lib/graphql'
 import createJWT from '../lib/jwt'
 
 const token = createJWT({
@@ -11,7 +11,7 @@ const token = createJWT({
 }, 'login');
 
 
-const client = createClient('http://graphql/v1alpha1/graphql', token)
+const client = createClient(createServerLink('http://graphql/v1alpha1/graphql', token))
 import gql from 'graphql-tag';
 
 

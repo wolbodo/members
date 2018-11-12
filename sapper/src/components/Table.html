@@ -1,0 +1,40 @@
+<table>
+  <caption>table title and/or explanatory text</caption>
+  <thead>
+    <tr>
+      {#each columns as column}
+        <th>{column}</th>
+      {/each}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>data</td>
+    </tr>
+  </tbody>
+</table>
+
+<script>
+  /*
+    name              VARCHAR(255)        NOT NULL,
+    email             VARCHAR(1024)       ,
+    phone             VARCHAR(255)        ,
+    
+    fullname          VARCHAR(1024)       NOT NULL,
+    streetname        VARCHAR(1024)       ,
+    housenumber       NUMERIC(8,0)        ,
+    housenumberaddon  VARCHAR(255)        ,
+    zipcode           VARCHAR(255)        ,
+    city              VARCHAR(255)        ,
+    country           VARCHAR(255)        ,
+    validity          TSTZRANGE           NOT NULL,
+    modified          TIMESTAMPTZ         DEFAULT 'NOW',
+  */
+  export default {
+    data () {
+      return {
+        columns: ['name', 'email', 'phone']
+      }
+    }
+  }
+</script>

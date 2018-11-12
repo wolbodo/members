@@ -2,7 +2,7 @@ import * as sapper from '../__sapper__/client.js';
 
 import { Store } from 'svelte/store.js';
 
-import createClient from './lib/graphql'
+import createClient, { createBrowserLink } from './lib/graphql'
 
 
 sapper.start({
@@ -14,7 +14,7 @@ sapper.start({
     store.compute(
       'graphql',
       ['graphqlUrl', 'authToken'],
-      (url, token) => url && token && createClient(url, token)
+      (url, token) => url && token && createClient(createBrowserLink(url, token))
     );
 
     return store
