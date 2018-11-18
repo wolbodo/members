@@ -1,12 +1,13 @@
 import bcrypt from 'bcryptjs'
-import * as jwt from '../lib/jwt'
+import * as JWT from '../lib/jwt'
 
 import createStore from '../stores'
 import gql from 'graphql-tag';
 
+
 export async function post(req, res, next) {
   const store = createStore()
-  const token = jwt.create({
+  const token = JWT.create({
     id: -1,
     name: 'login',
     user_roles: [
@@ -43,12 +44,14 @@ export async function post(req, res, next) {
       const passwordOk = await bcrypt.compare(req.body.password, user.password)
         
       if (passwordOk) {
+        const jwt = JWT.create(user)
+
         res.writeHead(200, {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Set-Cookie': `token=${jwt}`,
         })
         res.end(JSON.stringify({
-          jwt: jwt.create(user),
-          user
+          jwt, user
         }))
         return
       }

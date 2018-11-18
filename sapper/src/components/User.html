@@ -12,5 +12,13 @@
     <label>{user.city} {user.country}</label>
     <label>{user.zipcode}</label>
   </section>
+  <section>
+    <h2>Roles</h2>
+    <ul>
+      {#each user.user_roles as ur}
+        <li>{ur.role.name}</li>
+      {/each}
+    </ul>
+  </section>
 </section>
 

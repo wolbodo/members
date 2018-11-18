@@ -5,13 +5,13 @@
 <input
   type="text"
   placeholder="Zoek..."
-  bind:value="filter"/>
+  bind:value="$memberFilter"/>
 {#await getUsers}
   <tr><td>Loading</td></tr>
 {:then result}
 
   <Table
-    :filter
+    filter={$memberFilter}
     data={result.data.account_user}
     columns={columns}
     rowUrl={row => `/members/${row.name}`}
@@ -42,9 +42,9 @@ export default {
     }
   },
   onstate({ changed, current }) {
-    const { authToken } = this.store.get()
-    console.log("Got authToken")
-    if (authToken) {
+    const { authToken, graphql } = this.store.get()
+    if (authToken && graphql) {
+      console.log("Got authToken and graphql")
       connect.call(this, { changed, current });
     }
   }

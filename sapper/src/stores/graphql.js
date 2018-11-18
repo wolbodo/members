@@ -29,6 +29,7 @@ function createAuthLink(token) {
 
 function createServerLink(url, token) {
   // Split protocol
+  console.log("Creating server link:", url)
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
   return ApolloLink.from([
@@ -106,7 +107,28 @@ export default BaseStore =>
         if ('authToken' in changed) {
           console.log("Got local token: store it:", current.authToken)
           if (current.authToken) {
-            localStorage.setItem('token', current.authToken)
+            console.log("Creating provider:", current)
+            if (global.localStorage) {
+              console.log("- browser")
+              localStorage.setItem('token', current.authToken)
+              this.set({
+                graphql: createProvider(
+                  createClient(
+                    createBrowserLink(current.graphqlUri, current.authToken)
+                  )
+                )
+              })
+            } else {
+              console.log("- server")
+              this.set({
+                graphql: createProvider(
+                  createClient(
+                    createServerLink(current.graphqlUri, current.authToken)
+                  )
+                )
+              })
+            }
+
           } else {
             localStorage.removeItem('token')
           }
@@ -124,20 +146,16 @@ export default BaseStore =>
         }
       })
 
-      this.compute(
-        'graphql',
-        ['authToken', 'graphqlUri'],
-        (authToken, graphqlUri) => {
-          console.log("Creating provider:", (authToken && graphqlUri))
-          if (authToken && graphqlUri) {
-            return createProvider(
-              createClient(
-                createBrowserLink(graphqlUri, authToken)
-              )
-            )
-          }
-        }
-      )
+      // this.compute(
+      //   'graphql',
+      //   ['authToken', 'graphqlUri'],
+      //   (authToken, graphqlUri) => {
+      //     console.log("Creating provider:", (authToken && graphqlUri))
+      //     if (authToken && graphqlUri) {
+      //       return 
+      //     }
+      //   }
+      // )
 
       this.compute(
         'authTokenParsed',
