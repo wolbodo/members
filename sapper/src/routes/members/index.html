@@ -2,15 +2,20 @@
   <title>Wolbodo members</title>
 </svelte:head>
 
+<input
+  type="text"
+  placeholder="Zoek..."
+  bind:value="filter"/>
 {#await getUsers}
   <tr><td>Loading</td></tr>
 {:then result}
+
   <Table
+    :filter
     data={result.data.account_user}
     columns={columns}
     rowUrl={row => `/members/${row.name}`}
   />
-  <p>Logged in</p>
 {:catch error}
   <tr><td>ERROR: {JSON.stringify(error)}</td></tr>
 {/await}
@@ -19,7 +24,7 @@
 import { subscription, query, connect } from 'svelte-apollo'
 import gql from 'graphql-tag';
 
-const GET_USERS = gql`{
+const GET_USERS = gql`subscription{
   account_user {
     id name email phone
   }
@@ -31,7 +36,8 @@ export default {
   },
   data() {
     return {
-      getUsers: query(GET_USERS),
+      filter: '',
+      getUsers: subscription(GET_USERS),
       columns: ['name', 'email', 'phone']
     }
   },

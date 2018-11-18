@@ -1,10 +1,4 @@
-<input
-  type="text"
-  placeholder="Zoek..."
-  bind:value="filter">
-
 <table>
-  <caption>Wolbodo leden:</caption>
   <thead>
     <tr>
       {#each columns as column}
@@ -18,7 +12,8 @@
     {:else}
       {#each filteredData as row (row.id)}
         <tr on:click="gotoRow(row)"
-            style="background: rgba(0, 255, 150, {1/row.distance})">
+            style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}">
+            <!-- style="background: rgba(0, 255, 150, {1/getDistance(filter, row.name)})"> -->
           {#each columns as column}
             <td>{row[column]}</td>
           {/each}
@@ -54,10 +49,13 @@
     },
     computed: {
       filteredData: ({ data, filter }) => {
-       return data.map((user) => {
-          user.distance = levenshtein.get(filter, user.name)
-          return user;
-        }).sort((a, b) => a.distance - b.distance);
+        if (filter.length > 1) {
+          return data.map(user => ({
+            ...user,
+            distance: levenshtein.get(filter.toLowerCase(), user.name.toLowerCase())
+          })).sort((a, b) => a.distance - b.distance)
+        }
+        return data
       }
     },
     methods: {
