@@ -8,59 +8,16 @@
     </tr>
   </thead>
   <tbody>
-    {#await getUsers}
-      <tr><td>Loading</td></tr>
-    {:then result}
-      {#if !result.data.account_user.length}
-        <tr><td>No users found.</td></tr>
-      {:else}
-        {#each result.data.account_user as user (user.id)}
-          <tr>
-            {#each columns as column}
-              <td>{user[column]}</td>
-            {/each}
-          </tr>
-        {/each}
-      {/if}
-    {:catch error}
-      <tr><td>ERROR: {JSON.stringify(error)}</td></tr>
-    {/await}
+    {#if !data.account_user.length}
+      <tr><td>No users found.</td></tr>
+    {:else}
+      {#each data.account_user as user (user.id)}
+        <tr>
+          {#each columns as column}
+            <td>{user[column]}</td>
+          {/each}
+        </tr>
+      {/each}
+    {/if}
   </tbody>
 </table>
-
-<script>
-  /*
-    name              VARCHAR(255)        NOT NULL,
-    email             VARCHAR(1024)       ,
-    phone             VARCHAR(255)        ,
-    
-    fullname          VARCHAR(1024)       NOT NULL,
-    streetname        VARCHAR(1024)       ,
-    housenumber       NUMERIC(8,0)        ,
-    housenumberaddon  VARCHAR(255)        ,
-    zipcode           VARCHAR(255)        ,
-    city              VARCHAR(255)        ,
-    country           VARCHAR(255)        ,
-    validity          TSTZRANGE           NOT NULL,
-    modified          TIMESTAMPTZ         DEFAULT 'NOW',
-  */
-  import { subscription, connect } from 'svelte-apollo'
-  import gql from 'graphql-tag';
-
-  const GET_USERS = gql`subscription{
-    account_user {
-      id name email phone
-    }
-  }`
-
-
-  export default {
-    data () {
-      return {
-        getUsers: subscription(GET_USERS),
-        columns: ['name', 'email', 'phone']
-      }
-    },
-    onstate: connect
-  }
-</script>

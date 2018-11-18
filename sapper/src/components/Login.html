@@ -34,7 +34,6 @@
     {JSON.stringify(form, null, 2)}
   </pre>
 
-
   {#if loginResult}
     loginResult:
     <pre>
@@ -50,7 +49,6 @@
   {/if}
 </section>
 
-
 <style>
   pre {
     white-space: pre-wrap;
@@ -58,15 +56,14 @@
   }
 </style>
 
-
 <script>
   import gql from 'graphql-tag'
 
   export default {
     data() {
       return {
-        email: '',
-        password: '',
+        email: 'dexter@example.org',
+        password: 'dexter',
         loginResult: undefined,
         userData: undefined
       }
