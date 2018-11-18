@@ -1,9 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import moment from 'moment'
-
-
-export default function createJWT(user, defaultRole='user') {
+export function create(user, defaultRole='user') {
   const roles = (user.user_roles || []).map(ur => ur.role && ur.role.name)
   console.log("SECRET:", process.env.JWT_SECRET)
   const SECRET = JSON.parse(process.env.JWT_SECRET)
@@ -22,4 +19,8 @@ export default function createJWT(user, defaultRole='user') {
     subject: user.id.toString()
   })
 
+}
+
+export function parse(token) {
+  return jwt.decode(token)
 }
