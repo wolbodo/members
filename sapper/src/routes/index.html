@@ -1,47 +1,15 @@
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>Wolbodo</title>
 </svelte:head>
 
-{#if $authToken}
-	{#await getUsers}
-    <tr><td>Loading</td></tr>
-  {:then result}
-		<Table data={result.data} columns={columns}/>
-		<p>Logged in</p>
-  {:catch error}
-    <tr><td>ERROR: {JSON.stringify(error)}</td></tr>
-  {/await}
-{:else}
+{#if !$authToken}
 	<Login />
 {/if}
 
 <script>
-	import { subscription, query, connect } from 'svelte-apollo'
-	import gql from 'graphql-tag';
-	
-	const GET_USERS = gql`{
-    account_user {
-      id name email phone
-    }
-  }`
-
 	export default {
 		components: {
 			Login: '../components/Login.html',
-			Table: '../components/Table.html'
 		},
-    data() {
-      return {
-        getUsers: query(GET_USERS),
-        columns: ['name', 'email', 'phone']
-      }
-    },
-    onstate({ changed, current }) {
-      const { authToken } = this.store.get()
-      console.log("Got authToken")
-      if (authToken) {
-        connect.call(this, { changed, current });
-      }
-    }
 	}
 </script>

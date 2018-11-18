@@ -8,16 +8,31 @@
     </tr>
   </thead>
   <tbody>
-    {#if !data.account_user.length}
+    {#if !data.length}
       <tr><td>No users found.</td></tr>
     {:else}
-      {#each data.account_user as user (user.id)}
-        <tr>
+      {#each data as row (row.id)}
+        <tr on:click="gotoRow(row)">
           {#each columns as column}
-            <td>{user[column]}</td>
+            <td>{row[column]}</td>
           {/each}
         </tr>
       {/each}
     {/if}
   </tbody>
 </table>
+
+<script>
+  import { goto } from '../../__sapper__/client.js'
+  export default {
+    methods: {
+      gotoRow(row) {
+        const { rowUrl } = this.get()
+
+        if (rowUrl) {
+          goto(rowUrl(row))
+        } 
+      }
+    }
+  }
+</script>
