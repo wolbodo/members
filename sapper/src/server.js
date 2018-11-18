@@ -9,11 +9,11 @@ import path from 'path';
 import compression from 'compression';
 import bodyParser from 'body-parser'
 import * as sapper from '../__sapper__/server.js';
-import { Store } from 'svelte/store.js';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
+import createStore from './stores'
 
 polka() // You can also use Express
 	.use(
@@ -21,10 +21,7 @@ polka() // You can also use Express
     sirv('static', { dev }),
     bodyParser.json(),
 		sapper.middleware({
-      store: request => {
-        return new Store({
-        });
-      }
+      store: request => createStore()
     })
 	)
 	.listen(PORT, err => {

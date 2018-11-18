@@ -1,22 +1,21 @@
 import bcrypt from 'bcryptjs'
-import createClient, { createServerLink } from '../lib/graphql'
-import createJWT from '../lib/jwt'
+import * as jwt from '../lib/jwt'
 
-const token = createJWT({
-  id: -1,
-  name: 'login',
-  user_roles: [
-    { role: { name: 'login'}}
-  ]
-}, 'login');
-
-
-const client = createClient(createServerLink('http://graphql/v1alpha1/graphql', token))
+import createStore from '../stores'
 import gql from 'graphql-tag';
 
-
-
 export async function post(req, res, next) {
+  const store = createStore()
+  const token = jwt.create({
+    id: -1,
+    name: 'login',
+    user_roles: [
+      { role: { name: 'login'}}
+    ]
+  }, 'login');
+  const client = store.getServerClient('http://graphql/v1alpha1/graphql', token)
+
+
   try {
     const result = await client.query({
       query: gql`
@@ -48,7 +47,8 @@ export async function post(req, res, next) {
           'Content-Type': 'application/json'
         })
         res.end(JSON.stringify({
-          jwt: createJWT(user)
+          jwt: jwt.create(user),
+          user
         }))
         return
       }

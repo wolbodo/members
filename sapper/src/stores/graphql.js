@@ -9,6 +9,10 @@ import { ApolloLink } from 'apollo-link';
 import { getOperationAST } from 'graphql/utilities' // ES6
 import fetch from 'cross-fetch';
 
+import { createProvider } from 'svelte-apollo';
+
+import * as jwt from '../lib/jwt'
+
 // https://www.apollographql.com/docs/react/advanced/boost-migration.html
 
 function createAuthLink(token) {
@@ -23,7 +27,7 @@ function createAuthLink(token) {
   });
 }
 
-export function createServerLink(url, token) {
+function createServerLink(url, token) {
   // Split protocol
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
@@ -43,7 +47,7 @@ export function createServerLink(url, token) {
       }))
     ])
 }
-export function createBrowserLink(url, token) {
+function createBrowserLink(url, token) {
   // Split protocol
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
@@ -55,12 +59,13 @@ export function createBrowserLink(url, token) {
               `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
             ),
           );
-        if (networkError) console.log(`[Network error]: ${networkError}`);
+        if (networkError) console.log(`[Network error]:`, networkError);
       }),
       ApolloLink.split(
         operation => {
           const operationAST = getOperationAST(operation.query, operation.operationName)
-          return !!operationAST && operationAST.operation === 'subscription'
+          const isSubscription = !!operationAST && operationAST.operation === 'subscription'
+          return isSubscription
         },
         new WebSocketLink({
           uri: `ws://${uri}`,
@@ -81,10 +86,73 @@ export function createBrowserLink(url, token) {
     ])
 }
 
-export default function createClient(link) {
+function createClient(link) {
   return new ApolloClient({
     link,
     cache: new InMemoryCache()
   });
 
 }
+
+export default BaseStore =>
+  class Store extends BaseStore {
+    constructor (init) {
+      super({
+        ...init
+      })
+
+      this.on('state', ({changed, current}) => {
+        console.log("Running this")
+        if ('authToken' in changed) {
+          console.log("Got local token: store it:", current.authToken)
+          if (current.authToken) {
+            localStorage.setItem('token', current.authToken)
+          } else {
+            localStorage.removeItem('token')
+          }
+        } else if (!current.authToken) {
+          // Try reading from localstorage
+          if (global.localStorage) {
+            const local = localStorage.getItem('token')
+            if (local) {
+              console.log("Setting local token:", local)
+              this.set({
+                authToken: local
+              })
+            }
+          }
+        }
+      })
+
+      this.compute(
+        'graphql',
+        ['authToken', 'graphqlUri'],
+        (authToken, graphqlUri) => {
+          console.log("Creating provider:", (authToken && graphqlUri))
+          if (authToken && graphqlUri) {
+            return createProvider(
+              createClient(
+                createBrowserLink(graphqlUri, authToken)
+              )
+            )
+          }
+        }
+      )
+
+      this.compute(
+        'authTokenParsed',
+        ['authToken'],
+        authToken => authToken && jwt.parse(authToken)
+      )
+
+      this.compute(
+        'loggedIn',
+        ['authToken'],
+        authToken => !!authToken
+      )
+    }
+
+    getServerClient(url, token) {
+      return createClient(createServerLink(url, token))
+    }
+  }
