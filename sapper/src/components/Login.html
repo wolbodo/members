@@ -98,7 +98,7 @@
           })
 
           this.store.set({
-            graphqlUrl: 'http://members-graphql-1.dev.dock/v1alpha1/graphql',
+            graphqlUrl: process.env.GRAPHQL_URI,
             authToken: data.jwt
           })
 

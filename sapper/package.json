@@ -1,6 +1,7 @@
 {
-  "name": "TODO",
-  "description": "TODO",
+  "name": "wolbodo_members",
+  "description": "Wolbodo Members database",
+  "license": "Beerware",
   "version": "0.0.1",
   "scripts": {
     "dev": "sapper dev",
