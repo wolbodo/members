@@ -2,7 +2,8 @@ import * as sapper from '../__sapper__/client.js';
 
 import { Store } from 'svelte/store.js';
 
-import createClient from './lib/graphql'
+import { createProvider } from 'svelte-apollo';
+import createClient, { createBrowserLink } from './lib/graphql'
 
 
 sapper.start({
@@ -14,7 +15,11 @@ sapper.start({
     store.compute(
       'graphql',
       ['graphqlUrl', 'authToken'],
-      (url, token) => url && token && createClient(url, token)
+      (url, token) => {
+        if (url && token) {
+          return createProvider(createClient(createBrowserLink(url, token)))
+        }
+      }
     );
 
     return store

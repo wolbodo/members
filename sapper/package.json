@@ -19,6 +19,7 @@
     "apollo-link-context": "^1.0.9",
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.5",
+    "apollo-link-ws": "^1.0.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.1",
@@ -30,7 +31,9 @@
     "moment": "^2.22.2",
     "node-fetch": "^2.2.1",
     "polka": "^0.4.0",
-    "sirv": "^0.2.0"
+    "sirv": "^0.2.0",
+    "subscriptions-transport-ws": "^0.9.15",
+    "svelte-apollo": "^0.2.0"
   },
   "devDependencies": {
     "npm-run-all": "^4.1.2",

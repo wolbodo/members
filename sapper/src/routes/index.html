@@ -1,132 +1,18 @@
 <svelte:head>
 	<title>Sapper project template</title>
 </svelte:head>
-
-<section>
-	<form on:submit='login(event)'>
-		<div>
-			<label for='login-email'>
-				Email
-			</label>
-			<input
-				id='login-email'
-				type='text'
-				required
-				bind:value=email
-			/>
-		</div>
-		<div>
-			<label for='login-password'>
-				Password
-			</label>
-			<input
-				required
-				type='text'
-				id='login-password'
-				bind:value=password
-			/>
-		</div>
-		<div>
-			<button type='submit'>
-				Login
-			</button>
-		</div>`
-	</form>
-
-	<pre>
-		{JSON.stringify(form, null, 2)}
-	</pre>
-
-
-	{#if loginResult}
-		loginResult:
-		<pre>
-			{JSON.stringify(loginResult, null, 2)}
-		</pre>
-	{/if}
-
-	{#if userData}
-		<Members :userData/>
-	{/if}
-
-</section>
-
-<style>
-	pre {
-		white-space: pre-wrap;
-		word-break: break-all;
-	}
-</style>
+{#if $authToken}
+	<Table />
+	<p>Logged in</p>
+{:else}
+	<Login />
+{/if}
 
 <script>
-  import gql from 'graphql-tag'
-
 	export default {
-		data() {
-			return {
-				email: '',
-				password: '',
-				loginResult: undefined,
-				userData: undefined
-			}
-		},
-		computed: {
-			form: ({ email, password }) => ({ email, password })
-		},
 		components: {
-			Members: '../components/Members.html'
-		},
-		methods: {
-			async login(e) {
-				const { form } = this.get()
-
-				e.preventDefault()
-				e.stopPropagation()
-				try {
-					const res = await fetch('/login', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify(form)
-					})
-
-					const data = await res.json()
-					this.set({
-						loginResult: {
-							status: res.status,
-							data
-						}
-					})
-
-					await this.test(data.jwt)
-					
-				} catch (e) {
-					console.error(e)
-				}
-			},
-			async test(token) {
-				this.store.set({
-					graphqlUrl: 'http://members-graphql-1.dev.dock/v1alpha1/graphql',
-					authToken: token
-				})
-
-				const { graphql } = this.store.get()
-				console.log("got client:", graphql)
-
-				if (graphql) {
-	        this.set({
-	        	userData: await graphql.query({
-		          query: gql`{
-		              account_user {
-		                id name email
-		              }
-		            }
-		          `
-		        })
-	        })
-				}
-			}
+			Login: '../components/Login.html',
+			Table: '../components/Table.html'
 		}
 	}
 </script>

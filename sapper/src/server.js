@@ -9,6 +9,7 @@ import path from 'path';
 import compression from 'compression';
 import bodyParser from 'body-parser'
 import * as sapper from '../__sapper__/server.js';
+import { Store } from 'svelte/store.js';
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
@@ -19,7 +20,12 @@ polka() // You can also use Express
     compression({ threshold: 0 }),
     sirv('static', { dev }),
     bodyParser.json(),
-		sapper.middleware()
+		sapper.middleware({
+      store: request => {
+        return new Store({
+        });
+      }
+    })
 	)
 	.listen(PORT, err => {
 		if (err) console.log('error', err);
