@@ -1,5 +1,10 @@
+<input
+  type="text"
+  placeholder="Zoek..."
+  bind:value="filter">
+
 <table>
-  <caption>table title and/or explanatory text</caption>
+  <caption>Wolbodo leden:</caption>
   <thead>
     <tr>
       {#each columns as column}
@@ -11,8 +16,9 @@
     {#if !data.length}
       <tr><td>No users found.</td></tr>
     {:else}
-      {#each data as row (row.id)}
-        <tr on:click="gotoRow(row)">
+      {#each filteredData as row (row.id)}
+        <tr on:click="gotoRow(row)"
+            style="background: rgba(0, 255, 150, {1/row.distance})">
           {#each columns as column}
             <td>{row[column]}</td>
           {/each}
@@ -22,9 +28,38 @@
   </tbody>
 </table>
 
+<style>
+  table {
+    width: 100%;
+    text-align: left;
+    line-height: 2em;
+    border-spacing: 0;
+  }
+
+  td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    padding: .5em;
+  }
+</style>
+
 <script>
   import { goto } from '../../__sapper__/client.js'
+  import * as levenshtein from 'fast-levenshtein'
+
   export default {
+    data() {
+      return {
+        filter: ''
+      }
+    },
+    computed: {
+      filteredData: ({ data, filter }) => {
+       return data.map((user) => {
+          user.distance = levenshtein.get(filter, user.name)
+          return user;
+        }).sort((a, b) => a.distance - b.distance);
+      }
+    },
     methods: {
       gotoRow(row) {
         const { rowUrl } = this.get()
