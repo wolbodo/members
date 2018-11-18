@@ -102,27 +102,8 @@
             authToken: data.jwt
           })
 
-          await this.test()
-          
         } catch (e) {
           console.error(e)
-        }
-      },
-      async test() {
-        const { graphql } = this.store.get()
-        console.log("got client:", graphql)
-
-        if (graphql) {
-          this.set({
-            userData: await graphql.query({
-              query: gql`{
-                  account_user {
-                    id name
-                  }
-                }
-              `
-            })
-          })
         }
       }
     }

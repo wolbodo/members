@@ -2,6 +2,7 @@
 	<title>Sapper project template</title>
 </svelte:head>
 {#if $authToken}
+	<Table />
 	<p>Logged in</p>
 {:else}
 	<Login />
@@ -10,7 +11,8 @@
 <script>
 	export default {
 		components: {
-			Login: '../components/Login.html'
+			Login: '../components/Login.html',
+			Table: '../components/Table.html'
 		}
 	}
 </script>
