@@ -67,7 +67,9 @@ export function createBrowserLink(url, token) {
           options: {
             reconnect: true,
             connectionParams: {
-                authToken: token,
+              headers: {
+                authorization: token ? `Bearer ${token}` : "",
+              }
             },
           }
         }),

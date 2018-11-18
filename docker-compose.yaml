@@ -12,9 +12,9 @@ services:
   graphql:
     image: hasura/graphql-engine:latest
     ports:
-    - "80"
+      - "80"
     depends_on:
-    - "postgres"
+      - postgres
     restart: always
     command: >
       /bin/sh -c "
@@ -36,6 +36,8 @@ services:
 
   sapper:
     build: sapper
+    depends_on:
+      - graphql
     volumes:
       - ./sapper:/app
     environment:
