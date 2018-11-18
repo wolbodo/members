@@ -61,6 +61,13 @@
         columns: ['name', 'email', 'phone']
       }
     },
-    onstate: connect
+
+    onstate({ changed, current }) {
+      const { authToken } = this.store.get()
+      console.log("Got authToken", authToken)
+      if (authToken) {
+        connect.call(this, { changed, current });
+      }
+    }
   }
 </script>

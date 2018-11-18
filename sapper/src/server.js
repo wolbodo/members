@@ -21,7 +21,9 @@ polka() // You can also use Express
     sirv('static', { dev }),
     bodyParser.json(),
 		sapper.middleware({
-      store: request => createStore()
+      store: request => createStore({
+        graphqlUri: process.env.GRAPHQL_ENDPOINT,
+      })
     })
 	)
 	.listen(PORT, err => {
