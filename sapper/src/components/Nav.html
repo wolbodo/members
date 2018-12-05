@@ -2,6 +2,9 @@
 	<ul>
 		<li><a class='{segment === undefined ? "selected" : ""}' href='.'>home</a></li>
 		<li><a class='{segment === "members" ? "selected" : ""}' href='members'>members</a></li>
+		{#if $loggedIn}
+		<li><a on:click='$set({ authToken: null })'>Log out</a></li>
+		{/if}
 	</ul>
 </nav>
 
