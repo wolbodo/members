@@ -41,11 +41,8 @@
     components: {
       User: '../../components/User.html'
     },
-    onstate({ changed, current }) {
-      const { authToken } = this.store.get()
-      if (authToken) {
-        connect.call(this, { changed, current });
-      }
-    }
+    oncreate() {
+      this.store.graphqlConnect(this)
+    },
   }
 </script>

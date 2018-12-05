@@ -14,7 +14,7 @@ export async function post(req, res, next) {
       { role: { name: 'login'}}
     ]
   }, 'login');
-  const client = store.getServerClient('http://graphql/v1alpha1/graphql', token)
+  const client = store.getServerClient('http://graphql/v1alpha1/graphql', token, 'login')
 
 
   try {

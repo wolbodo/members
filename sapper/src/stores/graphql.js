@@ -115,16 +115,16 @@ export default BaseStore =>
         }
       })
 
-      this.compute('graphqlClient', ['authToken', 'graphqlUri', 'role'],
+      this.compute('graphqlClient', ['authToken', 'graphqlUri', 'role', 'server'],
         (authToken, graphqlUri, role, server) => 
           (authToken && graphqlUri) && (
             server ? 
               createClient(
-                createBrowserLink(graphqlUri, authToken, role)
+                createServerLink(graphqlUri, authToken, role)
               )
               : 
               createClient(
-                createServerLink(graphqlUri, authToken, role)
+                createBrowserLink(graphqlUri, authToken, role)
               )
           )
       )
