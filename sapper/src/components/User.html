@@ -2,23 +2,39 @@
 <section>
   <section>
     <h1>{user.name}</h1>
-    <label>{user.fullname}</label>
-    <label>{user.email}</label>
-    <label>{user.phone}</label>
+    {#if user.fullname}
+      <p><label>Fullname</label>: {user.fullname}</p>
+    {/if}
+    {#if user.email}
+      <p><label>Email</label>: {user.email}</p>
+    {/if}
+    {#if user.phone}
+      <p><label>Phone</label>: {user.phone}</p>
+    {/if}
   </section>
   <section>
     <h2>Address:</h2>
-    <label>{user.streetname} {user.housenumber} {user.housenumberaddon}</label>
-    <label>{user.city} {user.country}</label>
-    <label>{user.zipcode}</label>
+    <p><label>Address</label>: {user.streetname} {user.housenumber} {user.housenumberaddon || ''}</p>
+    <p><label>Location</label>: {user.city} {user.country}</p>
+    <p><label>ZipCode</label>: {user.zipcode}</p>
   </section>
   <section>
     <h2>Roles</h2>
-    <ul>
-      {#each user.user_roles as ur}
-        <li>{ur.role.name}</li>
-      {/each}
-    </ul>
+    {#if $roles.includes('admin')}
+      Edit
+      <ul>
+        {#each user.user_roles as ur}
+          <li>{ur.role.name}</li>
+        {/each}
+      </ul>
+    {:else}
+      <ul>
+        {#each user.user_roles as ur}
+          <li>{ur.role.name}</li>
+        {/each}
+      </ul>
+    {/if}
   </section>
 </section>
 
+<pre>{JSON.stringify(user, null, 2)}</pre>
