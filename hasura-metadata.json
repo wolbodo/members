@@ -1,4 +1,5 @@
 {
+  "remote_schemas": [],
   "tables": [
     {
       "table": {
@@ -90,6 +91,21 @@
       "select_permissions": [
         {
           "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "user_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
           "comment": null,
           "permission": {
             "allow_aggregations": false,

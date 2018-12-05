@@ -4,7 +4,8 @@
   <User user={data.data.users[0]} />
   <pre>{JSON.stringify(data, null, 2)}</pre>
 {:catch err}
-<p>Error</p>
+  <p>Error</p>
+  <pre>{JSON.stringify(err, null, 2)}</pre>
 {/await}
 
 <script>
