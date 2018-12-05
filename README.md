@@ -10,6 +10,16 @@ Wolbodo Members database
 + [ ] Huisstijl?
 + [ ] Paaseieren
 
+## Views
+
++ [x] List all members
++ [ ] Add member (by admin)
++ [ ] Edit member information (by member)
++ [ ] Edit member information including roles (by admin)
++ [ ] Edit member password (by member)
++ [ ] Add roles (by admin)
++ [ ] Configure role permissions in Hasura
+
 ## For developers
 
 ### Graphql Auth service
