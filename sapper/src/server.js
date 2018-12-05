@@ -44,6 +44,7 @@ polka() // You can also use Express
 		sapper.middleware({
       store: request => {
         return createStore({
+          server: true, // ugly
           graphqlUri: process.env.GRAPHQL_ENDPOINT,
           authToken: request.token,
           memberFilter: '',
