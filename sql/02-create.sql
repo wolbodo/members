@@ -1,5 +1,5 @@
 CREATE TABLE account.user (
-  id                INTEGER             GENERATED ALWAYS AS IDENTITY,
+  id                SERIAL,
   name              VARCHAR(255)        NOT NULL,
   email             VARCHAR(1024)       ,
   password          VARCHAR(1024)       ,

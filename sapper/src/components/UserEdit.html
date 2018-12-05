@@ -1,0 +1,88 @@
+<form on:submit="save(event)">
+  <table>
+    <tr>
+      <td>Alias</td>
+      <td><input type="text" bind:value="userEdit.name"/></td>
+    </tr>
+    <tr>
+      <td>Full name</td>
+      <td><input type="text" bind:value="userEdit.fullname"/></td>
+    </tr>
+    <tr>
+      <td>E-mail</td>
+      <td><input type="email" bind:value="userEdit.email"/></td>
+    </tr>
+    <tr>
+      <td>Phone</td>
+      <td><input type="tel" bind:value="userEdit.phone"/></td>
+    </tr>
+    <tr>
+      <td>Country</td>
+      <td><input type="text" bind:value="userEdit.country"/></td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td><input type="text" bind:value="userEdit.city"/></td>
+    </tr>
+    <tr>
+      <td>Street name</td>
+      <td><input type="text" bind:value="userEdit.streetname"/></td>
+    </tr>
+    <tr>
+      <td>ZIP code</td>
+      <td><input type="text" bind:value="userEdit.zipcode"/></td>
+    </tr>
+    <tr>
+      <td>Housenumber</td>
+      <td><input type="number" bind:value="userEdit.housenumber"/></td>
+      <td><input type="text" bind:value="userEdit.housenumberaddon"/></td>
+    </tr>
+  </table>
+
+  <input type="submit" value="Submit" />
+</form>
+
+<style>
+table {
+  border-spacing: 1em;
+}
+
+tr > td:first-child {
+  font-weight: bold;
+}
+</style>
+
+<script>
+export default {
+  data() {
+    return {
+      userEdit: {}
+    }
+  },
+  onstate({ changed, current}) {
+    if (changed.user) {
+      this.set({ userEdit: {
+        name: current.user.name,
+        fullname: current.user.fullname,
+        email: current.user.email,
+        country: current.user.country,
+        phone: current.user.phone,
+        city: current.user.city,
+        streetname: current.user.streetname,
+        zipcode: current.user.zipcode,
+        housenumber: current.user.housenumber,
+        housenumberaddon: current.user.housenumberaddon
+      }})
+    }
+  },
+  methods: {
+    save(event) {
+      event.stopPropagation()
+      event.preventDefault()
+
+      const {userEdit} = this.get()
+      this.store.addUser(userEdit)
+    }
+  }
+}
+</script>
