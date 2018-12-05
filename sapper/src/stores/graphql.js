@@ -5,86 +5,76 @@ import { HttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { WebSocketLink } from 'apollo-link-ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
-import { ApolloLink } from 'apollo-link';
-import { getOperationAST } from 'graphql/utilities' // ES6
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
 import fetch from 'cross-fetch';
 
-import { createProvider } from 'svelte-apollo';
+import { createProvider, connect } from 'svelte-apollo';
 
-import * as jwt from '../lib/jwt'
+import * as jwt from 'src/lib/jwt'
 
 // https://www.apollographql.com/docs/react/advanced/boost-migration.html
 
-function createAuthLink(token) {
+function createAuthLink(token, role = 'anonymous') {
   return setContext((_, { headers }) => {
     // return the headers to the context so httpLink can read them
     return {
       headers: {
         ...headers,
         authorization: token ? `Bearer ${token}` : "",
+        'X-Hasura-Role': role
       }
     }
   });
 }
 
-function createServerLink(url, token) {
+function createServerLink(url, token, role) {
   // Split protocol
-  console.log("Creating server link:", url)
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
-  return ApolloLink.from([
-      onError(({ graphQLErrors, networkError }) => {
-        if (graphQLErrors)
-          graphQLErrors.map(({ message, locations, path }) =>
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-            ),
-          );
-        if (networkError) console.log(`[Network error]: ${networkError}`);
-      }),
-      createAuthLink(token).concat(new HttpLink({
-        uri: `http://${uri}`,
-        fetch
-      }))
-    ])
+  return createAuthLink(token, role).concat(new HttpLink({
+    uri: `http://${uri}`,
+    fetch
+  }))
 }
-function createBrowserLink(url, token) {
+function createBrowserLink(url, token, role = 'anonymous') {
   // Split protocol
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
-  return ApolloLink.from([
-      onError(({ graphQLErrors, networkError }) => {
-        if (graphQLErrors)
-          graphQLErrors.map(({ message, locations, path }) =>
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-            ),
-          );
-        if (networkError) console.log(`[Network error]:`, networkError);
-      }),
-      ApolloLink.split(
-        operation => {
-          const operationAST = getOperationAST(operation.query, operation.operationName)
-          const isSubscription = !!operationAST && operationAST.operation === 'subscription'
-          return isSubscription
-        },
-        new WebSocketLink({
-          uri: `ws://${uri}`,
-          options: {
-            reconnect: true,
-            connectionParams: {
-              headers: {
-                authorization: token ? `Bearer ${token}` : "",
-              }
-            },
-          }
-        }),
-        createAuthLink(token).concat(new HttpLink({
-          uri: `http://${uri}`,
-          fetch
-        }))
-      )
-    ])
+  // Create an http link:
+  const httpLink = createAuthLink(token, role).concat(new HttpLink({
+    uri: `http://${uri}`,
+    fetch
+  }))
+
+  // Create a WebSocket link:
+  const wsLink = new WebSocketLink({
+    uri: `ws://${uri}`,
+    options: {
+      reconnect: true,
+      connectionParams: {
+        headers: {
+          authorization: token ? `Bearer ${token}` : "",
+          'X-Hasura-Role': role
+        }
+      },
+    }
+  })
+
+
+  // using the ability to split links, you can send data to each link
+  // depending on what kind of operation is being sent
+  const link = split(
+    // split based on operation type
+    ({ query }) => {
+      const { kind, operation } = getMainDefinition(query);
+      return kind === 'OperationDefinition' && operation === 'subscription';
+    },
+    wsLink,
+    httpLink,
+  )
+
+  return link
 }
 
 function createClient(link) {
@@ -99,36 +89,15 @@ export default BaseStore =>
   class Store extends BaseStore {
     constructor (init) {
       super({
+        role: 'user',
         ...init
       })
 
       this.on('state', ({changed, current}) => {
-        console.log("Running this")
         if ('authToken' in changed) {
           console.log("Got local token: store it:", current.authToken)
           if (current.authToken) {
-            console.log("Creating provider:", current)
-            if (global.localStorage) {
-              console.log("- browser")
-              localStorage.setItem('token', current.authToken)
-              this.set({
-                graphql: createProvider(
-                  createClient(
-                    createBrowserLink(current.graphqlUri, current.authToken)
-                  )
-                )
-              })
-            } else {
-              console.log("- server")
-              this.set({
-                graphql: createProvider(
-                  createClient(
-                    createServerLink(current.graphqlUri, current.authToken)
-                  )
-                )
-              })
-            }
-
+            localStorage.setItem('token', current.authToken)
           } else {
             localStorage.removeItem('token')
           }
@@ -146,31 +115,60 @@ export default BaseStore =>
         }
       })
 
-      // this.compute(
-      //   'graphql',
-      //   ['authToken', 'graphqlUri'],
-      //   (authToken, graphqlUri) => {
-      //     console.log("Creating provider:", (authToken && graphqlUri))
-      //     if (authToken && graphqlUri) {
-      //       return 
-      //     }
-      //   }
-      // )
-
-      this.compute(
-        'authTokenParsed',
-        ['authToken'],
-        authToken => authToken && jwt.parse(authToken)
+      this.compute('graphqlClient', ['authToken', 'graphqlUri', 'role'],
+        (authToken, graphqlUri, role) => 
+          (authToken && graphqlUri) && 
+            createClient(
+              createBrowserLink(graphqlUri, authToken, role)
+            )
       )
 
-      this.compute(
-        'loggedIn',
-        ['authToken'],
-        authToken => !!authToken
+      this.compute('graphql', ['graphqlClient'],
+        (client) => client && createProvider(client)
+      )
+      
+      this.compute('loggedIn', ['authToken'], authToken => !!authToken)
+
+      this.compute('authTokenParsed', ['authToken'],
+        (authToken) => jwt.parse(authToken)
+      )
+
+      this.compute('roles', ['authTokenParsed'],
+        (token) => token && token['https://hasura.io/jwt/claims']['x-hasura-allowed-roles'] || []
       )
     }
 
-    getServerClient(url, token) {
-      return createClient(createServerLink(url, token))
+    graphqlConnect(component, currentRole = 'user') {
+      // Connect component to graphql
+      console.log('client connected')
+
+      // This is gonna be shitty with nested components, I'll deal with it later
+      const { role : lastRole } = this.get()
+      this.set({
+        role: currentRole
+      })
+      component.on('destroy', () => {
+        this.set({
+          role: lastRole
+        })
+      })
+
+      component.on('state', (state) => {
+        const { authToken } = this.get()
+        if (authToken) {
+          connect.call(component, state);
+        }
+      })
+
+      const state = component.get()
+      connect.call(component, {
+        changed: Object.keys(state).reduce((obj, key) => ({...obj, [key]: true}), {}),
+        current: state,
+        previous: {}
+      });
+    }
+
+    getServerClient(url, token, role = 'user') {
+      return createClient(createServerLink(url, token, role))
     }
   }

@@ -41,7 +41,8 @@ services:
     ports:
       - "8011:80"
     volumes:
-      - ./sapper:/app
+      - ./sapper/src:/app/src
+      - ./sapper/webpack.config.js:/app/webpack.config.js
     environment:
       JWT_SECRET: $JWT_SECRET
       GRAPHQL_ENDPOINT: $GRAPHQL_ENDPOINT

@@ -1,11 +1,12 @@
 <svelte:head>
   <title>Wolbodo members</title>
 </svelte:head>
-
+<!-- 
 <input
   type="text"
   placeholder="Zoek..."
   bind:value="$memberFilter"/>
+
 {#await getUsers}
   <tr><td>Loading</td></tr>
 {:then result}
@@ -18,7 +19,11 @@
   />
 {:catch error}
   <tr><td>ERROR: {JSON.stringify(error)}</td></tr>
-{/await}
+{/await} -->
+
+<pre>
+  {JSON.stringify(users, null, 2)}
+</pre>
 
 <script>
 import { subscription, query, connect } from 'svelte-apollo'
@@ -37,15 +42,36 @@ export default {
   data() {
     return {
       filter: '',
-      getUsers: subscription(GET_USERS),
+      // getUsers: subscription(GET_USERS),
       columns: ['name', 'email', 'phone']
     }
   },
   onstate({ changed, current }) {
-    const { authToken, graphql } = this.store.get()
-    if (authToken && graphql) {
-      console.log("Got authToken and graphql")
-      connect.call(this, { changed, current });
+    // const { authToken, graphql } = this.store.get()
+    // if (authToken && graphql) {
+    //   console.log("Got authToken and graphql")
+    //   connect.call(this, { changed, current });
+    // }
+  },
+  async preload () {
+    try {
+
+      const { graphqlClient } = this.store.get()
+      if (graphqlClient) {
+        console.log("Got client")
+        const subscription = graphqlClient.watchQuery({
+          query: GET_USERS
+        })
+        console.log(subscription)
+
+        return {
+          users: await subscription.result() 
+        }
+      } else {
+        console.log("No client :S")
+      }
+    } catch (e) {
+      console.error(e)
     }
   }
 }

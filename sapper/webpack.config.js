@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const path = require('path')
 const config = require('sapper/config/webpack.js');
 const pkg = require('./package.json');
 
@@ -11,7 +12,10 @@ module.exports = {
 		output: config.client.output(),
 		resolve: {
 			extensions: ['.js', '.json', '.html'],
-			mainFields: ['svelte', 'module', 'browser', 'main']
+			mainFields: ['svelte', 'module', 'browser', 'main'],
+			alias: {
+				src: path.resolve(__dirname, 'src/')
+			}
 		},
 		module: {
 			rules: [
@@ -22,7 +26,8 @@ module.exports = {
 						options: {
 							dev,
 							hydratable: true,
-							hotReload: true
+							hotReload: true,
+              store: true,
 						}
 					}
 				}
@@ -46,7 +51,10 @@ module.exports = {
 		target: 'node',
 		resolve: {
 			extensions: ['.js', '.json', '.html'],
-			mainFields: ['svelte', 'module', 'browser', 'main']
+			mainFields: ['svelte', 'module', 'browser', 'main'],
+			alias: {
+				src: path.resolve(__dirname, 'src/')
+			}
 		},
 		externals: Object.keys(pkg.dependencies).concat('encoding'),
 		module: {
@@ -58,6 +66,7 @@ module.exports = {
 						options: {
 							css: false,
 							generate: 'ssr',
+              store: true,
 							dev
 						}
 					}
