@@ -8,7 +8,7 @@
   </thead>
   <tbody>
     {#if !data.length}
-      <tr><td>No users found.</td></tr>
+      <tr><td>No members found.</td></tr>
     {:else}
       {#each filteredData as row (row.id)}
         <tr on:click="gotoRow(row)"
@@ -48,9 +48,9 @@
     computed: {
       filteredData: ({ data, filter }) => {
         if (filter.length > 1) {
-          return data.map(user => ({
-            ...user,
-            distance: levenshtein.get(filter.toLowerCase(), user.name.toLowerCase())
+          return data.map(member => ({
+            ...member,
+            distance: levenshtein.get(filter.toLowerCase(), member.name.toLowerCase())
           })).sort((a, b) => a.distance - b.distance)
         }
         return data

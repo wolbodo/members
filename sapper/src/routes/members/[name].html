@@ -1,10 +1,10 @@
-{#await user}
+{#await member}
   <p>Loading</p>
 {:then data}
-  <User user={data.data.users[0]} />
+  <Member member={data.data.members[0]} />
 
-  <h2>Edit user</h2>
-  <UserEdit user={data.data.users[0]} />
+  <h2>Edit member</h2>
+  <MemberEdit member={data.data.members[0]} />
 
   <pre>{JSON.stringify(data, null, 2)}</pre>
 {:catch err}
@@ -16,8 +16,8 @@
   import { subscription, connect } from 'svelte-apollo'
   import gql from 'graphql-tag';
 
-  const GET_USER = gql`subscription ($name: String) {
-    users: active_user(where:{name: { _eq: $name }}, limit: 1) {
+  const GET_MEMBER = gql`subscription ($name: String) {
+    members: active_member(where:{name: { _eq: $name }}, limit: 1) {
       name
       fullname
       email
@@ -31,7 +31,7 @@
       streetname
       zipcode
 
-      user_roles {
+      member_roles {
         role {
           name
         }
@@ -41,11 +41,11 @@
 
   export default {
     computed: {
-      user: ({ params }) => subscription(GET_USER, { variables: params})
+      member: ({ params }) => subscription(GET_MEMBER, { variables: params})
     },
     components: {
-      User: 'src/components/User.html',
-      UserEdit: 'src/components/UserEdit.html'
+      Member: 'src/components/Member.html',
+      MemberEdit: 'src/components/MemberEdit.html'
     },
     oncreate() {
       this.store.graphqlConnect(this)

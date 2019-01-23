@@ -1,12 +1,25 @@
 <p>Add member</p>
 
-<UserEdit />
+<MemberEdit
+  on:submit=createMember(event)
+
+/>
 
 
 <script>
   export default {
     components: {
-      UserEdit: 'src/components/UserEdit.html'
+      MemberEdit: 'src/components/MemberEdit.html'
+    },
+    methods: {
+      async createMember(data) {
+        try {
+          console.log("Creating", data)
+          
+        } catch (e) {
+          console.error("Error trying to create member", e)
+        }
+      }
     }
   }
 </script>

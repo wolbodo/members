@@ -41,10 +41,10 @@
     </pre>
   {/if}
 
-  {#if userData}
-    userData:
+  {#if memberData}
+    memberData:
     <pre>
-      {JSON.stringify(userData, null, 2)}
+      {JSON.stringify(memberData, null, 2)}
     </pre>
   {/if}
 </section>
@@ -65,7 +65,7 @@
         email: 'dexter@example.org',
         password: 'dexter',
         loginResult: undefined,
-        userData: undefined
+        memberData: undefined
       }
     },
     computed: {

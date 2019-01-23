@@ -1,46 +1,46 @@
-<form on:submit="save(event)">
+<form on:submit|stopPropagation|preventDefault="fire('submit', memberEdit)" >
   <TextField horizontal
     label='Alias'
     placeholder='Thatcher'
-    value={_user.name || ''}
+    value={_member.name || ''}
     on:change="fieldChange('name', event)"
   >
     <TextField horizontal
       label='Full name'
       placeholder='Thatcher Peskens'
-      value={_user.fullname || ''}
+      value={_member.fullname || ''}
       on:change="fieldChange('fullname', event)"
     />
   </TextField>
   <EmailField horizontal
     label='Email'
     placeholder='thatcher@example.com'
-    value={_user.email || ''}
+    value={_member.email || ''}
     on:change="fieldChange('email', event)"
   />
   <TextField horizontal
     label='Phone'
     placeholder='+31 000 0000 000'
-    value={_user.phone || ''}
+    value={_member.phone || ''}
     on:change="fieldChange('phone', event)"
   />
 
   <TextField horizontal
     label='Street'
     placeholder='Dorpstraat'
-    value={_user.streetname || ''}
+    value={_member.streetname || ''}
     on:change="fieldChange('streetname', event)"
   >
     <TextField horizontal
       label='Number'
       placeholder='42'
-      value={_user.housenumber || ''}
+      value={_member.housenumber || ''}
       on:change="fieldChange('housenumber', event)"
     />
     <TextField horizontal
       label='Addon'
       placeholder='A'
-      value={_user.housenumberaddon || ''}
+      value={_member.housenumberaddon || ''}
       on:change="fieldChange('housenumberaddon', event)"
     />
   </TextField>
@@ -48,13 +48,13 @@
   <TextField horizontal
     label='Zipcode'
     placeholder='2134AA'
-    value={_user.zipcode || ''}
+    value={_member.zipcode || ''}
     on:change="fieldChange('zipcode', event)"
   >
     <TextField horizontal
       label='City'
       placeholder='Harare'
-      value={_user.city || ''}
+      value={_member.city || ''}
       on:change="fieldChange('city', event)"
     />
   </TextField>
@@ -62,13 +62,13 @@
   <TextField horizontal
     label='Country'
     placeholder='Zimbabwe'
-    value={_user.country || ''}
+    value={_member.country || ''}
     on:change="fieldChange('country', event)"
   />
 
-  <input type="submit" value="Submit" />
+  <input class='button' type="submit" value="Submit" />
   <pre>
-    {JSON.stringify(userEdit, null, 2)}
+    {JSON.stringify(memberEdit, null, 2)}
   </pre>
 </form>
 
@@ -97,28 +97,28 @@ export default {
   },
   data() {
     return {
-      userEdit: {}
+      memberEdit: {}
     }
   },
   computed: {
-    _user: ({ userEdit, user }) => ({
-      ...user,
-      ...userEdit
+    _member: ({ memberEdit, member }) => ({
+      ...member,
+      ...memberEdit
     })
   },
   methods: {
-    save(event) {
-      event.stopPropagation()
-      event.preventDefault()
+    // save(event) {
+    //   event.stopPropagation()
+    //   event.preventDefault()
 
-      const {userEdit} = this.get()
-      this.store.addUser(userEdit)
-    },
+    //   const {memberEdit} = this.get()
+    //   this.store.addmember(memberEdit)
+    // },
     fieldChange(name, value) {
-      const { userEdit } = this.get()
+      const { memberEdit } = this.get()
       this.set({
-        userEdit: {
-          ...userEdit,
+        memberEdit: {
+          ...memberEdit,
           [name]: value
         }
       })

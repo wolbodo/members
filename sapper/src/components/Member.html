@@ -1,0 +1,40 @@
+
+<section>
+  <section>
+    <h1>{member.name}</h1>
+    {#if member.fullname}
+      <p><label>Fullname</label>: {member.fullname}</p>
+    {/if}
+    {#if member.email}
+      <p><label>Email</label>: {member.email}</p>
+    {/if}
+    {#if member.phone}
+      <p><label>Phone</label>: {member.phone}</p>
+    {/if}
+  </section>
+  <section>
+    <h2>Address:</h2>
+    <p><label>Address</label>: {member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
+    <p><label>Location</label>: {member.city} {member.country}</p>
+    <p><label>ZipCode</label>: {member.zipcode}</p>
+  </section>
+  <section>
+    <h2>Roles</h2>
+    {#if $roles.includes('admin')}
+      Edit
+      <ul>
+        {#each member.member_roles as ur}
+          <li>{ur.role.name}</li>
+        {/each}
+      </ul>
+    {:else}
+      <ul>
+        {#each member.member_roles as ur}
+          <li>{ur.role.name}</li>
+        {/each}
+      </ul>
+    {/if}
+  </section>
+</section>
+
+<pre>{JSON.stringify(member, null, 2)}</pre>

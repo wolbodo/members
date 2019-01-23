@@ -22,7 +22,7 @@ export async function post(req, res, next) {
     const result = await client.query({
       query: gql`
         query($email: String) {
-          active_user(where:{email:{_eq:$email}}) {
+          active_member(where:{email:{_eq:$email}}) {
             id email password
             user_roles {
               role {
@@ -37,23 +37,23 @@ export async function post(req, res, next) {
       }
     })
     console.log("Has received result:", result)
-    const { active_user: [user, ] } = result.data
+    const { active_member: [member, ] } = result.data
 
-    console.log("Got post in login:", req.body, user, token)
-    if (user) {
-      console.log("Here", req.body.password, user.password)
+    console.log("Got post in login:", req.body, member, token)
+    if (member) {
+      console.log("Here", req.body.password, member.password)
 
-      const passwordOk = await bcrypt.compare(req.body.password, user.password)
+      const passwordOk = await bcrypt.compare(req.body.password, member.password)
         
       if (passwordOk) {
-        const jwt = JWT.create(user)
+        const jwt = JWT.create(member)
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
           'Set-Cookie': `token=${jwt}`,
         })
         res.end(JSON.stringify({
-          jwt, user
+          jwt, member
         }))
         return
       }
