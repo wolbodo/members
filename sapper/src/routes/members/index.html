@@ -25,7 +25,7 @@ import { subscription, query, connect } from 'svelte-apollo'
 import gql from 'graphql-tag';
 
 const GET_USERS = gql`subscription{
-  account_user {
+  user {
     id name email phone
   }
 }`

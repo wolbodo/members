@@ -18,10 +18,11 @@ export async function post(req, res, next) {
 
 
   try {
+    console.log("Trying query")
     const result = await client.query({
       query: gql`
         query($email: String) {
-          account_user(where:{email:{_eq:$email}}) {
+          active_user(where:{email:{_eq:$email}}) {
             id email password
             user_roles {
               role {
@@ -35,7 +36,8 @@ export async function post(req, res, next) {
         email: req.body.email
       }
     })
-    const { account_user: [user, ] } = result.data
+    console.log("Has received result:", result)
+    const { active_user: [user, ] } = result.data
 
     console.log("Got post in login:", req.body, user, token)
     if (user) {

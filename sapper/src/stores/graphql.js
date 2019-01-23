@@ -7,11 +7,11 @@ import { WebSocketLink } from 'apollo-link-ws'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
-import fetch from 'cross-fetch';
-
+import fetchPonyfill from 'fetch-ponyfill';
 import { createProvider, connect } from 'svelte-apollo';
-
 import * as jwt from 'src/lib/jwt'
+
+const { fetch } = fetchPonyfill();
 
 // https://www.apollographql.com/docs/react/advanced/boost-migration.html
 

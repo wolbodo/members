@@ -17,6 +17,7 @@
     "body-parser": "^1.18.3",
     "compression": "^1.7.1",
     "dotenv": "^6.1.0",
+    "fetch-ponyfill": "^6.0.2",
     "moment": "^2.22.2",
     "polka": "^0.5.1",
     "sirv": "^0.2.0"

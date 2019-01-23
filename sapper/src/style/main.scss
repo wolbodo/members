@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+@import "bulma/sass/utilities/initial-variables.sass";
+
 // Import a Google Font
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 
@@ -24,6 +26,7 @@ $body-background-color: $beige-lighter;
 $control-border-width: 2px;
 $input-border-color: transparent;
 $input-shadow: none;
+$navbar-breakpoint: $tablet;
 
 // Import only what you need from Bulma
 @import "bulma/sass/utilities/_all.sass";
