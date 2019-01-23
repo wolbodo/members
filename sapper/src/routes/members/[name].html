@@ -17,7 +17,7 @@
   import gql from 'graphql-tag';
 
   const GET_USER = gql`subscription ($name: String) {
-    users: account_user(where:{name: { _eq: $name }}, limit: 1) {
+    users: active_user(where:{name: { _eq: $name }}, limit: 1) {
       name
       fullname
       email

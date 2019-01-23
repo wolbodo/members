@@ -1,51 +1,78 @@
 <form on:submit="save(event)">
-  <table>
-    <tr>
-      <td>Alias</td>
-      <td><input type="text" bind:value="userEdit.name"/></td>
-    </tr>
-    <tr>
-      <td>Full name</td>
-      <td><input type="text" bind:value="userEdit.fullname"/></td>
-    </tr>
-    <tr>
-      <td>E-mail</td>
-      <td><input type="email" bind:value="userEdit.email"/></td>
-    </tr>
-    <tr>
-      <td>Phone</td>
-      <td><input type="tel" bind:value="userEdit.phone"/></td>
-    </tr>
-    <tr>
-      <td>Country</td>
-      <td><input type="text" bind:value="userEdit.country"/></td>
-    </tr>
-    <tr>
-      <td>City</td>
-      <td><input type="text" bind:value="userEdit.city"/></td>
-    </tr>
-    <tr>
-      <td>Street name</td>
-      <td><input type="text" bind:value="userEdit.streetname"/></td>
-    </tr>
-    <tr>
-      <td>ZIP code</td>
-      <td><input type="text" bind:value="userEdit.zipcode"/></td>
-    </tr>
-    <tr>
-      <td>Housenumber</td>
-      <td><input type="number" bind:value="userEdit.housenumber"/></td>
-      <td><input type="text" bind:value="userEdit.housenumberaddon"/></td>
-    </tr>
-  </table>
+  <TextField horizontal
+    label='Alias'
+    placeholder='Thatcher'
+    value={_user.name || ''}
+    on:change="fieldChange('name', event)"
+  >
+    <TextField horizontal
+      label='Full name'
+      placeholder='Thatcher Peskens'
+      value={_user.fullname || ''}
+      on:change="fieldChange('fullname', event)"
+    />
+  </TextField>
+  <EmailField horizontal
+    label='Email'
+    placeholder='thatcher@example.com'
+    value={_user.email || ''}
+    on:change="fieldChange('email', event)"
+  />
+  <TextField horizontal
+    label='Phone'
+    placeholder='+31 000 0000 000'
+    value={_user.phone || ''}
+    on:change="fieldChange('phone', event)"
+  />
+
+  <TextField horizontal
+    label='Street'
+    placeholder='Dorpstraat'
+    value={_user.streetname || ''}
+    on:change="fieldChange('streetname', event)"
+  >
+    <TextField horizontal
+      label='Number'
+      placeholder='42'
+      value={_user.housenumber || ''}
+      on:change="fieldChange('housenumber', event)"
+    />
+    <TextField horizontal
+      label='Addon'
+      placeholder='A'
+      value={_user.housenumberaddon || ''}
+      on:change="fieldChange('housenumberaddon', event)"
+    />
+  </TextField>
+  
+  <TextField horizontal
+    label='Zipcode'
+    placeholder='2134AA'
+    value={_user.zipcode || ''}
+    on:change="fieldChange('zipcode', event)"
+  >
+    <TextField horizontal
+      label='City'
+      placeholder='Harare'
+      value={_user.city || ''}
+      on:change="fieldChange('city', event)"
+    />
+  </TextField>
+
+  <TextField horizontal
+    label='Country'
+    placeholder='Zimbabwe'
+    value={_user.country || ''}
+    on:change="fieldChange('country', event)"
+  />
 
   <input type="submit" value="Submit" />
+  <pre>
+    {JSON.stringify(userEdit, null, 2)}
+  </pre>
 </form>
 
 <style>
-table {
-  border-spacing: 1em;
-}
 
 tr > td:first-child {
   font-weight: bold;
@@ -53,27 +80,31 @@ tr > td:first-child {
 </style>
 
 <script>
+import {
+  TextField,
+  DateField,
+  EmailField,
+  InputGroup,
+  InputControl,
+} from 'svelte-bulma-forms/module'
+
 export default {
+  components: {
+    TextField, 
+    EmailField,
+    InputGroup,
+    InputControl,
+  },
   data() {
     return {
       userEdit: {}
     }
   },
-  onstate({ changed, current}) {
-    if (changed.user) {
-      this.set({ userEdit: {
-        name: current.user.name,
-        fullname: current.user.fullname,
-        email: current.user.email,
-        country: current.user.country,
-        phone: current.user.phone,
-        city: current.user.city,
-        streetname: current.user.streetname,
-        zipcode: current.user.zipcode,
-        housenumber: current.user.housenumber,
-        housenumberaddon: current.user.housenumberaddon
-      }})
-    }
+  computed: {
+    _user: ({ userEdit, user }) => ({
+      ...user,
+      ...userEdit
+    })
   },
   methods: {
     save(event) {
@@ -82,6 +113,15 @@ export default {
 
       const {userEdit} = this.get()
       this.store.addUser(userEdit)
+    },
+    fieldChange(name, value) {
+      const { userEdit } = this.get()
+      this.set({
+        userEdit: {
+          ...userEdit,
+          [name]: value
+        }
+      })
     }
   }
 }

@@ -1,8 +1,8 @@
-<table>
+<table class='table'>
   <thead>
     <tr>
       {#each columns as column}
-        <th>{column}</th>
+        <th>{column.name}</th>
       {/each}
     </tr>
   </thead>
@@ -13,9 +13,14 @@
       {#each filteredData as row (row.id)}
         <tr on:click="gotoRow(row)"
             style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}">
-            <!-- style="background: rgba(0, 255, 150, {1/getDistance(filter, row.name)})"> -->
           {#each columns as column}
-            <td>{row[column]}</td>
+            <td>
+              {#if column.component}
+                <svelte:component this={column.component} {row} {column} />
+              {:else}
+                {row[column.field]}
+              {/if}
+            </td>
           {/each}
         </tr>
       {/each}
@@ -24,16 +29,9 @@
 </table>
 
 <style>
-  table {
-    width: 100%;
-    text-align: left;
-    line-height: 2em;
-    border-spacing: 0;
-  }
-
-  td {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-    padding: .5em;
+  tr:hover {
+    background-color: #C6F4D5;
+    color: #000;
   }
 </style>
 

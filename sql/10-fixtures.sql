@@ -1,7 +1,7 @@
 
 BEGIN;
 
-INSERT INTO public.user
+INSERT INTO public.member
   (name, email, password, fullname, validity)
 VALUES
   ('admin', 'admin@example.org', 'admin', 'Administrator', '[1970-01-01 00:00:01,)'),
@@ -17,15 +17,15 @@ VALUES
   ('user', 'User is able to perform login', '[now,)')
 ;
 
-INSERT INTO public.user_role
-  (user_id, role_id, validity)
-SELECT public.user.id, public.role.id, '[now,)' FROM
+INSERT INTO public.member_role
+  (member_id, role_id, validity)
+SELECT public.member.id, public.role.id, '[now,)' FROM
     (VALUES
         ('admin@example.org', array['user','admin']),
         ('dexter@example.org', array['user']),
         ('bwb@example.org', array['user'])
     ) alias (email, role_names)
-    JOIN public.user ON public.user.validity @> NOW() AND public.user.email = alias.email
+    JOIN public.member ON public.member.validity @> NOW() AND public.member.email = alias.email
     JOIN public.role ON public.role.validity @> NOW() AND public.role.name IN (SELECT unnest(alias.role_names));
 
 COMMIT;

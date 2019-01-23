@@ -2,23 +2,135 @@
   "remote_schemas": [],
   "tables": [
     {
-      "table": {
-        "schema": "public",
-        "name": "user"
-      },
+      "table": "role",
       "object_relationships": [],
       "array_relationships": [
         {
           "using": {
             "foreign_key_constraint_on": {
-              "column": "user_id",
-              "table": {
-                "schema": "public",
-                "name": "user_role"
+              "column": "role_id",
+              "table": "member_role"
+            }
+          },
+          "name": "role_members",
+          "comment": null
+        }
+      ],
+      "insert_permissions": [],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "name"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "description",
+              "id",
+              "modified",
+              "name",
+              "validity"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [],
+      "delete_permissions": [],
+      "event_triggers": []
+    },
+    {
+      "table": "active_member",
+      "object_relationships": [],
+      "array_relationships": [
+        {
+          "using": {
+            "manual_configuration": {
+              "remote_table": "member_role",
+              "column_mapping": {
+                "id": "member_id"
               }
             }
           },
-          "name": "user_roles",
+          "name": "member_roles",
+          "comment": null
+        }
+      ],
+      "insert_permissions": [],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "id",
+              "name",
+              "email",
+              "password",
+              "fullname",
+              "phone",
+              "streetname",
+              "housenumber",
+              "housenumberaddon",
+              "zipcode",
+              "city",
+              "country",
+              "modified"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "id",
+              "modified",
+              "name",
+              "password",
+              "phone",
+              "streetname",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [],
+      "delete_permissions": [],
+      "event_triggers": []
+    },
+    {
+      "table": "member",
+      "object_relationships": [],
+      "array_relationships": [
+        {
+          "using": {
+            "foreign_key_constraint_on": {
+              "column": "member_id",
+              "table": "member_role"
+            }
+          },
+          "name": "member_roles",
           "comment": null
         }
       ],
@@ -66,10 +178,7 @@
       "event_triggers": []
     },
     {
-      "table": {
-        "schema": "public",
-        "name": "user_role"
-      },
+      "table": "member_role",
       "object_relationships": [
         {
           "using": {
@@ -80,9 +189,9 @@
         },
         {
           "using": {
-            "foreign_key_constraint_on": "user_id"
+            "foreign_key_constraint_on": "member_id"
           },
-          "name": "user",
+          "name": "member",
           "comment": null
         }
       ],
@@ -95,7 +204,7 @@
           "permission": {
             "allow_aggregations": false,
             "columns": [
-              "user_id",
+              "member_id",
               "role_id",
               "note",
               "validity",
@@ -110,65 +219,11 @@
           "permission": {
             "allow_aggregations": false,
             "columns": [
-              "user_id",
+              "member_id",
               "role_id",
               "note",
               "validity",
               "modified"
-            ],
-            "filter": {}
-          }
-        }
-      ],
-      "update_permissions": [],
-      "delete_permissions": [],
-      "event_triggers": []
-    },
-    {
-      "table": {
-        "schema": "public",
-        "name": "role"
-      },
-      "object_relationships": [],
-      "array_relationships": [
-        {
-          "using": {
-            "foreign_key_constraint_on": {
-              "column": "role_id",
-              "table": {
-                "schema": "public",
-                "name": "user_role"
-              }
-            }
-          },
-          "name": "role_users",
-          "comment": null
-        }
-      ],
-      "insert_permissions": [],
-      "select_permissions": [
-        {
-          "role": "login",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "name"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "user",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "description",
-              "id",
-              "modified",
-              "name",
-              "validity"
             ],
             "filter": {}
           }
