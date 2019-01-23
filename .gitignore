@@ -6,3 +6,4 @@
 **/.hasura/
 **/__pycache__/
 sapper/app/
+.sapper-cache/

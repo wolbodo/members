@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const config = require('sapper/config/webpack.js');
 const pkg = require('./package.json');
 
@@ -30,12 +31,20 @@ module.exports = {
               store: true,
 						}
 					}
-				}
+				}, {
+          test: /\.scss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ]
+        }
 			]
 		},
 		mode,
 		plugins: [
 			dev && new webpack.HotModuleReplacementPlugin(),
+      new MiniCssExtractPlugin(),
 			new webpack.DefinePlugin({
 				'process.browser': true,
 				'process.env.NODE_ENV': JSON.stringify(mode),

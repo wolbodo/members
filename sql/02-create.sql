@@ -1,4 +1,4 @@
-CREATE TABLE account.user (
+CREATE TABLE public.user (
   id                SERIAL,
   name              VARCHAR(255)        NOT NULL,
   email             VARCHAR(1024)       ,
@@ -19,10 +19,16 @@ CREATE TABLE account.user (
   UNIQUE(id),
   CONSTRAINT is_email CHECK (email ~ '^[^@]+@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+(xn--[a-zA-Z0-9-]{4,}|[a-zA-Z]{2,})$')
 );
-CREATE INDEX ON account.user (email);
+CREATE INDEX ON public.user (email);
 -- TODO: how to add EXCLUDE USING gist (email WITH =, validity WITH &&) ?
 
-CREATE TABLE account.role (
+CREATE OR REPLACE VIEW public.active_user AS 
+  SELECT id, name, email, password, fullname, phone,
+    streetname, housenumber, housenumberaddon, zipcode, city, country, modified
+  FROM public.user
+  WHERE (validity @> now());
+
+CREATE TABLE public.role (
   id                INTEGER             GENERATED ALWAYS AS IDENTITY,
   name              VARCHAR(1024)       NOT NULL,
   description       TEXT                NOT NULL,
@@ -34,9 +40,9 @@ CREATE TABLE account.role (
   UNIQUE(id)
 );
 
-CREATE TABLE account.user_role (
-  user_id          INTEGER             NOT NULL REFERENCES account.user(id),
-  role_id          INTEGER             NOT NULL REFERENCES account.role(id),
+CREATE TABLE public.user_role (
+  user_id          INTEGER             NOT NULL REFERENCES public.user(id),
+  role_id          INTEGER             NOT NULL REFERENCES public.role(id),
   note             TEXT                NOT NULL DEFAULT '',
   validity         TSTZRANGE           NOT NULL,
   modified         TIMESTAMPTZ         DEFAULT 'NOW',

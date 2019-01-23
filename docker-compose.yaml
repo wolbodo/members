@@ -30,21 +30,32 @@ services:
         --jwt-secret $$JWT_SECRET \
         --enable-console;
       "
-
     environment:
       JWT_SECRET: $JWT_SECRET
 
   sapper:
     build: sapper
+    command: >
+      /bin/sh -c "
+        yarn install --pure-lockfile;
+        yarn run dev;
+      "
     depends_on:
       - graphql
-    ports:
-      - "8011:80"
     volumes:
       - ./sapper/src:/app/src
       - ./sapper/webpack.config.js:/app/webpack.config.js
+
+    volumes:
+      - ./sapper/src:/app/src
+      - ./sapper/static:/app/static
+      - ./sapper/package.json:/app/package.json
+      - ./sapper/yarn.lock:/app/yarn.lock
+      - ./sapper/webpack.config.js:/app/webpack.config.js
+      - ./.sapper-cache:/usr/local/share/.cache/yarn/v1
     environment:
       JWT_SECRET: $JWT_SECRET
+      NODE_ENV: development
       GRAPHQL_ENDPOINT: $GRAPHQL_ENDPOINT
       GRAPHQL_URI: $GRAPHQL_URI
 

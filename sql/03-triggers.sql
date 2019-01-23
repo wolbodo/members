@@ -1,23 +1,23 @@
 
 CREATE TRIGGER update_modified
   BEFORE UPDATE
-  ON account.user
+  ON public.user
   FOR EACH ROW EXECUTE PROCEDURE 
-  account.update_modified();
+  public.update_modified();
 
 CREATE TRIGGER hash_password
   BEFORE UPDATE OF password OR INSERT
-  ON account.user
+  ON public.user
   FOR EACH ROW EXECUTE PROCEDURE 
-  account.hash_password();
+  public.hash_password();
 
 CREATE TRIGGER update_modified
   BEFORE UPDATE
-  ON account.role
+  ON public.role
   FOR EACH ROW EXECUTE PROCEDURE 
-  account.update_modified();
+  public.update_modified();
 
 CREATE TRIGGER update_modified BEFORE UPDATE
-  ON account.user_role FOR EACH ROW EXECUTE PROCEDURE 
-  account.update_modified();
+  ON public.user_role FOR EACH ROW EXECUTE PROCEDURE 
+  public.update_modified();
 

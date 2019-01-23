@@ -3,7 +3,7 @@
   "tables": [
     {
       "table": {
-        "schema": "account",
+        "schema": "public",
         "name": "user"
       },
       "object_relationships": [],
@@ -13,7 +13,7 @@
             "foreign_key_constraint_on": {
               "column": "user_id",
               "table": {
-                "schema": "account",
+                "schema": "public",
                 "name": "user_role"
               }
             }
@@ -67,7 +67,7 @@
     },
     {
       "table": {
-        "schema": "account",
+        "schema": "public",
         "name": "user_role"
       },
       "object_relationships": [
@@ -126,7 +126,7 @@
     },
     {
       "table": {
-        "schema": "account",
+        "schema": "public",
         "name": "role"
       },
       "object_relationships": [],
@@ -136,7 +136,7 @@
             "foreign_key_constraint_on": {
               "column": "role_id",
               "table": {
-                "schema": "account",
+                "schema": "public",
                 "name": "user_role"
               }
             }
