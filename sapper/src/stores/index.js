@@ -3,10 +3,10 @@
 import { Store as BaseStore } from 'svelte/store.js';
 
 import graphqlStore from './graphql'
-import usersStore from './users'
+import membersStore from './members'
 
 
 export default function createStore(data) {
-  const Store = usersStore(graphqlStore(BaseStore))
+  const Store = membersStore(graphqlStore(BaseStore))
   return new Store(data)
 }

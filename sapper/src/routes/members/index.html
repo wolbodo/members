@@ -20,12 +20,12 @@
   </span>
 </div>
 
-{#await getUsers}
+{#await getMembers}
   <p>Loading</p>
 {:then result}
   <Table
     filter={filter}
-    data={result.data.active_user}
+    data={result.data.active_member}
     columns={columns}
     rowUrl={row => `/members/${row.name}`}
   />
@@ -42,8 +42,8 @@ import { subscription, query, connect } from 'svelte-apollo'
 import MemberNameField from 'src/components/MemberNameField.html'
 import gql from 'graphql-tag';
 
-const GET_USERS = gql`subscription {
-  active_user {
+const GET_MEMBERS = gql`subscription {
+  active_member {
     id name email phone
   }
 }`
@@ -55,7 +55,7 @@ export default {
   data() {
     return {
       filter: '',
-      getUsers: subscription(GET_USERS),
+      getMembers: subscription(GET_MEMBERS),
       columns: [
         { name: 'Name', field: 'name', component: MemberNameField },
         { name: 'Email', field: 'email' },

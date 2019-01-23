@@ -9,17 +9,18 @@ export default BaseStore =>
       })
     }
 
-    async addUser(user) {
+    async addMember(member) {
       const {graphqlClient} = this.get();
       try {
         await graphqlClient.mutate({
           mutation: gql`
-          mutation($user: account_user_insert_input!) {
-            insert_account_user (objects: [$user]) {
+          mutation ($member: member_insert_input!) {
+            insert_member(objects: [$member]) {
               affected_rows
+              __typename
             }
           }`,
-          variables: { user }
+          variables: { member }
         })
       } catch (error) {
         console.log(error)
