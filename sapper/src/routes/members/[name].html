@@ -2,11 +2,6 @@
   <p>Loading</p>
 {:then data}
   <Member member={data.data.members[0]} />
-
-  <h2>Edit member</h2>
-  <MemberEdit member={data.data.members[0]} />
-
-  <pre>{JSON.stringify(data, null, 2)}</pre>
 {:catch err}
   <p>Error</p>
   <pre>{JSON.stringify(err, null, 2)}</pre>

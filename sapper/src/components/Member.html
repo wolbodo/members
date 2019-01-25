@@ -1,40 +1,44 @@
+<div class="tile is-ancestor is-vertical">
+  <div class='tile is-parent'>
+    <div class="tile is-child box">
+      <h1 class='title'>{member.name}</h1>
+      {#if member.fullname}
+        <p>{member.fullname}</p>
+      {/if}
+      {#if member.email}
+        <a href='mailto:{member.email}'>{member.email}</a>
+      {/if}
+      {#if member.phone}
+        <a href='tel:{member.phone}'>{member.phone}</a>
+      {/if}
+    </div>
 
-<section>
-  <section>
-    <h1>{member.name}</h1>
-    {#if member.fullname}
-      <p><label>Fullname</label>: {member.fullname}</p>
-    {/if}
-    {#if member.email}
-      <p><label>Email</label>: {member.email}</p>
-    {/if}
-    {#if member.phone}
-      <p><label>Phone</label>: {member.phone}</p>
-    {/if}
-  </section>
-  <section>
-    <h2>Address:</h2>
-    <p><label>Address</label>: {member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
-    <p><label>Location</label>: {member.city} {member.country}</p>
-    <p><label>ZipCode</label>: {member.zipcode}</p>
-  </section>
-  <section>
-    <h2>Roles</h2>
-    {#if $roles.includes('admin')}
-      Edit
-      <ul>
-        {#each member.member_roles as ur}
-          <li>{ur.role.name}</li>
-        {/each}
-      </ul>
-    {:else}
-      <ul>
-        {#each member.member_roles as ur}
-          <li>{ur.role.name}</li>
-        {/each}
-      </ul>
-    {/if}
-  </section>
-</section>
+    <div class="tile is-child box">
+      <h2 class='title'>Address</h2>
+      <p>{member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
+      <p>{member.zipcode} {member.city}</p>
+      <p>{member.country}</p>
+    </div>
+  </div>
+  <div class='tile is-parent'>
+    <div class='tile is-child'>
+      <h2 class='title'>Roles</h2>
+      {#if $roles.includes('admin')}
+        Edit
+        <ul>
+          {#each member.member_roles as ur}
+            <li>{ur.role.name}</li>
+          {/each}
+        </ul>
+      {:else}
+        <ul>
+          {#each member.member_roles as ur}
+            <li>{ur.role.name}</li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
+  </div>
+</div>
 
 <pre>{JSON.stringify(member, null, 2)}</pre>
