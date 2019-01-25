@@ -16,9 +16,7 @@ export async function post(req, res, next) {
   }, 'login');
   const client = store.getServerClient('http://graphql/v1alpha1/graphql', token, 'login')
 
-
   try {
-    console.log("Trying query")
     const result = await client.query({
       query: gql`
         query($email: String) {
@@ -36,13 +34,9 @@ export async function post(req, res, next) {
         email: req.body.email
       }
     })
-    console.log("Has received result:", result)
     const { active_member: [member, ] } = result.data
 
-    console.log("Got post in login:", req.body, member, token)
     if (member) {
-      console.log("Here", req.body.password, member.password)
-
       const passwordOk = await bcrypt.compare(req.body.password, member.password)
         
       if (passwordOk) {
@@ -65,7 +59,7 @@ export async function post(req, res, next) {
       error: 'Authentication failed'
     }))
   } catch (e) {
-    console.error('Hmm', e)
+    console.error('Error logging in', e)
     res.writeHead(500, {
       'Content-Type': 'application/json'
     })

@@ -12,6 +12,8 @@ import { createProvider, connect } from 'svelte-apollo';
 
 import * as jwt from 'src/lib/jwt'
 
+import { goto } from '../../__sapper__/client.js'
+
 const { fetch } = fetchPonyfill();
 
 // https://www.apollographql.com/docs/react/advanced/boost-migration.html
@@ -174,12 +176,14 @@ export default BaseStore =>
         previous: {}
       });
     }
-    
+
     async logout () {
+      console.log("Logging out user:")
       this.set({
         authToken: undefined
       })
       await fetch('/auth/logout')
+      goto('/', { replaceState: true })
     }
 
     getServerClient(url, token, role = 'user') {

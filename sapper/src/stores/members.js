@@ -2,13 +2,6 @@ import gql from 'graphql-tag';
 
 export default BaseStore =>
   class Store extends BaseStore {
-
-    logout() {
-      this.set({
-        authToken: undefined
-      })
-    }
-
     async addMember(member) {
       const {graphqlClient} = this.get();
       try {
