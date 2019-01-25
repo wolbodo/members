@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 export function create(user, defaultRole='user') {
-  const roles = (user.user_roles || []).map(ur => ur.role && ur.role.name)
+  const roles = (user.member_roles || []).map(mr => mr.role && mr.role.name)
   console.log("SECRET:", process.env.JWT_SECRET)
   const SECRET = JSON.parse(process.env.JWT_SECRET)
 

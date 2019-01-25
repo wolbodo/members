@@ -1,38 +1,22 @@
 
 <section>
   <form on:submit='login(event)'>
-    <div>
-      <label for='login-email'>
-        Email
-      </label>
-      <input
-        id='login-email'
-        type='text'
-        required
-        bind:value=email
-      />
-    </div>
-    <div>
-      <label for='login-password'>
-        Password
-      </label>
-      <input
-        required
-        type='text'
-        id='login-password'
-        bind:value=password
-      />
-    </div>
-    <div>
-      <button type='submit'>
-        Login
-      </button>
-    </div>`
-  </form>
+    <EmailField horizontal
+      label='Email'
+      value={email || ''}
+      on:change="set({ email: event })"
+    />
+    <PasswordField horizontal
+      label='Password'
+      value={password || ''}
+      on:change="set({ password: event })"
+    />
 
-  <pre>
-    {JSON.stringify(form, null, 2)}
-  </pre>
+
+    <div class="buttons is-right">
+      <button type=submit class="button is-link" class:is-loading='loading' disabled="{loading}">Login</button>
+    </div>
+  </form>
 
   {#if loginResult}
     loginResult:
@@ -57,6 +41,12 @@
 </style>
 
 <script>
+
+  import {
+    EmailField,
+    PasswordField
+  } from 'svelte-bulma-forms/module'
+
   import gql from 'graphql-tag'
 
   export default {
@@ -68,22 +58,25 @@
         memberData: undefined
       }
     },
-    computed: {
-      form: ({ email, password }) => ({ email, password })
+    components: {
+      EmailField, PasswordField
     },
     methods: {
       async login(e) {
-        const { form } = this.get()
+        const { email, password } = this.get()
 
         e.preventDefault()
         e.stopPropagation()
         try {
-          const res = await fetch('/login', {
+          const res = await fetch('/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(form)
+            body: JSON.stringify({
+              email,
+              password
+            })
           })
 
           const data = await res.json()

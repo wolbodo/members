@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs'
-import * as JWT from '../lib/jwt'
+import gql from 'graphql-tag'
 
-import createStore from '../stores'
-import gql from 'graphql-tag';
+import * as JWT from 'src/lib/jwt'
+import createStore from 'src/stores'
 
 
 export async function post(req, res, next) {
@@ -10,7 +10,7 @@ export async function post(req, res, next) {
   const token = JWT.create({
     id: -1,
     name: 'login',
-    user_roles: [
+    member_roles: [
       { role: { name: 'login'}}
     ]
   }, 'login');
@@ -24,7 +24,7 @@ export async function post(req, res, next) {
         query($email: String) {
           active_member(where:{email:{_eq:$email}}) {
             id email password
-            user_roles {
+            member_roles {
               role {
                 name
               }

@@ -1,0 +1,66 @@
+<div class="field is-grouped">
+  <p class="control">
+    <a href='/members/create' class="button is-primary">
+      <span class="icon">
+        <i class="fas fa-plus"></i>
+      </span>
+      <span>Create</span>
+    </a>
+  </p>
+</div>
+
+<div class="control has-icons-left has-icons-right">
+  <input class="input is-medium" type="text" placeholder="Zoek..." bind:value='filter'>
+  <span class="icon is-left">
+    <i class="fas fa-search"></i>
+  </span>
+</div>
+
+{#await getMembers}
+  <p>Loading</p>
+{:then result}
+  <Table
+    filter={filter}
+    data={result.data.active_member}
+    columns={columns}
+    rowUrl={row => `/members/${row.name}`}
+  />
+{:catch error}
+  <section>
+    <h3>Error</h3>
+    <pre>{JSON.stringify(error, null, 2)}</pre>
+  </section>
+{/await}
+
+<script>
+
+import { subscription, query, connect } from 'svelte-apollo'
+import MemberNameField from 'src/components/MemberNameField.html'
+import gql from 'graphql-tag';
+
+const GET_MEMBERS = gql`subscription {
+  active_member {
+    id name email phone
+  }
+}`
+
+export default {
+  components: {
+    Table: 'src/components/Table.html'
+  },
+  data() {
+    return {
+      filter: '',
+      getMembers: subscription(GET_MEMBERS),
+      columns: [
+        { name: 'Name', field: 'name', component: MemberNameField },
+        { name: 'Email', field: 'email' },
+        { name: 'Phone', field: 'phone' },
+      ]
+    }
+  },
+  oncreate() {
+    this.store.graphqlConnect(this)
+  },
+}
+</script>

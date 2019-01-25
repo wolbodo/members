@@ -9,6 +9,7 @@ import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import fetchPonyfill from 'fetch-ponyfill';
 import { createProvider, connect } from 'svelte-apollo';
+
 import * as jwt from 'src/lib/jwt'
 
 const { fetch } = fetchPonyfill();
@@ -172,6 +173,13 @@ export default BaseStore =>
         current: state,
         previous: {}
       });
+    }
+    
+    async logout () {
+      this.set({
+        authToken: undefined
+      })
+      await fetch('/auth/logout')
     }
 
     getServerClient(url, token, role = 'user') {

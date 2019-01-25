@@ -2,14 +2,17 @@
 	<title>Wolbodo</title>
 </svelte:head>
 
-{#if !$authToken}
-	<Login />
+{#if $loggedIn}
+	<MemberList />
+{:else}
+  <Login />
 {/if}
 
 <script>
 	export default {
 		components: {
-			Login: '../components/Login.html',
+      Login: 'src/components/Login.html',
+			MemberList: 'src/components/MemberList.html',
 		},
 	}
 </script>

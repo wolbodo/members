@@ -1,6 +1,6 @@
 <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="/members">
+    <a class="navbar-item" href="/">
       <img src="/wolbodo.png" alt='logo' width="112" height="28">
     </a>
 
@@ -52,20 +52,21 @@
       -->
     </div>
 
-		<!-- 
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button is-primary">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light">
-            Log in
-          </a>
+          {#if $loggedIn}
+            <button class="button is-primary" class:is-loading='loading' disabled="{loading}" on:click='logout()'>
+              Log out
+            </button>
+          {:else}
+            <a class="button is-primary" href='/login'>
+              Log in
+            </a>
+          {/if}
         </div>
       </div>
     </div>
-     -->
   </div>
 </nav>
 
@@ -75,6 +76,18 @@
 			return {
 				navbarOpen: false
 			}
-		}
+		},
+    methods: {
+      async logout () {
+        try {
+          this.set({ loading : true })
+          await this.store.logout()
+          this.set({ loading : false })
+        } catch (e) {
+          this.set({ loading : false })
+          console.error("Error:", e)
+        }
+      }
+    }
 	}
 </script>
