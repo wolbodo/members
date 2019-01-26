@@ -1,83 +1,109 @@
-<form on:submit|stopPropagation|preventDefault="fire('submit', memberEdit)" >
-  <TextField horizontal
-    label='Alias'
-    placeholder='Thatcher'
-    value={_member.name || ''}
-    on:change="fieldChange('name', event)"
-  >
-    <TextField horizontal
-      label='Full name'
-      placeholder='Thatcher Peskens'
-      value={_member.fullname || ''}
-      on:change="fieldChange('fullname', event)"
-    />
-  </TextField>
-  <EmailField horizontal
-    label='Email'
-    placeholder='thatcher@example.com'
-    value={_member.email || ''}
-    on:change="fieldChange('email', event)"
-  />
-  <TextField horizontal
-    label='Phone'
-    placeholder='+31 000 0000 000'
-    value={_member.phone || ''}
-    on:change="fieldChange('phone', event)"
-  />
+<form on:submit="submitForm(event)" >
 
-  <TextField horizontal
-    label='Street'
-    placeholder='Dorpstraat'
-    value={_member.streetname || ''}
-    on:change="fieldChange('streetname', event)"
-  >
-    <TextField horizontal
-      label='Number'
-      placeholder='42'
-      value={_member.housenumber || ''}
-      on:change="fieldChange('housenumber', event)"
-    />
-    <TextField horizontal
-      label='Addon'
-      placeholder='A'
-      value={_member.housenumberaddon || ''}
-      on:change="fieldChange('housenumberaddon', event)"
-    />
-  </TextField>
-  
-  <TextField horizontal
-    label='Zipcode'
-    placeholder='2134AA'
-    value={_member.zipcode || ''}
-    on:change="fieldChange('zipcode', event)"
-  >
-    <TextField horizontal
-      label='City'
-      placeholder='Harare'
-      value={_member.city || ''}
-      on:change="fieldChange('city', event)"
-    />
-  </TextField>
+  <fieldset>
+    <legend>Name & Contact</legend>
 
-  <TextField horizontal
-    label='Country'
-    placeholder='Zimbabwe'
-    value={_member.country || ''}
-    on:change="fieldChange('country', event)"
-  />
+    <InputGroup label='Name' horizontal>
+      <TextField horizontal
+        label='Alias'
+        placeholder='Thatcher'
+        required
+        value={_member.name || ''}
+        on:change="fieldChange('name', event)"
+      />
+      <TextField horizontal
+        label='Full name'
+        placeholder='Thatcher Peskens'
+        value={_member.fullname || ''}
+        on:change="fieldChange('fullname', event)"
+      />
+    </InputGroup>
 
-  <input class='button' type="submit" value="Submit" />
+    <EmailField horizontal
+      label='Email'
+      placeholder='thatcher@example.com'
+      value={_member.email || ''}
+      on:change="fieldChange('email', event)"
+    />
+    <TextField horizontal
+      label='Phone'
+      placeholder='+31 000 0000 000'
+      value={_member.phone || ''}
+      on:change="fieldChange('phone', event)"
+    />
+  </fieldset>
+
+  <fieldset>
+    <legend>Address info</legend>
+
+    <InputGroup label='' horizontal>
+      <TextField horizontal
+        label='Street'
+        placeholder='Dorpstraat'
+        value={_member.streetname || ''}
+        on:change="fieldChange('streetname', event)"
+      />
+
+      <TextField horizontal
+        label='Number'
+        placeholder='42'
+        value={_member.housenumber || ''}
+        on:change="fieldChange('housenumber', event)"
+      />
+      <TextField horizontal
+        label='Addon'
+        placeholder='A'
+        value={_member.housenumberaddon || ''}
+        on:change="fieldChange('housenumberaddon', event)"
+      />
+    </InputGroup>
+    <InputGroup label='' horizontal>
+      <TextField horizontal
+        label='Zipcode'
+        placeholder='2134AA'
+        value={_member.zipcode || ''}
+        on:change="fieldChange('zipcode', event)"
+      />
+      <TextField horizontal
+        label='City'
+        placeholder='Harare'
+        value={_member.city || ''}
+        on:change="fieldChange('city', event)"
+      />
+    </InputGroup>
+
+    <TextField horizontal
+      label='Country'
+      placeholder='Zimbabwe'
+      value={_member.country || ''}
+      on:change="fieldChange('country', event)"
+    />
+  </fieldset>
+
+  <div class="buttons is-right">
+    <button type=submit class="button is-link" class:is-loading='loading' disabled="{loading}">Submit</button>
+  </div>
   <pre>
     {JSON.stringify(memberEdit, null, 2)}
   </pre>
 </form>
+
+<style>
+  fieldset {
+    padding: 1em;
+    padding-top: 0;
+    margin: 1em 0;
+    border: 2px solid #0000001a;
+
+  }
+</style>
 
 <script>
 import {
   TextField,
   DateField,
   EmailField,
-  // InputGroup,
+  InputGroup,
   // InputControl,
 } from 'svelte-bulma-forms/module'
 
@@ -85,7 +111,7 @@ export default {
   components: {
     TextField, 
     EmailField,
-    // InputGroup,
+    InputGroup,
     // InputControl,
   },
   data() {
@@ -100,6 +126,17 @@ export default {
     })
   },
   methods: {
+    async submitForm(ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
+
+      const { memberEdit } = this.get()
+
+      const res = await this.store.addMember(memberEdit)
+
+      console.log("Added member:", memberEdit, res)
+
+    },
     // save(event) {
     //   event.stopPropagation()
     //   event.preventDefault()

@@ -1,13 +1,9 @@
-<p>Add member</p>
+<h1 class='title'>Add member</h1>
 
 <MemberEdit
   on:submit=createMember(event)
   disabled={saving}
 />
-
-<pre>
-  {JSON.stringify(CREATE_MEMBER, null, 2)}
-</pre>
 
 <script>
   import gql from 'graphql-tag'

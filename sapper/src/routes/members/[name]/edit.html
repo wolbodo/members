@@ -1,0 +1,48 @@
+{#await member}
+  <p>Loading</p>
+{:then data}
+  <MemberEdit member={data.data.members[0]} />
+{:catch err}
+  <p>Error</p>
+  <pre>{JSON.stringify(err, null, 2)}</pre>
+{/await}
+
+<script>
+  import { subscription, connect } from 'svelte-apollo'
+  import gql from 'graphql-tag';
+
+  const GET_MEMBER = gql`subscription ($name: String) {
+    members: active_member(where:{name: { _eq: $name }}, limit: 1) {
+      name
+      fullname
+      email
+
+      housenumber
+      housenumberaddon
+      city
+      country
+
+      phone
+      streetname
+      zipcode
+
+      member_roles {
+        role {
+          name
+        }
+      }
+    }
+  }`
+
+  export default {
+    computed: {
+      member: ({ params }) => subscription(GET_MEMBER, { variables: params})
+    },
+    components: {
+      MemberEdit: 'src/components/MemberEdit.html'
+    },
+    oncreate() {
+      this.store.graphqlConnect(this)
+    },
+  }
+</script>
