@@ -27,20 +27,21 @@ function authorize(req, res, next) {
 
   req.token = cookie.token
 
-  console.log("Got cookie:", cookie)
-  // mutate req; available later
-  // req.token = req.headers['authorization'];
-  // req.token ? next() : ((res.statusCode=401) && res.end('No token!'));
-
   next()
+}
+// Log every request
+function logger(req, res, next) {
+  console.log(`~> Received ${req.method} on ${req.url}`);
+  next(); // move on
 }
 
 polka() // You can also use Express
 	.use(
     compression({ threshold: 0 }),
     sirv('static', { dev }),
-    bodyParser.json(),
+    logger,
     authorize,
+    bodyParser.json(),
 		sapper.middleware({
       store: request => {
         return createStore({

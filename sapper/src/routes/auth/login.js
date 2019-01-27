@@ -44,7 +44,7 @@ export async function post(req, res, next) {
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
-          'Set-Cookie': `token=${jwt}`,
+          'Set-Cookie': `token=${jwt}; path=/`,
         })
         res.end(JSON.stringify({
           jwt, member
