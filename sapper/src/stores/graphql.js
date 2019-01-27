@@ -145,36 +145,6 @@ export default BaseStore =>
       )
     }
 
-    // graphqlConnect(component, currentRole = 'user') {
-    //   // Connect component to graphql
-    //   console.log('client connected')
-
-    //   // This is gonna be shitty with nested components, I'll deal with it later
-    //   const { role : lastRole } = this.get()
-    //   this.set({
-    //     role: currentRole
-    //   })
-    //   component.on('destroy', () => {
-    //     this.set({
-    //       role: lastRole
-    //     })
-    //   })
-
-    //   component.on('state', (state) => {
-    //     const { authToken } = this.get()
-    //     if (authToken) {
-    //       connect.call(component, state);
-    //     }
-    //   })
-
-    //   const state = component.get()
-    //   connect.call(component, {
-    //     changed: Object.keys(state).reduce((obj, key) => ({...obj, [key]: true}), {}),
-    //     current: state,
-    //     previous: {}
-    //   });
-    // }
-
     async logout () {
       this.set({
         authToken: undefined
