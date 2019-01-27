@@ -1,23 +1,22 @@
-<form on:submit="submitForm(event)" >
+<form on:submit="submitForm(event)" disabled='{loading}' >
 
   <fieldset>
     <legend>Name & Contact</legend>
 
-    <InputGroup label='Name' horizontal>
-      <TextField horizontal
-        label='Alias'
-        placeholder='Thatcher'
-        required
-        value={_member.name || ''}
-        on:change="fieldChange('name', event)"
-      />
-      <TextField horizontal
-        label='Full name'
-        placeholder='Thatcher Peskens'
-        value={_member.fullname || ''}
-        on:change="fieldChange('fullname', event)"
-      />
-    </InputGroup>
+    <TextField horizontal
+      label='Alias'
+      placeholder='Thatcher'
+      required
+      value={_member.name || ''}
+      on:change="fieldChange('name', event)"
+    />
+    <TextField horizontal
+      required
+      label='Full name'
+      placeholder='Thatcher Peskens'
+      value={_member.fullname || ''}
+      on:change="fieldChange('fullname', event)"
+    />
 
     <EmailField horizontal
       label='Email'
@@ -107,6 +106,8 @@ import {
   // InputControl,
 } from 'svelte-bulma-forms/module'
 
+import { goto } from '../../__sapper__/client.js'
+
 export default {
   components: {
     TextField, 
@@ -131,19 +132,14 @@ export default {
       ev.stopPropagation()
 
       const { memberEdit } = this.get()
+      this.set({ loading: true })
 
       const res = await this.store.addMember(memberEdit)
+      this.set({ loading: false })
 
       console.log("Added member:", memberEdit, res)
 
     },
-    // save(event) {
-    //   event.stopPropagation()
-    //   event.preventDefault()
-
-    //   const {memberEdit} = this.get()
-    //   this.store.addmember(memberEdit)
-    // },
     fieldChange(name, value) {
       const { memberEdit } = this.get()
       this.set({

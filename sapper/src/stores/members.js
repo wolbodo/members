@@ -8,8 +8,8 @@ export default BaseStore =>
         return await graphqlClient.mutate({
           mutation: gql`
           mutation (
-            $name: String,
-            $fullname: String,
+            $name: String!,
+            $fullname: String!,
             $email: String,
             $phone: String,
             $streetname: String,
