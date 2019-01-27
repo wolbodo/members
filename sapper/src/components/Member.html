@@ -25,25 +25,90 @@
       <p>{member.country}</p>
     </div>
   </div>
+
   <div class='tile is-parent'>
     <div class='tile is-child'>
-      <h2 class='title'>Roles</h2>
-      {#if $roles.includes('admin')}
-        Edit
-        <ul>
-          {#each member.member_roles as ur}
-            <li>{ur.role.name}</li>
-          {/each}
-        </ul>
-      {:else}
-        <ul>
-          {#each member.member_roles as ur}
-            <li>{ur.role.name}</li>
-          {/each}
-        </ul>
-      {/if}
+      <heading>
+        <h2 class='title'>Roles</h2>
+
+        {#if rolesLoading || rolesFiltered.length}
+        <div class="field has-addons">
+          <p class="control">
+            <span class="select is-loading is-small" class:is-loading='rolesLoading'>
+              <select disabled={rolesLoading} bind:value='selectedRole'>
+                <option value=''>Add a new role</option>
+                {#each rolesFiltered as role}
+                  <option value={role.id}>{role.name}</option>
+                {/each}
+              </select>
+            </span>
+          </p>
+          {#if selectedRole}
+            <p class="control">
+              <button on:click="addRole()" class='button is-small' class:is-loading='addRoleSubmitting'>Add selected role</button>
+            </p>
+          {/if}
+        </div>
+        {/if}
+      </heading>
+      <section class='tags'>
+        {#each memberRoles as role}
+          <span class="tag is-medium is-primary">
+            {role}
+            <button class="button is-primary is-small">
+              <span class="icon">
+                <i class="fa fa-times fs-sm"></i>
+              </span>
+            </button>
+          </span>
+        {/each}
+      </section>
     </div>
   </div>
 </div>
 
 <pre>{JSON.stringify(member, null, 2)}</pre>
+
+<style>
+  .tag  {
+    padding-right: 0;
+  }
+  .tag .button {
+    margin-left: 0.4rem;
+  }
+
+  heading {
+    display: flex;
+    align-items: baseline;
+  }
+  heading .select {
+    margin-left: 0.4rem;
+  }
+</style>
+
+<script>
+  export default {
+    computed: {
+      memberRoles: ({ member }) => member.member_roles.map(ur => ur.role.name),
+      rolesFiltered: ({ roles, memberRoles }) => roles && roles.filter(r => !memberRoles.includes(r.name)) || []
+    },
+    data () {
+      return {
+        rolesLoading: true
+      }
+    },
+    methods: {
+      async addRole() {
+        const { member, selectedRole } = this.get() 
+        this.set({ addRoleSubmitting: true })
+        await this.store.addMemberRole(member.id, selectedRole)
+        this.set({ addRoleSubmitting: false, selectedRole: undefined })
+      },
+    },
+    oncreate () {
+      this.store.allRoles()
+        .then(roles => this.set({ rolesLoading: false, roles }))
+        .catch(e => console.error(e))
+    }
+  }
+</script>

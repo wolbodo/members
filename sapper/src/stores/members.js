@@ -71,4 +71,45 @@ export default BaseStore =>
         console.log(error)
       }
     }
+
+    async addMemberRole(memberId, roleId) {
+      const {graphqlClient} = this.get();
+      try {
+        const res = await graphqlClient.mutate({
+          mutation: gql`mutation addMemberRole($memberId: Int!, $roleId:Int!) {
+            insert_member_role(objects:{
+              member_id:$memberId,
+              role_id:$roleId
+            }) {
+              affected_rows
+            }
+          }`,
+          variables: {
+            memberId, roleId
+          }
+        })
+        console.log("Added member to role:", res)
+        return res
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+
+    async allRoles() {
+      const {graphqlClient} = this.get();
+      try {
+        const { data } = await graphqlClient.query({
+          query: gql`{
+            role {
+              id name
+              description
+            }
+          }`
+        })
+        return data.role
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }

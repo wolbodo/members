@@ -2,43 +2,22 @@
 
 <MemberEdit
   on:submit=createMember(event)
-  disabled={saving}
+  {loading} 
 />
 
 <script>
   import gql from 'graphql-tag'
 
-  const CREATE_MEMBER = gql`
-    mutation {
-      insert_member(objects:{
-        name: "new-user",
-        fullname: "This new user"
-      }) {
-        returning {
-          name
-        }
-      }
-    }
-  `
-
   export default {
     components: {
       MemberEdit: 'src/components/MemberEdit.html'
     },
-    data () {
-      return {
-        CREATE_MEMBER
-      }
-    },
     methods: {
       async createMember(data) {
         try {
-          this.set({ saving: true })
+          this.set({ loading: true })
           await this.store.addMember(data)
-          this.set({ saving: false })
-
-          console.log("Creating", data)
-          
+          this.set({ loading: false })
         } catch (e) {
           console.error("Error trying to create member", e)
         }

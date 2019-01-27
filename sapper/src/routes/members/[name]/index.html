@@ -31,6 +31,7 @@
     type: 'subscription',
     query: gql`subscription ($name: String) {
       members: active_member(where:{name: { _eq: $name }}, limit: 1) {
+        id
         name
         fullname
         email

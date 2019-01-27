@@ -1,6 +1,6 @@
 <div class="field is-grouped">
   <p class="control">
-    <a href='/members/' class="button is-primary">
+    <a href='/members/create' class="button is-primary">
       <span class="icon">
         <i class="fas fa-plus"></i>
       </span>
@@ -44,7 +44,6 @@
 <script>
 import MemberNameField from 'src/components/MemberNameField.html'
 import gql from 'graphql-tag';
-
 
 const intoQuery = ({ definitions, ...rest }) => (
   {
