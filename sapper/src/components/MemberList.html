@@ -26,15 +26,22 @@
     rowUrl={row => `/members/${row.name}`}
   />
 {:catch error}
-  <section>
-    <h3>Error</h3>
-    <pre>{JSON.stringify(error, null, 2)}</pre>
-  </section>
+  <div class="error notification is-danger">
+    <h3 class='title'>Error</h3>
+    {JSON.stringify(error, null, 2)}
+  </div>
 {/await}
+
+<style>
+  .error.notification {
+    white-space: pre-wrap;
+    margin: 1em 0;
+  }
+</style>
 
 <script>
 
-import { subscription, query, connect } from 'svelte-apollo'
+import { subscription, query } from 'svelte-apollo'
 import MemberNameField from 'src/components/MemberNameField.html'
 import gql from 'graphql-tag';
 
@@ -60,7 +67,6 @@ export default {
     }
   },
   oncreate() {
-    this.store.graphqlConnect(this)
   },
 }
 </script>

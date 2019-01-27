@@ -8,7 +8,7 @@
 {/await}
 
 <script>
-  import { subscription, connect } from 'svelte-apollo'
+  import { subscription } from 'svelte-apollo'
   import gql from 'graphql-tag';
 
   const GET_MEMBER = gql`subscription ($name: String) {
@@ -42,7 +42,6 @@
       MemberEdit: 'src/components/MemberEdit.html'
     },
     oncreate() {
-      this.store.graphqlConnect(this)
     },
   }
 </script>

@@ -14,11 +14,10 @@ export function create(user, defaultRole='user') {
         'x-hasura-user-id': user.id.toString()
       }
   }, SECRET.key, {
-    expiresIn: '1 day',
+    expiresIn: '10 seconds',
     issuer: 'auth',
     subject: user.id.toString()
   })
-
 }
 
 export function parse(token) {
