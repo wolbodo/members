@@ -1,4 +1,4 @@
-<form on:submit="submitForm(event)" disabled='{loading}' >
+<form on:submit|preventDefault|stopPropagation="fire('submit', memberEdit)" disabled='{loading}' >
 
   <fieldset>
     <legend>Name & Contact</legend>
@@ -8,6 +8,7 @@
       placeholder='Thatcher'
       required
       value={_member.name || ''}
+      disabled={loading}
       on:change="fieldChange('name', event)"
     />
     <TextField horizontal
@@ -15,6 +16,7 @@
       label='Full name'
       placeholder='Thatcher Peskens'
       value={_member.fullname || ''}
+      disabled={loading}
       on:change="fieldChange('fullname', event)"
     />
 
@@ -22,12 +24,14 @@
       label='Email'
       placeholder='thatcher@example.com'
       value={_member.email || ''}
+      disabled={loading}
       on:change="fieldChange('email', event)"
     />
     <TextField horizontal
       label='Phone'
       placeholder='+31 000 0000 000'
       value={_member.phone || ''}
+      disabled={loading}
       on:change="fieldChange('phone', event)"
     />
   </fieldset>
@@ -40,6 +44,7 @@
         label='Street'
         placeholder='Dorpstraat'
         value={_member.streetname || ''}
+        disabled={loading}
         on:change="fieldChange('streetname', event)"
       />
 
@@ -47,12 +52,14 @@
         label='Number'
         placeholder='42'
         value={_member.housenumber || ''}
+        disabled={loading}
         on:change="fieldChange('housenumber', event)"
       />
       <TextField horizontal
         label='Addon'
         placeholder='A'
         value={_member.housenumberaddon || ''}
+        disabled={loading}
         on:change="fieldChange('housenumberaddon', event)"
       />
     </InputGroup>
@@ -61,12 +68,14 @@
         label='Zipcode'
         placeholder='2134AA'
         value={_member.zipcode || ''}
+        disabled={loading}
         on:change="fieldChange('zipcode', event)"
       />
       <TextField horizontal
         label='City'
         placeholder='Harare'
         value={_member.city || ''}
+        disabled={loading}
         on:change="fieldChange('city', event)"
       />
     </InputGroup>
@@ -75,6 +84,7 @@
       label='Country'
       placeholder='Zimbabwe'
       value={_member.country || ''}
+      disabled={loading}
       on:change="fieldChange('country', event)"
     />
   </fieldset>
@@ -134,10 +144,14 @@ export default {
       const { memberEdit } = this.get()
       this.set({ loading: true })
 
-      const res = await this.store.addMember(memberEdit)
+      console.log("Trying submit")
+      const res = await this.fire('submit', memberEdit)
+      console.log("Done submitting")
+
+      // const res = await this.store.addMember(memberEdit)
       this.set({ loading: false })
 
-      console.log("Added member:", memberEdit, res)
+      // console.log("Added member:", memberEdit, res)
 
     },
     fieldChange(name, value) {

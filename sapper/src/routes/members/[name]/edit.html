@@ -1,47 +1,124 @@
-{#await member}
+
+{#if error}
+  <div class="error notification is-danger">
+    <h3 class='title'>Error</h3>
+    {JSON.stringify(error, null, 2)}
+  </div>
+{/if}
+
+{#if !member}
   <p>Loading</p>
-{:then data}
-  <MemberEdit member={data.data.members[0]} />
-{:catch err}
-  <p>Error</p>
-  <pre>{JSON.stringify(err, null, 2)}</pre>
-{/await}
+{:else}
+  <MemberEdit {member} {loading} on:submit='handleUpdate(event)'/>
+{/if}
+
 
 <script>
-  import { subscription } from 'svelte-apollo'
   import gql from 'graphql-tag';
 
-  const GET_MEMBER = gql`subscription ($name: String) {
-    members: active_member(where:{name: { _eq: $name }}, limit: 1) {
-      name
-      fullname
-      email
+  const intoQuery = ({ definitions, ...rest }) => (
+    {
+      definitions: definitions.map(
+        def => ({
+          ...def,
+          operation: 'query',
+        })),
+      ...rest
+    }
+  )
 
-      housenumber
-      housenumberaddon
-      city
-      country
+  const queries = [{
+    type: 'subscription',
+    query: gql`subscription ($name: String) {
+      members: active_member(where:{name: { _eq: $name }}, limit: 1) {
+        id
+        name
+        fullname
+        email
 
-      phone
-      streetname
-      zipcode
+        housenumber
+        housenumberaddon
+        city
+        country
 
-      member_roles {
-        role {
-          name
+        phone
+        streetname
+        zipcode
+
+        member_roles {
+          role {
+            name
+          }
         }
       }
-    }
-  }`
+    }`,
+    success({ data }) {
+      console.log("Received update:", data, this)
+      this.set({ member: data.members[0] })
+    },
+    error(err) { this.set({ error: err }) }
+  }]
 
   export default {
-    computed: {
-      member: ({ params }) => subscription(GET_MEMBER, { variables: params})
-    },
     components: {
       MemberEdit: 'src/components/MemberEdit.html'
     },
-    oncreate() {
+    methods: {
+      async handleUpdate (data) {
+        const { graphqlClient } = this.store.get()
+        const { member } = this.get()
+        console.log("Should handle update:", data)
+
+        this.set({ loading: true })
+        await this.store.updateMember(member.id, data)
+        this.set({ loading: false })
+      }
     },
+    oncreate() {
+      const { graphqlClient } = this.store.get()
+      const { params } = this.get()
+      // params do not update the subscription now
+
+      this.subscriptions = []
+
+      for (let query of queries) {
+        console.log("Creating:", query)
+        if (query.type === 'subscription') {
+          this.subscriptions.push(
+            graphqlClient.subscribe({
+              query: query.query,
+              variables: params
+            })
+            .subscribe({
+              next: d => query.success.call(this, d),
+              error: e => query.error.call(this, e)
+            })
+          )
+        } else {
+          console.warn("Unmanaged query:", query)
+        }
+      }
+    },
+    async preload ({ params }) {
+      const { graphqlClient } = this.store.get()
+
+      const data = {}
+
+      for (let query of queries) {
+        if (query.type === 'subscription') {
+
+          const res = await graphqlClient.query({
+            query: intoQuery(query.query),
+            variables: params
+          })
+
+          query.success.call({
+            set(newState) { Object.assign(data, newState) }
+          }, res)
+        }
+      }
+
+      return data
+    }
   }
 </script>

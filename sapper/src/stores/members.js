@@ -41,4 +41,34 @@ export default BaseStore =>
         console.log(error)
       }
     }
+
+    async updateMember(id, data) {
+      const {graphqlClient} = this.get();
+      try {
+        return await graphqlClient.mutate({
+          mutation: gql`
+          mutation (
+            $id: Int!,
+            $data: member_set_input
+          ) {
+            update_member(
+              _set:$data,
+              where:{
+                id: {
+                  _eq: $id
+                }
+              }
+            ) {
+              affected_rows
+            }
+          }`,
+          variables: {
+            id: id,
+            data: data
+          }
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }

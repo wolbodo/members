@@ -87,8 +87,10 @@
         }
       }
     },
-    async preload () {
+    async preload ({ params }) {
       const { graphqlClient } = this.store.get()
+
+      console.log("Got params:", params)
 
       const data = {}
 
@@ -96,7 +98,8 @@
         if (query.type === 'subscription') {
 
           const res = await graphqlClient.query({
-            query: intoQuery(query.query)
+            query: intoQuery(query.query),
+            variables: params
           })
 
           query.success.call({
