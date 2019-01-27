@@ -2,18 +2,16 @@
 	<title>Wolbodo</title>
 </svelte:head>
 
-{#if $loggedIn}
-	<MemberList />
-{:else}
-  <h2 class='title'>Welcome to Wolbodo members</h2>
-  <Login />
-{/if}
-
 <script>
 	export default {
-		components: {
-      Login: 'src/components/Login.html',
-			MemberList: 'src/components/MemberList.html',
-		},
+    preload () {
+      const { loggedIn } = this.store.get()
+      if (loggedIn) {
+        this.redirect(302, '/members')
+      } else {
+        this.redirect(302, '/login')
+      }
+      return {}
+    }
 	}
 </script>

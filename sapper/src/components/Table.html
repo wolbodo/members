@@ -18,7 +18,12 @@
               {#if column.component}
                 <svelte:component this={column.component} {row} {column} />
               {:else}
-                {row[column.field]}
+                {#if row[column.field] === null}
+                  <span class='has-size-2 has-text-grey-lighter'>ø</span>
+                {:else}
+                  {row[column.field]}
+                {/if}
+                
               {/if}
             </td>
           {/each}
