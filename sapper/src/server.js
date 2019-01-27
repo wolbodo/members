@@ -14,7 +14,10 @@ import http from 'http'
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-import createStore from './stores'
+import moment from 'moment'
+
+import { parse } from 'src/lib/jwt'
+import createStore from 'src/stores'
 
 function authorize(req, res, next) {
   const cookie = (req.headers.cookie || '')
@@ -24,6 +27,18 @@ function authorize(req, res, next) {
       ...o,
       [name.trim()]: decodeURI(value)
     }), {})
+
+  // Check token expiry
+  // console.log("Token:", cookie.token)
+  if (cookie.token) {
+    const parsed = parse(cookie.token)
+    // console.log("Contents:", parsed)  
+    const exp = moment.unix(parsed.exp)
+    console.log("exp:", moment(), exp, moment().isAfter(exp))
+    // req.token ? next() : ((res.statusCode=401) && res.end('No token!'));
+
+  }
+
 
   req.token = cookie.token
 
