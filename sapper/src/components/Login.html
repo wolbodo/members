@@ -2,11 +2,13 @@
 <section>
   <form on:submit='login(event)'>
     <EmailField horizontal
+      disabled={loading}
       label='Email'
       value={email || ''}
       on:change="set({ email: event })"
     />
     <PasswordField horizontal
+      disabled={loading}
       label='Password'
       value={password || ''}
       on:change="set({ password: event })"
@@ -68,6 +70,7 @@
         e.preventDefault()
         e.stopPropagation()
         try {
+          this.set({ loading: true })
           const res = await fetch('/auth/login', {
             method: 'POST',
             headers: {
@@ -87,6 +90,7 @@
             }
           })
 
+          this.set({ loading: false })
           this.store.set({
             authToken: data.jwt
           })
