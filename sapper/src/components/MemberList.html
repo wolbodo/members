@@ -16,21 +16,23 @@
   </span>
 </div>
 
-{#await getMembers}
-  <p>Loading</p>
-{:then result}
-  <Table
-    filter={filter}
-    data={result.data.active_member}
-    columns={columns}
-    rowUrl={row => `/members/${row.name}`}
-  />
-{:catch error}
+{#if error}
   <div class="error notification is-danger">
     <h3 class='title'>Error</h3>
     {JSON.stringify(error, null, 2)}
   </div>
-{/await}
+{/if}
+
+{#if !members}
+  <p>Loading</p>
+{:else}
+  <Table
+    filter={filter}
+    data={members}
+    columns={columns}
+    rowUrl={row => `/members/${row.name}`}
+  />
+{/if}
 
 <style>
   .error.notification {
@@ -40,16 +42,8 @@
 </style>
 
 <script>
-
-import { subscription, query } from 'svelte-apollo'
 import MemberNameField from 'src/components/MemberNameField.html'
 import gql from 'graphql-tag';
-
-const GET_MEMBERS = gql`subscription {
-  active_member {
-    id name email phone
-  }
-}`
 
 export default {
   components: {
@@ -58,7 +52,7 @@ export default {
   data() {
     return {
       filter: '',
-      getMembers: subscription(GET_MEMBERS),
+      // getMembers: subscription(GET_MEMBERS),
       columns: [
         { name: 'Name', field: 'name', component: MemberNameField },
         { name: 'Email', field: 'email' },
@@ -67,6 +61,23 @@ export default {
     }
   },
   oncreate() {
+    const { graphqlClient } = this.store.get()
+    const query = graphqlClient.subscribe({
+      query: gql`subscription {
+        members: active_member {
+          id name email phone
+        }
+      }`
+    })
+
+    this.subscription = query.subscribe({
+      next: ({ data }) =>this.set({ members: data.members }),
+      error: (err) => this.set({ error: err }),
+      complete: () => console.log('Finished')
+    })
   },
+  ondestroy() {
+    this.subscription.unsubscribe()
+  }
 }
 </script>
