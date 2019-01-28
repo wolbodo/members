@@ -50,6 +50,7 @@ build:
 deploy:master:
   stage: deploy
   script:
+    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
     - cp .env.default .env
     - docker-compose pull
     - docker-compose

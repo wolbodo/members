@@ -2,11 +2,6 @@ version: '3.6'
 
 services:
   sapper:
-    image: registry.dxlb.nl/wolbodo/members:latest
-    environment:
-      NODE_ENV: production
-
-  sapper:
     build: sapper
     command: >
       /bin/sh -c "
