@@ -44,10 +44,6 @@ services:
       - graphql
     volumes:
       - ./sapper/src:/app/src
-      - ./sapper/webpack.config.js:/app/webpack.config.js
-
-    volumes:
-      - ./sapper/src:/app/src
       - ./sapper/static:/app/static
       - ./sapper/package.json:/app/package.json
       - ./sapper/yarn.lock:/app/yarn.lock

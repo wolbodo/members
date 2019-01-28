@@ -1,0 +1,66 @@
+stages:
+  - static
+  - image
+  - deploy
+
+variables:
+  HASURA_HOST: api.members.wlbd.nl
+  FRONTEND_HOST: members.wlbd.nl
+
+sapper:
+  stage: static
+  image: node:alpine
+  variables:
+    GRAPHQL_URI: https://api.members.wlbd.nl/v1alpha1/graphql
+  before_script:
+    - echo "Going to build for:$GRAPHQL_URI"
+    - yarn --cwd sapper --pure-lockfile
+  script:
+    - yarn --cwd sapper run build
+  artifacts:
+    paths:
+    - sapper/__sapper__/build
+    expire_in: 1 week
+  cache:
+    paths:
+    - node_modules/
+  only:
+    - master
+
+build:
+  stage: image
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CI_PROJECT_DIR/sapper
+      --dockerfile $CI_PROJECT_DIR/sapper/Dockerfile
+      --destination $CI_REGISTRY_IMAGE:latest
+      --cache=true
+  cache:
+    paths:
+    - /cache
+  dependencies:
+    - sapper
+  only:
+    - master
+
+deploy:master:
+  stage: deploy
+  script:
+    - docker-compose pull
+    - docker-compose up -d
+      -p members
+      -f docker-compose.yaml
+      -f docker-compose.prod.yaml 
+  tags:
+    # Deploy on wlbd vps
+    - wlbd
+  environment:
+    name: production
+    url: https://members.wlbd.nl
+  only:
+    - master
+
