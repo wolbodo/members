@@ -50,6 +50,190 @@
       "event_triggers": []
     },
     {
+      "table": "member",
+      "object_relationships": [],
+      "array_relationships": [
+        {
+          "using": {
+            "foreign_key_constraint_on": {
+              "column": "member_id",
+              "table": "member_role"
+            }
+          },
+          "name": "member_roles",
+          "comment": null
+        }
+      ],
+      "insert_permissions": [
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "set": {
+              "validity": "[now,)"
+            },
+            "check": {},
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "name",
+              "password",
+              "phone",
+              "streetname",
+              "zipcode"
+            ]
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "email",
+              "id",
+              "password"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "id",
+              "modified",
+              "name",
+              "phone",
+              "streetname",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "modified",
+              "name",
+              "password",
+              "phone",
+              "streetname",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "delete_permissions": [],
+      "event_triggers": []
+    },
+    {
+      "table": "member_role",
+      "object_relationships": [
+        {
+          "using": {
+            "foreign_key_constraint_on": "role_id"
+          },
+          "name": "role",
+          "comment": null
+        },
+        {
+          "using": {
+            "foreign_key_constraint_on": "member_id"
+          },
+          "name": "member",
+          "comment": null
+        }
+      ],
+      "array_relationships": [],
+      "insert_permissions": [
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "set": {
+              "validity": "[NOW,)"
+            },
+            "check": {},
+            "columns": [
+              "member_id",
+              "role_id"
+            ]
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "login",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [],
+      "delete_permissions": [
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "filter": {}
+          }
+        }
+      ],
+      "event_triggers": []
+    },
+    {
       "table": "active_member",
       "object_relationships": [],
       "array_relationships": [
@@ -110,120 +294,6 @@
               "phone",
               "streetname",
               "zipcode"
-            ],
-            "filter": {}
-          }
-        }
-      ],
-      "update_permissions": [],
-      "delete_permissions": [],
-      "event_triggers": []
-    },
-    {
-      "table": "member",
-      "object_relationships": [],
-      "array_relationships": [
-        {
-          "using": {
-            "foreign_key_constraint_on": {
-              "column": "member_id",
-              "table": "member_role"
-            }
-          },
-          "name": "member_roles",
-          "comment": null
-        }
-      ],
-      "insert_permissions": [],
-      "select_permissions": [
-        {
-          "role": "login",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "email",
-              "id",
-              "password"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "user",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "city",
-              "country",
-              "email",
-              "fullname",
-              "housenumber",
-              "housenumberaddon",
-              "id",
-              "modified",
-              "name",
-              "phone",
-              "streetname",
-              "validity",
-              "zipcode"
-            ],
-            "filter": {}
-          }
-        }
-      ],
-      "update_permissions": [],
-      "delete_permissions": [],
-      "event_triggers": []
-    },
-    {
-      "table": "member_role",
-      "object_relationships": [
-        {
-          "using": {
-            "foreign_key_constraint_on": "role_id"
-          },
-          "name": "role",
-          "comment": null
-        },
-        {
-          "using": {
-            "foreign_key_constraint_on": "member_id"
-          },
-          "name": "member",
-          "comment": null
-        }
-      ],
-      "array_relationships": [],
-      "insert_permissions": [],
-      "select_permissions": [
-        {
-          "role": "login",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "member_id",
-              "role_id",
-              "note",
-              "validity",
-              "modified"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "user",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "member_id",
-              "role_id",
-              "note",
-              "validity",
-              "modified"
             ],
             "filter": {}
           }

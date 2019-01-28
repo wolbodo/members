@@ -34,7 +34,7 @@ function createServerLink(url, token, role) {
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
   return createAuthLink(token, role).concat(new HttpLink({
-    uri: `http://${uri}`,
+    uri: `${proto}://${uri}`,
     fetch
   }))
 }
@@ -42,15 +42,17 @@ function createBrowserLink(url, token, role = 'anonymous') {
   // Split protocol
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
+  const secure = proto === 'https'
+
   // Create an http link:
   const httpLink = createAuthLink(token, role).concat(new HttpLink({
-    uri: `http://${uri}`,
+    uri: `${proto}://${uri}`,
     fetch
   }))
 
   // Create a WebSocket link:
   const wsLink = new WebSocketLink({
-    uri: `ws://${uri}`,
+    uri: `${secure ? 'wss' : 'ws'}://${uri}`,
     options: {
       reconnect: true,
       connectionParams: {
