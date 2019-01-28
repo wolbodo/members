@@ -1,0 +1,30 @@
+services:
+  sapper:
+    image: registry.dxlb.nl/wolbodo/members:latest
+    environment:
+      NODE_ENV: production
+
+  sapper:
+    build: sapper
+    command: >
+      /bin/sh -c "
+        yarn install --pure-lockfile;
+        yarn run dev;
+      "
+    depends_on:
+      - graphql
+    volumes:
+      - ./sapper/src:/app/src
+      - ./sapper/static:/app/static
+      - ./sapper/package.json:/app/package.json
+      - ./sapper/yarn.lock:/app/yarn.lock
+      - ./sapper/webpack.config.js:/app/webpack.config.js
+      - ./.sapper-cache:/usr/local/share/.cache/yarn/v1
+    environment:
+      NODE_ENV: development
+
+
+networks:
+  default:
+    external:
+      name: dev

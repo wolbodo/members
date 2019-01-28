@@ -54,8 +54,6 @@ deploy:master:
     - docker-compose pull
     - docker-compose
       -p members
-      -f docker-compose.yaml
-      -f docker-compose.prod.yaml 
       up -d
   tags:
     # Deploy on wlbd vps
