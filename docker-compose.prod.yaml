@@ -10,3 +10,8 @@ services:
       NODE_ENV: production
       GRAPHQL_ENDPOINT: $GRAPHQL_ENDPOINT
       GRAPHQL_URI: $GRAPHQL_URI
+
+networks:
+  default:
+    external:
+      name: web
