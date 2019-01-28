@@ -1,0 +1,101 @@
+<heading>
+  <h2 class='title'>Roles</h2>
+
+  <form on:submit|preventDefault|stopPropagation='addRole()'>
+  {#if rolesLoading || rolesFiltered.length}
+  <div class="field has-addons">
+    <p class="control">
+      <span class="select is-loading is-small" class:is-loading='rolesLoading'>
+        <select disabled={rolesLoading} bind:value='selectedRole'>
+          <option value=''>Add a new role</option>
+          {#each rolesFiltered as role}
+            <option value={role.id}>{role.name}</option>
+          {/each}
+        </select>
+      </span>
+    </p>
+    {#if selectedRole}
+      <p class="control">
+        <button type=submit class='button is-small' class:is-loading='addRoleSubmitting'>Add selected role</button>
+      </p>
+    {/if}
+  </div>
+  {/if}
+  </form>
+</heading>
+<section class='tags'>
+  {#each roles as role}
+    <span class="tag is-medium is-primary">
+      {role.name}
+      <button
+        class="button is-primary is-small"
+        class:is-loading='removingRoles.has(role.id)'
+        on:click='removeRole(role.id)'
+      >
+        <span class="icon">
+          <i class="fa fa-times fs-sm"></i>
+        </span>
+      </button>
+    </span>
+  {/each}
+</section>
+
+
+<style>
+  .tag  {
+    padding-right: 0;
+  }
+  .tag .button {
+    margin-left: 0.4rem;
+  }
+
+  heading {
+    display: flex;
+    align-items: baseline;
+  }
+  heading .select {
+    margin-left: 0.4rem;
+  }
+</style>
+
+
+<script>
+  export default {
+    computed: {
+      roleNames: ({ roles }) => roles.map(r => r.name),
+      rolesFiltered: ({ allRoles, roleNames }) => (
+        allRoles
+          ? allRoles.filter(r => !roleNames.includes(r.name))
+          : []
+      )
+    },
+    data () {
+      return {
+        rolesLoading: true,
+        removingRoles: new Set()
+      }
+    },
+    methods: {
+      async addRole() {
+        const { memberId, selectedRole } = this.get() 
+        this.set({ addRoleSubmitting: true })
+        await this.store.addMemberRole(memberId, selectedRole)
+        this.set({ addRoleSubmitting: false, selectedRole: '' })
+      },
+      async removeRole(roleId) {
+        const { removingRoles, memberId } = this.get()
+        console.log("removing role:", roleId)
+        removingRoles.add(roleId)
+        this.set({ removingRoles })
+        await this.store.removeMemberRole(memberId, roleId)
+        removingRoles.delete(roleId)
+        this.set({ removingRoles })
+      }
+    },
+    oncreate () {
+      this.store.allRoles()
+        .then(allRoles => this.set({ rolesLoading: false, allRoles }))
+        .catch(e => console.error(e))
+    }
+  }
+</script>

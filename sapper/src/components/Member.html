@@ -28,104 +28,23 @@
 
   <div class='tile is-parent'>
     <div class='tile is-child'>
-      <heading>
-        <h2 class='title'>Roles</h2>
-
-        <form on:submit|preventDefault|stopPropagation='addRole()'>
-        {#if rolesLoading || rolesFiltered.length}
-        <div class="field has-addons">
-          <p class="control">
-            <span class="select is-loading is-small" class:is-loading='rolesLoading'>
-              <select disabled={rolesLoading} bind:value='selectedRole'>
-                <option value=''>Add a new role</option>
-                {#each rolesFiltered as role}
-                  <option value={role.id}>{role.name}</option>
-                {/each}
-              </select>
-            </span>
-          </p>
-          {#if selectedRole}
-            <p class="control">
-              <button type=submit class='button is-small' class:is-loading='addRoleSubmitting'>Add selected role</button>
-            </p>
-          {/if}
-        </div>
-        {/if}
-        </form>
-      </heading>
-      <section class='tags'>
-        {#each memberRoles as role}
-          <span class="tag is-medium is-primary">
-            {role.name}
-            <button
-              class="button is-primary is-small"
-              class:is-loading='removingRoles.has(role.id)'
-              on:click='removeRole(role.id)'
-            >
-              <span class="icon">
-                <i class="fa fa-times fs-sm"></i>
-              </span>
-            </button>
-          </span>
-        {/each}
-      </section>
+      <MemberRoles
+        memberId={member.id}
+        roles={memberRoles}
+      />
     </div>
   </div>
 </div>
 
 <pre>{JSON.stringify(member, null, 2)}</pre>
 
-<style>
-  .tag  {
-    padding-right: 0;
-  }
-  .tag .button {
-    margin-left: 0.4rem;
-  }
-
-  heading {
-    display: flex;
-    align-items: baseline;
-  }
-  heading .select {
-    margin-left: 0.4rem;
-  }
-</style>
-
 <script>
   export default {
     computed: {
       memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
-      memberRoleNames: ({ memberRoles }) => memberRoles.map(r => r.name),
-      rolesFiltered: ({ roles, memberRoleNames }) => roles && roles.filter(r => !memberRoleNames.includes(r.name)) || []
     },
-    data () {
-      return {
-        rolesLoading: true,
-        removingRoles: new Set()
-      }
-    },
-    methods: {
-      async addRole() {
-        const { member, selectedRole } = this.get() 
-        this.set({ addRoleSubmitting: true })
-        await this.store.addMemberRole(member.id, selectedRole)
-        this.set({ addRoleSubmitting: false, selectedRole: '' })
-      },
-      async removeRole(roleId) {
-        const { removingRoles, member } = this.get()
-        console.log("Removing role:", roleId)
-        removingRoles.add(roleId)
-        this.set({ removingRoles })
-        await this.store.removeMemberRole(member.id, roleId)
-        removingRoles.delete(roleId)
-        this.set({ removingRoles })
-      }
-    },
-    oncreate () {
-      this.store.allRoles()
-        .then(roles => this.set({ rolesLoading: false, roles }))
-        .catch(e => console.error(e))
+    components: {
+      MemberRoles: './MemberRoles.html'
     }
   }
 </script>
