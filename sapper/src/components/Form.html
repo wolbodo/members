@@ -1,0 +1,65 @@
+<form on:submit|preventDefault|stopPropagation="submit()">
+  {#each fields as {
+    type, label, placeholder, name,
+    required
+  }}
+    {#if type === 'email'}
+      <EmailField
+        {required} {label}
+        {placeholder}
+        value={data[name]}
+        disabled={loading}
+        on:change="change(name, event)"
+      />
+    {:else}
+      <TextField
+        {required} {label}
+        {placeholder}
+        value={data[name]}
+        disabled={loading}
+        on:change="change(name, event)"
+      />
+    {/if}
+  {/each}
+  <div class="buttons is-right">
+    <button type=reset class="button" class:is-loading='loading' disabled="{loading}" on:click="fire('cancel')">Cancel</button>
+    <button type=submit class="button is-primary" class:is-loading='loading' disabled="{loading}">Save</button>
+  </div>
+</form>
+
+<script>
+
+  import {
+    TextField,
+    EmailField,
+  } from 'svelte-bulma-forms/module'
+
+
+  export default {
+    components: {
+      TextField, EmailField
+    },
+    data () {
+      return {
+        changes: new Map(),
+        loading: false
+      }
+    },
+    methods: {
+      change (field, value) {
+        const { changes, data } = this.get()
+        if (value === data[field]) {
+          // Nothing changed
+          changes.delete(field)
+        } else {
+          changes.set(field, value)
+        }
+        this.set({ changes })
+      },
+      submit () {
+        const { changes } = this.get()
+        this.fire('submit', changes)
+      }
+    }
+  }
+</script>

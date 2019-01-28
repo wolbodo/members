@@ -6,15 +6,50 @@
 <div class="tile is-ancestor is-vertical">
   <div class='tile is-parent'>
     <div class="tile is-child box">
-      <h1 class='title'>{member.name}</h1>
-      {#if member.fullname}
-        <p>{member.fullname}</p>
-      {/if}
-      {#if member.email}
-        <a href='mailto:{member.email}'>{member.email}</a>
-      {/if}
-      {#if member.phone}
-        <a href='tel:{member.phone}'>{member.phone}</a>
+      <h1 class='title'>
+        {member.name}
+        <button
+          class="button is-small"
+          on:click="open('identity')"
+        >
+          <span class="icon">
+            <i class="fas fa-edit"></i>
+          </span>
+        </button>
+      </h1>
+      {#if edit.has('identity')}
+        <Form
+          on:submit="submit('identity', event)"
+          on:cancel="close('identity')"
+          loading={submitting.has('identity')}
+          data={member}
+          fields={[{
+            name: 'fullname',
+            required: true,
+            label: 'Full name',
+            placeholder: 'Thatcher Peskens',
+          }, {
+            type: 'email',
+            name: 'email',
+            required: true,
+            label: 'Email',
+            placeholder: 'thatcher@example.com',
+          }, {
+            name: 'phone',
+            label: 'Phone',
+            placeholder: '+31 000 0000 000',
+          }]}
+        />
+      {:else}
+        {#if member.fullname}
+          <p>{member.fullname}</p>
+        {/if}
+        {#if member.email}
+          <a href='mailto:{member.email}'>{member.email}</a>
+        {/if}
+        {#if member.phone}
+          <a href='tel:{member.phone}'>{member.phone}</a>
+        {/if}
       {/if}
     </div>
 
@@ -38,13 +73,61 @@
 
 <pre>{JSON.stringify(member, null, 2)}</pre>
 
+<style>
+  .tile.is-child {
+    padding: 0.5rem;
+  }
+  .title {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+
+
 <script>
+
   export default {
     computed: {
       memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
     },
     components: {
-      MemberRoles: './MemberRoles.html'
+      MemberRoles: './MemberRoles.html',
+      Form: './Form.html'
+    },
+    data () {
+      return {
+        edit: new Set(),
+        submitting: new Set(),
+      }
+    },
+    methods: {
+      async submit(name, data) {
+        const { member, edit, submitting } = this.get()
+        if (data.size !== 0) {
+          console.log("Submit:", name, data)
+          submitting.add(name)
+          this.set({ submitting })
+
+          await this.store.updateMember(
+            member.id,
+            Object.fromEntries(data.entries())
+          )
+          submitting.delete(name)
+        }
+        edit.delete(name)
+        this.set({ submitting, edit })
+      },
+      open(name) {
+        console.log("Open form:", name)
+        const { edit } = this.get()
+        edit.add(name)
+        this.set({ edit })
+      },
+      close(name) {
+        const { edit } = this.get()
+        edit.delete(name)
+        this.set({ edit })
+      }
     }
   }
 </script>
