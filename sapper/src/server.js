@@ -61,7 +61,7 @@ polka() // You can also use Express
       store: request => {
         return createStore({
           server: true, // ugly
-          graphqlUri: process.env.GRAPHQL_ENDPOINT,
+          graphqlUri: process.env.GRAPHQL_LOCAL_URI,
           authToken: request.token,
           memberFilter: '',
         })

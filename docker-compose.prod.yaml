@@ -2,6 +2,7 @@ version: '3.6'
 
 services:
   sapper:
+    build: false
     image: $CI_REGISTRY_IMAGE:latest
     depends_on:
       - graphql

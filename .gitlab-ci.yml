@@ -50,6 +50,7 @@ build:
 deploy:master:
   stage: deploy
   script:
+    - cp .env.default .env
     - docker-compose pull
     - docker-compose
       -p members
