@@ -93,7 +93,28 @@ export default BaseStore =>
       } catch (error) {
         console.log(error)
       }
-
+    }
+    async removeMemberRole(memberId, roleId) {
+      const {graphqlClient} = this.get();
+      try {
+        const res = await graphqlClient.mutate({
+          mutation: gql`mutation addMemberRole($memberId: Int!, $roleId:Int!) {
+            delete_member_role(where:{
+              member_id:{_eq: $memberId},
+              role_id:{_eq: $roleId}
+            }) {
+              affected_rows
+            }
+          }`,
+          variables: {
+            memberId, roleId
+          }
+        })
+        console.log("Added member to role:", res)
+        return res
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     async allRoles() {

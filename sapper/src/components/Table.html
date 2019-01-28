@@ -11,8 +11,7 @@
       <tr><td>No members found.</td></tr>
     {:else}
       {#each filteredData as row (row.id)}
-        <tr on:click="gotoRow(row)"
-            style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}">
+        <tr style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}">
           {#each columns as column}
             <td>
               {#if column.component}
@@ -37,8 +36,6 @@
   tr:hover {
     background-color: #C6F4D5;
     color: #000;
-
-    cursor: pointer;
   }
 </style>
 
@@ -61,15 +58,6 @@
           })).sort((a, b) => a.distance - b.distance)
         }
         return data
-      }
-    },
-    methods: {
-      gotoRow(row) {
-        const { rowUrl } = this.get()
-
-        if (rowUrl) {
-          goto(rowUrl(row))
-        } 
       }
     }
   }

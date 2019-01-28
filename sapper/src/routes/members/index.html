@@ -43,6 +43,7 @@
 
 <script>
 import MemberNameField from 'src/components/MemberNameField.html'
+import MemberRolesField from 'src/components/MemberRolesField.html'
 import gql from 'graphql-tag';
 
 const intoQuery = ({ definitions, ...rest }) => (
@@ -60,7 +61,14 @@ const queries = [{
   type: 'subscription',
   query: gql`subscription {
     members: active_member {
-      id name email phone
+      id name email phone 
+      fullname
+      member_roles {
+        role {
+          id
+          name
+        }
+      }
     }
   }`,
   success({ data }) {
@@ -80,8 +88,10 @@ export default {
       // getMembers: subscription(GET_MEMBERS),
       columns: [
         { name: 'Name', field: 'name', component: MemberNameField },
+        { name: 'Full Name', field: 'fullname' },
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
+        { name: 'Roles', field: 'member_roles', component: MemberRolesField },
       ]
     }
   },
@@ -110,22 +120,29 @@ export default {
   ondestroy() {
     this.subscriptions.map(s => s.unsubscribe())
   },
-  async preload () {
+  async preload (pp) {
     const { graphqlClient } = this.store.get()
+
+    console.log("Got p:", pp)
 
     const data = {}
 
-    for (let query of queries) {
-      if (query.type === 'subscription') {
+    try {
 
-        const res = await graphqlClient.query({
-          query: intoQuery(query.query)
-        })
+      for (let query of queries) {
+        if (query.type === 'subscription') {
 
-        query.success.call({
-          set(newState) { Object.assign(data, newState) }
-        }, res)
+          const res = await graphqlClient.query({
+            query: intoQuery(query.query)
+          })
+
+          query.success.call({
+            set(newState) { Object.assign(data, newState) }
+          }, res)
+        }
       }
+    } catch (e) {
+      console.log("Error:", e)
     }
 
     return data

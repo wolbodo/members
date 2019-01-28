@@ -31,6 +31,7 @@
       <heading>
         <h2 class='title'>Roles</h2>
 
+        <form on:submit|preventDefault|stopPropagation='addRole()'>
         {#if rolesLoading || rolesFiltered.length}
         <div class="field has-addons">
           <p class="control">
@@ -45,17 +46,22 @@
           </p>
           {#if selectedRole}
             <p class="control">
-              <button on:click="addRole()" class='button is-small' class:is-loading='addRoleSubmitting'>Add selected role</button>
+              <button type=submit class='button is-small' class:is-loading='addRoleSubmitting'>Add selected role</button>
             </p>
           {/if}
         </div>
         {/if}
+        </form>
       </heading>
       <section class='tags'>
         {#each memberRoles as role}
           <span class="tag is-medium is-primary">
-            {role}
-            <button class="button is-primary is-small">
+            {role.name}
+            <button
+              class="button is-primary is-small"
+              class:is-loading='removingRoles.has(role.id)'
+              on:click='removeRole(role.id)'
+            >
               <span class="icon">
                 <i class="fa fa-times fs-sm"></i>
               </span>
@@ -89,12 +95,14 @@
 <script>
   export default {
     computed: {
-      memberRoles: ({ member }) => member.member_roles.map(ur => ur.role.name),
-      rolesFiltered: ({ roles, memberRoles }) => roles && roles.filter(r => !memberRoles.includes(r.name)) || []
+      memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
+      memberRoleNames: ({ memberRoles }) => memberRoles.map(r => r.name),
+      rolesFiltered: ({ roles, memberRoleNames }) => roles && roles.filter(r => !memberRoleNames.includes(r.name)) || []
     },
     data () {
       return {
-        rolesLoading: true
+        rolesLoading: true,
+        removingRoles: new Set()
       }
     },
     methods: {
@@ -102,8 +110,17 @@
         const { member, selectedRole } = this.get() 
         this.set({ addRoleSubmitting: true })
         await this.store.addMemberRole(member.id, selectedRole)
-        this.set({ addRoleSubmitting: false, selectedRole: undefined })
+        this.set({ addRoleSubmitting: false, selectedRole: '' })
       },
+      async removeRole(roleId) {
+        const { removingRoles, member } = this.get()
+        console.log("Removing role:", roleId)
+        removingRoles.add(roleId)
+        this.set({ removingRoles })
+        await this.store.removeMemberRole(member.id, roleId)
+        removingRoles.delete(roleId)
+        this.set({ removingRoles })
+      }
     },
     oncreate () {
       this.store.allRoles()
