@@ -91,65 +91,71 @@ function createClient(link) {
 export default BaseStore =>
   class Store extends BaseStore {
     constructor (init) {
+      
+      const lsData = {}
+      if (global.localStorage) {
+        const user = localStorage.getItem('user')
+        if (user) {
+          lsData.user = JSON.parse(user)
+        }
+        lsData.token = localStorage.getItem('token')
+      }
+
       super({
         role: 'user',
+        ...lsData,
         ...init
       })
 
+
       this.on('state', ({changed, current}) => {
-        if ('authToken' in changed) {
-          console.log("Got local token: store it:", current.authToken)
-          if (current.authToken) {
-            localStorage.setItem('token', current.authToken)
-          } else {
-            localStorage.removeItem('token')
+        if (global.localStorage) {
+          if (changed.token) {
+            if (current.token) {
+              localStorage.setItem('token', current.token)
+            } else {
+              localStorage.removeItem('token')
+            }
           }
-        } else if (!current.authToken) {
-          // Try reading from localstorage
-          if (global.localStorage) {
-            const local = localStorage.getItem('token')
-            if (local) {
-              console.log("Setting local token:", local)
-              this.set({
-                authToken: local
-              })
+          if (changed.user) {
+            if (current.user) {
+              localStorage.setItem('user', JSON.stringify(current.user))
+            } else {
+              localStorage.removeItem('user')
             }
           }
         }
       })
 
-      this.compute('graphqlClient', ['authToken', 'graphqlUri', 'role', 'server'],
-        (authToken, graphqlUri, role, server) => 
-          (authToken && graphqlUri) && (
+      this.compute('graphqlClient', ['token', 'graphqlUri', 'role', 'server'],
+        (token, graphqlUri, role, server) => 
+          (token && graphqlUri) && (
             server ? 
               createClient(
-                createServerLink(graphqlUri, authToken, role)
+                createServerLink(graphqlUri, token, role)
               )
               : 
               createClient(
-                createBrowserLink(graphqlUri, authToken, role)
+                createBrowserLink(graphqlUri, token, role)
               )
           )
       )
 
-      // this.compute('graphql', ['graphqlClient'],
-      //   (client) => client && createProvider(client)
-      // )
-      
-      this.compute('loggedIn', ['authToken'], authToken => !!authToken)
+      this.compute('loggedIn', ['token'], token => !!token)
 
-      this.compute('authTokenParsed', ['authToken'],
-        (authToken) => jwt.parse(authToken)
+      this.compute('tokenParsed', ['token'],
+        (token) => jwt.parse(token)
       )
 
-      this.compute('roles', ['authTokenParsed'],
+      this.compute('roles', ['tokenParsed'],
         (token) => token && token['https://hasura.io/jwt/claims']['x-hasura-allowed-roles'] || []
       )
     }
 
     async logout () {
       this.set({
-        authToken: undefined
+        token: undefined,
+        user: undefined
       })
       await fetch('/auth/logout')
       goto('/', { replaceState: true })

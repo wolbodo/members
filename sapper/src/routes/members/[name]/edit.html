@@ -9,6 +9,9 @@
 {#if !member}
   <p>Loading</p>
 {:else}
+  {#if isSelf}
+    <h2>Hoi daar zelf</h2>
+  {/if}
   <MemberEdit {member} {loading} on:submit='handleUpdate(event)'/>
 {/if}
 
@@ -62,6 +65,9 @@
   export default {
     components: {
       MemberEdit: 'src/components/MemberEdit.html'
+    },
+    computed: {
+      isSelf: ({ $user, params: { name } }) => $user && ($user.name === name)
     },
     methods: {
       async handleUpdate (data) {

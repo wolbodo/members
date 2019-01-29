@@ -54,15 +54,64 @@
     </div>
 
     <div class="tile is-child box">
-      <h2 class='title'>Address</h2>
-      <p>{member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
-      <p>{member.zipcode} {member.city}</p>
-      <p>{member.country}</p>
+      <h1 class='title'>
+        Address
+        <button
+          class="button is-small"
+          on:click="open('address')"
+        >
+          <span class="icon">
+            <i class="fas fa-edit"></i>
+          </span>
+        </button>
+      </h1>
+      {#if edit.has('address')}
+        <Form
+          on:submit="submit('address', event)"
+          on:cancel="close('address')"
+          loading={submitting.has('address')}
+          data={member}
+          fields={[{
+            name: 'streetname',
+            required: true,
+            label: 'Street',
+            placeholder: 'Verwersdijk',
+          }, {
+            name: 'housenumber',
+            required: true,
+            label: 'Number',
+            placeholder: '102',
+          }, {
+            name: 'housenumberaddon',
+            label: 'Number addon',
+            placeholder: ''
+          }, {
+            name: 'zipcode',
+            label: 'Zipcode',
+            placeholder: '2611 NK',
+          }, {
+            name: 'city',
+            label: 'City',
+            placeholder: 'Delft',
+          }, {
+            name: 'country',
+            label: 'Country',
+            placeholder: 'Nederland',
+          }]}
+        />
+      {:else}
+        <p>{member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
+        <p>{member.zipcode} {member.city}</p>
+        <p>{member.country}</p>
+      {/if}
     </div>
   </div>
 
   <div class='tile is-parent'>
-    <div class='tile is-child'>
+    <div class='tile is-child box is-6'>
+      <h1 class='title'>
+        Roles
+      </h1>
       <MemberRoles
         memberId={member.id}
         roles={memberRoles}

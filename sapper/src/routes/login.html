@@ -92,7 +92,8 @@
 
           this.set({ loading: false })
           this.store.set({
-            authToken: data.jwt
+            token: data.jwt,
+            user: data.user
           })
 
         } catch (e) {

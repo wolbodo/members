@@ -1,8 +1,5 @@
-<heading>
-  <h2 class='title'>Roles</h2>
-
-  <form on:submit|preventDefault|stopPropagation='addRole()'>
-  {#if rolesLoading || rolesFiltered.length}
+{#if edit}
+<form on:submit|preventDefault|stopPropagation='addRole()'>
   <div class="field has-addons">
     <p class="control">
       <span class="select is-loading is-small" class:is-loading='rolesLoading'>
@@ -20,13 +17,14 @@
       </p>
     {/if}
   </div>
-  {/if}
-  </form>
-</heading>
+</form>
+{/if}
+
 <section class='tags'>
   {#each roles as role}
-    <span class="tag is-medium is-primary">
+    <span class="tag is-medium is-primary" class:edit="edit">
       {role.name}
+      {#if edit}
       <button
         class="button is-primary is-small"
         class:is-loading='removingRoles.has(role.id)'
@@ -36,26 +34,20 @@
           <i class="fa fa-times fs-sm"></i>
         </span>
       </button>
+      {/if}
     </span>
   {/each}
 </section>
 
 
 <style>
-  .tag  {
+  .tag.edit  {
     padding-right: 0;
   }
-  .tag .button {
+  .tag.edit .button {
     margin-left: 0.4rem;
   }
 
-  heading {
-    display: flex;
-    align-items: baseline;
-  }
-  heading .select {
-    margin-left: 0.4rem;
-  }
 </style>
 
 
@@ -71,6 +63,7 @@
     },
     data () {
       return {
+        edit: true,
         rolesLoading: true,
         removingRoles: new Set()
       }

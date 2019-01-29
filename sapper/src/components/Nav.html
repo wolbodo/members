@@ -56,6 +56,11 @@
       <div class="navbar-item">
         <div class="buttons">
           {#if $loggedIn}
+            {#if $user}
+            <a href='/members/{$user.name}' class="button">
+              {$user.name}
+            </a>
+            {/if}
             <button class="button is-primary" class:is-loading='loading' disabled="{loading}" on:click='logout()'>
               Log out
             </button>

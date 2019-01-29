@@ -21,7 +21,7 @@ export async function post(req, res, next) {
       query: gql`
         query($email: String) {
           active_member(where:{email:{_eq:$email}}) {
-            id email password
+            id name email password
             member_roles {
               role {
                 name
@@ -47,7 +47,13 @@ export async function post(req, res, next) {
           'Set-Cookie': `token=${jwt}; path=/`,
         })
         res.end(JSON.stringify({
-          jwt, member
+          jwt,
+          user: {
+            id: member.id,
+            email: member.email,
+            name: member.name,
+            roles: member.member_roles.map(mr => mr.role.name)
+          }
         }))
         return
       }

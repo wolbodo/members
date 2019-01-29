@@ -36,9 +36,7 @@ function authorize(req, res, next) {
     const exp = moment.unix(parsed.exp)
     console.log("exp:", moment(), exp, moment().isAfter(exp))
     // req.token ? next() : ((res.statusCode=401) && res.end('No token!'));
-
   }
-
 
   req.token = cookie.token
 
@@ -62,7 +60,7 @@ polka() // You can also use Express
         return createStore({
           server: true, // ugly
           graphqlUri: process.env.GRAPHQL_LOCAL_URI,
-          authToken: request.token,
+          token: request.token,
           memberFilter: '',
         })
       }
