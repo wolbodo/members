@@ -5,7 +5,7 @@ import * as JWT from 'src/lib/jwt'
 import createStore from 'src/stores'
 
 
-export async function post(req, res, next) {
+export async function post(req, res) {
   const store = createStore()
   const token = JWT.create({
     id: -1,
@@ -55,7 +55,6 @@ export async function post(req, res, next) {
             roles: member.member_roles.map(mr => mr.role.name)
           }
         }))
-        return
       }
     }
     res.writeHead(401, {

@@ -20,6 +20,13 @@ services:
     environment:
       NODE_ENV: development
 
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    environment:
+      MH_HOSTNAME: members-mail-1.dev.dock
 
 networks:
   default:
