@@ -1,6 +1,8 @@
 
 "use strict";
 import nodemailer from "nodemailer"
+import mails from 'src/mails'
+import { JSDOM } from 'jsdom'
 
 // async..await is not allowed in global scope, must use a wrapper
 export async function get (req, res) {
@@ -16,13 +18,24 @@ export async function get (req, res) {
     secure: false, // true for 465, false for other ports
   });
 
+  const { html, head } = mails.test.render({ name: 'Dingo'}) 
+
+  // Parse the head to get the subject and text
+  const dom = new JSDOM(head);
+  const subjectEl = dom.window.document.querySelector("title")
+  const subject = subjectEl.textContent || ''
+  const text = dom.window.document.body.textContent.trim()
+
+  subjectEl.remove()
+  console.log({
+    subject, text
+  }); // "Hello world"
+
   // setup email data with unicode symbols
   let mailOptions = {
     from: '"Fred Foo 👻" <foo@example.com>', // sender address
     to: "bar@example.com, baz@example.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>" // html body
+    subject, text, html
   };
 
   // send mail with defined transport object

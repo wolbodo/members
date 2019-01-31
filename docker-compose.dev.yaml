@@ -10,6 +10,7 @@ services:
       "
     depends_on:
       - graphql
+      - mail
     volumes:
       - ./sapper/src:/app/src
       - ./sapper/static:/app/static
