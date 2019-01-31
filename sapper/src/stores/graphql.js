@@ -81,6 +81,7 @@ function createBrowserLink(url, token, role = 'anonymous') {
 }
 
 function createClient({ graphqlUri, token, role, cacheInit }) {
+  console.log("Creating client:", graphqlUri, token, role, cacheInit)
   const cache = new InMemoryCache()
   if (cacheInit) {
     console.log("Using cache init", cacheInit)

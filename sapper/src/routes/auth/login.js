@@ -4,8 +4,9 @@ import gql from 'graphql-tag'
 import * as JWT from 'src/lib/jwt'
 import createStore from 'src/stores'
 
+const { GRAPHQL_LOCAL_URI } = process.env;
+
 export async function post(req, res) {
-  const store = createStore()
   const token = JWT.create({
     id: -1,
     name: 'login',
@@ -13,10 +14,15 @@ export async function post(req, res) {
       { role: { name: 'login'}}
     ]
   }, 'login');
-  const client = store.getServerClient('http://graphql/v1alpha1/graphql', token, 'login')
+
+  const store = createStore({
+    graphqlUri: GRAPHQL_LOCAL_URI,
+    token,
+    role: 'login'
+  })
 
   try {
-    const result = await client.query({
+    const result = await store.gqlQuery({
       query: gql`
         query($email: String) {
           active_member(where:{email:{_eq:$email}}) {
