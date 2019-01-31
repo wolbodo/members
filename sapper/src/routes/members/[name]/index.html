@@ -9,12 +9,14 @@
 {#if !member}
   <p>Loading</p>
 {:else}
+  {#if isSelf}
+    <h2>Hoi daar zelf</h2>
+  {/if}
   <Member {member} />
 {/if}
 
 <script>
-  import gql from 'graphql-tag';
-
+  import gql from 'graphql-tag'
     
   const intoQuery = ({ definitions, ...rest }) => (
     {
@@ -62,6 +64,9 @@
   export default {
     components: {
       Member: 'src/components/Member.html',
+    },
+    computed: {
+      isSelf: ({ $user, params: { name } }) => $user && ($user.name === name)
     },
     oncreate() {
       const { graphqlClient } = this.store.get()
