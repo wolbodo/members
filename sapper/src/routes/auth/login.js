@@ -4,7 +4,6 @@ import gql from 'graphql-tag'
 import * as JWT from 'src/lib/jwt'
 import createStore from 'src/stores'
 
-
 export async function post(req, res) {
   const store = createStore()
   const token = JWT.create({

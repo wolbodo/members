@@ -80,12 +80,19 @@ function createBrowserLink(url, token, role = 'anonymous') {
   return link
 }
 
-function createClient(link) {
+function createClient({ graphqlUri, token, role, cacheInit }) {
+  const cache = new InMemoryCache()
+  if (cacheInit) {
+    console.log("Using cache init", cacheInit)
+    cache.restore(cacheInit)
+  }
   return new ApolloClient({
-    link,
-    cache: new InMemoryCache()
+    link: (global.WebSocket
+      ? createBrowserLink(graphqlUri, token, role)
+      : createServerLink(graphqlUri, token, role)
+    ),
+    cache
   });
-
 }
 
 export default BaseStore =>
@@ -127,18 +134,10 @@ export default BaseStore =>
         }
       })
 
-      this.compute('graphqlClient', ['token', 'graphqlUri', 'role', 'server'],
-        (token, graphqlUri, role, server) => 
-          (token && graphqlUri) && (
-            server ? 
-              createClient(
-                createServerLink(graphqlUri, token, role)
-              )
-              : 
-              createClient(
-                createBrowserLink(graphqlUri, token, role)
-              )
-          )
+      this.compute('graphqlClient', ['token', 'graphqlUri', 'role'],
+        (token, graphqlUri, role) => (
+          (token && graphqlUri) && createClient({ graphqlUri, token, role })
+        )
       )
 
       this.compute('loggedIn', ['token'], token => !!token)
@@ -163,5 +162,21 @@ export default BaseStore =>
 
     getServerClient(url, token, role = 'user') {
       return createClient(createServerLink(url, token, role))
+    }
+
+    gqlQuery (options) {
+      const { graphqlClient, graphqlUri, token } = this.get()
+      if (!graphqlClient) throw new Error('No grapqhl client present')
+      return graphqlClient.query(options)
+    }
+    gqlMutation (options) {
+      const { graphqlClient } = this.get()
+      if (!graphqlClient) throw new Error('No grapqhl client present')
+      return graphqlClient.mutate(options)
+    }
+    gqlSubscription (options) {
+      const { graphqlClient } = this.get()
+      if (!graphqlClient) throw new Error('No grapqhl client present')
+      return graphqlClient.subscribe(options)
     }
   }

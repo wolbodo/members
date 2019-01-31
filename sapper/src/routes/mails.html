@@ -1,0 +1,175 @@
+<h1 class='title'>Emails</h1>
+<div class="field is-grouped">
+  <p class="control">
+    <span class="select is-small" class:is-loading='membersLoading'>
+      <select disabled={membersLoading} bind:value='selectedMember'>
+        {#each members as member}
+          <option value={member.id}>{member.name}</option>
+        {/each}
+      </select>
+    </span>
+    <span class="select is-small" class:is-loading='membersLoading'>
+      <select bind:value='template'>
+        <option>test</option>
+        <option>password-reset</option>
+      </select>
+    </span>
+    <button on:click='sentTest(selectedMember, template)' class="button is-primary">
+      <span class="icon">
+        <i class="fas fa-plus"></i>
+      </span>
+      <span>Send test email</span>
+    </button>
+  </p>
+</div>
+
+{#if error}
+  <div class="error notification is-danger">
+    <h3 class='title'>Error</h3>
+    {JSON.stringify(error, null, 2)}
+  </div>
+{/if}
+
+{#if !emails}
+  <p>Loading</p>
+{:else}
+  <Table
+    data={emails}
+    columns={columns}
+  />
+{/if}
+
+<style>
+  .error.notification {
+    white-space: pre-wrap;
+    margin: 1em 0;
+  }
+</style>
+
+<script>
+import gql from 'graphql-tag';
+
+const intoQuery = ({ definitions, ...rest }) => (
+  {
+    definitions: definitions.map(
+      def => ({
+        ...def,
+        operation: 'query',
+      })),
+    ...rest
+  }
+)
+
+const queries = [{
+  type: 'subscription',
+  query: gql`subscription {
+    mail(order_by:{id:desc}) {
+      id member { name } status template
+    }
+  }`,
+  success({ data }) {
+    this.set({ emails: data.mail })
+  },
+  error(err) { this.set({ error: err }) }
+}, {
+  type: 'subscription',
+  query: gql`subscription {
+    member {
+      id name
+    }
+  }`,
+  success({ data }) {
+    this.set({ members: data.member })
+  },
+  error(err) { this.set({ error: err }) }
+}]
+
+export default {
+  components: {
+    Table: 'src/components/Table.html'
+  },
+  data() {
+    return {
+      filter: '',
+      // getMembers: subscription(GET_MEMBERS),
+      columns: [
+        { name: 'ID', field: 'id' },
+        { name: 'Status', field: 'status' },
+        { name: 'Template', field: 'template' },
+      ]
+    }
+  },
+  methods: {
+    sentTest (memberId, template) {
+      this.store.gqlMutation({
+        mutation: gql`mutation sentTest($memberId: Int!, $template: String!) {
+          insert_mail(objects:{
+            member_id:$memberId,
+            template:$template,
+            data: {
+              link: "https://dxlb.nl"
+            }
+          }) {
+            returning {
+              id data status
+            }
+          }
+        }`,
+        variables: {
+          memberId, template
+        }
+      })      
+    }
+  },
+  oncreate() {
+    const { graphqlClient } = this.store.get()
+
+    this.subscriptions = []
+
+    for (let query of queries) {
+      console.log("Creating:", query)
+      if (query.type === 'subscription') {
+        this.subscriptions.push(
+          graphqlClient.subscribe({
+            query: query.query
+          })
+          .subscribe({
+            next: d => query.success.call(this, d),
+            error: e => query.error.call(this, e)
+          })
+        )
+      } else {
+        console.warn("Unmanaged query:", query)
+      }
+    }
+  },
+  ondestroy() {
+    this.subscriptions.map(s => s.unsubscribe())
+  },
+  async preload (pp) {
+    const { graphqlClient } = this.store.get()
+
+    const data = {}
+
+    try {
+
+      for (let query of queries) {
+        if (query.type === 'subscription') {
+
+          const res = await graphqlClient.query({
+            query: intoQuery(query.query)
+          })
+
+          query.success.call({
+            set(newState) { Object.assign(data, newState) }
+          }, res)
+        }
+      }
+    } catch (e) {
+      console.log("Error:", e)
+    }
+
+    return data
+  }
+}
+</script>

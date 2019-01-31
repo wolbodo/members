@@ -15,8 +15,8 @@ CREATE TABLE public.member (
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
   EXCLUDE USING gist (name WITH =, validity WITH &&),
-  PRIMARY KEY(name, validity),
-  UNIQUE(id),
+  PRIMARY KEY (name, validity),
+  UNIQUE (id),
   CONSTRAINT is_email CHECK (email ~ '^[^@]+@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+(xn--[a-zA-Z0-9-]{4,}|[a-zA-Z]{2,})$')
 );
 CREATE INDEX ON public.member (email);
@@ -36,17 +36,31 @@ CREATE TABLE public.role (
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
   EXCLUDE USING gist (name WITH =, validity WITH &&),
-  PRIMARY KEY(name, validity), 
-  UNIQUE(id)
+  PRIMARY KEY (name, validity), 
+  UNIQUE (id)
 );
 
 CREATE TABLE public.member_role (
-  member_id          INTEGER             NOT NULL REFERENCES public.member(id),
-  role_id          INTEGER             NOT NULL REFERENCES public.role(id),
-  note             TEXT                NOT NULL DEFAULT '',
-  validity         TSTZRANGE           NOT NULL,
-  modified         TIMESTAMPTZ         DEFAULT 'NOW',
+  member_id         INTEGER             NOT NULL REFERENCES public.member(id),
+  role_id           INTEGER             NOT NULL REFERENCES public.role(id),
+  note              TEXT                NOT NULL DEFAULT '',
+  validity          TSTZRANGE           NOT NULL,
+  modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
   EXCLUDE USING gist (member_id WITH =, role_id WITH =, validity WITH &&),
-  PRIMARY KEY(member_id, role_id, validity)
+  PRIMARY KEY (member_id, role_id, validity)
+);
+
+CREATE TYPE public.mail_status AS ENUM ('new', 'sent', 'error');
+CREATE TABLE public.mail (
+  -- Used for representing mail sent to a member and it's status
+  id                SERIAL,
+  status            mail_status         DEFAULT 'new',
+
+  member_id         INTEGER             NOT NULL REFERENCES public.member(id),
+  template          VARCHAR(255)           NOT NULL,
+  data              JSONB               DEFAULT '{}',
+
+  PRIMARY KEY (id)
+
 );

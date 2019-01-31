@@ -1,9 +1,19 @@
 <svelte:head>
-  <title>This is the subject '{name}'</title>
+  <title>This is the subject '{user.name}'</title>
 
   You can use the rest of the head for the plaintext mail
 </svelte:head>
 
-<h2>Hello {name}</h2>
+<h2>Hello {user.fullname}</h2>
 
 <p>This is a test</p>
+
+{#if numbers}
+  <ul>
+  {#each numbers as number}
+    <li>{number}</li>
+  {:else}
+    <li>No numbers</li>
+  {/each}
+  </ul>
+{/if}
