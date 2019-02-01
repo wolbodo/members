@@ -16,13 +16,14 @@
             <td>
               {#if column.component}
                 <svelte:component this={column.component} {row} {column} />
+              {:elseif column.field instanceof Function}
+                {column.field(row)}
               {:else}
                 {#if row[column.field] === null}
                   <span class='has-size-2 has-text-grey-lighter'>ø</span>
                 {:else}
                   {row[column.field]}
                 {/if}
-                
               {/if}
             </td>
           {/each}
@@ -48,6 +49,9 @@
       return {
         filter: ''
       }
+    },
+    helpers: {
+      Function
     },
     computed: {
       filteredData: ({ data, filter }) => {

@@ -19,6 +19,13 @@
 
   <div id="navbar-content" class="navbar-menu" class:is-active="navbarOpen">
     <div class="navbar-start">
+
+      {#if $hasRoles('admin')}
+        <a class="navbar-item" href='/mails'>
+          Mails
+        </a>
+      {/if}
+
 			<!-- 
       <a class="navbar-item" href='/members'>
         Home

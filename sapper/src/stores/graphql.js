@@ -150,6 +150,8 @@ export default BaseStore =>
       this.compute('roles', ['tokenParsed'],
         (token) => token && token['https://hasura.io/jwt/claims']['x-hasura-allowed-roles'] || []
       )
+
+      this.compute('hasRoles', ['roles'], (roles) => ((...checkRoles) => checkRoles.some(r => roles.includes(r))))
     }
 
     async logout () {

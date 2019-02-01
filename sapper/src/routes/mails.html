@@ -1,27 +1,29 @@
 <h1 class='title'>Emails</h1>
-<div class="field is-grouped">
-  <p class="control">
-    <span class="select is-small" class:is-loading='membersLoading'>
-      <select disabled={membersLoading} bind:value='selectedMember'>
-        {#each members as member}
-          <option value={member.id}>{member.name}</option>
-        {/each}
-      </select>
-    </span>
-    <span class="select is-small" class:is-loading='membersLoading'>
-      <select bind:value='template'>
-        <option>test</option>
-        <option>password-reset</option>
-      </select>
-    </span>
-    <button on:click='sentTest(selectedMember, template)' class="button is-primary">
-      <span class="icon">
-        <i class="fas fa-plus"></i>
-      </span>
-      <span>Send test email</span>
-    </button>
-  </p>
-</div>
+  <div class="field is-grouped">
+    <form on:submit|preventDefault|stopPropagation='sentTest(selectedMember, template)'>
+      <p class="control">
+        <span class="select is-small" class:is-loading='membersLoading'>
+          <select disabled={membersLoading || sending} bind:value='selectedMember'>
+            {#each members as member}
+              <option value={member.id}>{member.name}</option>
+            {/each}
+          </select>
+        </span>
+        <span class="select is-small">
+          <select bind:value='template' disabled={sending}>
+            <option>test</option>
+            <option>password-reset</option>
+          </select>
+        </span>
+        <button type='submit' class="button is-small is-primary" class:is-loading='sending' disabled="{sending}">
+          <span class="icon">
+            <i class="fas fa-plus"></i>
+          </span>
+          <span>Send test email</span>
+        </button>
+      </p>
+    </form>
+  </div>
 
 {#if error}
   <div class="error notification is-danger">
@@ -85,14 +87,19 @@ export default {
       // getMembers: subscription(GET_MEMBERS),
       columns: [
         { name: 'ID', field: 'id' },
+        { name: 'Recipient', field: ({ member }) => {
+            console.log("m:", member)
+            return member.name
+          } },
         { name: 'Status', field: 'status' },
         { name: 'Template', field: 'template' },
       ]
     }
   },
   methods: {
-    sentTest (memberId, template) {
-      this.store.gqlMutation({
+    async sentTest (memberId, template) {
+      this.set({ sending: true })
+      await this.store.gqlMutation({
         mutation: gql`mutation sentTest($memberId: Int!, $template: String!) {
           insert_mail(objects:{
             member_id:$memberId,
@@ -110,6 +117,7 @@ export default {
           memberId, template
         }
       })      
+      this.set({ sending: false })
     }
   },
   oncreate() {
