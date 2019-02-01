@@ -27,13 +27,13 @@
             name: 'fullname',
             required: true,
             label: 'Full name',
-            placeholder: 'Thatcher Peskens',
+            placeholder: 'Wikkert Olbodo',
           }, {
             type: 'email',
             name: 'email',
             required: true,
             label: 'Email',
-            placeholder: 'thatcher@example.com',
+            placeholder: 'wikkert@wolbodo.nl',
           }, {
             name: 'phone',
             label: 'Phone',
@@ -117,10 +117,41 @@
         roles={memberRoles}
       />
     </div>
+
+    {#if isSelf}
+      <div class='tile is-child box is-6'>
+        <form on:submit|preventDefault|stopPropagation='savePassword(password)'>
+          <h1 class='title'>
+            Password
+          </h1>
+          <div class="field has-addons">
+            <p class="control">
+              {#if showPassword}
+                <input disabled={passwordSaving} class="input" type='text' bind:value='password'>
+              {:else}
+                <input disabled={passwordSaving} class="input" type='password' bind:value='password'>
+              {/if}
+            </p>
+            <p class="control">
+              <button type='button' class="button" on:click='set({ showPassword: !showPassword})'>
+                <span class="icon is-small">
+                  <i class="fa fa-{showPassword ? 'eye-slash' : 'eye'}" />
+                </span>
+              </button>
+            </p>
+            <p class="control">
+              <button type='submit' class="button is-primary" class:is-loading='passwordSaving'>
+                Save
+              </button>
+            </p>
+          </div>
+        </form>
+      </div>
+    {/if}
   </div>
 </div>
 
-<pre>{JSON.stringify(member, null, 2)}</pre>
+<!-- <pre>{JSON.stringify(member, null, 2)}</pre> -->
 
 <style>
   .tile.is-child {
@@ -138,13 +169,16 @@
   export default {
     computed: {
       memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
+      isSelf: ({ $user, member: { name } }) => $user && ($user.name === name),
     },
     components: {
       MemberRoles: './MemberRoles.html',
-      Form: './Form.html'
+      Form: './Form.html',
     },
     data () {
       return {
+        showPassword: false,
+        password: '',
         edit: new Set(),
         submitting: new Set(),
       }
@@ -171,6 +205,17 @@
         const { edit } = this.get()
         edit.add(name)
         this.set({ edit })
+      },
+      async savePassword (password) {
+        const { member } = this.get()
+        this.set({ passwordSaving: true })
+        console.log("New password:", password)
+
+        await this.store.updateMember(
+          member.id,
+          { password }
+        )
+        this.set({ passwordSaving: false })
       },
       close(name) {
         const { edit } = this.get()
