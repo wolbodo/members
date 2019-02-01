@@ -5,7 +5,7 @@
 
     <TextField horizontal
       label='Alias'
-      placeholder='Thatcher'
+      placeholder='Wikkert'
       required
       value={_member.name || ''}
       disabled={loading}
@@ -14,7 +14,7 @@
     <TextField horizontal
       required
       label='Full name'
-      placeholder='Thatcher Peskens'
+      placeholder='Wikkert Olbodo'
       value={_member.fullname || ''}
       disabled={loading}
       on:change="fieldChange('fullname', event)"
@@ -22,7 +22,7 @@
 
     <EmailField horizontal
       label='Email'
-      placeholder='thatcher@example.com'
+      placeholder='wikkert@wolbodo.nl'
       value={_member.email || ''}
       disabled={loading}
       on:change="fieldChange('email', event)"
@@ -42,7 +42,7 @@
     <InputGroup label='' horizontal>
       <TextField horizontal
         label='Street'
-        placeholder='Dorpstraat'
+        placeholder='Verwersdijk'
         value={_member.streetname || ''}
         disabled={loading}
         on:change="fieldChange('streetname', event)"
@@ -50,14 +50,14 @@
 
       <TextField horizontal
         label='Number'
-        placeholder='42'
+        placeholder='102'
         value={_member.housenumber || ''}
         disabled={loading}
         on:change="fieldChange('housenumber', event)"
       />
       <TextField horizontal
         label='Addon'
-        placeholder='A'
+        placeholder='Achterbar'
         value={_member.housenumberaddon || ''}
         disabled={loading}
         on:change="fieldChange('housenumberaddon', event)"
@@ -66,14 +66,14 @@
     <InputGroup label='' horizontal>
       <TextField horizontal
         label='Zipcode'
-        placeholder='2134AA'
+        placeholder='2611NK'
         value={_member.zipcode || ''}
         disabled={loading}
         on:change="fieldChange('zipcode', event)"
       />
       <TextField horizontal
         label='City'
-        placeholder='Harare'
+        placeholder='Delft'
         value={_member.city || ''}
         disabled={loading}
         on:change="fieldChange('city', event)"
@@ -82,7 +82,7 @@
 
     <TextField horizontal
       label='Country'
-      placeholder='Zimbabwe'
+      placeholder='Nederland'
       value={_member.country || ''}
       disabled={loading}
       on:change="fieldChange('country', event)"

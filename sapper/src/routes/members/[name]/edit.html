@@ -15,17 +15,7 @@
 
 <script>
   import gql from 'graphql-tag';
-
-  const intoQuery = ({ definitions, ...rest }) => (
-    {
-      definitions: definitions.map(
-        def => ({
-          ...def,
-          operation: 'query',
-        })),
-      ...rest
-    }
-  )
+  import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
 
   const queries = [{
     type: 'subscription',
@@ -75,50 +65,21 @@
       }
     },
     oncreate() {
-      const { graphqlClient } = this.store.get()
       const { params } = this.get()
-      // params do not update the subscription now
-
-      this.subscriptions = []
-
-      for (let query of queries) {
-        console.log("Creating:", query)
-        if (query.type === 'subscription') {
-          this.subscriptions.push(
-            graphqlClient.subscribe({
-              query: query.query,
-              variables: params
-            })
-            .subscribe({
-              next: d => query.success.call(this, d),
-              error: e => query.error.call(this, e)
-            })
-          )
-        } else {
-          console.warn("Unmanaged query:", query)
-        }
-      }
+      loadQueries(this, queries, params)
+    },
+    ondestroy() {
+      stopQueries(this)
     },
     async preload ({ params }) {
-      const { graphqlClient } = this.store.get()
+      const { loggedIn } = this.store.get()
+      
+      if (!loggedIn) {
+        return this.redirect(302, '/login')
+      } else {
 
-      const data = {}
-
-      for (let query of queries) {
-        if (query.type === 'subscription') {
-
-          const res = await graphqlClient.query({
-            query: intoQuery(query.query),
-            variables: params
-          })
-
-          query.success.call({
-            set(newState) { Object.assign(data, newState) }
-          }, res)
-        }
+        return await preloadQueries(this.store, queries, params)
       }
-
-      return data
     }
   }
 </script>

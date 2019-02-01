@@ -17,18 +17,8 @@
 
 <script>
   import gql from 'graphql-tag'
+  import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
     
-  const intoQuery = ({ definitions, ...rest }) => (
-    {
-      definitions: definitions.map(
-        def => ({
-          ...def,
-          operation: 'query',
-        })),
-      ...rest
-    }
-  )
-
   const queries = [{
     type: 'subscription',
     query: gql`subscription ($name: String) {
@@ -55,7 +45,6 @@
       }
     }`,
     success({ data }) {
-      console.log("Received update:", data, this)
       this.set({ member: data.members[0] })
     },
     error(err) { this.set({ error: err }) }
@@ -69,52 +58,21 @@
       isSelf: ({ $user, params: { name } }) => $user && ($user.name === name)
     },
     oncreate() {
-      const { graphqlClient } = this.store.get()
       const { params } = this.get()
-      // params do not update the subscription now
-
-      this.subscriptions = []
-
-      for (let query of queries) {
-        console.log("Creating:", query)
-        if (query.type === 'subscription') {
-          this.subscriptions.push(
-            graphqlClient.subscribe({
-              query: query.query,
-              variables: params
-            })
-            .subscribe({
-              next: d => query.success.call(this, d),
-              error: e => query.error.call(this, e)
-            })
-          )
-        } else {
-          console.warn("Unmanaged query:", query)
-        }
-      }
+      loadQueries(this, queries, params)
+    },
+    ondestroy() {
+      stopQueries(this)
     },
     async preload ({ params }) {
-      const { graphqlClient } = this.store.get()
+      const { loggedIn } = this.store.get()
+      
+      if (!loggedIn) {
+        return this.redirect(302, '/login')
+      } else {
 
-      console.log("Got params:", params)
-
-      const data = {}
-
-      for (let query of queries) {
-        if (query.type === 'subscription') {
-
-          const res = await graphqlClient.query({
-            query: intoQuery(query.query),
-            variables: params
-          })
-
-          query.success.call({
-            set(newState) { Object.assign(data, newState) }
-          }, res)
-        }
+        return await preloadQueries(this.store, queries, params)
       }
-
-      return data
     }
   }
 </script>
