@@ -46,7 +46,7 @@ export default BaseStore =>
 
       this.compute('loggedIn', ['token'], token => !!token)
       this.compute('userSlug', ['tokenParsed'],
-        ({ name } = {}) => name && slugify(name)
+        (tokenParsed) => tokenParsed && slugify(tokenParsed.name)
       )
       this.compute('tokenParsed', ['token'],
         (token) => jwt.parse(token)
@@ -64,7 +64,8 @@ export default BaseStore =>
           'member:create': ['admin', 'board'],
           'member:read': ['admin', 'board', 'user'],
           'member:update': ['admin', 'board'],
-          'member:delete': []
+          'mail:create': ['admin'],
+          'mail:read': ['admin'],
         })
         // Every permission which contains a role
         .filter(([permission, pRoles]) => pRoles.some(r => roles.includes(r)))
