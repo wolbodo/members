@@ -33,6 +33,13 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+CREATE OR REPLACE FUNCTION public.notify_password_change()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO mail (member_id, template) VALUES(NEW.id, 'password-change');
+  RETURN NEW;
+END; $$ LANGUAGE 'plpgsql';
+
 
 CREATE OR REPLACE FUNCTION slugify("value" TEXT, "allow_unicode" BOOLEAN)
 RETURNS TEXT AS $$

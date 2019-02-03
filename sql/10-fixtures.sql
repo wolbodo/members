@@ -15,7 +15,8 @@ INSERT INTO public.role
   (name, description, validity)
 VALUES
   ('admin', 'Can change all the data', '[now,)'),
-  ('user', 'User is able to perform login', '[now,)')
+  ('user', 'User is able to perform login', '[now,)'),
+  ('board', 'User is able to edit other users', '[now,)')
 ;
 
 INSERT INTO public.member_role

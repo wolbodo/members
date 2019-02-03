@@ -28,7 +28,8 @@ export async function post (req, res) {
     role: 'mail'
   })
 
-  const { data: { mail }} = await store.gqlQuery({
+  console.log("Querying mail:", _mail.id)
+  const mailResponse = await store.gqlQuery({
     query: gql`query getMail($id: Int!) {
       mail: mail_by_pk(id:$id) {
         id data status template member {
@@ -40,7 +41,9 @@ export async function post (req, res) {
       id: _mail.id
     }
   })
-  console.log("Got mail:", mail)
+  console.log("Got res:", mailResponse)
+  const { data: { mail }} = mailResponse
+
 
   if (mail.status !== 'new') {
     throw new Error("Mail already sent")

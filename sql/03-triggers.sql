@@ -11,6 +11,12 @@ CREATE TRIGGER hash_password
   FOR EACH ROW EXECUTE PROCEDURE 
   public.hash_password();
 
+CREATE TRIGGER notify_password_change
+  AFTER UPDATE OF password
+  ON public.member
+  FOR EACH ROW EXECUTE PROCEDURE 
+  public.notify_password_change();
+
 CREATE TRIGGER update_modified
   BEFORE UPDATE
   ON public.role
