@@ -4,6 +4,9 @@
 	<svelte:component this={child.component} {...child.props}/>
 </main>
 
+
+<Notifications />
+
 <style>
 	main {
 		position: relative;
@@ -18,7 +21,8 @@
 <script>
 	export default {
 		components: {
-			Nav: '../components/Nav.html'
+			Nav: 'src/components/Nav.html',
+			Notifications: 'src/components/Notifications.html'
 		}
 	};
 </script>

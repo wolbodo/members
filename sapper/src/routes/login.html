@@ -100,7 +100,11 @@
               user: data.user
             })
 
+            this.store.notify('success', 'Successful login')
+
             goto('/', { replaceState: true })
+          } else {
+            this.store.notify('error', 'Incorrect login details')
           }
 
 

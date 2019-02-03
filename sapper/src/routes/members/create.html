@@ -16,12 +16,26 @@
       async createMember(data) {
         try {
           this.set({ loading: true })
-          await this.store.addMember(data)
+          const res = await this.store.addMember(data)
+          console.log("result:", res)
           this.set({ loading: false })
         } catch (e) {
           console.error("Error trying to create member", e)
         }
       }
+    },
+    async preload () {
+      const { loggedIn, permissions } = this.store.get()
+      
+      if (!loggedIn) {
+        return this.redirect(302, '/login')
+      }
+
+      if (!permissions.includes('member:create')) {
+        return this.redirect(302, '/')
+      }
+
+      return {}
     }
   }
 </script>

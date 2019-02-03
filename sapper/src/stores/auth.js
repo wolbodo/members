@@ -80,5 +80,6 @@ export default BaseStore =>
       })
       await fetch('/auth/logout')
       goto('/', { replaceState: true })
+      this.notify('success', 'Successful logout')
     }
   }

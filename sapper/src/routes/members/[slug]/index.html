@@ -59,16 +59,13 @@
       stopQueries(this)
     },
     async preload ({ params }) {
-      const { loggedIn, userSlug } = this.store.get()
+      const { loggedIn } = this.store.get()
 
-      console.log("Got params:", params, userSlug)
-      
       if (!loggedIn) {
         return this.redirect(302, '/login')
-      } else {
-
-        return await preloadQueries(this.store, queries, params)
       }
+
+      return await preloadQueries(this.store, queries, params)
     }
   }
 </script>

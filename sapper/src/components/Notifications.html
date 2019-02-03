@@ -1,0 +1,58 @@
+
+{#if $notifyQueue}
+  <div class='notifications'>
+    {#each Array.from($notifyQueue.entries()) as [time, notification] (time)}
+      <div transition:fly="{y: 200, duration: 200}" class="notification is-{notifyType(notification.type)}">
+        <button class="button delete" on:click="$notifyRemove(time)">
+          <span class="icon is-small">
+            <i class="fas fa-times"></i>
+          </span>
+        </button>
+        {notification.message}
+        <hr />
+      </div>
+    {/each}
+  </div>
+{/if}
+
+<style>
+.notifications {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 1em;
+}
+
+
+@keyframes progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+.notification hr {
+  padding: 0;
+  margin: 0;
+  animation: 3s linear progress;
+}
+</style>
+
+<script>
+
+  import { fly } from 'svelte-transitions';
+
+  export default {
+    helpers: {
+      Array,
+      notifyType(type) {
+        return {
+          success: 'success',
+          error: 'danger',
+          warning: 'warning',
+          info: 'info'
+        }[type] || 'info'
+      }
+    },
+    transitions: { fly },
+  }
+</script>

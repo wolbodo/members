@@ -39,6 +39,7 @@ export default BaseStore =>
         })
       } catch (error) {
         console.log(error)
+        return error
       }
     }
 
