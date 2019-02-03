@@ -1,3 +1,4 @@
+{#if canCreate}
 <div class="field is-grouped">
   <p class="control">
     <a href='/members/create' class="button is-primary">
@@ -8,6 +9,7 @@
     </a>
   </p>
 </div>
+{/if}
 
 <div class="control has-icons-left has-icons-right">
   <input class="input is-medium" type="text" placeholder="Zoek..." bind:value='filter'>
@@ -71,6 +73,9 @@ const queries = [{
 export default {
   components: {
     Table: 'src/components/Table.html'
+  },
+  computed: {
+    canEdit: ({ $hasRoles }) => $hasRoles('admin', 'board')
   },
   data() {
     return {

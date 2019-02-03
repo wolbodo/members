@@ -1,13 +1,16 @@
 
+{#if canEdit}
 <div class="buttons has-addons is-right">
   <a href='/members/{member.name}/edit' class="button">Edit</a>
 </div>
+{/if}
 
 <div class="tile is-ancestor is-vertical">
   <div class='tile is-parent'>
     <div class="tile is-child box">
       <h1 class='title'>
         {member.name}
+        {#if canEdit}
         <button
           class="button is-small"
           on:click="open('identity')"
@@ -16,6 +19,7 @@
             <i class="fas fa-edit"></i>
           </span>
         </button>
+        {/if}
       </h1>
       {#if edit.has('identity')}
         <Form
@@ -23,22 +27,7 @@
           on:cancel="close('identity')"
           loading={submitting.has('identity')}
           data={member}
-          fields={[{
-            name: 'fullname',
-            required: true,
-            label: 'Full name',
-            placeholder: 'Wikkert Olbodo',
-          }, {
-            type: 'email',
-            name: 'email',
-            required: true,
-            label: 'Email',
-            placeholder: 'wikkert@wolbodo.nl',
-          }, {
-            name: 'phone',
-            label: 'Phone',
-            placeholder: '+31 000 0000 000',
-          }]}
+          fields={identityFields}
         />
       {:else}
         {#if member.fullname}
@@ -56,6 +45,7 @@
     <div class="tile is-child box">
       <h1 class='title'>
         Address
+        {#if canEdit}
         <button
           class="button is-small"
           on:click="open('address')"
@@ -64,6 +54,7 @@
             <i class="fas fa-edit"></i>
           </span>
         </button>
+        {/if}
       </h1>
       {#if edit.has('address')}
         <Form
@@ -71,33 +62,7 @@
           on:cancel="close('address')"
           loading={submitting.has('address')}
           data={member}
-          fields={[{
-            name: 'streetname',
-            required: true,
-            label: 'Street',
-            placeholder: 'Verwersdijk',
-          }, {
-            name: 'housenumber',
-            required: true,
-            label: 'Number',
-            placeholder: '102',
-          }, {
-            name: 'housenumberaddon',
-            label: 'Number addon',
-            placeholder: ''
-          }, {
-            name: 'zipcode',
-            label: 'Zipcode',
-            placeholder: '2611 NK',
-          }, {
-            name: 'city',
-            label: 'City',
-            placeholder: 'Delft',
-          }, {
-            name: 'country',
-            label: 'Country',
-            placeholder: 'Nederland',
-          }]}
+          fields={addressFields}
         />
       {:else}
         <p>{member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
@@ -116,6 +81,7 @@
         Item={RoleSelectItem}
         items={roles}
         isMulti={true}
+        isDisabled={!canEdit}
         isWaiting={rolesLoading}
         placeholder='Select roles'
         getSelectionLabel={(option) => option.name}
@@ -123,11 +89,13 @@
         bind:selectedValue='selectedRoles'
       ></Select>
 
+      {#if canEdit}
       <div class="buttons is-right">
         <button on:click='saveRoles()' class="button is-primary" class:is-loading='rolesSaving' disabled='{!rolesDirty}'>
           Save
         </button>
       </div>
+      {/if}
     </div>
 
     {#if isSelf}
@@ -187,7 +155,8 @@
       rolesDirty: ({ selectedRoles = [], memberRoles }) => (
         (selectedRoles.length !== memberRoles.length)
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
-      )
+      ),
+      canEdit: ({ isSelf, $hasRoles }) => isSelf || $hasRoles('admin', 'board')
     },
     components: {
       Form: './Form.html',
@@ -201,7 +170,50 @@
         edit: new Set(),
         submitting: new Set(),
         roles: [],
-        rolesLoading: true
+        rolesLoading: true,
+        addressFields: [{
+          name: 'streetname',
+          required: true,
+          label: 'Street',
+          placeholder: 'Verwersdijk',
+        }, {
+          name: 'housenumber',
+          required: true,
+          label: 'Number',
+          placeholder: '102',
+        }, {
+          name: 'housenumberaddon',
+          label: 'Number addon',
+          placeholder: ''
+        }, {
+          name: 'zipcode',
+          label: 'Zipcode',
+          placeholder: '2611 NK',
+        }, {
+          name: 'city',
+          label: 'City',
+          placeholder: 'Delft',
+        }, {
+          name: 'country',
+          label: 'Country',
+          placeholder: 'Nederland',
+        }],
+        identityFields: [{
+          name: 'fullname',
+          required: true,
+          label: 'Full name',
+          placeholder: 'Wikkert Olbodo',
+        }, {
+          type: 'email',
+          name: 'email',
+          required: true,
+          label: 'Email',
+          placeholder: 'wikkert@wolbodo.nl',
+        }, {
+          name: 'phone',
+          label: 'Phone',
+          placeholder: '+31 000 0000 000',
+        }]
       }
     },
     methods: {
