@@ -53,6 +53,7 @@
     PasswordField
   } from 'svelte-bulma-forms/module'
 
+  import { goto } from '../../__sapper__/client.js'
   import gql from 'graphql-tag'
 
   export default {
@@ -95,10 +96,15 @@
           })
 
           this.set({ loading: false })
-          this.store.set({
-            token: data.jwt,
-            user: data.user
-          })
+          if (res.ok) {
+            this.store.set({
+              token: data.jwt,
+              user: data.user
+            })
+
+            goto('/', { replaceState: true })
+          }
+
 
         } catch (e) {
           console.error(e)
