@@ -71,13 +71,13 @@
       stopQueries(this)
     },
     async preload ({ params }) {
-      const { loggedIn, permissions } = this.store.get()
+      const { loggedIn, permissions, userSlug } = this.store.get()
       
       if (!loggedIn) {
         return this.redirect(302, '/login')
       }
 
-      if (!permissions.includes('member:update')) {
+      if (!(permissions.includes('member:update') || (userSlug == params.slug))) {
         console.error("No permissions")
         return this.redirect(302, '/')
       }

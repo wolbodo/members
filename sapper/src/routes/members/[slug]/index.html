@@ -7,7 +7,7 @@
 {/if}
 
 <pre>
-  {JSON.stringify($permissions, null, 2)}
+  {JSON.stringify($tokenParsed, null, 2)}
 </pre>
 {#if !member}
   <p>Loading</p>
@@ -62,7 +62,9 @@
       stopQueries(this)
     },
     async preload ({ params }) {
-      const { loggedIn } = this.store.get()
+      const { loggedIn, userSlug } = this.store.get()
+
+      console.log("Got params:", params, userSlug)
       
       if (!loggedIn) {
         return this.redirect(302, '/login')
