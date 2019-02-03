@@ -64,7 +64,7 @@
         <div class="buttons">
           {#if $loggedIn}
             {#if $user}
-            <a href='/members/{$user.name}' class="button">
+            <a href='/members/{slugify($user.name)}' class="button">
               {$user.name}
             </a>
             {/if}
@@ -83,12 +83,17 @@
 </nav>
 
 <script>
+  import slugify from 'src/lib/slugify'
+
 	export default {
 		data () {
 			return {
 				navbarOpen: false
 			}
 		},
+    helpers: {
+      slugify
+    },
     methods: {
       async logout () {
         try {

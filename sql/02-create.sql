@@ -28,6 +28,16 @@ CREATE OR REPLACE VIEW public.active_member AS
   FROM public.member
   WHERE (validity @> now());
 
+-- View function for use in hasura
+CREATE FUNCTION find_member(slug text)
+RETURNS SETOF member AS $$
+    SELECT *
+    FROM member
+    WHERE
+      slug = slugify(member.name, false)
+$$ LANGUAGE sql STABLE;
+
+
 CREATE TABLE public.role (
   id                INTEGER             GENERATED ALWAYS AS IDENTITY,
   name              VARCHAR(1024)       NOT NULL,

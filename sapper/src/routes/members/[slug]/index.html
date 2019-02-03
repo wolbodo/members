@@ -21,8 +21,8 @@
     
   const queries = [{
     type: 'subscription',
-    query: gql`subscription ($name: String) {
-      members: active_member(where:{name: { _eq: $name }}, limit: 1) {
+    query: gql`subscription ($slug: String) {
+      members: find_member(args:{slug:$slug}) {
         id
         name
         fullname

@@ -32,3 +32,40 @@ BEGIN
    RETURN NEW;
 END;
 $$ language 'plpgsql';
+
+
+CREATE OR REPLACE FUNCTION slugify("value" TEXT, "allow_unicode" BOOLEAN)
+RETURNS TEXT AS $$
+  WITH "normalized" AS (
+    SELECT CASE
+      WHEN "allow_unicode" THEN "value"
+      ELSE unaccent("value")
+    END AS "value"
+  ),
+  "remove_chars" AS (
+    SELECT regexp_replace("value", E'[^\\w\\s-]', '', 'gi') AS "value"
+    FROM "normalized"
+  ),
+  "lowercase" AS (
+    SELECT lower("value") AS "value"
+    FROM "remove_chars"
+  ),
+  "trimmed" AS (
+    SELECT trim("value") AS "value"
+    FROM "lowercase"
+  ),
+  "hyphenated" AS (
+    SELECT regexp_replace("value", E'[-\\s]+', '-', 'gi') AS "value"
+    FROM "trimmed"
+  )
+  SELECT "value" FROM "hyphenated";
+$$ LANGUAGE SQL STRICT IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION public.slugify_name()
+RETURNS TRIGGER AS $$
+BEGIN
+   NEW.slug = slugify(NEW.name, false);
+   RETURN NEW;
+END;
+$$ language 'plpgsql';
+

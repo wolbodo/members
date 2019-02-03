@@ -1,1 +1,11 @@
-<a href='/members/{row.name}'>{row.name}</a>
+<a href='/members/{slugify(row.name)}'>{row.name}</a>
+
+<script>
+  import slugify from 'src/lib/slugify'
+
+  export default {
+    helpers: {
+      slugify
+    }
+  }
+</script>

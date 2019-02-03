@@ -1,5 +1,6 @@
 CREATE EXTENSION pgcrypto;
 CREATE EXTENSION btree_gist;
+CREATE EXTENSION unaccent;
 
 CREATE SCHEMA public;
 DROP TABLE IF EXISTS public.member CASCADE;

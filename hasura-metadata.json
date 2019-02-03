@@ -1,4 +1,7 @@
 {
+  "functions": [
+    "find_member"
+  ],
   "remote_schemas": [],
   "tables": [
     {
@@ -48,6 +51,123 @@
       "update_permissions": [],
       "delete_permissions": [],
       "event_triggers": []
+    },
+    {
+      "table": "mail",
+      "object_relationships": [
+        {
+          "using": {
+            "foreign_key_constraint_on": "member_id"
+          },
+          "name": "member",
+          "comment": null
+        }
+      ],
+      "array_relationships": [],
+      "insert_permissions": [
+        {
+          "role": "mail",
+          "comment": null,
+          "permission": {
+            "set": {},
+            "check": {},
+            "columns": [
+              "data",
+              "id",
+              "member_id",
+              "template"
+            ]
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "set": {},
+            "check": {},
+            "columns": [
+              "data",
+              "member_id",
+              "template"
+            ]
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "mail",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "data",
+              "id",
+              "member_id",
+              "status",
+              "template"
+            ],
+            "filter": {
+              "status": {
+                "_eq": "new"
+              }
+            }
+          }
+        },
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "id",
+              "status",
+              "member_id",
+              "template",
+              "data"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "mail",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "status"
+            ],
+            "filter": {
+              "status": {
+                "_eq": "new"
+              }
+            }
+          }
+        }
+      ],
+      "delete_permissions": [],
+      "event_triggers": [
+        {
+          "webhook": "http://sapper/mail",
+          "headers": [],
+          "name": "mail_send",
+          "definition": {
+            "insert": {
+              "columns": [
+                "id",
+                "status",
+                "member_id",
+                "template",
+                "data"
+              ]
+            }
+          },
+          "retry_conf": {
+            "num_retries": 5,
+            "interval_sec": 10
+          }
+        }
+      ]
     },
     {
       "table": "member",
@@ -105,6 +225,29 @@
         },
         {
           "role": "user",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "id",
+              "modified",
+              "name",
+              "phone",
+              "streetname",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "mail",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -221,7 +364,20 @@
           }
         }
       ],
-      "update_permissions": [],
+      "update_permissions": [
+        {
+          "role": "user",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "member_id",
+              "note",
+              "role_id"
+            ],
+            "filter": {}
+          }
+        }
+      ],
       "delete_permissions": [
         {
           "role": "user",
