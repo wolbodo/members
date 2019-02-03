@@ -1,7 +1,7 @@
 
 {#if canEdit}
 <div class="buttons has-addons is-right">
-  <a href='/members/{member.name}/edit' class="button">Edit</a>
+  <a href='/members/{slugify(member.name)}/edit' class="button">Edit</a>
 </div>
 {/if}
 
@@ -82,6 +82,7 @@
         items={roles}
         isMulti={true}
         isDisabled={!canEdit}
+        isClearable={false}
         isWaiting={rolesLoading}
         placeholder='Select roles'
         getSelectionLabel={(option) => option.name}
@@ -148,6 +149,8 @@
   import gql from 'graphql-tag'
   import RoleSelectItem from './RoleSelectItem.html'
 
+  import slugify from 'src/lib/slugify'
+
   export default {
     computed: {
       memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
@@ -156,7 +159,7 @@
         (selectedRoles.length !== memberRoles.length)
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
       ),
-      canEdit: ({ isSelf, $hasRoles }) => isSelf || $hasRoles('admin', 'board')
+      canEdit: ({ isSelf, $permissions }) => isSelf || $permissions.includes('member:update')
     },
     components: {
       Form: './Form.html',
@@ -215,6 +218,9 @@
           placeholder: '+31 000 0000 000',
         }]
       }
+    },
+    helpers: {
+      slugify
     },
     methods: {
       async submit(name, data) {

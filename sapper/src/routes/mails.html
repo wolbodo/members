@@ -1,4 +1,6 @@
 <h1 class='title'>Emails</h1>
+
+{#if $permissions.includes('mail:create')}
   <div class="field is-grouped">
     <form on:submit|preventDefault|stopPropagation='sentTest(selectedMember, template)'>
       <p class="control">
@@ -24,6 +26,7 @@
       </p>
     </form>
   </div>
+{/if}
 
 {#if error}
   <div class="error notification is-danger">

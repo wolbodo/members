@@ -1,4 +1,4 @@
-{#if canCreate}
+{#if $permissions.includes('member:create')}
 <div class="field is-grouped">
   <p class="control">
     <a href='/members/create' class="button is-primary">
@@ -73,9 +73,6 @@ const queries = [{
 export default {
   components: {
     Table: 'src/components/Table.html'
-  },
-  computed: {
-    canEdit: ({ $hasRoles }) => $hasRoles('admin', 'board')
   },
   data() {
     return {

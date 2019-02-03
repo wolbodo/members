@@ -19,8 +19,8 @@
 
   const queries = [{
     type: 'subscription',
-    query: gql`subscription ($name: String) {
-      members: active_member(where:{name: { _eq: $name }}, limit: 1) {
+    query: gql`subscription ($slug: String) {
+      members: find_member(args:{slug:$slug}) {
         id
         name
         fullname
@@ -43,7 +43,6 @@
       }
     }`,
     success({ data }) {
-      console.log("Received update:", data, this)
       this.set({ member: data.members[0] })
     },
     error(err) { this.set({ error: err }) }
@@ -72,14 +71,18 @@
       stopQueries(this)
     },
     async preload ({ params }) {
-      const { loggedIn } = this.store.get()
+      const { loggedIn, permissions } = this.store.get()
       
       if (!loggedIn) {
         return this.redirect(302, '/login')
-      } else {
-
-        return await preloadQueries(this.store, queries, params)
       }
+
+      if (!permissions.includes('member:update')) {
+        console.error("No permissions")
+        return this.redirect(302, '/')
+      }
+
+      return await preloadQueries(this.store, queries, params)
     }
   }
 </script>

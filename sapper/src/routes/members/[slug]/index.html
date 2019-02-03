@@ -6,6 +6,9 @@
   </div>
 {/if}
 
+<pre>
+  {JSON.stringify($permissions, null, 2)}
+</pre>
 {#if !member}
   <p>Loading</p>
 {:else}

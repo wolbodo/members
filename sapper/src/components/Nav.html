@@ -20,7 +20,7 @@
   <div id="navbar-content" class="navbar-menu" class:is-active="navbarOpen">
     <div class="navbar-start">
 
-      {#if $hasRoles('admin')}
+      {#if $permissions.includes('mail:read')}
         <a class="navbar-item" href='/mails'>
           Mails
         </a>
