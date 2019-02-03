@@ -12,7 +12,6 @@ const { GRAPHQL_LOCAL_URI } = process.env;
 export async function post (req, res) {
 
   const data = req.body
-  console.log("Data:",data)
   const _mail = data.event.data.new
 
   const token = create({
@@ -29,7 +28,7 @@ export async function post (req, res) {
   })
 
   console.log("Querying mail:", _mail.id)
-  const mailResponse = await store.gqlQuery({
+  const { data: { mail }} = await store.gqlQuery({
     query: gql`query getMail($id: Int!) {
       mail: mail_by_pk(id:$id) {
         id data status template member {
@@ -41,50 +40,70 @@ export async function post (req, res) {
       id: _mail.id
     }
   })
-  console.log("Got res:", mailResponse)
-  const { data: { mail }} = mailResponse
+  console.log("Got mail:", mail)
+  let messageInfo
 
+  if (mail && mail.status === 'new') {
+    // Do not retry new mails
+    try {
+      // Try sending the mail, untill the moment the mail is really sent, we can still retry sending.
+      let transporter = nodemailer.createTransport({
+        host: "mail",
+        port: 1025,
+        secure: false, // true for 465, false for other ports
+      });
 
-  if (mail.status !== 'new') {
-    throw new Error("Mail already sent")
-  }
+      console.log("Created mailtransport")
 
-  try {
+      const { html, head } = mails[mail.template].render({
+        user: mail.member,
+        ...mail.data
+      }) 
+      console.log("Rendered template")
 
-    let transporter = nodemailer.createTransport({
-      host: "mail",
-      port: 1025,
-      secure: false, // true for 465, false for other ports
-    });
+      // Parse the head to get the subject and text
+      const dom = new JSDOM(head);
+      const subjectEl = dom.window.document.querySelector("title")
 
-    const { html, head } = mails[mail.template].render({
-      user: mail.member,
-      ...mail.data
-    }) 
+      const subject = subjectEl.textContent || ''
+      const text = dom.window.document.body.textContent.trim()
 
-    // Parse the head to get the subject and text
-    const dom = new JSDOM(head);
-    const subjectEl = dom.window.document.querySelector("title")
+      subjectEl.remove()
 
-    const subject = subjectEl.textContent || ''
-    const text = dom.window.document.body.textContent.trim()
+      // setup email data with unicode symbols
+      let mailOptions = {
+        from: '"Wolbodo members system" <admin@wolbodo.nl>', // sender address
+        to: mail.member.email,
+        subject, text, html
+      };
 
-    subjectEl.remove()
-    console.log({
-      subject, text
-    }); // "Hello world"
+      console.log("Sending mail")
+      // send mail with defined transport object
+      messageInfo = await transporter.sendMail(mailOptions)
+    } catch (e) {
 
-    // setup email data with unicode symbols
-    let mailOptions = {
-      from: '"Wolbodo members system" <admin@wolbodo.nl>', // sender address
-      to: mail.member.email,
-      subject, text, html
-    };
+      console.error("Error happened in sending mail:", e)
 
-    // send mail with defined transport object
-    let info = await transporter.sendMail(mailOptions)
+      await store.gqlMutation({
+        mutation: gql`mutation mailError($id: Int!) {
+          update_mail(_set:{status: "error"}, where:{id:{_eq:$id}}) {
+            affected_rows
+          }
+        }`,
+        variables: {
+          id: _mail.id
+        }
+      })
 
+      res.writeHead(500, {
+        'Content-Type': 'application/json'
+      })
+      res.end(JSON.stringify({
+        error: e
+      }))
+    }
 
+    console.log("Updating mail table", _mail.id, messageInfo)
     const mutRes = await store.gqlMutation({
       mutation: gql`mutation mailSent($id: Int!) {
         update_mail(_set:{status: "sent"}, where:{id:{_eq:$id}}) {
@@ -96,35 +115,15 @@ export async function post (req, res) {
       }
     })
 
-    console.log("Message sent: %s", info.messageId, mutRes);
-
-
-    res.writeHead(200, {
-      'Content-Type': 'application/json'
-    })
-    res.end(JSON.stringify({
-      status: 'ok'
-    }))
-  } catch (e) {
-    console.error("Error happened in sending mail:", e)
-
-    await store.gqlMutation({
-      mutation: gql`mutation mailError($id: Int!) {
-        update_mail(_set:{status: "error"}, where:{id:{_eq:$id}}) {
-          affected_rows
-        }
-      }`,
-      variables: {
-        id: _mail.id
-      }
-    })
-
-    res.writeHead(500, {
-      'Content-Type': 'application/json'
-    })
-    res.end(JSON.stringify({
-      error: e
-    }))
+    console.log("Message sent: %s", messageInfo.messageId, mutRes);
   }
+
+  res.writeHead(200, {
+    'Content-Type': 'application/json'
+  })
+  res.end(JSON.stringify({
+    status: 'ok',
+    sent: !!(messageInfo && messageInfo.messageId)
+  }))
 }
 
