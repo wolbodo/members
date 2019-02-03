@@ -9,9 +9,6 @@
 {#if !member}
   <p>Loading</p>
 {:else}
-  {#if isSelf}
-    <h2>Hoi daar zelf</h2>
-  {/if}
   <Member {member} />
 {/if}
 
@@ -53,9 +50,6 @@
   export default {
     components: {
       Member: 'src/components/Member.html',
-    },
-    computed: {
-      isSelf: ({ $user, params: { name } }) => $user && ($user.name === name)
     },
     oncreate() {
       const { params } = this.get()
