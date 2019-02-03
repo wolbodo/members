@@ -11,6 +11,10 @@
       disabled={loading}
       label='Password'
       value={password || ''}
+      validate={{
+        message: 'Your password must be at least 5 characters long',
+        rule: /\S{5,}/
+      }}
       on:change="set({ password: event })"
     />
 

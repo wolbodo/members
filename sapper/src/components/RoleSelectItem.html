@@ -1,0 +1,32 @@
+<div class="customItem">
+  <div class="title">
+    <div class="name">{item.name}</div>
+    <div class="description">{item.description}</div>
+  </div>
+</div>
+
+<style>
+  .customItem {
+    display: flex;
+    align-items: center;
+  }
+
+  .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 1em;
+    line-height: 2em;
+  }
+
+  .name {
+    display: inline-block;
+    /*font-weight: 700;*/
+    margin-right: 10px;
+  }
+
+  .description {
+    display: inline-block;
+    font-weight: lighter;
+  }
+</style>

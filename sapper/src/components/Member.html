@@ -112,10 +112,23 @@
       <h1 class='title'>
         Roles
       </h1>
-      <MemberRoles
-        memberId={member.id}
-        roles={memberRoles}
-      />
+      <Select
+        Item={RoleSelectItem}
+        items={roles}
+        isMulti={true}
+        isWaiting={rolesLoading}
+        placeholder='Select roles'
+        getSelectionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.name}
+        bind:selectedValue='selectedRoles'
+      ></Select>
+
+      <div class="buttons is-right">
+        <button on:click='saveRoles()' class="button is-primary" class:is-loading='rolesSaving' disabled='{!rolesDirty}'>
+          Save
+        </button>
+      </div>
+      <pre>{JSON.stringify(selectedRoles, null, 2)}</pre>
     </div>
 
     {#if isSelf}
@@ -165,22 +178,31 @@
 
 
 <script>
+  import gql from 'graphql-tag'
+  import RoleSelectItem from './RoleSelectItem.html'
 
   export default {
     computed: {
       memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
       isSelf: ({ $user, member: { name } }) => $user && ($user.name === name),
+      rolesDirty: ({ selectedRoles = [], memberRoles }) => (
+        (selectedRoles.length !== memberRoles.length)
+        || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
+      )
     },
     components: {
-      MemberRoles: './MemberRoles.html',
       Form: './Form.html',
+      Select: 'svelte-select',
     },
     data () {
       return {
+        RoleSelectItem,
         showPassword: false,
         password: '',
         edit: new Set(),
         submitting: new Set(),
+        roles: [],
+        rolesLoading: true
       }
     },
     methods: {
@@ -200,6 +222,36 @@
         edit.delete(name)
         this.set({ submitting, edit })
       },
+      async saveRoles () {
+        this.set({ rolesSaving: true })
+
+        const { selectedRoles = [], memberRoles, member } = this.get()
+        const toDelete = memberRoles.filter(mr => !selectedRoles.some(sr => sr.name === mr.name))
+        const toAdd = selectedRoles.filter(sr => !memberRoles.some(mr => sr.name === mr.name))
+
+        const res = await this.store.gqlMutation({
+          mutation: gql`mutation updateRoles($memberId: Int!, $delRoleIds: [Int!]!, $addRoles: [member_role_insert_input!]!) {
+            delete_member_role(where:{
+              member_id: { _eq: $memberId },
+              role_id: { _in: $delRoleIds }
+            }) {
+              affected_rows
+            }
+            insert_member_role(objects:$addRoles) {
+              affected_rows
+            }
+          }`,
+          variables: {
+            memberId: member.id,
+            delRoleIds: toDelete.map(r => r.id),
+            addRoles: toAdd.map(r => ({
+              member_id: member.id,
+              role_id: r.value
+            }))
+          }
+        })
+        this.set({ rolesSaving: false })
+      },
       open(name) {
         console.log("Open form:", name)
         const { edit } = this.get()
@@ -215,13 +267,25 @@
           member.id,
           { password }
         )
-        this.set({ passwordSaving: false })
+        this.set({ passwordSaving: false, password: '' })
       },
       close(name) {
         const { edit } = this.get()
         edit.delete(name)
         this.set({ edit })
       }
+    },
+    oncreate () { 
+      this.store.allRoles()
+        .then(roles => roles.map(({ id, name, description }) => ({ value: id, name, description })))
+        .then(roles => this.set({ rolesLoading: false, roles }))
+        .then(roles => console.log("Roles loaded:", roles))
+        .catch(e => console.error(e))
+
+      const { member } = this.get()
+      this.set({
+        selectedRoles: member.member_roles.map(ur => ur.role).map(r => ({...r, value: r.id}))
+      })
     }
   }
 </script>

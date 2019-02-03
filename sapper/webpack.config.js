@@ -65,7 +65,9 @@ module.exports = {
 				src: path.resolve(__dirname, 'src/')
 			}
 		},
-		externals: Object.keys(pkg.dependencies).concat('encoding'),
+		externals: Object.keys(pkg.dependencies)
+                .filter(name => !name.startsWith('svelte-select'))
+								.concat('encoding'),
 		module: {
 			rules: [
 				{

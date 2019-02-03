@@ -5585,6 +5585,11 @@ svelte-observable@^0.3.0:
   resolved "https://registry.yarnpkg.com/svelte-observable/-/svelte-observable-0.3.1.tgz#51550237d27a0da17985803a3bb71a6467ab8348"
   integrity sha512-22zvXr8LshhQC09LmH2wAP/mDV9TwJeF8Kn8umozUqncVXrbLicnfNaovttwnORD4lyWFGnyicvCgKW2TpJskw==
 
+svelte-select@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/svelte-select/-/svelte-select-1.2.0.tgz#1ada2d6a9329273ea47b1092641bc983f058180d"
+  integrity sha512-+OLwCmkgmTRZ0WFp/id5LMocnTz1SRM2p//6vFK2dgiRUCK3242GBwR3nyO58v7qALTry0LksHOf7WKc9VLYPw==
+
 svelte@^2.0.0:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-2.16.0.tgz#a9a10fc4103ecb19d01090fd447ca07e3022af7c"
