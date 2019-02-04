@@ -33,7 +33,8 @@ export default BaseStore =>
             __typename
           }
         }`,
-        variables: member
+        variables: member,
+        permission: 'member:create'
       })
     }
 
