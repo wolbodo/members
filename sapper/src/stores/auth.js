@@ -9,7 +9,7 @@ const PERMISSIONS_MAP = {
   'member:create': ['board'],
   'member:read': ['admin', 'board', 'user'],
   'member:update': ['admin', 'board'],
-  'member_roles:create': ['board', 'admin'],
+  'member_roles:create': ['board'],
   'mail:create': ['admin'],
   'mail:read': ['admin'],
 }
@@ -82,6 +82,8 @@ export default BaseStore =>
       // Returns a role for which the permission should be allowed
       const { roles: userRoles } = this.get()
       const permissionRoles = this.allPermissions[permission]
+      if (!permissionRoles) return
+
       const [allowed, ...rest] = userRoles.filter(r => permissionRoles.includes(r))
       return allowed
     }

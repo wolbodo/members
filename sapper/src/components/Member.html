@@ -267,7 +267,8 @@
                 member_id: member.id,
                 role_id: r.value
               }))
-            }
+            },
+            permission: 'member_roles:create'
           })
           this.store.notify('success', `Member (${member.name}) updated`)
         } catch (e) {

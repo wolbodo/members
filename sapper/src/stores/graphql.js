@@ -111,28 +111,28 @@ export default BaseStore =>
       })
     }
 
-    gqlConnParams () {
-      const { token, role } = this.get()
+    gqlConnParams ( role ) {
+      const { token, role: defaultRole } = this.get()
       return {
         headers: {
           authorization: token ? `Bearer ${token}` : "",
-          'X-Hasura-Role': role
+          'X-Hasura-Role': role || defaultRole
         }
       }
     }
 
-    gqlQuery (options) {
+    gqlQuery ({ permission, ...options }) {
       if (!this._gqlClient) throw new Error('No grapqhl client present')
       return this._gqlClient.query({
         ...options,
-        context: this.gqlConnParams()
+        context: this.gqlConnParams(this.roleForPermission(permission))
       })
     }
-    gqlMutation (options) {
+    gqlMutation ({ permission, ...options }) {
       if (!this._gqlClient) throw new Error('No grapqhl client present')
       return this._gqlClient.mutate({
         ...options,
-        context: this.gqlConnParams()
+        context: this.gqlConnParams(this.roleForPermission(permission))
       })
     }
     gqlSubscription (options) {
