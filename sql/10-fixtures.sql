@@ -24,7 +24,7 @@ INSERT INTO public.member_role
 SELECT public.member.id, public.role.id, '[now,)' FROM
     (VALUES
         ('admin@example.org', array['user','admin']),
-        ('dexter@example.org', array['user']),
+        ('dexter@example.org', array['user', 'board']),
         ('dj@example.org', array['user']),
         ('bwb@example.org', array['user'])
     ) alias (email, role_names)

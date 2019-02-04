@@ -46,6 +46,21 @@
             ],
             "filter": {}
           }
+        },
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "description",
+              "id",
+              "modified",
+              "name",
+              "validity"
+            ],
+            "filter": {}
+          }
         }
       ],
       "update_permissions": [],
@@ -78,19 +93,6 @@
               "template"
             ]
           }
-        },
-        {
-          "role": "user",
-          "comment": null,
-          "permission": {
-            "set": {},
-            "check": {},
-            "columns": [
-              "data",
-              "member_id",
-              "template"
-            ]
-          }
         }
       ],
       "select_permissions": [
@@ -111,21 +113,6 @@
                 "_eq": "new"
               }
             }
-          }
-        },
-        {
-          "role": "user",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "id",
-              "status",
-              "member_id",
-              "template",
-              "data"
-            ],
-            "filter": {}
           }
         }
       ],
@@ -186,12 +173,10 @@
       ],
       "insert_permissions": [
         {
-          "role": "user",
+          "role": "board",
           "comment": null,
           "permission": {
-            "set": {
-              "validity": "[now,)"
-            },
+            "set": {},
             "check": {},
             "columns": [
               "city",
@@ -201,7 +186,6 @@
               "housenumber",
               "housenumberaddon",
               "name",
-              "password",
               "phone",
               "streetname",
               "zipcode"
@@ -268,6 +252,29 @@
             ],
             "filter": {}
           }
+        },
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "id",
+              "modified",
+              "name",
+              "phone",
+              "streetname",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
+          }
         }
       ],
       "update_permissions": [
@@ -292,6 +299,28 @@
                 "_eq": "X-HASURA-USER-ID"
               }
             }
+          }
+        },
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "housenumber",
+              "housenumberaddon",
+              "modified",
+              "name",
+              "password",
+              "phone",
+              "streetname",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
           }
         }
       ],
@@ -319,7 +348,7 @@
       "array_relationships": [],
       "insert_permissions": [
         {
-          "role": "user",
+          "role": "board",
           "comment": null,
           "permission": {
             "set": {
@@ -328,6 +357,7 @@
             "check": {},
             "columns": [
               "member_id",
+              "note",
               "role_id"
             ]
           }
@@ -363,17 +393,31 @@
             ],
             "filter": {}
           }
+        },
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "modified",
+              "note",
+              "role_id",
+              "validity"
+            ],
+            "filter": {}
+          }
         }
       ],
       "update_permissions": [
         {
-          "role": "user",
+          "role": "board",
           "comment": null,
           "permission": {
             "columns": [
-              "member_id",
               "note",
-              "role_id"
+              "validity"
             ],
             "filter": {}
           }
@@ -382,6 +426,13 @@
       "delete_permissions": [
         {
           "role": "user",
+          "comment": null,
+          "permission": {
+            "filter": {}
+          }
+        },
+        {
+          "role": "board",
           "comment": null,
           "permission": {
             "filter": {}
