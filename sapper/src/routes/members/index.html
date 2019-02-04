@@ -88,10 +88,17 @@ export default {
     }
   },
   oncreate() {
+    const role = this.store.roleForPermission('member:read')
+    const { role: prevRole } = this.store.get()
+    this.prevRole = prevRole
+    this.store.set({ role })
+
     loadQueries(this, queries)
   },
   ondestroy() {
     stopQueries(this)
+    
+    this.store.set({ role: this.prevRole })
   },
   async preload () {
     const { loggedIn } = this.store.get()

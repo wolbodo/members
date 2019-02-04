@@ -14,27 +14,40 @@
     },
     methods: {
       async createMember(data) {
+        this.set({ loading: true })
         try {
-          this.set({ loading: true })
           const res = await this.store.addMember(data)
           console.log("result:", res)
           this.store.notify('success', 'Member added')
-          this.set({ loading: false })
         } catch (e) {
+          this.store.notify('error', `Error trying to create member: ${e}`)
           console.error("Error trying to create member", e)
         }
+        this.set({ loading: false })
       }
+    },
+    oncreate () {
+      const role = this.store.roleForPermission('member:read')
+      const { role: prevRole } = this.store.get()
+      this.prevRole = prevRole
+      this.store.set({ role })
+    },
+    ondestroy() {
+      this.store.set({ role: this.prevRole })
     },
     async preload () {
       const { loggedIn, permissions } = this.store.get()
+      const role = this.store.roleForPermission('member:create')
       
       if (!loggedIn) {
         return this.redirect(302, '/login')
       }
 
-      if (!permissions.includes('member:create')) {
+      if (!role) {
         return this.redirect(302, '/')
       }
+
+      this.store.set({ role })
 
       return {}
     }
