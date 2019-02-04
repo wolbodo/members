@@ -93,10 +93,22 @@ export default BaseStore =>
     constructor (init) {
       super(init)
 
-      this.compute('graphqlClient', ['token', 'graphqlUri'],
-        (token, graphqlUri) => 
-          (token && graphqlUri) && createClient({ graphqlUri, token, connParams: this.gqlConnParams.bind(this) })
-      )
+      this.on('state', ({ changed, current }) => {
+        const { graphqlUri, token } = current
+
+        if (!(graphqlUri && token)) {
+          console.warn("No token or uri for graphql client.")
+          return
+        }
+
+        if (!this._gqlClient || changed.graphqlUri || changed.token) {
+          console.log("Setting up gql client")
+          this._gqlClient = createClient({
+            graphqlUri, token,
+            connParams: this.gqlConnParams.bind(this)
+          })
+        }
+      })
     }
 
     gqlConnParams () {
@@ -110,24 +122,21 @@ export default BaseStore =>
     }
 
     gqlQuery (options) {
-      const { graphqlClient, graphqlUri, token } = this.get()
-      if (!graphqlClient) throw new Error('No grapqhl client present')
-      return graphqlClient.query({
+      if (!this._gqlClient) throw new Error('No grapqhl client present')
+      return this._gqlClient.query({
         ...options,
         context: this.gqlConnParams()
       })
     }
     gqlMutation (options) {
-      const { graphqlClient } = this.get()
-      if (!graphqlClient) throw new Error('No grapqhl client present')
-      return graphqlClient.mutate({
+      if (!this._gqlClient) throw new Error('No grapqhl client present')
+      return this._gqlClient.mutate({
         ...options,
         context: this.gqlConnParams()
       })
     }
     gqlSubscription (options) {
-      const { graphqlClient } = this.get()
-      if (!graphqlClient) throw new Error('No grapqhl client present')
-      return graphqlClient.subscribe(options)
+      if (!this._gqlClient) throw new Error('No grapqhl client present')
+      return this._gqlClient.subscribe(options)
     }
   }

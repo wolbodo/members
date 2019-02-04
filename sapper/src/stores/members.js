@@ -3,8 +3,7 @@ import gql from 'graphql-tag';
 export default BaseStore =>
   class Store extends BaseStore {
     async addMember(member) {
-      const {graphqlClient} = this.get();
-      return await graphqlClient.mutate({
+      return await this.gqlMutation({
         mutation: gql`
         mutation (
           $name: String!,
@@ -39,9 +38,8 @@ export default BaseStore =>
     }
 
     async updateMember(id, data) {
-      const {graphqlClient} = this.get();
       try {
-        return await graphqlClient.mutate({
+        return await this.gqlMutation({
           mutation: gql`
           mutation (
             $id: Int!,
@@ -69,9 +67,8 @@ export default BaseStore =>
     }
 
     async addMemberRole(memberId, roleId) {
-      const {graphqlClient} = this.get();
       try {
-        const res = await graphqlClient.mutate({
+        const res = await this.gqlMutation({
           mutation: gql`mutation addMemberRole($memberId: Int!, $roleId:Int!) {
             insert_member_role(objects:{
               member_id:$memberId,
@@ -91,9 +88,8 @@ export default BaseStore =>
       }
     }
     async removeMemberRole(memberId, roleId) {
-      const {graphqlClient} = this.get();
       try {
-        const res = await graphqlClient.mutate({
+        const res = await this.gqlMutation({
           mutation: gql`mutation addMemberRole($memberId: Int!, $roleId:Int!) {
             delete_member_role(where:{
               member_id:{_eq: $memberId},
@@ -114,9 +110,8 @@ export default BaseStore =>
     }
 
     async allRoles() {
-      const {graphqlClient} = this.get();
       try {
-        const { data } = await graphqlClient.query({
+        const { data } = await this.gqlQuery({
           query: gql`{
             role {
               id name
