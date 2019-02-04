@@ -6,7 +6,7 @@ import { goto } from '../../__sapper__/client.js'
 const { fetch } = fetchPonyfill();
 
 const PERMISSIONS_MAP = {
-  'member:create': ['admin', 'board'],
+  'member:create': ['board'],
   'member:read': ['admin', 'board', 'user'],
   'member:update': ['admin', 'board'],
   'member_roles:create': ['board', 'admin'],

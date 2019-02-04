@@ -13,51 +13,47 @@ const { fetch } = fetchPonyfill();
 
 // https://www.apollographql.com/docs/react/advanced/boost-migration.html
 
-function createAuthLink(token, role = 'anonymous') {
-  return setContext((_, { headers }) => {
-    // return the headers to the context so httpLink can read them
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : "",
-        'X-Hasura-Role': role
-      }
-    }
-  });
-}
+// function createAuthLink(token, getOptions = v => v {
+//   return setContext((_, { headers }) => {
+//     // return the headers to the context so httpLink can read them
+//     return {
+//       headers: {
+//         ...headers,
+//         authorization: token ? `Bearer ${token}` : "",
+//         'X-Hasura-Role': getRole()
+//       }
+//     }
+//   });
+// }
 
-function createServerLink(url, token, role) {
+function createServerLink(url, connParams = v => v) {
   // Split protocol
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
-  return createAuthLink(token, role).concat(new HttpLink({
+  return new HttpLink({
     uri: `${proto}://${uri}`,
-    fetch
-  }))
+    fetch,
+    connParams
+  })
 }
-function createBrowserLink(url, token, role = 'anonymous') {
+function createBrowserLink(url, connParams = v => v) {
   // Split protocol
   const [, proto, uri] = url.match(/(\w+):\/\/(.*)/ )
 
   const secure = proto === 'https'
 
   // Create an http link:
-  const httpLink = createAuthLink(token, role).concat(new HttpLink({
+  const httpLink = new HttpLink({
     uri: `${proto}://${uri}`,
     fetch
-  }))
+  })
 
   // Create a WebSocket link:
   const wsLink = new WebSocketLink({
     uri: `${secure ? 'wss' : 'ws'}://${uri}`,
     options: {
       reconnect: true,
-      connectionParams: {
-        headers: {
-          authorization: token ? `Bearer ${token}` : "",
-          'X-Hasura-Role': role
-        }
-      },
+      connectionParams: connParams
     }
   })
 
@@ -77,7 +73,7 @@ function createBrowserLink(url, token, role = 'anonymous') {
   return link
 }
 
-function createClient({ graphqlUri, token, role, cacheInit }) {
+function createClient({ graphqlUri, connParams = v => v, cacheInit }) {
   const cache = new InMemoryCache()
   if (cacheInit) {
     console.log("Using cache init", cacheInit)
@@ -85,8 +81,8 @@ function createClient({ graphqlUri, token, role, cacheInit }) {
   }
   return new ApolloClient({
     link: (global.WebSocket
-      ? createBrowserLink(graphqlUri, token, role)
-      : createServerLink(graphqlUri, token, role)
+      ? createBrowserLink(graphqlUri, connParams)
+      : createServerLink(graphqlUri, connParams)
     ),
     cache
   });
@@ -97,26 +93,37 @@ export default BaseStore =>
     constructor (init) {
       super(init)
 
-      this.compute('graphqlClient', ['token', 'graphqlUri', 'role'],
-        (token, graphqlUri, role) => (
-          (token && graphqlUri) && createClient({ graphqlUri, token, role })
-        )
+      this.compute('graphqlClient', ['token', 'graphqlUri'],
+        (token, graphqlUri) => 
+          (token && graphqlUri) && createClient({ graphqlUri, token, connParams: this.gqlConnParams.bind(this) })
       )
     }
 
-    getServerClient(url, token, role = 'user') {
-      return createClient(createServerLink(url, token, role))
+    gqlConnParams () {
+      const { token, role } = this.get()
+      return {
+        headers: {
+          authorization: token ? `Bearer ${token}` : "",
+          'X-Hasura-Role': role
+        }
+      }
     }
 
     gqlQuery (options) {
       const { graphqlClient, graphqlUri, token } = this.get()
       if (!graphqlClient) throw new Error('No grapqhl client present')
-      return graphqlClient.query(options)
+      return graphqlClient.query({
+        ...options,
+        context: this.gqlConnParams()
+      })
     }
     gqlMutation (options) {
       const { graphqlClient } = this.get()
       if (!graphqlClient) throw new Error('No grapqhl client present')
-      return graphqlClient.mutate(options)
+      return graphqlClient.mutate({
+        ...options,
+        context: this.gqlConnParams()
+      })
     }
     gqlSubscription (options) {
       const { graphqlClient } = this.get()
