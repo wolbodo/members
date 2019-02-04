@@ -18,7 +18,6 @@ export default BaseStore =>
   class Store extends BaseStore {
 
     constructor (init) {
-      this.allPermissions = PERMISSIONS_MAP
       
       const lsData = {}
       if (global.localStorage) {
@@ -34,6 +33,8 @@ export default BaseStore =>
         ...lsData,
         ...init
       })
+
+      this.allPermissions = PERMISSIONS_MAP
 
       this.on('state', ({changed, current}) => {
         if (global.localStorage) {
@@ -81,8 +82,8 @@ export default BaseStore =>
       // Returns a role for which the permission should be allowed
       const { roles: userRoles } = this.get()
       const permissionRoles = this.allPermissions[permission]
-
-      console.log("Has permissions:", permissionRoles, userRoles)
+      const [allowed, ...rest] = userRoles.filter(r => permissionRoles.includes(r))
+      return allowed
     }
 
     async logout () {

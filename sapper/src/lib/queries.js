@@ -11,7 +11,7 @@ const intoQuery = ({ definitions, ...rest }) => (
   }
 )
 
-export function loadQueries (component, queries, params = {}) {
+export function loadQueries (component, queries, { params = {}, role='user' } = {}) {
   component._subscriptions = []
 
   for (let query of queries) {
@@ -36,8 +36,11 @@ export function stopQueries (component) {
   component._subscriptions.map(s => s.unsubscribe())
 }
 
-export async function preloadQueries (store, queries, params={}) {
+export async function preloadQueries (store, queries, { params = {}, role='user' } = {}) {
   const data = {}
+  const { role: prevRole } = store.get()
+
+  store.set({ role })
   try {
 
     for (let query of queries) {
@@ -60,5 +63,6 @@ export async function preloadQueries (store, queries, params={}) {
     data.error = e
     console.log("Error in companies preload:", e)
   }
+  store.set({ role: prevRole })
   return data
 }

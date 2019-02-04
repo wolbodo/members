@@ -90,10 +90,7 @@ export default {
       // getMembers: subscription(GET_MEMBERS),
       columns: [
         { name: 'ID', field: 'id' },
-        { name: 'Recipient', field: ({ member }) => {
-            console.log("m:", member)
-            return member.name
-          } },
+        { name: 'Recipient', field: ({ member }) => member.name },
         { name: 'Status', field: 'status' },
         { name: 'Template', field: 'template' },
       ]
@@ -124,20 +121,32 @@ export default {
     }
   },
   oncreate() {
+    const role = this.store.roleForPermission('mail:read')
+    const { role: prevRole } = this.store.get()
+    this.prevRole = prevRole
+    this.store.set({ role })
+
     loadQueries(this, queries)
   },
   ondestroy() {
     stopQueries(this)
+
+    this.store.set({ role: this.prevRole })
   },
   async preload () {
     const { loggedIn } = this.store.get()
+    const role = this.store.roleForPermission('mail:read')
     
     if (!loggedIn) {
       return this.redirect(302, '/login')
-    } else {
-
-      return await preloadQueries(this.store, queries)
     }
+
+    if (!role) {
+      this.store.notify('warning', 'Could not show page')
+      return this.redirect(302, '/')
+    }
+
+    return await preloadQueries(this.store, queries, { role })
   }
 }
 </script>

@@ -66,7 +66,7 @@
     },
     oncreate() {
       const { params } = this.get()
-      loadQueries(this, queries, params)
+      loadQueries(this, queries, { params })
     },
     ondestroy() {
       stopQueries(this)
@@ -83,7 +83,7 @@
         return this.redirect(302, '/')
       }
 
-      return await preloadQueries(this.store, queries, params)
+      return await preloadQueries(this.store, queries, { params })
     }
   }
 </script>
