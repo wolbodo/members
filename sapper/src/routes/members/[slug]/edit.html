@@ -60,6 +60,7 @@
 
         this.set({ loading: true })
         await this.store.updateMember(member.id, data)
+        this.store.notify('success', `Member (${member.name}) updated`)
         this.set({ loading: false })
       }
     },

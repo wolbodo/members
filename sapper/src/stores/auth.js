@@ -5,10 +5,20 @@ import { goto } from '../../__sapper__/client.js'
 
 const { fetch } = fetchPonyfill();
 
+const PERMISSIONS_MAP = {
+  'member:create': ['admin', 'board'],
+  'member:read': ['admin', 'board', 'user'],
+  'member:update': ['admin', 'board'],
+  'member_roles:create': ['board', 'admin'],
+  'mail:create': ['admin'],
+  'mail:read': ['admin'],
+}
+
 export default BaseStore =>
   class Store extends BaseStore {
 
     constructor (init) {
+      this.allPermissions = PERMISSIONS_MAP
       
       const lsData = {}
       if (global.localStorage) {
@@ -60,17 +70,19 @@ export default BaseStore =>
 
       // Table level 'permissions' based on roles
       this.compute('permissions', ['roles'],
-        (roles) => Object.entries({
-          'member:create': ['admin', 'board'],
-          'member:read': ['admin', 'board', 'user'],
-          'member:update': ['admin', 'board'],
-          'mail:create': ['admin'],
-          'mail:read': ['admin'],
-        })
+        (roles) => Object.entries(this.allPermissions)
         // Every permission which contains a role
         .filter(([permission, pRoles]) => pRoles.some(r => roles.includes(r)))
         .map(([permission, pRoles]) => permission)
       )
+    }
+
+    roleForPermission (permission) {
+      // Returns a role for which the permission should be allowed
+      const { roles: userRoles } = this.get()
+      const permissionRoles = this.allPermissions[permission]
+
+      console.log("Has permissions:", permissionRoles, userRoles)
     }
 
     async logout () {

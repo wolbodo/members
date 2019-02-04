@@ -1,17 +1,19 @@
 
 {#if $notifyQueue}
   <div class='notifications'>
-    {#each Array.from($notifyQueue.entries()) as [time, notification] (time)}
-      <div transition:fly="{y: 200, duration: 200}" class="notification is-{notifyType(notification.type)}">
-        <button class="button delete" on:click="$notifyRemove(time)">
-          <span class="icon is-small">
-            <i class="fas fa-times"></i>
-          </span>
-        </button>
-        {notification.message}
-        <hr />
-      </div>
-    {/each}
+    <section class='container'>
+      {#each Array.from($notifyQueue.entries()) as [time, notification] (time)}
+        <div transition:fly="{y: 200, duration: 200}" class="notification is-{notifyType(notification.type)}">
+          <button class="button delete" on:click="$notifyRemove(time)">
+            <span class="icon is-small">
+              <i class="fas fa-times"></i>
+            </span>
+          </button>
+          {notification.message}
+          <hr />
+        </div>
+      {/each}
+    </section>
   </div>
 {/if}
 

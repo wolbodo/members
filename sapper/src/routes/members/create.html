@@ -18,6 +18,7 @@
           this.set({ loading: true })
           const res = await this.store.addMember(data)
           console.log("result:", res)
+          this.store.notify('success', 'Member added')
           this.set({ loading: false })
         } catch (e) {
           console.error("Error trying to create member", e)

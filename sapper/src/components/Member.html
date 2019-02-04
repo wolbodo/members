@@ -81,7 +81,7 @@
         Item={RoleSelectItem}
         items={roles}
         isMulti={true}
-        isDisabled={!canEdit}
+        isDisabled={!$permissions.includes('member_roles:create')}
         isClearable={false}
         isWaiting={rolesLoading}
         placeholder='Select roles'
@@ -159,7 +159,7 @@
         (selectedRoles.length !== memberRoles.length)
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
       ),
-      canEdit: ({ isSelf, $permissions }) => isSelf || $permissions.includes('member:update')
+      canEdit: ({ isSelf, $permissions }) => isSelf || $permissions.includes('member:update'),
     },
     components: {
       Form: './Form.html',
@@ -235,6 +235,7 @@
             Object.fromEntries(data.entries())
           )
           submitting.delete(name)
+          this.store.notify('success', `Member (${member.name}) updated`)
         }
         edit.delete(name)
         this.set({ submitting, edit })
@@ -246,27 +247,32 @@
         const toDelete = memberRoles.filter(mr => !selectedRoles.some(sr => sr.name === mr.name))
         const toAdd = selectedRoles.filter(sr => !memberRoles.some(mr => sr.name === mr.name))
 
-        const res = await this.store.gqlMutation({
-          mutation: gql`mutation updateRoles($memberId: Int!, $delRoleIds: [Int!]!, $addRoles: [member_role_insert_input!]!) {
-            delete_member_role(where:{
-              member_id: { _eq: $memberId },
-              role_id: { _in: $delRoleIds }
-            }) {
-              affected_rows
+        try {
+          const res = await this.store.gqlMutation({
+            mutation: gql`mutation updateRoles($memberId: Int!, $delRoleIds: [Int!]!, $addRoles: [member_role_insert_input!]!) {
+              delete_member_role(where:{
+                member_id: { _eq: $memberId },
+                role_id: { _in: $delRoleIds }
+              }) {
+                affected_rows
+              }
+              insert_member_role(objects:$addRoles) {
+                affected_rows
+              }
+            }`,
+            variables: {
+              memberId: member.id,
+              delRoleIds: toDelete.map(r => r.id),
+              addRoles: toAdd.map(r => ({
+                member_id: member.id,
+                role_id: r.value
+              }))
             }
-            insert_member_role(objects:$addRoles) {
-              affected_rows
-            }
-          }`,
-          variables: {
-            memberId: member.id,
-            delRoleIds: toDelete.map(r => r.id),
-            addRoles: toAdd.map(r => ({
-              member_id: member.id,
-              role_id: r.value
-            }))
-          }
-        })
+          })
+          this.store.notify('success', `Member (${member.name}) updated`)
+        } catch (e) {
+          this.store.notify('error', `Failed updating roles: ${e.message}`)
+        }
         this.set({ rolesSaving: false })
       },
       open(name) {
