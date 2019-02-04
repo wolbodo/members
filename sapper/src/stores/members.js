@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 export default BaseStore =>
   class Store extends BaseStore {
     async addMember(member) {
-      return await this.gqlMutation({
+      const res = await this.gqlMutation({
         mutation: gql`
         mutation (
           $name: String!,
@@ -36,11 +36,12 @@ export default BaseStore =>
         variables: member,
         permission: 'member:create'
       })
+      return res
     }
 
     async updateMember(id, data) {
       try {
-        return await this.gqlMutation({
+        const res = await this.gqlMutation({
           mutation: gql`
           mutation (
             $id: Int!,
@@ -60,8 +61,12 @@ export default BaseStore =>
           variables: {
             id: id,
             data: data
-          }
+          },
+          permission: 'member:update'
         })
+        this.notify('info', `Edited ${res.data.update_member.affected_rows} rows`)
+        return res
+
       } catch (error) {
         console.log(error)
       }
