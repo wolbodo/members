@@ -8,7 +8,7 @@
       <button class="button" on:click='makeMember()' class:is-loading='submittingMembership'>Maak lid</button>
     {/if}
   {/if}
-  <a href='/members/{slugify(member.name)}/edit' class="button">Edit</a>
+  <a href='/members/{slugify(member.name)}/edit' rel=prefetch class="button">Edit</a>
 </div>
 {/if}
 
@@ -87,9 +87,9 @@
           fields={addressFields}
         />
       {:else}
-        <p>{member.streetname} {member.housenumber} {member.housenumberaddon || ''}</p>
-        <p>{member.zipcode} {member.city}</p>
-        <p>{member.country}</p>
+        <p>{member.address || ''}</p>
+        <p>{member.zipcode || ''} {member.city || ''}</p>
+        <p>{member.country || ''}</p>
       {/if}
     </div>
   </div>
@@ -112,7 +112,7 @@
         bind:selectedValue='selectedRoles'
       ></Select>
 
-      {#if canEdit}
+      {#if $permissions.includes('member_roles:create')}
       <div class="buttons is-right">
         <button on:click='saveRoles()' class="button is-primary" class:is-loading='rolesSaving' disabled='{!rolesDirty}'>
           Save
@@ -198,19 +198,10 @@
         roles: [],
         rolesLoading: true,
         addressFields: [{
-          name: 'streetname',
+          name: 'address',
           required: true,
-          label: 'Street',
-          placeholder: 'Verwersdijk',
-        }, {
-          name: 'housenumber',
-          required: true,
-          label: 'Number',
-          placeholder: '102',
-        }, {
-          name: 'housenumberaddon',
-          label: 'Number addon',
-          placeholder: ''
+          label: 'Address',
+          placeholder: 'Verwersdijk 102',
         }, {
           name: 'zipcode',
           label: 'Zipcode',
@@ -312,7 +303,7 @@
 
         await this.store.updateMember(
           member.id,
-          { password }
+          { password }, 'member:update_self'
         )
         this.set({ passwordSaving: false, password: '' })
       },

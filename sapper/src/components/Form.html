@@ -11,6 +11,15 @@
         disabled={loading}
         on:change="change(name, event)"
       />
+    {:elseif type === 'number'}
+      <InputControl
+        type='number'
+        {required} {label}
+        {placeholder}
+        value={data[name]}
+        disabled={loading}
+        on:change="change(name, event)"
+      />
     {:else}
       <TextField
         {required} {label}
@@ -31,13 +40,14 @@
 
   import {
     TextField,
+    InputControl,
     EmailField,
   } from 'svelte-bulma-forms/module'
 
 
   export default {
     components: {
-      TextField, EmailField
+      TextField, InputControl, EmailField
     },
     data () {
       return {

@@ -5,12 +5,12 @@ CREATE TABLE public.member (
   password          VARCHAR(1024)       ,
   fullname          VARCHAR(1024)       NOT NULL,
   phone             VARCHAR(255)        ,
-  streetname        VARCHAR(1024)       ,
-  housenumber       NUMERIC(8,0)        ,
-  housenumberaddon  VARCHAR(255)        ,
+
+  address           VARCHAR(1024)       ,
   zipcode           VARCHAR(255)        ,
   city              VARCHAR(255)        ,
   country           VARCHAR(255)        ,
+
   validity          TSTZRANGE           NOT NULL,
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
@@ -24,7 +24,7 @@ CREATE INDEX ON public.member (email);
 
 CREATE OR REPLACE VIEW public.active_member AS 
   SELECT id, name, email, password, fullname, phone,
-    streetname, housenumber, housenumberaddon, zipcode, city, country, modified
+    address, zipcode, city, country, modified
   FROM public.member
   WHERE (validity @> now());
 

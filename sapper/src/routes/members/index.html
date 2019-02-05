@@ -1,7 +1,7 @@
 {#if $permissions.includes('member:create')}
 <div class="field is-grouped">
   <p class="control">
-    <a href='/members/create' class="button is-primary">
+    <a href='/members/create' rel=prefetch class="button is-primary">
       <span class="icon">
         <i class="fas fa-plus"></i>
       </span>
@@ -89,7 +89,7 @@ export default {
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
         { name: 'Roles', field: 'member_roles', component: MemberRolesField },
-        { name: 'status', field: 'status', component: MemberStatusField,
+        { name: 'Status', field: 'status', component: MemberStatusField,
         props: ({ validity }) => ({ status: status({ validity }) }) },
       ]
     }

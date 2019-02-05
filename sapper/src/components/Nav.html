@@ -21,42 +21,10 @@
     <div class="navbar-start">
 
       {#if $permissions.includes('mail:read')}
-        <a class="navbar-item" href='/mails'>
+        <a class="navbar-item" href='/mails' rel=prefetch>
           Mails
         </a>
       {/if}
-
-			<!-- 
-      <a class="navbar-item" href='/members'>
-        Home
-      </a>
-
-      <a class="navbar-item">
-        Documentation
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
-        </a>
-
-        <div class="navbar-dropdown">
-          <a class="navbar-item">
-            About
-          </a>
-          <a class="navbar-item">
-            Jobs
-          </a>
-          <a class="navbar-item">
-            Contact
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            Report an issue
-          </a>
-        </div>
-      </div>
-      -->
     </div>
 
     <div class="navbar-end">
@@ -64,7 +32,7 @@
         <div class="buttons">
           {#if $loggedIn}
             {#if $user}
-            <a href='/members/{slugify($user.name)}' class="button">
+            <a href='/members/{slugify($user.name)}' rel=prefetch class="button">
               {$user.name}
             </a>
             {/if}

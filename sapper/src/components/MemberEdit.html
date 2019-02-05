@@ -39,30 +39,14 @@
   <fieldset>
     <legend>Address info</legend>
 
-    <InputGroup label='' horizontal>
-      <TextField horizontal
-        label='Street'
-        placeholder='Verwersdijk'
-        value={_member.streetname || ''}
-        disabled={loading}
-        on:change="fieldChange('streetname', event)"
-      />
+    <TextField horizontal
+      label='Address'
+      placeholder='Verwersdijk 102'
+      value={_member.address || ''}
+      disabled={loading}
+      on:change="fieldChange('address', event)"
+    />
 
-      <TextField horizontal
-        label='Number'
-        placeholder='102'
-        value={_member.housenumber || ''}
-        disabled={loading}
-        on:change="fieldChange('housenumber', event)"
-      />
-      <TextField horizontal
-        label='Addon'
-        placeholder='Achterbar'
-        value={_member.housenumberaddon || ''}
-        disabled={loading}
-        on:change="fieldChange('housenumberaddon', event)"
-      />
-    </InputGroup>
     <InputGroup label='' horizontal>
       <TextField horizontal
         label='Zipcode'

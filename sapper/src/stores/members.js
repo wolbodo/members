@@ -10,9 +10,7 @@ export default BaseStore =>
           $fullname: String!,
           $email: String,
           $phone: String,
-          $streetname: String,
-          $housenumber: numeric,
-          $housenumberaddon: String,
+          $address: String,
           $zipcode: String,
           $city: String,
           $country: String
@@ -22,9 +20,7 @@ export default BaseStore =>
             fullname: $fullname
             email: $email
             phone: $phone
-            streetname: $streetname
-            housenumber: $housenumber
-            housenumberaddon: $housenumberaddon
+            address: $address
             zipcode: $zipcode
             city: $city
             country: $country
@@ -39,7 +35,7 @@ export default BaseStore =>
       return res
     }
 
-    async updateMember(id, data) {
+    async updateMember(id, data, permission = 'member:update') {
       try {
         const res = await this.gqlMutation({
           mutation: gql`
@@ -62,7 +58,7 @@ export default BaseStore =>
             id: id,
             data: data
           },
-          permission: 'member:update'
+          permission
         })
         this.notify('info', `Edited ${res.data.update_member.affected_rows} rows`)
         return res
