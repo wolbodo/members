@@ -8,7 +8,7 @@ const { fetch } = fetchPonyfill();
 const PERMISSIONS_MAP = {
   'member:create': ['board'],
   'member:read': ['admin', 'board', 'user'],
-  'member:update': ['admin', 'board'],
+  'member:update': ['board', 'self'],
   'member_roles:create': ['board'],
   'mail:create': ['admin'],
   'mail:read': ['admin'],

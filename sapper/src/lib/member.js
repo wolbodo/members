@@ -18,13 +18,22 @@ export function status({ validity }) {
     } else {
       status = 'current'
     }
-  } else {
-    status = 'aspiring'
-  }
-  if (end) {
-    if (end.isBefore(moment())) {
-      status = 'retired'
+
+    if (end) {
+      if (end.isBefore(moment())) {
+        status = 'retired'
+      }
     }
+  } else {
+
+    if (end) {
+      if (end.isBefore(moment())) {
+        status = 'aspiring'
+      }
+    } else {
+      status = 'always'
+    }
+
   }
 
 

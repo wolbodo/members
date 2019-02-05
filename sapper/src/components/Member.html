@@ -1,9 +1,17 @@
 
 {#if canEdit}
 <div class="buttons has-addons is-right">
+  {#if $permissions.includes('member:update')}
+    {#if memberStatus.status === 'current'}
+      <button class="button" on:click='makeOldMember()' class:is-loading='submittingMembership'>Maak lid af</button>
+    {:elseif memberStatus.status === 'aspiring'}
+      <button class="button" on:click='makeMember()' class:is-loading='submittingMembership'>Maak lid</button>
+    {/if}
+  {/if}
   <a href='/members/{slugify(member.name)}/edit' class="button">Edit</a>
 </div>
 {/if}
+
 
 <div class="tile is-ancestor is-vertical">
   <div class='tile is-parent'>
@@ -146,8 +154,6 @@
   </div>
 </div>
 
-<!-- <pre>{JSON.stringify(member, null, 2)}</pre> -->
-
 <style>
   .tile.is-child {
     padding: 0.5rem;
@@ -165,7 +171,6 @@
 
   import slugify from 'src/lib/slugify'
   import { status } from 'src/lib/member'
-  import moment from 'moment'
 
   export default {
     computed: {
@@ -238,7 +243,7 @@
       }
     },
     helpers: {
-      slugify, moment
+      slugify
     },
     methods: {
       async submit(name, data) {
@@ -315,7 +320,39 @@
         const { edit } = this.get()
         edit.delete(name)
         this.set({ edit })
-      }
+      },
+      async makeOldMember () {
+        const { memberStatus, member } = this.get()
+        console.log("Making old member:", memberStatus)
+        this.set({ submittingMembership: true })
+        await this.store.gqlMutation({
+          mutation: gql`mutation {
+            update_member(_set:{
+              validity: "[${memberStatus.start.format()},now]"
+            }, where:{id:{_eq: ${member.id}}}){
+              affected_rows
+            }
+          }`,
+          permission: 'member:update'
+        })
+        this.set({ submittingMembership: false })
+      },
+      async makeMember () {
+        const { memberStatus, member } = this.get()
+        console.log("Making member:", memberStatus)
+        this.set({ submittingMembership: true })
+        await this.store.gqlMutation({
+          mutation: gql`mutation {
+            update_member(_set:{
+              validity: "[now,)"
+            }, where:{id:{_eq: ${member.id}}}){
+              affected_rows
+            }
+          }`,
+          permission: 'member:update'
+        })
+        this.set({ submittingMembership: false })
+      },
     },
     oncreate () { 
       this.store.allRoles()
