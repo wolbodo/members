@@ -39,7 +39,7 @@ $$ LANGUAGE sql STABLE;
 
 
 CREATE TABLE public.role (
-  id                INTEGER             GENERATED ALWAYS AS IDENTITY,
+  id                SERIAL,
   name              VARCHAR(1024)       NOT NULL,
   description       TEXT                NOT NULL,
   validity          TSTZRANGE           NOT NULL,
