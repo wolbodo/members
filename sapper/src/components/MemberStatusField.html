@@ -1,15 +1,23 @@
 
-{#if validity.end && validity.end.isBefore(moment())}
+{#if status.status === 'retired'}
   <span class="tag is-small is-info">
     Old member
   </span>
-{:elseif validity.start && validity.start.isAfter(moment())}
+{:elseif status.status === 'future'}
   <span class="tag is-small is-warning">
     Future member
   </span>
-{:else}
+{:elseif status.status === 'current'}
   <span class="tag is-small is-success">
     Member
+  </span>
+{:elseif status.status === 'aspiring'}
+  <span class="tag is-small is-danger">
+    Aspiring member
+  </span>
+{:else}
+  <span class="tag is-small is-danger">
+    ???
   </span>
 {/if}
 

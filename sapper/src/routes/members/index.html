@@ -46,11 +46,11 @@
 <script>
 import gql from 'graphql-tag';
 
-import validity from 'src/lib/validity'
+import { status } from 'src/lib/member'
 
 import MemberNameField from 'src/components/MemberNameField.html'
 import MemberRolesField from 'src/components/MemberRolesField.html'
-import MemberValidityField from 'src/components/MemberValidityField.html'
+import MemberStatusField from 'src/components/MemberStatusField.html'
 import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
 
 const queries = [{
@@ -89,8 +89,8 @@ export default {
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
         { name: 'Roles', field: 'member_roles', component: MemberRolesField },
-        { name: 'validity', field: 'validity', component: MemberValidityField,
-        props: ({ validity: v }) => ({ validity: validity(v) }) },
+        { name: 'status', field: 'status', component: MemberStatusField,
+        props: ({ validity }) => ({ status: status({ validity }) }) },
       ]
     }
   },

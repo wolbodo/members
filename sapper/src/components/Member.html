@@ -41,13 +41,15 @@
         {/if}
 
         <p>
-          <MemberValidityField validity={memberValidity} />
-          {#if memberValidity.end}
-            Lid van: {memberValidity.start.format('D MMM YYYY')} tot {memberValidity.end.format('D MMM YYYY')}
-          {:elseif memberValidity.start && memberValidity.start.isAfter(moment())}
-            Lid vanaf: {memberValidity.start.format('D MMM YYYY')}
+          <MemberStatusField status={memberStatus} />
+          {#if memberStatus.status === 'retired'}
+            Lid van: {memberStatus.start.format('D MMM YYYY')} tot {memberStatus.end.format('D MMM YYYY')}
+          {:elseif memberStatus.status === 'future'}
+            Lid vanaf: {memberStatus.start.format('D MMM YYYY')}
+          {:elseif memberStatus.status === 'current'}
+            Lid sinds: {memberStatus.start.format('D MMM YYYY')}
           {:else}
-            Lid sinds: {memberValidity.start.format('D MMM YYYY')}
+            Aspirant lid
           {/if}
         </p>
 
@@ -162,7 +164,7 @@
   import RoleSelectItem from './RoleSelectItem.html'
 
   import slugify from 'src/lib/slugify'
-  import validity from 'src/lib/validity'
+  import { status } from 'src/lib/member'
   import moment from 'moment'
 
   export default {
@@ -174,12 +176,12 @@
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
       ),
       canEdit: ({ isSelf, $permissions }) => isSelf || $permissions.includes('member:update'),
-      memberValidity: ({ member }) => validity(member.validity)
+      memberStatus: ({ member }) => status(member)
     },
     components: {
       Form: './Form.html',
       Select: 'svelte-select',
-      MemberValidityField: 'src/components/MemberValidityField.html'
+      MemberStatusField: 'src/components/MemberStatusField.html'
     },
     data () {
       return {
