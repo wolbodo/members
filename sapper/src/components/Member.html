@@ -449,6 +449,15 @@
       this.set({
         selectedRoles: member.member_roles.map(ur => ur.role).map(r => ({...r, value: r.id}))
       })
+
+      // Update selectedRoles when member is updated
+      this.on('state', ({ changed, current }) => {
+        if (changed.memberRoles) {
+          this.set({
+            selectedRoles: current.memberRoles.map(r => ({...r, value: r.id}))
+          })
+        }
+      })
     }
   }
 </script>
