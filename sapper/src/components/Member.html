@@ -39,6 +39,18 @@
         {#if member.phone}
           <a href='tel:{member.phone}'>{member.phone}</a>
         {/if}
+
+        <p>
+          <MemberValidityField validity={memberValidity} />
+          {#if memberValidity.end}
+            Lid van: {memberValidity.start.format('D MMM YYYY')} tot {memberValidity.end.format('D MMM YYYY')}
+          {:elseif memberValidity.start && memberValidity.start.isAfter(moment())}
+            Lid vanaf: {memberValidity.start.format('D MMM YYYY')}
+          {:else}
+            Lid sinds: {memberValidity.start.format('D MMM YYYY')}
+          {/if}
+        </p>
+
       {/if}
     </div>
 
@@ -150,6 +162,8 @@
   import RoleSelectItem from './RoleSelectItem.html'
 
   import slugify from 'src/lib/slugify'
+  import validity from 'src/lib/validity'
+  import moment from 'moment'
 
   export default {
     computed: {
@@ -160,10 +174,12 @@
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
       ),
       canEdit: ({ isSelf, $permissions }) => isSelf || $permissions.includes('member:update'),
+      memberValidity: ({ member }) => validity(member.validity)
     },
     components: {
       Form: './Form.html',
       Select: 'svelte-select',
+      MemberValidityField: 'src/components/MemberValidityField.html'
     },
     data () {
       return {
@@ -220,7 +236,7 @@
       }
     },
     helpers: {
-      slugify
+      slugify, moment
     },
     methods: {
       async submit(name, data) {

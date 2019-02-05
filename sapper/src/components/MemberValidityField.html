@@ -1,0 +1,24 @@
+
+{#if validity.end && validity.end.isBefore(moment())}
+  <span class="tag is-small is-info">
+    Old member
+  </span>
+{:elseif validity.start && validity.start.isAfter(moment())}
+  <span class="tag is-small is-warning">
+    Future member
+  </span>
+{:else}
+  <span class="tag is-small is-success">
+    Member
+  </span>
+{/if}
+
+<script>
+  import moment from 'moment'
+
+  export default {
+    helpers: {
+      moment
+    }
+  }
+</script>

@@ -46,16 +46,20 @@
 <script>
 import gql from 'graphql-tag';
 
-  import MemberNameField from 'src/components/MemberNameField.html'
-  import MemberRolesField from 'src/components/MemberRolesField.html'
-  import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
+import validity from 'src/lib/validity'
+
+import MemberNameField from 'src/components/MemberNameField.html'
+import MemberRolesField from 'src/components/MemberRolesField.html'
+import MemberValidityField from 'src/components/MemberValidityField.html'
+import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
 
 const queries = [{
   type: 'subscription',
   query: gql`subscription {
-    members: active_member {
+    members: member {
       id name email phone 
       fullname
+      validity
       member_roles {
         role {
           id
@@ -70,9 +74,10 @@ const queries = [{
   error(err) { this.set({ error: err }) }
 }]
 
+
 export default {
   components: {
-    Table: 'src/components/Table.html'
+    Table: 'src/components/Table.html',
   },
   data() {
     return {
@@ -84,6 +89,8 @@ export default {
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
         { name: 'Roles', field: 'member_roles', component: MemberRolesField },
+        { name: 'validity', field: 'validity', component: MemberValidityField,
+        props: ({ validity: v }) => ({ validity: validity(v) }) },
       ]
     }
   },

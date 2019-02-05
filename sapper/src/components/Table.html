@@ -15,7 +15,11 @@
           {#each columns as column}
             <td>
               {#if column.component}
-                <svelte:component this={column.component} {row} {column} />
+                {#if column.props}
+                  <svelte:component this={column.component} {...column.props(row)} />
+                {:else}
+                  <svelte:component this={column.component} {row} {column} />
+                {/if}
               {:elseif column.field instanceof Function}
                 {column.field(row)}
               {:else}
