@@ -11,7 +11,7 @@
       <tr><td>No members found.</td></tr>
     {:else}
       {#each filteredData as row (row.id)}
-        <tr style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}">
+        <tr style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}" class:clickable='!!rowUrl' on:click="gotoRow(row)">
           {#each columns as column}
             <td>
               {#if column.component}
@@ -42,6 +42,9 @@
     background-color: #C6F4D5;
     color: #000;
   }
+  tr.clickable {
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -56,6 +59,13 @@
     },
     helpers: {
       Function
+    },
+    methods: {
+      gotoRow (row) {
+        const { rowUrl } = this.get()
+        if (rowUrl)
+          goto(rowUrl(row))
+      }
     },
     computed: {
       filteredData: ({ data, filter }) => {

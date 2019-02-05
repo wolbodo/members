@@ -176,7 +176,9 @@
           "role": "board",
           "comment": null,
           "permission": {
-            "set": {},
+            "set": {
+              "validity": "[,now]"
+            },
             "check": {},
             "columns": [
               "city",

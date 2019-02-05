@@ -3,39 +3,50 @@
 <div class="buttons has-addons is-right">
   {#if $permissions.includes('member:update')}
     {#if memberStatus.status === 'current'}
-      <button class="button" on:click='makeOldMember()' class:is-loading='submittingMembership'>Maak lid af</button>
+      <button class="button" on:click='makeOldMember()' class:is-loading='submittingMembership'>Make old member</button>
     {:elseif memberStatus.status === 'aspiring'}
-      <button class="button" on:click='makeMember()' class:is-loading='submittingMembership'>Maak lid</button>
+      <button class="button" on:click='makeMember()' class:is-loading='submittingMembership'>Make member</button>
     {/if}
   {/if}
-  <a href='/members/{slugify(member.name)}/edit' rel=prefetch class="button">Edit</a>
+  <!-- <a href='/members/{slugify(member.name)}/edit' rel=prefetch class="button">Edit</a> -->
 </div>
 {/if}
 
-
+<form on:submit|preventDefault|stopPropagation='submitForm()'>
 <div class="tile is-ancestor is-vertical">
   <div class='tile is-parent'>
     <div class="tile is-child box">
       <h1 class='title'>
         {member.name}
         {#if canEdit}
-        <button
-          class="button is-small"
-          on:click="open('identity')"
-        >
-          <span class="icon">
-            <i class="fas fa-edit"></i>
-          </span>
-        </button>
+          {#if openForms.has('identity')}
+            <button type='button'
+              class="button is-medium"
+              on:click="closeForm('identity')"
+            >
+              <span class="icon">
+                <i class="fas fa-times"></i>
+              </span>
+            </button>
+          {:else}
+            <button type='button'
+              class="button is-medium"
+              on:click="openForm('identity')"
+            >
+              <span class="icon">
+                <i class="fas fa-edit"></i>
+              </span>
+            </button>
+          {/if}
         {/if}
       </h1>
-      {#if edit.has('identity')}
+      {#if openForms.has('identity')}
         <Form
-          on:submit="submit('identity', event)"
-          on:cancel="close('identity')"
-          loading={submitting.has('identity')}
+          loading={submittingForm}
           data={member}
+          bind:changes='identityChanges'
           fields={identityFields}
+          showButtons={false}
         />
       {:else}
         {#if member.fullname}
@@ -68,23 +79,34 @@
       <h1 class='title'>
         Address
         {#if canEdit}
-        <button
-          class="button is-small"
-          on:click="open('address')"
-        >
-          <span class="icon">
-            <i class="fas fa-edit"></i>
-          </span>
-        </button>
+          {#if openForms.has('address')}
+            <button type='button'
+              class="button is-medium"
+              on:click="closeForm('address')"
+            >
+              <span class="icon">
+                <i class="fas fa-times"></i>
+              </span>
+            </button>
+          {:else}
+            <button type='button'
+              class="button is-medium"
+              on:click="openForm('address')"
+            >
+              <span class="icon">
+                <i class="fas fa-edit"></i>
+              </span>
+            </button>
+          {/if}
         {/if}
       </h1>
-      {#if edit.has('address')}
+      {#if openForms.has('address')}
         <Form
-          on:submit="submit('address', event)"
-          on:cancel="close('address')"
-          loading={submitting.has('address')}
+          loading={submittingForm}
+          bind:changes='addressChanges'
           data={member}
           fields={addressFields}
+          showButtons={false}
         />
       {:else}
         <p>{member.address || ''}</p>
@@ -95,7 +117,7 @@
   </div>
 
   <div class='tile is-parent'>
-    <div class='tile is-child box is-6'>
+    <div class='tile is-child box is-6 roles'>
       <h1 class='title'>
         Roles
       </h1>
@@ -111,48 +133,57 @@
         getOptionLabel={(option) => option.name}
         bind:selectedValue='selectedRoles'
       ></Select>
-
-      {#if $permissions.includes('member_roles:create')}
-      <div class="buttons is-right">
-        <button on:click='saveRoles()' class="button is-primary" class:is-loading='rolesSaving' disabled='{!rolesDirty}'>
-          Save
-        </button>
-      </div>
-      {/if}
     </div>
 
     {#if isSelf}
       <div class='tile is-child box is-6'>
-        <form on:submit|preventDefault|stopPropagation='savePassword(password)'>
-          <h1 class='title'>
-            Password
-          </h1>
-          <div class="field has-addons">
-            <p class="control">
-              {#if showPassword}
-                <input disabled={passwordSaving} class="input" type='text' bind:value='password'>
-              {:else}
-                <input disabled={passwordSaving} class="input" type='password' bind:value='password'>
-              {/if}
-            </p>
-            <p class="control">
-              <button type='button' class="button" on:click='set({ showPassword: !showPassword})'>
-                <span class="icon is-small">
-                  <i class="fa fa-{showPassword ? 'eye-slash' : 'eye'}" />
-                </span>
-              </button>
-            </p>
-            <p class="control">
-              <button type='submit' class="button is-primary" class:is-loading='passwordSaving'>
-                Save
-              </button>
-            </p>
-          </div>
-        </form>
+        <h1 class='title'>
+          Password
+        </h1>
+        <div class="field has-addons">
+          <p class="control">
+            {#if showPassword}
+              <input disabled={passwordSaving} class="input" type='text' bind:value='password'>
+            {:else}
+              <input disabled={passwordSaving} class="input" type='password' bind:value='password'>
+            {/if}
+          </p>
+          <p class="control">
+            <button type='button' class="button" on:click='set({ showPassword: !showPassword})'>
+              <span class="icon is-small">
+                <i class="fa fa-{showPassword ? 'eye-slash' : 'eye'}" />
+              </span>
+            </button>
+          </p>
+        </div>
       </div>
     {/if}
   </div>
 </div>
+
+{#if showSaveBar}
+  <div class="save-all buttons is-right">
+    <button
+      type='reset'
+      class="button"
+      class:is-loading='loading'
+      disabled="{loading}"
+      on:click="resetForm()"
+    >Cancel</button>
+
+    <button
+      type='submit'
+      class="button
+      is-primary"
+      class:is-loading='loading'
+      class:is-disabled='formsDirty'
+      disabled="{!formsDirty}"
+    >Save</button>
+  </div>
+{/if}
+</form>
+
+<pre>{JSON.stringify(openForms.size, null, 2)}</pre>
 
 <style>
   .tile.is-child {
@@ -161,6 +192,36 @@
   .title {
     display: flex;
     justify-content: space-between;
+  }
+  .box:hover .title .button {
+    background-color: #8A4D76;
+    border-color: transparent;
+    color: #fff;
+  }
+
+  .roles :global(.selectContainer.disabled),
+  .roles :global(.selectContainer.disabled:hover) {
+    background: transparent;
+    border: none;
+  }
+  .roles :global(.multiSelectItem),
+  .roles :global(.multiSelectItem:hover) {
+    background: #8A4D76;
+    color: white;
+  }
+
+  .save-all {
+    background: #8A4D76;
+    position: sticky;
+    padding: 0.5rem;
+    bottom: 0;
+  }
+  .save-all button {
+    margin: 0;
+  }
+
+  .box:hover {
+    background: #ffe1f4;
   }
 </style>
 
@@ -176,6 +237,10 @@
     computed: {
       memberRoles: ({ member }) => member.member_roles.map(ur => ur.role),
       isSelf: ({ $user, member: { name } }) => $user && ($user.name === name),
+      showSaveBar: ({ rolesDirty, openForms, formsDirty }) =>
+        rolesDirty || openForms.size > 0 || formsDirty,
+      formsDirty: ({ rolesDirty, identityChanges, addressChanges, password }) =>
+        rolesDirty || (identityChanges.size > 0) || (addressChanges.size > 0) || (password !== ''),
       rolesDirty: ({ selectedRoles = [], memberRoles }) => (
         (selectedRoles.length !== memberRoles.length)
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
@@ -193,10 +258,11 @@
         RoleSelectItem,
         showPassword: false,
         password: '',
-        edit: new Set(),
-        submitting: new Set(),
+        openForms: new Set(),
         roles: [],
         rolesLoading: true,
+        addressChanges: new Map(),
+        identityChanges: new Map(),
         addressFields: [{
           name: 'address',
           required: true,
@@ -237,22 +303,49 @@
       slugify
     },
     methods: {
-      async submit(name, data) {
-        const { member, edit, submitting } = this.get()
-        if (data.size !== 0) {
-          console.log("Submit:", name, data)
-          submitting.add(name)
-          this.set({ submitting })
+      async submitForm() {
+        let permission = 'member:update'
+        const {
+          member,
+          isSelf, password,
+          addressChanges, identityChanges,
+          rolesDirty,
+        } = this.get()
+        const { permissions } = this.store.get()
+
+        const changes = new Map([...addressChanges, ...identityChanges])
+
+
+        if (isSelf && password) {
+          changes.set('password', password)
+          permission = 'member:update_self'
+        }
+
+        if (changes.size !== 0) {
+          console.log("Submit:", changes)
+          this.set({ submittingForm: true })
 
           await this.store.updateMember(
             member.id,
-            Object.fromEntries(data.entries())
+            Object.fromEntries(changes.entries()),
+            permission
           )
-          submitting.delete(name)
           this.store.notify('success', `Member (${member.name}) updated`)
         }
-        edit.delete(name)
-        this.set({ submitting, edit })
+        if (permissions.includes('member_roles:create') && rolesDirty) {
+          await this.saveRoles()
+        }
+
+        this.resetForm()
+      },
+      resetForm () {
+        this.set({
+          submittingForm: false,
+          password: '',
+          openForms: new Set(),
+          addressChanges: new Map(),
+          identityChanges: new Map(),
+        })
       },
       async saveRoles () {
         this.set({ rolesSaving: true })
@@ -290,11 +383,11 @@
         }
         this.set({ rolesSaving: false })
       },
-      open(name) {
+      openForm(name) {
         console.log("Open form:", name)
-        const { edit } = this.get()
-        edit.add(name)
-        this.set({ edit })
+        const { openForms } = this.get()
+        openForms.add(name)
+        this.set({ openForms })
       },
       async savePassword (password) {
         const { member } = this.get()
@@ -307,10 +400,10 @@
         )
         this.set({ passwordSaving: false, password: '' })
       },
-      close(name) {
-        const { edit } = this.get()
-        edit.delete(name)
-        this.set({ edit })
+      closeForm(name) {
+        const { openForms } = this.get()
+        openForms.delete(name)
+        this.set({ openForms })
       },
       async makeOldMember () {
         const { memberStatus, member } = this.get()

@@ -1,4 +1,4 @@
-<form on:submit|preventDefault|stopPropagation="submit()">
+<!-- <form on:submit|preventDefault|stopPropagation="submit()"> -->
   {#each fields as {
     type, label, placeholder, name,
     required
@@ -30,11 +30,14 @@
       />
     {/if}
   {/each}
+
+  {#if showButtons}
   <div class="buttons is-right">
     <button type=reset class="button" class:is-loading='loading' disabled="{loading}" on:click="fire('cancel')">Cancel</button>
     <button type=submit class="button is-primary" class:is-loading='loading' disabled="{loading}">Save</button>
   </div>
-</form>
+  {/if}
+<!-- </form> -->
 
 <script>
 
@@ -52,7 +55,8 @@
     data () {
       return {
         changes: new Map(),
-        loading: false
+        loading: false,
+        showButtons: true
       }
     },
     methods: {
