@@ -2,7 +2,7 @@
 
 import { Store as BaseStore } from 'svelte/store.js';
 
-import graphqlStore from './graphql'
+import graphqlStore from '@dxlb/svelte-graphql-store'
 import membersStore from './members'
 import authStore from './auth'
 import notificationStore from './notifications'

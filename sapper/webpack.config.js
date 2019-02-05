@@ -67,6 +67,7 @@ module.exports = {
 		},
 		externals: Object.keys(pkg.dependencies)
                 .filter(name => !name.startsWith('svelte-select'))
+                .filter(name => !name.startsWith('@dxlb/svelte-'))
 								.concat('encoding'),
 		module: {
 			rules: [
