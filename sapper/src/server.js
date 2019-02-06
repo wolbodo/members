@@ -34,7 +34,7 @@ function authorize(req, res, next) {
     const parsed = parse(cookie.token)
     // console.log("Contents:", parsed)  
     const exp = moment.unix(parsed.exp)
-    console.log("exp:", moment(), exp, moment().isAfter(exp))
+    // console.log("exp:", moment(), exp, moment().isAfter(exp))
     // req.token ? next() : ((res.statusCode=401) && res.end('No token!'));
   }
 
@@ -52,7 +52,7 @@ polka() // You can also use Express
 	.use(
     compression({ threshold: 0 }),
     sirv('static', { dev }),
-    logger,
+    // logger,
     authorize,
     bodyParser.json(),
 		sapper.middleware({
