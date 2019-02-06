@@ -28,12 +28,7 @@
   </div>
 {/if}
 
-{#if error}
-  <div class="error notification is-danger">
-    <h3 class='title'>Error</h3>
-    {JSON.stringify(error, null, 2)}
-  </div>
-{/if}
+<Error :error />  
 
 {#if !emails}
   <p>Loading</p>
@@ -82,7 +77,8 @@ const queries = [{
 
 export default {
   components: {
-    Table: 'src/components/Table.html'
+    Table: 'src/components/Table.html',
+    Error: 'src/components/Error.html'
   },
   data() {
     return {

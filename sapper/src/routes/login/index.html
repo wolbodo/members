@@ -24,19 +24,8 @@
     <a href='/login/reset' class='is-link'>Forgot your password?</a>
   </form>
 
-  {#if loginResult}
-    loginResult:
-    <pre>
-      {JSON.stringify(loginResult, null, 2)}
-    </pre>
-  {/if}
+  <Error :error />  
 
-  {#if memberData}
-    memberData:
-    <pre>
-      {JSON.stringify(memberData, null, 2)}
-    </pre>
-  {/if}
 </section>
 
 <style>
@@ -62,11 +51,12 @@
         email: 'dexter@example.org',
         password: 'dexter',
         loginResult: undefined,
-        memberData: undefined
+        error: undefined
       }
     },
     components: {
-      EmailField, PasswordField
+      EmailField, PasswordField,
+      Error: 'src/components/Error.html'
     },
     methods: {
       async login(e) {
@@ -102,10 +92,11 @@
               user: data.user
             })
 
-            this.store.notify('success', 'Successful login')
-
             goto('/', { replaceState: true })
           } else {
+            this.set({
+              error: data
+            })
             this.store.notify('error', 'Incorrect login details')
           }
 

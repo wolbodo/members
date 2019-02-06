@@ -182,8 +182,6 @@
 {/if}
 </form>
 
-<pre>{JSON.stringify(openForms.size, null, 2)}</pre>
-
 <style>
   .tile.is-child {
     padding: 0.5rem;
@@ -230,6 +228,15 @@
   import RoleSelectItem from './RoleSelectItem.html'
 
   import { status } from 'src/lib/member'
+
+  function mapToObject(obj) {
+    const res = Array.from(obj.entries())
+      .reduce((acc, [key, value]) => {
+        acc[key] = value
+        return acc
+      }, {})
+    return res
+  }
 
   export default {
     computed: {
@@ -322,7 +329,7 @@
 
           await this.store.updateMember(
             member.id,
-            Object.fromEntries(changes.entries()),
+            mapToObject(changes),
             permission
           )
           this.store.notify('success', `Member (${member.name}) updated`)

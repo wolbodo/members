@@ -1,10 +1,4 @@
-
-{#if error}
-  <div class="error notification is-danger">
-    <h3 class='title'>Error</h3>
-    {JSON.stringify(error, null, 2)}
-  </div>
-{/if}
+<Error :error />  
 
 {#if !member}
   <p>Loading</p>
@@ -50,6 +44,8 @@
   export default {
     components: {
       Member: 'src/components/Member.html',
+      Error: 'src/components/Error.html'
+      
     },
     oncreate() {
       const { params } = this.get()
