@@ -1,0 +1,47 @@
+<form on:submit|stopPropagation|preventDefault='resetPassword(resetEmail)'>
+  <EmailField horizontal
+    disabled={resetPending}
+    label='Email'
+    value={resetEmail || ''}
+    on:change="set({ resetEmail: event })"
+  />
+
+  <div class="buttons is-right">
+    <button type='submit' class="button is-primary" class:is-loading='resetPending'>
+      Send reset email
+    </button>
+  </div>
+</form>
+
+<script>
+  import { EmailField } from 'svelte-bulma-forms/module'
+
+  import { goto } from '../../../__sapper__/client.js'
+
+  export default {
+    components: {
+      EmailField
+    },
+    data () {
+      return {
+        resetPending: false,
+      }
+    },
+    methods: {
+      async resetPassword(email) {
+        this.set({ resetPending: true })
+        await fetch('/auth/password-forgot', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            email
+          })
+        })
+        this.set({ resetPending: false })
+        goto('/login/reset-received')
+      }
+    }
+  }
+</script>

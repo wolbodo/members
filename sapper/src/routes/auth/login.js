@@ -9,16 +9,16 @@ const { GRAPHQL_LOCAL_URI } = process.env;
 export async function post(req, res) {
   const token = JWT.create({
     id: -1,
-    name: 'login',
+    name: 'server:login',
     member_roles: [
-      { role: { name: 'login'}}
+      { role: { name: 'server'}}
     ]
-  }, 'login');
+  }, 'server');
 
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
     token,
-    role: 'login'
+    role: 'server'
   })
 
   try {

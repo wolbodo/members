@@ -20,6 +20,8 @@
     <div class="buttons is-right">
       <button type=submit class="button is-link" class:is-loading='loading' disabled="{loading}">Login</button>
     </div>
+
+    <a href='/login/reset' class='is-link'>Forgot your password?</a>
   </form>
 
   {#if loginResult}
@@ -51,7 +53,7 @@
     PasswordField
   } from 'svelte-bulma-forms/module'
 
-  import { goto } from '../../__sapper__/client.js'
+  import { goto } from '../../../__sapper__/client.js'
   import gql from 'graphql-tag'
 
   export default {

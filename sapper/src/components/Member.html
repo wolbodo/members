@@ -8,7 +8,6 @@
       <button class="button" on:click='makeMember()' class:is-loading='submittingMembership'>Make member</button>
     {/if}
   {/if}
-  <!-- <a href='/members/{slugify(member.name)}/edit' rel=prefetch class="button">Edit</a> -->
 </div>
 {/if}
 
@@ -230,7 +229,6 @@
   import gql from 'graphql-tag'
   import RoleSelectItem from './RoleSelectItem.html'
 
-  import slugify from 'src/lib/slugify'
   import { status } from 'src/lib/member'
 
   export default {
@@ -298,9 +296,6 @@
           placeholder: '+31 000 0000 000',
         }]
       }
-    },
-    helpers: {
-      slugify
     },
     methods: {
       async submitForm() {

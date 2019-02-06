@@ -7,12 +7,12 @@ const { fetch } = fetchPonyfill();
 
 const PERMISSIONS_MAP = {
   'member:create': ['board'],
-  'member:read': ['admin', 'board', 'user'],
+  'member:read': ['admin', 'board', 'user', 'login'],
   'member:update': ['board'],
   'member:update_self': ['user'],
   'member_roles:create': ['board'],
-  'mail:create': ['admin'],
-  'mail:read': ['admin'],
+  'mail:create': ['admin', 'mail'],
+  'mail:read': ['admin', 'mail'],
 }
 
 export default BaseStore =>
