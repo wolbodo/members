@@ -16,15 +16,15 @@ export async function post (req, res) {
 
   const token = create({
     id: -1,
-    name: 'mail',
+    name: 'server:mail',
     member_roles: [
-      { role: { name: 'mail' } }
+      { role: { name: 'server' } }
     ]
-  }, 'mail') 
+  }, 'server') 
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
     token,
-    role: 'mail'
+    role: 'server'
   })
 
   console.log("Querying mail:", _mail.id)

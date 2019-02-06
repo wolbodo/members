@@ -22,7 +22,7 @@
       "insert_permissions": [],
       "select_permissions": [
         {
-          "role": "login",
+          "role": "server",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -81,7 +81,7 @@
       "array_relationships": [],
       "insert_permissions": [
         {
-          "role": "mail",
+          "role": "server",
           "comment": null,
           "permission": {
             "set": {},
@@ -97,7 +97,7 @@
       ],
       "select_permissions": [
         {
-          "role": "mail",
+          "role": "server",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -108,17 +108,13 @@
               "status",
               "template"
             ],
-            "filter": {
-              "status": {
-                "_eq": "new"
-              }
-            }
+            "filter": {}
           }
         }
       ],
       "update_permissions": [
         {
-          "role": "mail",
+          "role": "server",
           "comment": null,
           "permission": {
             "columns": [
@@ -195,24 +191,12 @@
       ],
       "select_permissions": [
         {
-          "role": "login",
+          "role": "server",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
             "columns": [
-              "email",
-              "id",
-              "password"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "user",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
+              "address",
               "city",
               "country",
               "email",
@@ -220,8 +204,8 @@
               "id",
               "modified",
               "name",
+              "password",
               "phone",
-              "address",
               "validity",
               "zipcode"
             ],
@@ -229,7 +213,7 @@
           }
         },
         {
-          "role": "mail",
+          "role": "user",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -272,6 +256,16 @@
         }
       ],
       "update_permissions": [
+        {
+          "role": "server",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "password"
+            ],
+            "filter": {}
+          }
+        },
         {
           "role": "user",
           "comment": null,
@@ -355,7 +349,7 @@
       ],
       "select_permissions": [
         {
-          "role": "login",
+          "role": "server",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -451,27 +445,6 @@
       "insert_permissions": [],
       "select_permissions": [
         {
-          "role": "login",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "id",
-              "name",
-              "email",
-              "password",
-              "fullname",
-              "phone",
-              "address",
-              "zipcode",
-              "city",
-              "country",
-              "modified"
-            ],
-            "filter": {}
-          }
-        },
-        {
           "role": "user",
           "comment": null,
           "permission": {
@@ -488,6 +461,27 @@
               "phone",
               "address",
               "zipcode"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "server",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "id",
+              "name",
+              "email",
+              "password",
+              "fullname",
+              "phone",
+              "address",
+              "zipcode",
+              "city",
+              "country",
+              "modified"
             ],
             "filter": {}
           }

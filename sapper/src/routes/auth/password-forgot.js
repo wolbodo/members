@@ -57,7 +57,6 @@ export async function post(req, res) {
             }
           }
         `,
-        permission: 'mail:create',
         variables: {
           memberId: member.id,
           data: {
