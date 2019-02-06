@@ -11,7 +11,7 @@ const intoQuery = ({ definitions, ...rest }) => (
   }
 )
 
-export function loadQueries (component, queries, { params = {}, role='user' } = {}) {
+export function loadQueries (component, queries, { params = {}, role='member' } = {}) {
   component._subscriptions = []
 
   for (let query of queries) {
@@ -36,7 +36,7 @@ export function stopQueries (component) {
   component._subscriptions.map(s => s.unsubscribe())
 }
 
-export async function preloadQueries (store, queries, { params = {}, role='user' } = {}) {
+export async function preloadQueries (store, queries, { params = {}, role='member' } = {}) {
   const data = {}
   const { role: prevRole } = store.get()
 

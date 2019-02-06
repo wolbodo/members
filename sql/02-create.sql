@@ -1,7 +1,7 @@
 CREATE TABLE public.member (
   id                SERIAL,
   name              VARCHAR(255)        NOT NULL,
-  email             VARCHAR(1024)       ,
+  email             VARCHAR(255)       ,
   password          VARCHAR(1024)       ,
   fullname          VARCHAR(1024)       NOT NULL,
   phone             VARCHAR(255)        ,
@@ -11,7 +11,8 @@ CREATE TABLE public.member (
   city              VARCHAR(255)        ,
   country           VARCHAR(255)        ,
 
-  validity          TSTZRANGE           NOT NULL,
+  validity          TSTZRANGE           DEFAULT '[NOW,)',
+  created           TIMESTAMPTZ         DEFAULT 'NOW', -- Adding a created cause validity might have to be reset
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
   EXCLUDE USING gist (name WITH =, validity WITH &&),

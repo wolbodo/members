@@ -15,7 +15,7 @@ INSERT INTO public.role
   (name, description, validity)
 VALUES
   ('admin', 'Can change all the data', '[now,)'),
-  ('user', 'User is able to perform login', '[now,)'),
+  ('member', 'Can login', '[now,)'),
   ('board', 'User is able to edit other users', '[now,)')
 ;
 
@@ -23,10 +23,10 @@ INSERT INTO public.member_role
   (member_id, role_id, validity)
 SELECT public.member.id, public.role.id, '[now,)' FROM
     (VALUES
-        ('admin@example.org', array['user','admin']),
-        ('dexter@example.org', array['user', 'board']),
-        ('dj@example.org', array['user']),
-        ('bwb@example.org', array['user'])
+        ('admin@example.org', array['member','admin']),
+        ('dexter@example.org', array['member', 'board']),
+        ('dj@example.org', array['member']),
+        ('bwb@example.org', array['member'])
     ) alias (email, role_names)
     JOIN public.member ON public.member.validity @> NOW() AND public.member.email = alias.email
     JOIN public.role ON public.role.validity @> NOW() AND public.role.name IN (SELECT unnest(alias.role_names));

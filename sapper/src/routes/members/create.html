@@ -7,6 +7,7 @@
 
 <script>
   import gql from 'graphql-tag'
+  import { goto } from '../../../__sapper__/client.js'
 
   export default {
     components: {
@@ -19,6 +20,7 @@
           const res = await this.store.addMember(data)
           console.log("result:", res)
           this.store.notify('success', 'Member added')
+          goto('/members')
         } catch (e) {
           this.store.notify('error', `Error trying to create member: ${e}`)
           console.error("Error trying to create member", e)

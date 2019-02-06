@@ -33,7 +33,7 @@
           }
         },
         {
-          "role": "user",
+          "role": "member",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -213,7 +213,7 @@
           }
         },
         {
-          "role": "user",
+          "role": "member",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -267,7 +267,7 @@
           }
         },
         {
-          "role": "user",
+          "role": "member",
           "comment": null,
           "permission": {
             "columns": [
@@ -364,7 +364,7 @@
           }
         },
         {
-          "role": "user",
+          "role": "member",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -409,7 +409,7 @@
       ],
       "delete_permissions": [
         {
-          "role": "user",
+          "role": "member",
           "comment": null,
           "permission": {
             "filter": {}
@@ -445,7 +445,7 @@
       "insert_permissions": [],
       "select_permissions": [
         {
-          "role": "user",
+          "role": "member",
           "comment": null,
           "permission": {
             "allow_aggregations": false,

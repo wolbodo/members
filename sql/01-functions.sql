@@ -34,7 +34,6 @@ END;
 $$ language 'plpgsql';
 
 
-
 CREATE OR REPLACE FUNCTION public.notify_password_change()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -44,7 +43,6 @@ BEGIN
     (NEW.id, 'password-change');
   RETURN NEW;
 END; $$ LANGUAGE 'plpgsql';
-
 
 
 

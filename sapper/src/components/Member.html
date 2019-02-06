@@ -132,6 +132,21 @@
         getOptionLabel={(option) => option.name}
         bind:selectedValue='selectedRoles'
       ></Select>
+
+      {#if member.member_roles}
+      <h2 class=subtitle>History</h2>
+      <ul>
+        {#each member.member_roles as memberRole}
+          <li>
+            {memberRole.role.name} ({
+              (v => v ? v.format('D-M-YY') : '')(parseValidity(memberRole.validity).start)
+            } - {
+              (v => v ? v.format('D-M-YY') : '')(parseValidity(memberRole.validity).end)
+            })
+          </li>
+        {/each}
+      </ul>
+      {/if}
     </div>
 
     {#if isSelf}
@@ -227,7 +242,7 @@
   import gql from 'graphql-tag'
   import RoleSelectItem from './RoleSelectItem.html'
 
-  import { status } from 'src/lib/member'
+  import { status, parseValidity } from 'src/lib/member'
 
   function mapToObject(obj) {
     const res = Array.from(obj.entries())
@@ -257,6 +272,9 @@
       Form: './Form.html',
       Select: 'svelte-select',
       MemberStatusField: 'src/components/MemberStatusField.html'
+    },
+    helpers: {
+      parseValidity
     },
     data () {
       return {
