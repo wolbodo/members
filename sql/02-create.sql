@@ -11,7 +11,7 @@ CREATE TABLE public.member (
   city              VARCHAR(255)        ,
   country           VARCHAR(255)        ,
 
-  validity          TSTZRANGE           DEFAULT '[NOW,)',
+  validity          TSTZRANGE           DEFAULT TSTZRANGE(now(),NULL),
   created           TIMESTAMPTZ         DEFAULT 'NOW', -- Adding a created cause validity might have to be reset
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
@@ -43,7 +43,7 @@ CREATE TABLE public.role (
   id                SERIAL,
   name              VARCHAR(1024)       NOT NULL,
   description       TEXT                NOT NULL,
-  validity          TSTZRANGE           NOT NULL,
+  validity          TSTZRANGE           DEFAULT TSTZRANGE(NULL,NULL),
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
   EXCLUDE USING gist (name WITH =, validity WITH &&),
@@ -55,12 +55,28 @@ CREATE TABLE public.member_role (
   member_id         INTEGER             NOT NULL REFERENCES public.member(id),
   role_id           INTEGER             NOT NULL REFERENCES public.role(id),
   note              TEXT                NOT NULL DEFAULT '',
-  validity          TSTZRANGE           NOT NULL,
+  validity          TSTZRANGE           DEFAULT TSTZRANGE(now(),NULL),
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
   EXCLUDE USING gist (member_id WITH =, role_id WITH =, validity WITH &&),
   PRIMARY KEY (member_id, role_id, validity)
 );
+CREATE RULE catch_member_role_delete AS ON DELETE TO public.member_role
+  DO INSTEAD UPDATE public.member_role
+    SET
+      validity = tstzrange(lower(validity), now())
+    WHERE
+      member_id = OLD.member_id AND role_id = OLD.role_id
+      AND
+      validity @> now()
+    RETURNING
+       OLD.*;
+
+
+CREATE OR REPLACE VIEW public.active_member_role AS 
+  SELECT mr.*
+  FROM public.member_role mr
+  WHERE (mr.validity @> now());
 
 CREATE TYPE public.mail_status AS ENUM ('new', 'sent', 'error');
 CREATE TABLE public.mail (

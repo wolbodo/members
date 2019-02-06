@@ -136,7 +136,7 @@
       {#if member.member_roles}
       <h2 class=subtitle>History</h2>
       <ul>
-        {#each member.member_roles as memberRole}
+        {#each member.all_member_roles as memberRole}
           <li>
             {memberRole.role.name} ({
               (v => v ? v.format('D-M-YY') : '')(parseValidity(memberRole.validity).start)
@@ -350,21 +350,23 @@
             mapToObject(changes),
             permission
           )
-          this.store.notify('success', `Member (${member.name}) updated`)
         }
         if (permissions.includes('member_roles:create') && rolesDirty) {
           await this.saveRoles()
         }
+        this.store.notify('success', `Member (${member.name}) updated`)
 
         this.resetForm()
       },
       resetForm () {
+        const { member } = this.get()
         this.set({
           submittingForm: false,
           password: '',
           openForms: new Set(),
           addressChanges: new Map(),
           identityChanges: new Map(),
+          selectedRoles: member.member_roles.map(ur => ur.role).map(r => ({...r, value: r.id}))
         })
       },
       async saveRoles () {
@@ -397,9 +399,8 @@
             },
             permission: 'member_roles:create'
           })
-          this.store.notify('success', `Member (${member.name}) updated`)
         } catch (e) {
-          this.store.notify('error', `Failed updating roles: ${e.message}`)
+          console.error('Err:', e)
         }
         this.set({ rolesSaving: false })
       },

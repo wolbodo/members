@@ -22,14 +22,25 @@
       "insert_permissions": [],
       "select_permissions": [
         {
-          "role": "server",
+          "role": "board",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
             "columns": [
-              "name"
+              "description",
+              "id",
+              "modified",
+              "name",
+              "validity"
             ],
-            "filter": {}
+            "filter": {
+              "name": {
+                "_nin": [
+                  "server",
+                  "admin"
+                ]
+              }
+            }
           }
         },
         {
@@ -44,20 +55,23 @@
               "name",
               "validity"
             ],
-            "filter": {}
+            "filter": {
+              "name": {
+                "_nin": [
+                  "server",
+                  "admin"
+                ]
+              }
+            }
           }
         },
         {
-          "role": "board",
+          "role": "server",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
             "columns": [
-              "description",
-              "id",
-              "modified",
-              "name",
-              "validity"
+              "name"
             ],
             "filter": {}
           }
@@ -158,9 +172,23 @@
       "array_relationships": [
         {
           "using": {
-            "foreign_key_constraint_on": {
-              "column": "member_id",
-              "table": "member_role"
+            "manual_configuration": {
+              "remote_table": "member_role",
+              "column_mapping": {
+                "id": "member_id"
+              }
+            }
+          },
+          "name": "all_member_roles",
+          "comment": null
+        },
+        {
+          "using": {
+            "manual_configuration": {
+              "remote_table": "active_member_role",
+              "column_mapping": {
+                "id": "member_id"
+              }
             }
           },
           "name": "member_roles",
@@ -335,10 +363,17 @@
           "role": "board",
           "comment": null,
           "permission": {
-            "set": {
-              "validity": "[NOW,)"
+            "set": {},
+            "check": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
             },
-            "check": {},
             "columns": [
               "member_id",
               "note",
@@ -364,6 +399,30 @@
           }
         },
         {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
           "role": "member",
           "comment": null,
           "permission": {
@@ -375,22 +434,16 @@
               "validity",
               "modified"
             ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "board",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "member_id",
-              "modified",
-              "note",
-              "role_id",
-              "validity"
-            ],
-            "filter": {}
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
           }
         }
       ],
@@ -403,23 +456,34 @@
               "note",
               "validity"
             ],
-            "filter": {}
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
           }
         }
       ],
       "delete_permissions": [
         {
-          "role": "member",
-          "comment": null,
-          "permission": {
-            "filter": {}
-          }
-        },
-        {
           "role": "board",
           "comment": null,
           "permission": {
-            "filter": {}
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
           }
         }
       ],
@@ -489,6 +553,168 @@
       ],
       "update_permissions": [],
       "delete_permissions": [],
+      "event_triggers": []
+    },
+    {
+      "table": "active_member_role",
+      "object_relationships": [
+        {
+          "using": {
+            "manual_configuration": {
+              "remote_table": "role",
+              "column_mapping": {
+                "role_id": "id"
+              }
+            }
+          },
+          "name": "role",
+          "comment": null
+        },
+        {
+          "using": {
+            "manual_configuration": {
+              "remote_table": "member",
+              "column_mapping": {
+                "member_id": "id"
+              }
+            }
+          },
+          "name": "member",
+          "comment": null
+        }
+      ],
+      "array_relationships": [],
+      "insert_permissions": [
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "set": {
+              "validity": "[NOW,)"
+            },
+            "check": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            },
+            "columns": [
+              "member_id",
+              "note",
+              "role_id"
+            ]
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "server",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "role": "member",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "note",
+              "validity"
+            ],
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "board",
+          "comment": null,
+          "permission": {
+            "filter": {
+              "role": {
+                "name": {
+                  "_nin": [
+                    "admin",
+                    "server"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
       "event_triggers": []
     }
   ],
