@@ -1,12 +1,10 @@
 
-{#if canEdit}
-<div class="buttons has-addons is-right">
-  {#if $permissions.includes('member:update')}
-    {#if memberStatus.status === 'current'}
-      <button class="button" on:click='makeOldMember()' class:is-loading='submittingMembership'>Make old member</button>
-    {:elseif memberStatus.status === 'aspiring'}
-      <button class="button" on:click='makeMember()' class:is-loading='submittingMembership'>Make member</button>
-    {/if}
+{#if $permissions.includes('member:update')}
+<div class="buttons is-right">
+  {#if member.isMember}
+    <button class="button" on:click='removeMemberRole()' class:is-loading='submittingMembership'>Make old member</button>
+  {:else}
+    <button class="button" on:click='addMemberRole()' class:is-loading='submittingMembership'>Make member</button>
   {/if}
 </div>
 {/if}
@@ -59,8 +57,8 @@
         {/if}
 
         <p>
-          <MemberStatusField status={memberStatus} />
-          {#if memberStatus.status === 'retired'}
+          <MemberStatusField row={member} />
+<!--           {#if memberStatus.status === 'retired'}
             Lid van: {memberStatus.start.format('D MMM YYYY')} tot {memberStatus.end.format('D MMM YYYY')}
           {:elseif memberStatus.status === 'future'}
             Lid vanaf: {memberStatus.start.format('D MMM YYYY')}
@@ -68,7 +66,7 @@
             Lid sinds: {memberStatus.start.format('D MMM YYYY')}
           {:else}
             Aspirant lid
-          {/if}
+          {/if} -->
         </p>
 
       {/if}
@@ -242,7 +240,7 @@
   import gql from 'graphql-tag'
   import RoleSelectItem from './RoleSelectItem.html'
 
-  import { status, parseValidity } from 'src/lib/member'
+  import { parseValidity } from 'src/lib/member'
 
   function mapToObject(obj) {
     const res = Array.from(obj.entries())
@@ -266,7 +264,6 @@
         || selectedRoles.some(r => !memberRoles.some(mr => mr.name === r.name))
       ),
       canEdit: ({ isSelf, $permissions }) => isSelf || $permissions.includes('member:update'),
-      memberStatus: ({ member }) => status(member)
     },
     components: {
       Form: './Form.html',
@@ -426,35 +423,51 @@
         openForms.delete(name)
         this.set({ openForms })
       },
-      async makeOldMember () {
-        const { memberStatus, member } = this.get()
-        console.log("Making old member:", memberStatus)
+      async removeMemberRole () {
+        const { member } = this.get()
         this.set({ submittingMembership: true })
+        console.log("Submitting")
+        try {
+
         await this.store.gqlMutation({
-          mutation: gql`mutation {
-            update_member(_set:{
-              validity: "[${memberStatus.start.format()},now]"
-            }, where:{id:{_eq: ${member.id}}}){
+          mutation: gql`mutation ($memberId: Int!) {
+            delete_member_role(where:{
+              member_id: { _eq: $memberId }
+              role: { name: { _eq: "member"}}
+            }) {
               affected_rows
             }
           }`,
+          variables: {
+            memberId: member.id
+          },
           permission: 'member:update'
         })
+        } catch (e) {
+          console.error(e)
+        }
+        console.log("Done")
         this.set({ submittingMembership: false })
       },
-      async makeMember () {
-        const { memberStatus, member } = this.get()
-        console.log("Making member:", memberStatus)
+      async addMemberRole () {
+        const { roles, member } = this.get()
+        const [ memberRole, ] = roles.filter(r => r.name === 'member')
+
         this.set({ submittingMembership: true })
         await this.store.gqlMutation({
-          mutation: gql`mutation {
-            update_member(_set:{
-              validity: "[now,)"
-            }, where:{id:{_eq: ${member.id}}}){
+          mutation: gql`mutation addMemberRole($memberId: Int!, $roleId: Int!) {
+            insert_member_role(objects:{
+              member_id:$memberId,
+              role_id:$roleId
+            }) {
               affected_rows
             }
           }`,
-          permission: 'member:update'
+          permission: 'member:update',
+          variables: {
+            memberId: member.id,
+            roleId: memberRole.value
+          }
         })
         this.set({ submittingMembership: false })
       },

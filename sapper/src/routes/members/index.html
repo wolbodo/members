@@ -56,6 +56,23 @@ const queries = [{
       id name email phone 
       fullname
       validity
+
+      isMember: member_roles_aggregate(where:{role:{name:{_eq:"member"}}}) {
+        aggregate {
+          count
+        }
+      }
+      isOldMember: all_member_roles(where:{
+        role:{name:{_eq:"member"}},
+        validity:{_lt:"[NOW,]"}
+      }) {
+        validity
+      }
+      isBoard: member_roles_aggregate(where:{role:{name:{_eq:"board"}}}) {
+        aggregate {
+          count
+        }
+      }
       member_roles {
         role {
           id
@@ -65,7 +82,12 @@ const queries = [{
     }
   }`,
   success({ data }) {
-    this.set({ members: data.members })
+    this.set({ members: data.members.map(({isMember, isOldMember, isBoard, ...member}) => ({
+      ...member,
+      isMember: isMember.aggregate.count > 0,
+      isBoard: isBoard.aggregate.count > 0,
+      isOldMember: isOldMember.length > 0
+    })) })
   },
   error(err) { this.set({ error: err }) }
 }]
@@ -85,9 +107,8 @@ export default {
         { name: 'Full Name', field: 'fullname' },
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
-        { name: 'Roles', field: 'member_roles', component: MemberRolesField },
-        { name: 'Status', field: 'status', component: MemberStatusField,
-        props: ({ validity }) => ({ status: status({ validity }) }) },
+        // { name: 'Roles', field: 'member_roles', component: MemberRolesField },
+        { name: 'Status', field: 'status', component: MemberStatusField },
       ]
     }
   },

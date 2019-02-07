@@ -1,22 +1,20 @@
 
-{#if status.status === 'retired'}
+{#if row.isMember}
+  {#if row.isBoard}
+    <span class="tag is-small is-primary">
+      Board
+    </span>
+  {:else}
+    <span class="tag is-small is-success">
+      Member
+    </span>
+  {/if}
+{:elseif row.isOldMember}
   <span class="tag is-small is-info">
     Old member
   </span>
-{:elseif status.status === 'future'}
-  <span class="tag is-small is-warning">
-    Future member
-  </span>
-{:elseif status.status === 'current'}
-  <span class="tag is-small is-success">
-    Member
-  </span>
-{:elseif status.status === 'aspiring'}
-  <span class="tag is-small is-danger">
-    Aspiring member
-  </span>
 {:else}
   <span class="tag is-small is-danger">
-    ???
+    Aspiring member
   </span>
 {/if}

@@ -3,14 +3,13 @@
 {#if !member}
   <p>Loading</p>
 {:else}
-  <MemberEdit {member} {loading} on:submit='handleUpdate(event)'/>
+  <Member {member} />
 {/if}
 
-
 <script>
-  import gql from 'graphql-tag';
+  import gql from 'graphql-tag'
   import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
-
+    
   const queries = [{
     type: 'subscription',
     query: gql`subscription ($slug: String) {
@@ -29,34 +28,53 @@
 
         validity
 
+        isMember: member_roles_aggregate(where:{role:{name:{_eq:"member"}}}) {
+          aggregate {
+            count
+          }
+        }
+        isOldMember: all_member_roles(where:{
+          role:{name:{_eq:"member"}},
+          validity:{_lt:"[NOW,]"}
+        }) {
+          validity
+        }
+        isBoard: member_roles_aggregate(where:{role:{name:{_eq:"board"}}}) {
+          aggregate {
+            count
+          }
+        }
+
         member_roles {
           role {
-            name
+            id name
+          }
+        }
+
+        all_member_roles {
+          validity
+          role {
+            id name
           }
         }
       }
     }`,
     success({ data }) {
-      this.set({ member: data.members[0] })
+      this.set({ member: data.members.map(({isMember, isOldMember, isBoard, ...member}) => ({
+        ...member,
+        isMember: isMember.aggregate.count > 0,
+        isBoard: isBoard.aggregate.count > 0,
+        isOldMember: isOldMember.length > 0
+      }))[0] })
     },
     error(err) { this.set({ error: err }) }
   }]
 
   export default {
     components: {
-      MemberEdit: 'src/components/MemberEdit.html',
+      Member: 'src/components/Member.html',
       Error: 'src/components/Error.html'
-    },
-    methods: {
-      async handleUpdate (data) {
-        const { member } = this.get()
-        console.log("Should handle update:", data)
-
-        this.set({ loading: true })
-        await this.store.updateMember(member.id, data)
-        this.store.notify('success', `Member (${member.name}) updated`)
-        this.set({ loading: false })
-      }
+      
     },
     oncreate() {
       const { params } = this.get()
@@ -66,15 +84,10 @@
       stopQueries(this)
     },
     async preload ({ params }) {
-      const { loggedIn, permissions, userSlug } = this.store.get()
-      
+      const { loggedIn } = this.store.get()
+
       if (!loggedIn) {
         return this.redirect(302, '/login')
-      }
-
-      if (!(permissions.includes('member:update') || (userSlug == params.slug))) {
-        console.error("No permissions")
-        return this.redirect(302, '/')
       }
 
       return await preloadQueries(this.store, queries, { params })
