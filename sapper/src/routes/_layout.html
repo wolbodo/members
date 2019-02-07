@@ -1,4 +1,5 @@
-<Nav segment={child.segment}/>
+<Nav segment={child.segment} :child />
+
 
 <main class='container'>
 	<svelte:component this={child.component} {...child.props}/>

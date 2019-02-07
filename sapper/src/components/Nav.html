@@ -25,7 +25,26 @@
           Mails
         </a>
       {/if}
+
+      <nav class="navbar-item breadcrumb" aria-label="breadcrumbs">
+        <ul>
+          {#each breadcrumbs as crumb, i}
+            <li>
+              {#if breadcrumbs.length - 1 === i}
+                <a class='is-active' href="{crumb.path}" rel='preload' aria-current="page">
+                  {crumb.name}
+                </a>
+              {:else}
+                <a href="{crumb.path}" rel='preload'>
+                  {crumb.name}
+                </a>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      </nav>
     </div>
+
 
     <div class="navbar-end">
       <div class="navbar-item">
@@ -50,6 +69,12 @@
   import slugify from 'src/lib/slugify'
 
 	export default {
+    computed: {
+      breadcrumbs: ({ child: { props: { path = '' }}}) =>
+        path.split('/')
+          .splice(1)
+          .map((name, i, arr) => ({ name, path: `/${[...arr.splice(0,i), name].join('/')}` }))
+    },
 		data () {
 			return {
 				navbarOpen: false
