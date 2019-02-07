@@ -54,7 +54,7 @@ CREATE TABLE public.role (
 CREATE TABLE public.member_role (
   member_id         INTEGER             NOT NULL REFERENCES public.member(id),
   role_id           INTEGER             NOT NULL REFERENCES public.role(id),
-  note              TEXT                NOT NULL DEFAULT '',
+  note              TEXT                DEFAULT '',
   validity          TSTZRANGE           DEFAULT TSTZRANGE(now(),NULL),
   modified          TIMESTAMPTZ         DEFAULT 'NOW',
 
@@ -62,16 +62,16 @@ CREATE TABLE public.member_role (
   PRIMARY KEY (member_id, role_id, validity)
 );
 CREATE RULE catch_member_role_delete AS ON DELETE TO public.member_role
-  DO INSTEAD UPDATE public.member_role
-    SET
-      validity = tstzrange(lower(validity), now())
-    WHERE
-      member_id = OLD.member_id AND role_id = OLD.role_id
-      AND
-      validity @> now()
+  DO INSTEAD 
+    UPDATE public.member_role
+      SET
+        validity = tstzrange(lower(validity), now())
+      WHERE
+        member_id = OLD.member_id AND role_id = OLD.role_id
+        AND
+        validity @> now()
     RETURNING
        OLD.*;
-
 
 CREATE OR REPLACE VIEW public.active_member_role AS 
   SELECT mr.*

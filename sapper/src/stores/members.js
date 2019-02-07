@@ -13,7 +13,8 @@ export default BaseStore =>
           $address: String,
           $zipcode: String,
           $city: String,
-          $country: String
+          $country: String,
+          $member_roles: active_member_role_insert_input,
         ) {
           insert_member(objects: [{
             name: $name
@@ -23,13 +24,21 @@ export default BaseStore =>
             address: $address
             zipcode: $zipcode
             city: $city
-            country: $country
+            country: $country,
+            member_roles: {
+              data: $member_roles
+            }
           }]) {
             affected_rows
             __typename
           }
         }`,
-        variables: member,
+        variables: {
+          ...member,
+          member_roles: [
+            // { role_id: 2 } // role == 'member'
+          ]
+        },
         permission: 'member:create'
       })
       return res

@@ -33,7 +33,6 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-
 CREATE OR REPLACE FUNCTION public.notify_password_change()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -42,6 +41,29 @@ BEGIN
   VALUES
     (NEW.id, 'password-change');
   RETURN NEW;
+END; $$ LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION public.synchronize_membership()
+RETURNS TRIGGER AS $$
+DECLARE
+  membership TEXT;
+BEGIN
+  -- When update and role = 'member' and validity != now        -> validity :[...,now]
+  -- When insert and role = 'member' and member.validity != now -> validity := [now,)
+  IF NEW.role_id != (SELECT id FROM public.role WHERE name = 'member') THEN
+    RETURN NULL;
+  END IF;
+
+  IF (NEW.validity @> now()) THEN
+    UPDATE public.member
+      SET validity = tstzrange(now(), NULL, '[)')
+      WHERE id = NEW.member_id AND NOT (validity @> now());
+  ELSE
+    UPDATE public.member
+      SET validity = tstzrange(lower(validity), now(), '[]')
+      WHERE id = NEW.member_id AND (validity @> now());
+  END IF;
+  RETURN NULL;
 END; $$ LANGUAGE 'plpgsql';
 
 
