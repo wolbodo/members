@@ -1,4 +1,6 @@
 
+import { verify } from 'src/lib/jwt'
+
 /*
   # Verifies cookie in request for nginx's auth_request module
 
@@ -6,16 +8,14 @@
   - if token is invalid -> 302 -> members.wlbd.nl/login
 */
 
-export function get (req, res) {
-  const body = JSON.stringify({
-    method: req.method,
-    headers: req.headers,
-    body: req.body
-  })
-  console.log("Got echo get", body)
+export async function get (req, res) {
+  try {
+    const t = await verify(req.token)
+    res.writeHead(200)
+    res.end()
+  } catch (e) {
+    res.writeHead(401)
+    res.end()
+  }
 
-  res.writeHead(302, {
-    Location: 'https://members.wlbd.nl/login'
-  })
-  res.end()
 }

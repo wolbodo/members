@@ -52,7 +52,7 @@ polka() // You can also use Express
 	.use(
     compression({ threshold: 0 }),
     sirv('static', { dev }),
-    // logger,
+    logger,
     authorize,
     bodyParser.json(),
 		sapper.middleware({
