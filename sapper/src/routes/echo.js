@@ -1,19 +1,28 @@
 
 
 export function post (req, res) {
-  console.log("Got echo post", JSON.stringify(req))
-
+  const body = JSON.stringify({
+    method: req.method,
+    headers: req.headers,
+    body: req.body
+  })
+  console.log("Got echo post", body)
   res.writeHead(500, {
     'Content-Type': 'application/json'
   })
-  res.end(JSON.stringify(req))
+  res.end(body)
 }
 
 export function get (req, res) {
-  console.log("Got echo post", JSON.stringify(req))
+  const body = JSON.stringify({
+    method: req.method,
+    headers: req.headers,
+    body: req.body
+  })
+  console.log("Got echo post", body)
 
   res.writeHead(500, {
     'Content-Type': 'application/json'
   })
-  res.end(JSON.stringify(req))
+  res.end(body)
 }
