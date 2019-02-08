@@ -13,7 +13,7 @@ export function create(user, defaultRole='user') {
         'x-hasura-user-id': user.id.toString()
       }
   }, SECRET.key, {
-    expiresIn: '1 minute',
+    expiresIn: '5 minutes',
     // expiresIn: '10 days',
     issuer: 'auth',
     subject: user.id.toString()
