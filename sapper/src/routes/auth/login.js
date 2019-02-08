@@ -49,7 +49,7 @@ export async function post(req, res) {
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
-          'Set-Cookie': `token=${jwt}; path=/`,
+          'Set-Cookie': `token=${jwt}; Domain=wlbd.nl; Path=/; Secure; HttpOnly`,
         })
         res.end(JSON.stringify({
           jwt,
