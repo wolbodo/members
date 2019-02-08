@@ -11,9 +11,11 @@ import { verify } from 'src/lib/jwt'
 export async function get (req, res) {
   try {
     const t = await verify(req.token)
+    console.log("verify ok", t)
     res.writeHead(200)
     res.end()
   } catch (e) {
+    console.log("verify fail", e)
     res.writeHead(401)
     res.end()
   }
