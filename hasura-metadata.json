@@ -219,6 +219,27 @@
       ],
       "select_permissions": [
         {
+          "role": "member",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": true,
+            "columns": [
+              "city",
+              "country",
+              "email",
+              "fullname",
+              "id",
+              "modified",
+              "name",
+              "phone",
+              "address",
+              "validity",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        },
+        {
           "role": "server",
           "comment": null,
           "permission": {
@@ -234,27 +255,6 @@
               "name",
               "password",
               "phone",
-              "validity",
-              "zipcode"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "member",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "city",
-              "country",
-              "email",
-              "fullname",
-              "id",
-              "modified",
-              "name",
-              "phone",
-              "address",
               "validity",
               "zipcode"
             ],
@@ -384,25 +384,10 @@
       ],
       "select_permissions": [
         {
-          "role": "server",
+          "role": "member",
           "comment": null,
           "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "member_id",
-              "role_id",
-              "note",
-              "validity",
-              "modified"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "board",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
+            "allow_aggregations": true,
             "columns": [
               "member_id",
               "role_id",
@@ -423,7 +408,22 @@
           }
         },
         {
-          "role": "member",
+          "role": "server",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "board",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
@@ -612,25 +612,10 @@
       ],
       "select_permissions": [
         {
-          "role": "server",
+          "role": "member",
           "comment": null,
           "permission": {
-            "allow_aggregations": false,
-            "columns": [
-              "member_id",
-              "role_id",
-              "note",
-              "validity",
-              "modified"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "board",
-          "comment": null,
-          "permission": {
-            "allow_aggregations": false,
+            "allow_aggregations": true,
             "columns": [
               "member_id",
               "role_id",
@@ -651,7 +636,22 @@
           }
         },
         {
-          "role": "member",
+          "role": "server",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "member_id",
+              "role_id",
+              "note",
+              "validity",
+              "modified"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "board",
           "comment": null,
           "permission": {
             "allow_aggregations": false,
