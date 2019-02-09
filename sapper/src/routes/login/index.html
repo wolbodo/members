@@ -60,7 +60,7 @@
     },
     methods: {
       async login(e) {
-        const { email, password } = this.get()
+        const { email, password, host, uri } = this.get()
 
         e.preventDefault()
         e.stopPropagation()
@@ -92,7 +92,13 @@
               user: data.user
             })
 
-            goto('/', { replaceState: true })
+            if (host) {}
+            if (host) {
+              goto(`https://${host}${uri}`, { replaceState: true })
+            } else {
+              goto('/', { replaceState: true })
+            }
+
           } else {
             this.set({
               error: data
@@ -103,6 +109,23 @@
 
         } catch (e) {
           console.error(e)
+        }
+      }
+    },
+    preload ({ query }) {
+      // Check login status, and redirect to next of necessary
+      const { loggedIn } = this.store.get()
+      const { host, uri } = query
+
+      if (loggedIn) {
+        if (host) {
+          this.redirect("302", `https://${host}${uri}`)
+        } else {
+          this.redirect("302", '/')
+        }
+      } else {
+        return {
+          host, uri
         }
       }
     }
