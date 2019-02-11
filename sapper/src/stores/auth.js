@@ -101,16 +101,28 @@ export default BaseStore =>
 
       this.checkExpiry()
     }
-
-    async gqlQuery (...args) {
+    async gqlWrapper (method, ...args) {
       // Overrides graphql-store
       try {
-        const res = await super.gqlQuery(...args)
-        return res
+        const exp = this.checkExpiry()
+        if (exp < 100) {
+          console.log('Token expired -> refreshing')
+          await this.refreshToken()
+        }
+        return await method(...args)
       } catch (e) {
-        console.error('Err in gql query, parse token??')
+        console.error('Err in gql query, parse token??', e)
       }
     }
+    async gqlQuery (...args) {
+      return await this.gqlWrapper(super.gqlQuery.bind(this), ...args)
+    }
+    async gqlMutation (...args) {
+      return await this.gqlWrapper(super.gqlMutation.bind(this), ...args)
+    }
+    // async gqlSubscription (...args) {
+    //   return await this.gqlWrapper(super.gqlSubscription.bind(this), ...args)
+    // }
 
     checkExpiry () {
       // verify token expiry, trigger refresh if needed.
@@ -122,14 +134,9 @@ export default BaseStore =>
         const duration = moment.unix(exp).diff(moment())
 
         if (duration > 0) {
-          console.log('TOKEN OK')
           return duration
-        } else {
-          console.log('TOKEN EXPIRED')
-          return 0
         }
       }
-      console.error('TOKEN INVALID')
       return 0
     }
 
@@ -180,9 +187,9 @@ export default BaseStore =>
           })
 
           if (exp == 0) {
-            this.refreshToken()
-              .then(() => console.log('Refresh ok'))
-              .catch(e => console.error('Refresh fail:', e))
+            // this.refreshToken()
+            //   .then(() => console.log('Refresh ok'))
+            //   .catch(e => console.error('Refresh fail:', e))
           }
         }
       }, 2000)

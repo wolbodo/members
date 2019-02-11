@@ -35,18 +35,5 @@
 		ondestroy () {
 			this.stopWatch()
 		},
-		async preload () {
-			// Check token expiry, and refresh if necessary.
-			const { tokenExpiry, refreshToken } = this.store.get()
-
-			if (tokenExpiry === 0 && refreshToken) {
-				console.log("Refreshing token from preload")
-				await this.store.refreshToken()
-				console.log("Done refreshing")
-			}
-
-
-			return {}
-		}
 	};
 </script>

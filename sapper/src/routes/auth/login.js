@@ -64,6 +64,7 @@ export async function post (req, res) {
             roles: member.member_roles.map(mr => mr.role.name)
           }
         }))
+        return
       }
     }
     res.writeHead(401, {
