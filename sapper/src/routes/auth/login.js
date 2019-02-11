@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs'
 import gql from 'graphql-tag'
 
-import { createToken, serverToken } from 'src/lib/jwt'
+import { createToken, serverToken, createRefreshToken } from 'src/lib/jwt'
 import createStore from 'src/stores'
 
-const { GRAPHQL_LOCAL_URI } = process.env;
+const { GRAPHQL_LOCAL_URI, COOKIE_DOMAIN = 'wolbodo.nl' } = process.env;
 
 export async function post(req, res) {
   const store = createStore({
@@ -42,7 +42,7 @@ export async function post(req, res) {
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
-          'Set-Cookie': `token=${jwt}; Domain=wlbd.nl; Path=/; Secure; HttpOnly`,
+          'Set-Cookie': `token=${jwt}; Domain=${COOKIE_DOMAIN}; Path=/; Secure; HttpOnly`,
         })
         res.end(JSON.stringify({
           jwt,

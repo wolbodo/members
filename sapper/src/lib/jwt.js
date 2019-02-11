@@ -13,7 +13,7 @@ export function createToken(user, defaultRole='user') {
         'x-hasura-user-id': user.id.toString()
       }
   }, SECRET.key, {
-    expiresIn: '5 minutes',
+    expiresIn: '10 seconds',
     // expiresIn: '10 days',
     issuer: 'auth',
     subject: user.id.toString()
@@ -21,6 +21,7 @@ export function createToken(user, defaultRole='user') {
 }
 
 export function createRefreshToken (userId, expiresIn = '10 days') {
+  const SECRET = JSON.parse(process.env.JWT_SECRET)
   return jwt.sign({
     type: 'refresh',
   }, SECRET.key, {

@@ -115,6 +115,8 @@
       const { loggedIn } = this.store.get()
       const { host, uri } = query
 
+      console.log("User logged in:", loggedIn)
+
       if (loggedIn) {
         if (host) {
           this.redirect("302", `https://${host}${uri}`)

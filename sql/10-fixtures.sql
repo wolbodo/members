@@ -31,4 +31,15 @@ SELECT public.member.id, public.role.id, '[now,)' FROM
     JOIN public.member ON public.member.validity @> NOW() AND public.member.email = alias.email
     JOIN public.role ON public.role.validity @> NOW() AND public.role.name IN (SELECT unnest(alias.role_names));
 
+-- Old membership
+INSERT INTO public.member_role
+  (member_id, role_id, validity)
+SELECT public.member.id, public.role.id, '[01-01-1880,01-12-1950)' FROM
+    (VALUES
+        ('old@example.org', array['member'])
+    ) alias (email, role_names)
+    JOIN public.member ON public.member.email = alias.email
+    JOIN public.role ON public.role.validity @> NOW() AND public.role.name IN (SELECT unnest(alias.role_names));
+
+
 COMMIT;
