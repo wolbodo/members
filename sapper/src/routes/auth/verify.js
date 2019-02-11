@@ -20,7 +20,8 @@ export async function get (req, res) {
 
     console.log('verify ok', t)
     res.writeHead(200, {
-      'X-User': t.name
+      'X-User': t.name,
+      'X-Email': t.email
     })
     res.end()
   } catch (e) {

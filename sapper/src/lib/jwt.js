@@ -7,6 +7,7 @@ export function createToken (user, defaultRole = 'user') {
   defaultRole = roles.includes('admin') ? 'admin' : defaultRole
   return jwt.sign({
     name: user.name,
+    email: user.email,
     'https://hasura.io/jwt/claims': {
       'x-hasura-allowed-roles': roles,
       'x-hasura-default-role': defaultRole,
