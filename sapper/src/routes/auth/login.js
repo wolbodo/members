@@ -42,7 +42,7 @@ export async function post (req, res) {
 
       if (passwordOk) {
         const token = createToken(member)
-        const refreshToken = createRefreshToken(member.id, '1 minute')
+        const refreshToken = createRefreshToken(member.id)
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
