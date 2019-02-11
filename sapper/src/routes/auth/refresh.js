@@ -7,9 +7,9 @@ const {
   GRAPHQL_LOCAL_URI,
   COOKIE_DOMAIN = 'wolbodo.nl',
   COOKIE_SECURE = 'true'
-} = process.env;
+} = process.env
 
-export async function post(req, res) {
+export async function post (req, res) {
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
     token: serverToken('server:refresh', 'server'),
@@ -22,9 +22,9 @@ export async function post(req, res) {
     if (refreshToken) {
       const { sub } = await verifyToken(refreshToken)
       // Parse refreshToken
-      console.log("Parsed:", sub)
+      console.log('Parsed:', sub)
 
-      const { data: { active_member: [member, ] = [] } = {} } = await store.gqlQuery({
+      const { data: { active_member: [member ] = [] } = {} } = await store.gqlQuery({
         query: gql`
           query($id: Int!) {
             active_member(where:{id:{_eq:$id}}) {
@@ -41,11 +41,10 @@ export async function post(req, res) {
           id: sub
         }
       })
-      console.log("Found user:", member)
+
       if (member) {
         const token = createToken(member)
 
-        
         res.writeHead(200, {
           'Content-Type': 'application/json',
           'Set-Cookie': `token=${
@@ -54,7 +53,7 @@ export async function post(req, res) {
                           COOKIE_DOMAIN
                         }; Path=/; ${
                           (COOKIE_SECURE === 'true') ? 'Secure;' : ''
-                        }  HttpOnly`,
+                        }  HttpOnly`
         })
         res.end(JSON.stringify({
           token,
@@ -67,9 +66,7 @@ export async function post(req, res) {
         }))
         return
       }
-
     }
-
   } catch (e) {
     console.log('error', e)
     res.writeHead(401, {
@@ -86,6 +83,4 @@ export async function post(req, res) {
   res.end(JSON.stringify({
     error: 'refreshToken invalid'
   }))
-
-
 }

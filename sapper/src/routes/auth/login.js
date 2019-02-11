@@ -8,9 +8,9 @@ const {
   GRAPHQL_LOCAL_URI,
   COOKIE_DOMAIN = 'wolbodo.nl',
   COOKIE_SECURE = true
-} = process.env;
+} = process.env
 
-export async function post(req, res) {
+export async function post (req, res) {
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
     token: serverToken('server:login', 'server'),
@@ -35,14 +35,14 @@ export async function post(req, res) {
         email: req.body.email
       }
     })
-    const { active_member: [member, ] } = result.data
+    const { active_member: [member ] } = result.data
 
     if (member) {
       const passwordOk = await bcrypt.compare(req.body.password, member.password)
-        
+
       if (passwordOk) {
         const token = createToken(member)
-        const refreshToken = createRefreshToken(member.id)
+        const refreshToken = createRefreshToken(member.id, '1 minute')
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export async function post(req, res) {
                           COOKIE_DOMAIN
                         }; Path=/; ${
                           (COOKIE_SECURE === 'true') ? 'Secure;' : ''
-                        }  HttpOnly`,
+                        }  HttpOnly`
         })
         res.end(JSON.stringify({
           token,

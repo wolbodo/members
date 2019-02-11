@@ -1,10 +1,10 @@
-import fetchPonyfill from 'fetch-ponyfill';
+import fetchPonyfill from 'fetch-ponyfill'
 import moment from 'moment'
 import { parseToken } from 'src/lib/jwt'
 import slugify from 'src/lib/slugify'
 import { goto } from '../../__sapper__/client.js'
 
-const { fetch } = fetchPonyfill();
+const { fetch } = fetchPonyfill()
 
 const PERMISSIONS_MAP = {
   'member:create': ['board'],
@@ -13,14 +13,12 @@ const PERMISSIONS_MAP = {
   'member:update_self': ['member'],
   'member_roles:create': ['board'],
   'mail:create': ['admin', 'mail'],
-  'mail:read': ['admin', 'mail'],
+  'mail:read': ['admin', 'mail']
 }
 
 export default BaseStore =>
   class Store extends BaseStore {
-
     constructor (init) {
-      
       const lsData = {}
       if (global.localStorage) {
         const user = localStorage.getItem('user')
@@ -33,6 +31,7 @@ export default BaseStore =>
 
       super({
         role: 'member',
+        authTimer: moment(),
         ...lsData,
         ...init
       })
@@ -73,12 +72,24 @@ export default BaseStore =>
       this.compute('tokenParsed', ['token'],
         (token) => parseToken(token)
       )
+      this.compute('tokenExpiry', ['tokenParsed', 'authTimer'],
+        (tokenParsed, authTimer) => {
+          if (tokenParsed && authTimer) {
+            const { exp } = tokenParsed
+            const duration = moment.unix(exp).diff(authTimer)
+            if (duration > 0) {
+              return duration
+            }
+          }
+          return 0
+        }
+      )
 
       this.compute('roles', ['tokenParsed'],
         (token) => token && token['https://hasura.io/jwt/claims']['x-hasura-allowed-roles'] || []
       )
 
-      this.compute('hasRoles', ['roles'], (roles) => ((...checkRoles) => checkRoles.some(r => roles.includes(r))))
+      this.compute('hasRoles', ['roles'], (roles) => (...checkRoles) => checkRoles.some(r => roles.includes(r)))
 
       // Table level 'permissions' based on roles
       this.compute('permissions', ['roles'],
@@ -88,8 +99,17 @@ export default BaseStore =>
         .map(([permission, pRoles]) => permission)
       )
 
-
       this.checkExpiry()
+    }
+
+    async gqlQuery (...args) {
+      // Overrides graphql-store
+      try {
+        const res = await super.gqlQuery(...args)
+        return res
+      } catch (e) {
+        console.error('Err in gql query, parse token??')
+      }
     }
 
     checkExpiry () {
@@ -102,14 +122,14 @@ export default BaseStore =>
         const duration = moment.unix(exp).diff(moment())
 
         if (duration > 0) {
-          console.log("TOKEN OK")
+          console.log('TOKEN OK')
           return duration
         } else {
-          console.log("TOKEN EXPIRED")
+          console.log('TOKEN EXPIRED')
           return 0
         }
       }
-      console.error("TOKEN INVALID")
+      console.error('TOKEN INVALID')
       return 0
     }
 
@@ -119,18 +139,10 @@ export default BaseStore =>
       const { refreshToken } = this.get()
 
       // check refreshToken
-      if (refreshToken) {
-        const refresh = parseToken(refreshToken)
-        const validForMS = moment.unix(refresh.exp).diff(moment())
-        if (validForMS > 0) {
-          // OK
-          console.info("refresh token valid")
-        } else {
-          console.error("refresh token expired")
-          return
-        }
-      } else {
-        console.error("refresh not available")
+      if (!refreshToken) {
+        console.error('refresh not available')
+        await this.logout()
+
         return
       }
 
@@ -145,12 +157,12 @@ export default BaseStore =>
       })
 
       if (res.ok) {
-        console.log("Refresh OK")
+        console.log('Refresh OK')
         const { token, user } = await res.json()
 
         this.set({ token, user })
       } else {
-        console.log("Logging out user")
+        console.log('Logging out user')
         await this.logout()
       }
     }
@@ -158,16 +170,22 @@ export default BaseStore =>
     watchAuth () {
       // Call checkExpiry regulary
       const handle = window.setInterval(() => {
-        const exp = this.checkExpiry()
-        console.log("Got exp", exp)
+        const { token } = this.get()
 
-        if (exp == 0) {
-          this.refreshToken()
-            .then(() => console.log("Refresh ok"))
-            .catch(e => console.error("Refresh fail:", e))
+        if (token) {
+          const exp = this.checkExpiry()
+          console.log('Got exp', exp)
+          this.set({
+            authTimer: moment()
+          })
+
+          if (exp == 0) {
+            this.refreshToken()
+              .then(() => console.log('Refresh ok'))
+              .catch(e => console.error('Refresh fail:', e))
+          }
         }
       }, 2000)
-
 
       return () => window.clearInterval(handle)
     }
