@@ -1,23 +1,15 @@
 import bcrypt from 'bcryptjs'
 import gql from 'graphql-tag'
 
-import * as JWT from 'src/lib/jwt'
+import { createToken, serverToken } from 'src/lib/jwt'
 import createStore from 'src/stores'
 
 const { GRAPHQL_LOCAL_URI } = process.env;
 
 export async function post(req, res) {
-  const token = JWT.create({
-    id: -1,
-    name: 'server:login',
-    member_roles: [
-      { role: { name: 'server'}}
-    ]
-  }, 'server');
-
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
-    token,
+    token: serverToken('server:login', 'server'),
     role: 'server'
   })
 
@@ -45,7 +37,8 @@ export async function post(req, res) {
       const passwordOk = await bcrypt.compare(req.body.password, member.password)
         
       if (passwordOk) {
-        const jwt = JWT.create(member)
+        const jwt = createToken(member)
+        const refresh = createRefreshToken(member.id)
 
         res.writeHead(200, {
           'Content-Type': 'application/json',
@@ -53,6 +46,7 @@ export async function post(req, res) {
         })
         res.end(JSON.stringify({
           jwt,
+          refresh,
           user: {
             id: member.id,
             email: member.email,

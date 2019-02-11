@@ -1,5 +1,5 @@
 import fetchPonyfill from 'fetch-ponyfill';
-import * as jwt from 'src/lib/jwt'
+import { parseToken } from 'src/lib/jwt'
 import slugify from 'src/lib/slugify'
 import { goto } from '../../__sapper__/client.js'
 
@@ -61,7 +61,7 @@ export default BaseStore =>
         (tokenParsed) => tokenParsed && slugify(tokenParsed.name)
       )
       this.compute('tokenParsed', ['token'],
-        (token) => jwt.parse(token)
+        (token) => parseToken(token)
       )
 
       this.compute('roles', ['tokenParsed'],

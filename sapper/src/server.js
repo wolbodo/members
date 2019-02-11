@@ -16,7 +16,7 @@ const dev = NODE_ENV === 'development';
 
 import moment from 'moment'
 
-import { parse } from 'src/lib/jwt'
+import { parseToken } from 'src/lib/jwt'
 import createStore from 'src/stores'
 
 function authorize(req, res, next) {
@@ -31,7 +31,7 @@ function authorize(req, res, next) {
   // Check token expiry
   // console.log("Token:", cookie.token)
   if (cookie.token) {
-    const parsed = parse(cookie.token)
+    const parsed = parseToken(cookie.token)
     // console.log("Contents:", parsed)  
     const exp = moment.unix(parsed.exp)
     // console.log("exp:", moment(), exp, moment().isAfter(exp))

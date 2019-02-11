@@ -1,5 +1,6 @@
 import gql from 'graphql-tag'
 
+import { serverToken } from 'src/lib/jwt'
 import * as JWT from 'src/lib/jwt'
 import createStore from 'src/stores'
 import bcrypt from 'bcryptjs'
@@ -7,17 +8,9 @@ import bcrypt from 'bcryptjs'
 const { GRAPHQL_LOCAL_URI } = process.env;
 
 export async function post(req, res) {
-  const token = JWT.create({
-    id: -1,
-    name: 'server:password-reset',
-    member_roles: [
-      { role: { name: 'server'}},
-    ]
-  }, 'server');
-
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
-    token,
+    token: serverToken('server:password-reset', 'server'),
     role: 'server'
   })
 

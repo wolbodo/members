@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import nodemailer from "nodemailer"
 import { JSDOM } from 'jsdom'
 
-import { create } from 'src/lib/jwt'
+import { serverToken } from 'src/lib/jwt'
 import mails from 'src/mails'
 import createStore from 'src/stores'
 
@@ -14,16 +14,9 @@ export async function post (req, res) {
   const data = req.body
   const _mail = data.event.data.new
 
-  const token = create({
-    id: -1,
-    name: 'server:mail',
-    member_roles: [
-      { role: { name: 'server' } }
-    ]
-  }, 'server') 
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
-    token,
+    token: serverToken('server:mail', 'server'),
     role: 'server'
   })
 

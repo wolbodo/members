@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-export function create(user, defaultRole='user') {
+export function createToken(user, defaultRole='user') {
   const SECRET = JSON.parse(process.env.JWT_SECRET)
   const roles = (user.member_roles || []).map(mr => mr.role && mr.role.name)
 
@@ -20,12 +20,32 @@ export function create(user, defaultRole='user') {
   })
 }
 
-export function parse(token) {
+export function createRefreshToken (userId, expiresIn = '10 days') {
+  return jwt.sign({
+    type: 'refresh',
+  }, SECRET.key, {
+    expiresIn,
+    issuer: 'auth',
+    subject: userId.toString()
+  })
+}
+
+export function parseToken(token) {
   return jwt.decode(token)
 }
 
-export async function verify(token) {
+export async function verifyToken(token) {
   const SECRET = JSON.parse(process.env.JWT_SECRET)
 
   return await jwt.verify(token, SECRET.key)
+}
+
+export function serverToken (username, role) {
+  return createToken({
+    id: -1,
+    name: username,
+    member_roles: [
+      { role: { name: role}}
+    ]
+  }, role)
 }

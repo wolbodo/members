@@ -1,5 +1,5 @@
 
-import { verify } from 'src/lib/jwt'
+import { verifyToken } from 'src/lib/jwt'
 
 /*
   # Verifies cookie in request for nginx's auth_request module
