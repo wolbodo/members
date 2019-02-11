@@ -10,20 +10,19 @@ import { verifyToken } from 'src/lib/jwt'
 
 export async function get (req, res) {
   try {
-    console.log("verify:", req.headers)
+    console.log('verify:', req.headers)
     if (!req.token) {
-      console.log("no token")
+      console.log('no token')
       res.writeHead(401)
       res.end()
     }
-    const t = await verify(req.token)
-    console.log("verify ok", t)
+    const t = await verifyToken(req.token)
+    console.log('verify ok', t)
     res.writeHead(200)
     res.end()
   } catch (e) {
-    console.log("verify fail", e)
+    console.log('verify fail', e)
     res.writeHead(401)
     res.end()
   }
-
 }

@@ -502,6 +502,18 @@
               }
             }
           },
+          "name": "all_member_roles",
+          "comment": null
+        },
+        {
+          "using": {
+            "manual_configuration": {
+              "remote_table": "active_member_role",
+              "column_mapping": {
+                "id": "member_id"
+              }
+            }
+          },
           "name": "member_roles",
           "comment": null
         }
