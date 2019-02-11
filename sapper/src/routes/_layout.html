@@ -24,6 +24,12 @@
 		components: {
 			Nav: 'src/components/Nav.html',
 			Notifications: 'src/components/Notifications.html'
+		},
+		oncreate () {
+			this.stopWatch = this.store.watchAuth()
+		},
+		ondestroy () {
+			this.stopWatch()
 		}
 	};
 </script>

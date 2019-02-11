@@ -1,49 +1,51 @@
-import bcrypt from 'bcryptjs'
 import gql from 'graphql-tag'
 
-import { createToken, serverToken, createRefreshToken } from 'src/lib/jwt'
+import { createToken, serverToken, verifyToken } from 'src/lib/jwt'
 import createStore from 'src/stores'
 
 const {
   GRAPHQL_LOCAL_URI,
   COOKIE_DOMAIN = 'wolbodo.nl',
-  COOKIE_SECURE = true
+  COOKIE_SECURE = 'true'
 } = process.env;
 
 export async function post(req, res) {
   const store = createStore({
     graphqlUri: GRAPHQL_LOCAL_URI,
-    token: serverToken('server:login', 'server'),
+    token: serverToken('server:refresh', 'server'),
     role: 'server'
   })
 
   try {
-    const result = await store.gqlQuery({
-      query: gql`
-        query($email: String) {
-          active_member(where:{email:{_eq:$email}}) {
-            id name email password
-            member_roles {
-              role {
-                name
+    const { refreshToken } = req.body
+
+    if (refreshToken) {
+      const { sub } = await verifyToken(refreshToken)
+      // Parse refreshToken
+      console.log("Parsed:", sub)
+
+      const { data: { active_member: [member, ] = [] } = {} } = await store.gqlQuery({
+        query: gql`
+          query($id: Int!) {
+            active_member(where:{id:{_eq:$id}}) {
+              id name email password
+              member_roles {
+                role {
+                  name
+                }
               }
             }
           }
+        `,
+        variables: {
+          id: sub
         }
-      `,
-      variables: {
-        email: req.body.email
-      }
-    })
-    const { active_member: [member, ] } = result.data
-
-    if (member) {
-      const passwordOk = await bcrypt.compare(req.body.password, member.password)
-        
-      if (passwordOk) {
+      })
+      console.log("Found user:", member)
+      if (member) {
         const token = createToken(member)
-        const refreshToken = createRefreshToken(member.id)
 
+        
         res.writeHead(200, {
           'Content-Type': 'application/json',
           'Set-Cookie': `token=${
@@ -56,7 +58,6 @@ export async function post(req, res) {
         })
         res.end(JSON.stringify({
           token,
-          refreshToken,
           user: {
             id: member.id,
             email: member.email,
@@ -64,21 +65,27 @@ export async function post(req, res) {
             roles: member.member_roles.map(mr => mr.role.name)
           }
         }))
+        return
       }
+
     }
+
+  } catch (e) {
+    console.log('error', e)
     res.writeHead(401, {
       'Content-Type': 'application/json'
     })
     res.end(JSON.stringify({
-      error: 'Authentication failed'
-    }))
-  } catch (e) {
-    console.error('Error logging in', e)
-    res.writeHead(500, {
-      'Content-Type': 'application/json'
-    })
-    res.end(JSON.stringify({
-      error: e.toString()
+      error: 'refreshToken expired'
     }))
   }
+
+  res.writeHead(401, {
+    'Content-Type': 'application/json'
+  })
+  res.end(JSON.stringify({
+    error: 'refreshToken invalid'
+  }))
+
+
 }

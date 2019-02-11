@@ -50,7 +50,6 @@
       return {
         email: 'dexter@example.org',
         password: 'dexter',
-        loginResult: undefined,
         error: undefined
       }
     },
@@ -78,21 +77,15 @@
           })
 
           const data = await res.json()
-          this.set({
-            loginResult: {
-              status: res.status,
-              data
-            }
-          })
 
           this.set({ loading: false })
           if (res.ok) {
             this.store.set({
-              token: data.jwt,
-              user: data.user
+              token: data.token,
+              user: data.user,
+              refreshToken: data.refreshToken
             })
 
-            if (host) {}
             if (host) {
               goto(`https://${host}${uri}`, { replaceState: true })
             } else {
