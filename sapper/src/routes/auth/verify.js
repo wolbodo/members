@@ -17,8 +17,11 @@ export async function get (req, res) {
       res.end()
     }
     const t = await verifyToken(req.token)
+
     console.log('verify ok', t)
-    res.writeHead(200)
+    res.writeHead(200, {
+      'X-User': t.name
+    })
     res.end()
   } catch (e) {
     console.log('verify fail', e)
