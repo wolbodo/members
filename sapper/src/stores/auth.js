@@ -176,25 +176,30 @@ export default BaseStore =>
 
     watchAuth () {
       // Call checkExpiry regulary
-      const handle = window.setInterval(() => {
+      let handle
+      const timeout = 600000 // every 10 minutes
+      const checkAuth = () => {
         const { token } = this.get()
+        const exp = this.checkExpiry()
 
         if (token) {
-          const exp = this.checkExpiry()
           console.log('Got exp', exp)
           this.set({
             authTimer: moment()
           })
 
           if (exp == 0) {
-            // this.refreshToken()
-            //   .then(() => console.log('Refresh ok'))
-            //   .catch(e => console.error('Refresh fail:', e))
+            this.refreshToken()
+              .then(() => console.log('Refresh ok'))
+              .catch(e => console.error('Refresh fail:', e))
           }
         }
-      }, 2000)
 
-      return () => window.clearInterval(handle)
+        handle = window.setTimeout(checkAuth, exp < timeout ? exp : timeout)
+      }
+      handle = window.setTimeout(checkAuth, timeout)
+
+      return () => window.clearTimeout(handle)
     }
 
     roleForPermission (permission) {
