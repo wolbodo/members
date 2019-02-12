@@ -26,12 +26,12 @@ services:
         --dbname $POSTGRES_DB \
         serve \
         --server-port 80 \
-        --access-key $ACCESS_KEY \
-        --jwt-secret $$JWT_SECRET \
+        --access-key $HASURA_ACCESS_KEY \
+        --jwt-secret $$AUTH_JWT_SECRET \
         --enable-console;
       "
     environment:
-      JWT_SECRET: $JWT_SECRET
+      AUTH_JWT_SECRET: $AUTH_JWT_SECRET
 
   sapper:
     image: registry.dxlb.nl/wolbodo/members:latest
@@ -40,7 +40,7 @@ services:
     depends_on:
       - graphql
     environment:
-      JWT_SECRET: $JWT_SECRET
+      AUTH_JWT_SECRET: $AUTH_JWT_SECRET
       NODE_ENV: production
       GRAPHQL_LOCAL_URI: $GRAPHQL_LOCAL_URI
       GRAPHQL_URI: $GRAPHQL_URI
