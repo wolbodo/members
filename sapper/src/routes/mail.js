@@ -40,9 +40,14 @@ export async function post (req, res) {
     try {
       // Try sending the mail, untill the moment the mail is really sent, we can still retry sending.
       let transporter = nodemailer.createTransport({
-        host: 'mail',
-        port: 1025,
-        secure: false // true for 465, false for other ports
+        sendmail: true,
+        newline: 'unix',
+        path: '/usr/sbin/sendmail',
+        args: ['-S', 'wlbd.nl']
+        // host: 'mail',
+
+        // port: 1025,
+        // secure: false // true for 465, false for other ports
       })
 
       console.log('Created mailtransport')
