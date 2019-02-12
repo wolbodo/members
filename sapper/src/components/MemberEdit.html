@@ -11,14 +11,22 @@
       disabled={loading}
       on:change="fieldChange('name', event)"
     />
-    <TextField horizontal
-      required
-      label='Full name'
-      placeholder='Wikkert Olbodo'
-      value={_member.fullname || ''}
-      disabled={loading}
-      on:change="fieldChange('fullname', event)"
-    />
+
+
+    <InputGroup label='Name' horizontal>
+      <TextField horizontal
+        placeholder='Wikkert'
+        value={_member.firstname || ''}
+        disabled={loading}
+        on:change="fieldChange('firstname', event)"
+      />
+      <TextField horizontal
+        placeholder='Olbodo'
+        value={_member.lastname || ''}
+        disabled={loading}
+        on:change="fieldChange('lastname', event)"
+      />
+    </InputGroup>
 
     <EmailField horizontal
       label='Email'

@@ -1,16 +1,15 @@
 import gql from 'graphql-tag'
-import nodemailer from "nodemailer"
+import nodemailer from 'nodemailer'
 import { JSDOM } from 'jsdom'
 
 import { serverToken } from 'src/lib/jwt'
 import mails from 'src/mails'
 import createStore from 'src/stores'
 
-const { GRAPHQL_LOCAL_URI } = process.env;
+const { GRAPHQL_LOCAL_URI } = process.env
 
 // async..await is not allowed in global scope, must use a wrapper
 export async function post (req, res) {
-
   const data = req.body
   const _mail = data.event.data.new
 
@@ -20,12 +19,12 @@ export async function post (req, res) {
     role: 'server'
   })
 
-  console.log("Querying mail:", _mail.id)
+  console.log('Querying mail:', _mail.id)
   const { data: { mail }} = await store.gqlQuery({
     query: gql`query getMail($id: Int!) {
       mail: mail_by_pk(id:$id) {
         id data status template member {
-          name email fullname
+          name email name
         }
       }
     }`,
@@ -33,7 +32,7 @@ export async function post (req, res) {
       id: _mail.id
     }
   })
-  console.log("Got mail:", mail)
+  console.log('Got mail:', mail)
   let messageInfo
 
   if (mail && mail.status === 'new') {
@@ -41,22 +40,22 @@ export async function post (req, res) {
     try {
       // Try sending the mail, untill the moment the mail is really sent, we can still retry sending.
       let transporter = nodemailer.createTransport({
-        host: "mail",
+        host: 'mail',
         port: 1025,
-        secure: false, // true for 465, false for other ports
-      });
+        secure: false // true for 465, false for other ports
+      })
 
-      console.log("Created mailtransport")
+      console.log('Created mailtransport')
 
       const { html, head } = mails[mail.template].render({
         user: mail.member,
         ...mail.data
-      }) 
-      console.log("Rendered template")
+      })
+      console.log('Rendered template')
 
       // Parse the head to get the subject and text
-      const dom = new JSDOM(head);
-      const subjectEl = dom.window.document.querySelector("title")
+      const dom = new JSDOM(head)
+      const subjectEl = dom.window.document.querySelector('title')
 
       const subject = subjectEl.textContent || ''
       const text = dom.window.document.body.textContent.trim()
@@ -67,15 +66,16 @@ export async function post (req, res) {
       let mailOptions = {
         from: '"Wolbodo members system" <admin@wolbodo.nl>', // sender address
         to: mail.member.email,
-        subject, text, html
-      };
+        subject,
+        text,
+        html
+      }
 
-      console.log("Sending mail")
+      console.log('Sending mail')
       // send mail with defined transport object
       messageInfo = await transporter.sendMail(mailOptions)
     } catch (e) {
-
-      console.error("Error happened in sending mail:", e)
+      console.error('Error happened in sending mail:', e)
 
       await store.gqlMutation({
         mutation: gql`mutation mailError($id: Int!) {
@@ -96,7 +96,7 @@ export async function post (req, res) {
       }))
     }
 
-    console.log("Updating mail table", _mail.id, messageInfo)
+    console.log('Updating mail table', _mail.id, messageInfo)
     const mutRes = await store.gqlMutation({
       mutation: gql`mutation mailSent($id: Int!) {
         update_mail(_set:{status: "sent"}, where:{id:{_eq:$id}}) {
@@ -108,7 +108,7 @@ export async function post (req, res) {
       }
     })
 
-    console.log("Message sent: %s", messageInfo.messageId, mutRes);
+    console.log('Message sent: %s', messageInfo.messageId, mutRes)
   }
 
   res.writeHead(200, {
@@ -119,4 +119,3 @@ export async function post (req, res) {
     sent: !!(messageInfo && messageInfo.messageId)
   }))
 }
-

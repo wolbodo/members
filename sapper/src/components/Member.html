@@ -46,8 +46,8 @@
           showButtons={false}
         />
       {:else}
-        {#if member.fullname}
-          <p>{member.fullname}</p>
+        {#if member.firstname || member.lastname}
+          <p>{member.firstname || ''} {member.lastname || ''}</p>
         {/if}
         {#if member.email}
           <a href='mailto:{member.email}'>{member.email}</a>
@@ -302,10 +302,13 @@
           placeholder: 'Nederland',
         }],
         identityFields: [{
-          name: 'fullname',
-          required: true,
-          label: 'Full name',
-          placeholder: 'Wikkert Olbodo',
+          name: 'firstname',
+          label: 'Name',
+          placeholder: 'Wikkert',
+        }, {
+          name: 'lastname',
+          label: 'Surname',
+          placeholder: 'Olbodo',
         }, {
           type: 'email',
           name: 'email',

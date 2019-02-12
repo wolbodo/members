@@ -2,7 +2,7 @@
 BEGIN;
 
 INSERT INTO public.member
-  (name, email, password, fullname, validity)
+  (name, email, password, firstname, validity)
 VALUES
   ('Admin', 'admin@example.org', 'admin', 'Administrator', '[1970-01-01 00:00:01,)'),
   ('Dexter', 'dexter@example.org', 'dexter', 'Dexter', '[2008-11-20 22:00:00,)'),

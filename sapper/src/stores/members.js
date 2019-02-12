@@ -1,13 +1,14 @@
-import gql from 'graphql-tag';
+import gql from 'graphql-tag'
 
 export default BaseStore =>
   class Store extends BaseStore {
-    async addMember(member) {
+    async addMember (member) {
       const res = await this.gqlMutation({
         mutation: gql`
         mutation (
           $name: String!,
-          $fullname: String!,
+          $firstname: String,
+          $lastname: String,
           $email: String,
           $phone: String,
           $address: String,
@@ -18,7 +19,7 @@ export default BaseStore =>
         ) {
           insert_member(objects: [{
             name: $name
-            fullname: $fullname
+            lastname: $lastname
             email: $email
             phone: $phone
             address: $address
@@ -32,7 +33,7 @@ export default BaseStore =>
           }
         }`,
         variables: {
-          ...member,
+          ...member
           // member_roles: [
           //   // { role_id: 2 } // role == 'member'
           // ]
@@ -42,7 +43,7 @@ export default BaseStore =>
       return res
     }
 
-    async updateMember(id, data, permission = 'member:update') {
+    async updateMember (id, data, permission = 'member:update') {
       try {
         const res = await this.gqlMutation({
           mutation: gql`
@@ -69,13 +70,12 @@ export default BaseStore =>
         })
         this.notify('info', `Edited ${res.data.update_member.affected_rows} rows`)
         return res
-
       } catch (error) {
         console.log(error)
       }
     }
 
-    async addMemberRole(memberId, roleId) {
+    async addMemberRole (memberId, roleId) {
       try {
         const res = await this.gqlMutation({
           mutation: gql`mutation addMemberRole($memberId: Int!, $roleId:Int!) {
@@ -90,13 +90,13 @@ export default BaseStore =>
             memberId, roleId
           }
         })
-        console.log("Added member to role:", res)
+        console.log('Added member to role:', res)
         return res
       } catch (error) {
         console.log(error)
       }
     }
-    async removeMemberRole(memberId, roleId) {
+    async removeMemberRole (memberId, roleId) {
       try {
         const res = await this.gqlMutation({
           mutation: gql`mutation addMemberRole($memberId: Int!, $roleId:Int!) {
@@ -111,14 +111,14 @@ export default BaseStore =>
             memberId, roleId
           }
         })
-        console.log("Added member to role:", res)
+        console.log('Added member to role:', res)
         return res
       } catch (error) {
         console.log(error)
       }
     }
 
-    async allRoles() {
+    async allRoles () {
       try {
         const { data } = await this.gqlQuery({
           query: gql`{

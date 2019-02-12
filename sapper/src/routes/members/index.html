@@ -47,7 +47,7 @@ const queries = [{
   query: gql`subscription {
     members: member {
       id name email phone 
-      fullname
+      firstname lastname
       validity
 
       isMember: member_roles_aggregate(where:{role:{name:{_eq:"member"}}}) {
@@ -96,8 +96,8 @@ export default {
       filter: '',
       // getMembers: subscription(GET_MEMBERS),
       columns: [
-        { name: 'Name', field: 'name', component: MemberNameField },
-        { name: 'Full Name', field: 'fullname' },
+        { name: 'Alias', field: 'name', component: MemberNameField },
+        { name: 'Name', field: ({ firstname = '', lastname = '' }) => `${firstname} ${lastname}` },
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
         // { name: 'Roles', field: 'member_roles', component: MemberRolesField },
