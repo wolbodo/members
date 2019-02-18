@@ -33,13 +33,14 @@
 
 <script>
 import gql from 'graphql-tag';
+import fuzzysort from 'fuzzysort'
 
 import { status } from 'src/lib/member'
 import slugify from 'src/lib/slugify'
 
 import MemberNameField from 'src/components/MemberNameField.html'
-import MemberRolesField from 'src/components/MemberRolesField.html'
 import MemberStatusField from 'src/components/MemberStatusField.html'
+import MemberResultField from 'src/components/MemberResultField.html'
 import { loadQueries, stopQueries, preloadQueries } from 'src/lib/queries'
 
 const queries = [{
@@ -97,10 +98,9 @@ export default {
       // getMembers: subscription(GET_MEMBERS),
       columns: [
         { name: 'Alias', field: 'name', component: MemberNameField },
-        { name: 'Name', field: ({ firstname = '', lastname = '' }) => `${firstname} ${lastname}` },
+        { name: 'Name', component: MemberResultField },
         { name: 'Email', field: 'email' },
         { name: 'Phone', field: 'phone' },
-        // { name: 'Roles', field: 'member_roles', component: MemberRolesField },
         { name: 'Status', field: 'status', component: MemberStatusField },
       ]
     }

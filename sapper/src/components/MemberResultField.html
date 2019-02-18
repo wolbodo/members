@@ -1,0 +1,25 @@
+{#each parts as part, i}
+  {#if (i % 2) === 0}
+    {part}
+  {:else}
+    <b>{part}</b>
+  {/if}
+{/each}
+
+<script>
+  import fuzzysort from 'fuzzysort'
+  export default {
+    computed: {
+      parts: ({ result, row }) => {
+        const { firstname = '', lastname = '' } = row
+        const first = result[1]
+                        ? fuzzysort.highlight(result[1], '~', '~')
+                        : firstname
+        const last = result[2]
+                        ? fuzzysort.highlight(result[2], '~', '~')
+                        : lastname
+        return `${first} ${last}`.split('~')
+      }
+    }
+  }
+</script>

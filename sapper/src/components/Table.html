@@ -10,28 +10,30 @@
     {#if !data.length}
       <tr><td>No members found.</td></tr>
     {:else}
-      {#each filteredData as row (row.id)}
-        <tr style="{ (row.distance != undefined) && `background: rgba(0, 255, 150, ${1/(row.distance+1)})`}" class:clickable='!!rowUrl' on:click="gotoRow(row)">
+      {#each filteredData as result (result.obj.id)}
+        <tr style="{ (result.obj.distance != undefined) && `background: rgba(0, 255, 150, ${1/(result.obj.distance+1)})`}" class:clickable='!!rowUrl' on:click="gotoRow(result.obj)">
           {#each columns as column}
             <td>
               {#if column.component}
                 {#if column.props}
-                  <svelte:component this={column.component} {...column.props(row)} />
+                  <svelte:component this={column.component} {...column.props(result.obj)} {result} />
                 {:else}
-                  <svelte:component this={column.component} {row} {column} />
+                  <svelte:component this={column.component} row={result.obj} {column} {result} />
                 {/if}
               {:elseif column.field instanceof Function}
-                {column.field(row)}
+                {column.field(result.obj, result)}
               {:else}
-                {#if row[column.field] === null}
+                {#if result.obj[column.field] === null}
                   <span class='has-size-2 has-text-grey-lighter'>ø</span>
                 {:else}
-                  {row[column.field]}
+                  {result.obj[column.field]}
                 {/if}
               {/if}
             </td>
           {/each}
         </tr>
+      {:else}
+        <tr><td>No members found.</td></tr>
       {/each}
     {/if}
   </tbody>
@@ -50,15 +52,17 @@
 <script>
   import { goto } from '../../__sapper__/client.js'
   import * as levenshtein from 'fast-levenshtein'
+  import fuzzysort from 'fuzzysort'
 
   export default {
     data() {
       return {
-        filter: ''
+        filter: '',
+        filteredData: []
       }
     },
     helpers: {
-      Function
+      Function,
     },
     methods: {
       gotoRow (row) {
@@ -67,16 +71,26 @@
           goto(rowUrl(row))
       }
     },
-    computed: {
-      filteredData: ({ data, filter }) => {
+    async onstate ({ changed, current }) {
+      if (changed.data || changed.filter) {
+        const { data, filter } = current
         if (filter.length > 1) {
-          return data.map(member => ({
-            ...member,
-            distance: levenshtein.get(filter.toLowerCase(), member.name.toLowerCase())
-          })).sort((a, b) => a.distance - b.distance)
+          const res = await fuzzysort.goAsync(filter, data, {
+            limit: 20,
+            keys: ['name', 'firstname', 'lastname'],
+            allowTypo: false
+          })
+
+          this.set({
+            filteredData: res
+          })
+        } else {
+          this.set({
+            filteredData: data.map(obj => ({ obj }))
+          })
+          
         }
-        return data
       }
-    }
+    },
   }
 </script>
