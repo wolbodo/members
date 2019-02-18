@@ -19,6 +19,7 @@ export default BaseStore =>
         ) {
           insert_member(objects: [{
             name: $name
+            firstname: $firstname
             lastname: $lastname
             email: $email
             phone: $phone
