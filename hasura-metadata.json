@@ -167,6 +167,77 @@
       ]
     },
     {
+      "table": {
+        "schema": "quotes",
+        "name": "quote"
+      },
+      "array_relationships": [],
+      "insert_permissions": [
+        {
+          "role": "member",
+          "comment": null,
+          "permission": {
+            "set": {
+              "created_by_id": "x-hasura-User-Id"
+            },
+            "check": {},
+            "columns": [
+              "quotee_id",
+              "text"
+            ]
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "member",
+          "comment": null,
+          "permission": {
+            "allow_aggregations": false,
+            "columns": [
+              "created",
+              "created_by_id",
+              "id",
+              "quotee_id",
+              "text"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "member",
+          "comment": null,
+          "permission": {
+            "columns": [
+              "quotee_id",
+              "text"
+            ],
+            "filter": {
+              "created_by_id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            }
+          }
+        }
+      ],
+      "delete_permissions": [
+        {
+          "role": "member",
+          "comment": null,
+          "permission": {
+            "filter": {
+              "created_by_id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            }
+          }
+        }
+      ],
+      "event_triggers": []
+    },
+    {
       "table": "member",
       "object_relationships": [],
       "array_relationships": [
@@ -208,13 +279,14 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "address",
               "name",
               "phone",
               "zipcode"
             ]
-          } 
+          }
         }
       ],
       "select_permissions": [
@@ -227,7 +299,8 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "id",
               "modified",
               "name",
@@ -249,7 +322,8 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "id",
               "modified",
               "name",
@@ -270,7 +344,8 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "id",
               "modified",
               "name",
@@ -302,7 +377,8 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "password",
               "phone",
               "address",
@@ -323,7 +399,8 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "modified",
               "name",
               "password",
@@ -529,7 +606,8 @@
               "city",
               "country",
               "email",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "id",
               "modified",
               "name",
@@ -551,7 +629,8 @@
               "name",
               "email",
               "password",
-              "firstname", "lastname",
+              "firstname",
+              "lastname",
               "phone",
               "address",
               "zipcode",
