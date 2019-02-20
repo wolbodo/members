@@ -10,6 +10,7 @@ const PERMISSIONS_MAP = {
   'member:create': ['board'],
   'member:read': ['admin', 'board', 'member', 'login'],
   'member:update': ['board'],
+  'board:update_member': ['board'],
   'member:update_self': ['member'],
   'member_roles:create': ['board'],
   'mail:create': ['admin', 'mail'],

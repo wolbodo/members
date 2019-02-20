@@ -12,7 +12,7 @@
 <form on:submit|preventDefault|stopPropagation='submitForm()'>
 <div class="tile is-ancestor is-vertical">
   <div class='tile is-parent'>
-    <div class="tile is-child box">
+    <div class="tile is-child box content">
       <h1 class='title'>
         {member.name}
         {#if canEdit}
@@ -38,22 +38,35 @@
         {/if}
       </h1>
       {#if openForms.has('identity')}
-        <Form
-          loading={submittingForm}
-          data={member}
-          bind:changes='identityChanges'
-          fields={identityFields}
-          showButtons={false}
-        />
+        {#if $permissions.includes('board:update_member')}
+          <Form
+            loading={submittingForm}
+            data={member}
+            bind:changes='identityChanges'
+            fields={identityBoardFields}
+            showButtons={false}
+          />
+        {:else}
+          {#if member.firstname || member.lastname}
+            <p>{member.firstname || ''} {member.lastname || ''}</p>
+          {/if}
+          <Form
+            loading={submittingForm}
+            data={member}
+            bind:changes='identityChanges'
+            fields={identityFields}
+            showButtons={false}
+          />
+        {/if}
       {:else}
         {#if member.firstname || member.lastname}
           <p>{member.firstname || ''} {member.lastname || ''}</p>
         {/if}
         {#if member.email}
-          <a href='mailto:{member.email}'>{member.email}</a>
+          <p><label>Email:</label><a href='mailto:{member.email}'>{member.email}</a></p>
         {/if}
         {#if member.phone}
-          <a href='tel:{member.phone}'>{member.phone}</a>
+          <p><label>Phone:</label><a href='tel:{member.phone}'>{member.phone}</a></p>
         {/if}
 
         <p>
@@ -283,43 +296,60 @@
         rolesLoading: true,
         addressChanges: new Map(),
         identityChanges: new Map(),
-        addressFields: [{
-          name: 'address',
-          required: true,
-          label: 'Address',
-          placeholder: 'Verwersdijk 102',
-        }, {
-          name: 'zipcode',
-          label: 'Zipcode',
-          placeholder: '2611 NK',
-        }, {
-          name: 'city',
-          label: 'City',
-          placeholder: 'Delft',
-        }, {
-          name: 'country',
-          label: 'Country',
-          placeholder: 'Nederland',
-        }],
-        identityFields: [{
-          name: 'firstname',
-          label: 'Name',
-          placeholder: 'Wikkert',
-        }, {
-          name: 'lastname',
-          label: 'Surname',
-          placeholder: 'Olbodo',
-        }, {
-          type: 'email',
-          name: 'email',
-          required: true,
-          label: 'Email',
-          placeholder: 'wikkert@wolbodo.nl',
-        }, {
-          name: 'phone',
-          label: 'Phone',
-          placeholder: '+31 000 0000 000',
-        }]
+        addressFields: [
+          {
+            name: 'address',
+            required: true,
+            label: 'Address',
+            placeholder: 'Verwersdijk 102',
+          }, {
+            name: 'zipcode',
+            label: 'Zipcode',
+            placeholder: '2611 NK',
+          }, {
+            name: 'city',
+            label: 'City',
+            placeholder: 'Delft',
+          }, {
+            name: 'country',
+            label: 'Country',
+            placeholder: 'Nederland',
+          }
+        ],
+        identityFields: [
+          {
+            type: 'email',
+            name: 'email',
+            required: true,
+            label: 'Email',
+            placeholder: 'wikkert@wolbodo.nl',
+          }, {
+            name: 'phone',
+            label: 'Phone',
+            placeholder: '+31 000 0000 000',
+          }
+        ],
+        identityBoardFields: [
+          {
+            name: 'firstname',
+            label: 'Name',
+            placeholder: 'Wikkert',
+          }, {
+            name: 'lastname',
+            label: 'Surname',
+            placeholder: 'Olbodo',
+          }, {
+            type: 'email',
+            name: 'email',
+            required: true,
+            label: 'Email',
+            placeholder: 'wikkert@wolbodo.nl',
+          }, {
+            name: 'phone',
+            label: 'Phone',
+            placeholder: '+31 000 0000 000',
+          }
+        ]
       }
     },
     methods: {
