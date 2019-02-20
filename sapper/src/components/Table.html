@@ -88,10 +88,11 @@
 
           this.sorter = fuzzysort.goAsync(filter, data, {
             limit: 20,
-            keys: ['name', 'firstname', 'lastname'],
+            keys: ['name', 'fullname'],
             allowTypo: false
           })
             .then(res => {
+              console.log("Done ->")
               delete this.sorter
               this.set({
                 searching: false,

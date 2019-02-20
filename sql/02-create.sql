@@ -17,8 +17,8 @@ CREATE TABLE public.member (
   note              TEXT                ,
 
   validity          TSTZRANGE           DEFAULT TSTZRANGE(now(),NULL),
-  created           TIMESTAMPTZ         DEFAULT 'NOW', -- Adding a created cause validity might have to be reset
-  modified          TIMESTAMPTZ         DEFAULT 'NOW',
+  created           TIMESTAMPTZ         DEFAULT NOW(), -- Adding a created cause validity might have to be reset
+  modified          TIMESTAMPTZ         DEFAULT NOW(),
 
   EXCLUDE USING gist (name WITH =, validity WITH &&),
   PRIMARY KEY (name, validity),
@@ -48,7 +48,7 @@ CREATE TABLE public.role (
   name              VARCHAR(1024)       NOT NULL,
   description       TEXT                NOT NULL,
   validity          TSTZRANGE           DEFAULT TSTZRANGE(NULL,NULL),
-  modified          TIMESTAMPTZ         DEFAULT 'NOW',
+  modified          TIMESTAMPTZ         DEFAULT NOW(),
 
   EXCLUDE USING gist (name WITH =, validity WITH &&),
   PRIMARY KEY (name, validity), 
@@ -60,7 +60,7 @@ CREATE TABLE public.member_role (
   role_id           INTEGER             NOT NULL REFERENCES public.role(id),
   note              TEXT                DEFAULT '',
   validity          TSTZRANGE           DEFAULT TSTZRANGE(now(),NULL),
-  modified          TIMESTAMPTZ         DEFAULT 'NOW',
+  modified          TIMESTAMPTZ         DEFAULT NOW(),
 
   EXCLUDE USING gist (member_id WITH =, role_id WITH =, validity WITH &&),
   PRIMARY KEY (member_id, role_id, validity)

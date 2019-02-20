@@ -78,6 +78,7 @@ const queries = [{
   success({ data }) {
     this.set({ members: data.members.map(({isMember, isOldMember, isBoard, ...member}) => ({
       ...member,
+      fullname: `${member.firstname} ${member.lastname}`,
       isMember: isMember.aggregate.count > 0,
       isBoard: isBoard.aggregate.count > 0,
       isOldMember: isOldMember.length > 0

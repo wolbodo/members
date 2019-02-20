@@ -1,18 +1,20 @@
 <a href='/members/{slugify(row.name)}' rel=prefetch>
-  {@html hasMatch
-      ? highlight(result[0], '<b>', '</b>')
-      : row.name
-  }
+  {@html value}
 </a>
 
 <script>
   import slugify from 'src/lib/slugify'
-  import fuzzysort from 'fuzzysort'
-
+  import highlight from 'src/lib/fuzzy-highlight'
 
   export default {
     computed: {
-      hasMatch: ({ result }) => !!(result.length && result[0])
+      value: ({ result, row }) => {
+        if (result && result.length) {
+          return highlight(result[0], row.name)
+        } else {
+          return row.name
+        }
+      }
     },
     data () {
       return {
@@ -21,7 +23,6 @@
     },
     helpers: {
       slugify,
-      highlight: fuzzysort.highlight
     }
   }
 </script>
