@@ -92,6 +92,8 @@ CREATE TABLE public.mail (
   template          VARCHAR(255)           NOT NULL,
   data              JSONB               DEFAULT '{}',
 
+  created           TIMESTAMPTZ         DEFAULT NOW(),
+
   PRIMARY KEY (id)
 
 );
