@@ -45,7 +45,7 @@ export async function get (req, res) {
     }
 
     console.log('headers:', req.headers)
-    if (req.headers.origin.includes('localhost') || req.headers.origin.includes('wlbd.nl')) {
+    if (req.headers.origin && (req.headers.origin.includes('localhost') || req.headers.origin.includes('wlbd.nl'))) {
       headers = {
         ...headers,
         'Access-Control-Allow-Origin': req.headers.origin,
