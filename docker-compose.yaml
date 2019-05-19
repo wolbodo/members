@@ -34,7 +34,7 @@ services:
       AUTH_JWT_SECRET: $AUTH_JWT_SECRET
 
   sapper:
-    image: registry.dxlb.nl/wolbodo/members:latest
+    image: registry.dxlb.dev/wolbodo/members:latest
     environment:
       NODE_ENV: production
     depends_on:
