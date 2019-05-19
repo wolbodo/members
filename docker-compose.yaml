@@ -33,6 +33,10 @@ services:
     environment:
       AUTH_JWT_SECRET: $AUTH_JWT_SECRET
 
+      VIRTUAL_HOST: api.members.wlbd.nl
+      LETSENCRYPT_HOST: api.members.wlbd.nl
+      LETSENCRYPT_EMAIL: dexter+wlbd@dxlb.nl
+
   sapper:
     image: registry.dxlb.dev/wolbodo/members:latest
     environment:
@@ -40,6 +44,10 @@ services:
     depends_on:
       - graphql
     environment:
+      VIRTUAL_HOST: members.wlbd.nl
+      LETSENCRYPT_HOST: members.wlbd.nl
+      LETSENCRYPT_EMAIL: dexter+wlbd@dxlb.nl
+
       AUTH_JWT_SECRET: $AUTH_JWT_SECRET
       NODE_ENV: production
       GRAPHQL_LOCAL_URI: $GRAPHQL_LOCAL_URI
