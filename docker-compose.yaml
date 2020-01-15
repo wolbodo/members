@@ -38,7 +38,7 @@ services:
       LETSENCRYPT_EMAIL: dexter+wlbd@dxlb.nl
 
   sapper:
-    image: registry.dxlb.dev/wolbodo/members:latest
+    image: registry.gitlab.com/wolbodo/members:latest
     environment:
       NODE_ENV: production
     depends_on:
