@@ -64,4 +64,5 @@ deploy:master:
     url: https://members.wlbd.nl
   only:
     - master
+  when: manual
 

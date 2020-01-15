@@ -1,6 +1,5 @@
 <Nav segment={child.segment} :child />
 
-
 <main class='container'>
 	{#if preloading}
 		<p>Loading ...</p>
@@ -8,7 +7,6 @@
 		<svelte:component this={child.component} {...child.props}/>
 	{/if}
 </main>
-
 
 <Notifications />
 

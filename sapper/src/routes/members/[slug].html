@@ -12,7 +12,7 @@
     
   const queries = [{
     type: 'subscription',
-    query: gql`subscription ($slug: String) {
+    query: gql`subscription ($slug: String!) {
       members: find_member(args:{slug:$slug}) {
         id
         name
