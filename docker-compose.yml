@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres
+    environment:
+      POSTGRES_DB: members
+      POSTGRES_INITDB_ARGS: --data-checksums
+      POSTGRES_PASSWORD: password
+    image: postgres:13-alpine
+    volumes:
+      - './sql:/docker-entrypoint-initdb.d:ro'
+      - './pgdata:/var/lib/postgresql/data'
+  
