@@ -11,6 +11,10 @@ create type jwt_token as (
   username varchar
 );
 
+CREATE ROLE admin
+CREATE ROLE member
+CREATE ROLE board
+
 CREATE TABLE person (
   id                SERIAL,
   
@@ -40,13 +44,22 @@ CREATE TABLE person (
 );
 CREATE INDEX ON person (email);
 
-CREATE TABLE group ()
-CREATE TABLE person_group ()
-
+ALTER TABLE person ENABLE ROW LEVEL SECURITY
 -- Users can edit their own data
 -- Bestuur can edit all users
 
-
 INSERT INTO person (name, email) VALUES ('Bob', 'bob@example.com'), ('Alice', 'alice@example.com');
+
+
+
+CREATE TABLE role (
+  id      SERIAL,
+  name    VARCHAR(255)          UNIQUE NOT NULL
+)
+CREATE TABLE person_role (
+
+)
+
+
 
 COMMIT;
