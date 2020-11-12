@@ -44,6 +44,14 @@ CREATE TABLE auth.person (
 CREATE INDEX ON auth.person (email);
 
 -- ALTER TABLE auth.person ENABLE ROW LEVEL SECURITY
+
+-- GRANT
+--   SELECT,
+--   INSERT,
+--   UPDATE,
+--   DELETE
+-- ON auth.person
+-- TO graphql_role;
 -- Users can edit their own data
 -- Bestuur can edit all users
 

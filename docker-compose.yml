@@ -1,14 +1,25 @@
 version: "3.8"
 
 services:
-  database:
+  db:
     image: postgres
     environment:
-      POSTGRES_DB: members
       POSTGRES_INITDB_ARGS: --data-checksums
-      POSTGRES_PASSWORD: password
+    env_file:
+      - ./.env
     image: postgres:13-alpine
     volumes:
-      - './sql:/docker-entrypoint-initdb.d:ro'
-      - './pgdata:/var/lib/postgresql/data'
-  
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db/data:/var/lib/postgresql/data
+
+  graphql:
+    restart: always
+    build:
+      context: ./graphql
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    command: ["--connection", "${DATABASE_URL}", "--port", "80", "--schema", "auth", "--append-plugins", "postgraphile-plugin-connection-filter"]
