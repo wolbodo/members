@@ -103,7 +103,12 @@ INSERT INTO auth.person_role (person_id, role)
   SELECT auth.person.id, alias.role FROM (
     VALUES
       ('Alice', 'admin'),
-      ('Bob', 'board')
+      ('Alice', 'member'),
+      ('Bob', 'board'),
+      ('Bob', 'member'),
+      ('Charly', 'member'),
+      ('Dennis', 'member'),
+      ('Edward', 'member')
   ) ALIAS (name, role)
   JOIN auth.person ON auth.person.name = alias.name
 ;
