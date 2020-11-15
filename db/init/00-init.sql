@@ -41,6 +41,7 @@ CREATE TABLE auth.person (
   CONSTRAINT is_email CHECK (email ~ '^[^@]+@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+(xn--[a-zA-Z0-9-]{4,}|[a-zA-Z]{2,})$')
   -- CONSTRAINT is_iban  CHECK (bankaccount ~ '^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}$')
 );
+CREATE INDEX ON auth.person (id);
 CREATE INDEX ON auth.person (email);
 
 -- ALTER TABLE auth.person ENABLE ROW LEVEL SECURITY
@@ -75,6 +76,7 @@ CREATE TABLE auth.person_role (
 
   EXCLUDE USING gist (person_id WITH =, role WITH =, validity WITH &&)
 );
+CREATE INDEX ON auth.person_role(person_id);
 
 CREATE FUNCTION
   auth.check_role_exists() RETURNS trigger AS $$
