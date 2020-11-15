@@ -16,7 +16,7 @@ create type auth.jwt_token as (
 
 CREATE TABLE auth.person (
   id                SERIAL,
-  
+
   name              VARCHAR(255)        NOT NULL,
   email             VARCHAR(255)        UNIQUE,
   password          VARCHAR(1024)       ,
@@ -33,6 +33,9 @@ CREATE TABLE auth.person (
 
   note              TEXT                ,
 
+  -- student              BOOLEAN         ,
+  -- birthdate              TIMESTAMPTZ         ,
+  -- membersince              TIMESTAMPTZ         ,
   created           TIMESTAMPTZ         DEFAULT NOW(), -- Adding a created cause validity might have to be reset
   modified          TIMESTAMPTZ         DEFAULT NOW(),
 

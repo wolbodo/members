@@ -1,0 +1,30 @@
+[{
+    "id": "1",
+    "name": "Dorian",
+    "email": "halloimdorian@dxlb.dev",
+    "password": "123",
+    "firstname": "Bax",
+    "lastname": "Bex",
+    "phone": "0612345678",
+    "address": "pauw 123",
+    "zipcode": "1234XX",
+    "city": "Illuppuhdam",
+    "country": "Netherlands",
+    "bankaccount": "NL98 KNAB 00000000",
+    "note": "admin"
+},
+{
+  "id": "2",
+  "name": "Michael",
+  "email": "Michael@bx.dev",
+  "password": "123",
+  "firstname": "Bob",
+  "lastname": "Pauper",
+  "phone": "+31(0)612345678",
+  "address": "Onzin 100",
+  "zipcode": "1234XX",
+  "city": "Delft",
+  "country": "Netherlands",
+  "bankaccount": "NL98 RABO 00000000",
+  "note": "admin"
+}]
