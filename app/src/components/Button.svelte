@@ -1,4 +1,5 @@
 <script>
+  export let href;
   let growFactor = 1.0;
   let stop = false;
   let buttonElement;
@@ -9,6 +10,7 @@
   // }
 
   const grow = (time) => {
+    if (!buttonElement) return;
     if (stop) {
       stop = false;
       growFactor = 1.0;
@@ -40,7 +42,7 @@
   }
 
   button.focus-dashed:focus {
-    outline: dashed 0.25rem linear-gradient(to left, black, var(--main-color));
+    outline: dashed 0.25rem var(--main-color);
     outline-offset: 0.125rem;
   }
 
@@ -91,11 +93,13 @@
   }
 </style>
 
-<button
-  on:click
-  on:pointerdown={grow}
-  on:pointerup={stopGrowing}
-  bind:this={buttonElement}
-  class="focus-ants">
-  <slot>Click here!</slot>
-</button>
+<a href={href} tabindex="-1">
+  <button
+    on:click
+    on:pointerdown={grow}
+    on:pointerup={stopGrowing}
+    bind:this={buttonElement}
+    class="focus-ants">
+    <slot>Click here!</slot>
+  </button>
+</a>
