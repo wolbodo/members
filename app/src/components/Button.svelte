@@ -4,11 +4,6 @@
   let stop = false;
   let buttonElement;
 
-  // function grow () {
-  //   buttonElement.style.transform =`scale(${growFactor})`;
-  //   requestAnimationFrame(growMore);
-  // }
-
   const grow = (time) => {
     if (!buttonElement) return;
     if (stop) {
@@ -26,6 +21,17 @@
     stop = true;
   };
 </script>
+
+<a href={href} >
+  <button
+    on:click
+    on:pointerdown={grow}
+    on:pointerup={stopGrowing}
+    bind:this={buttonElement}
+    class="focus-ants">
+    <slot>Click here!</slot>
+  </button>
+  </a>
 
 <style>
   button {
@@ -92,14 +98,3 @@
     }
   }
 </style>
-
-<a href={href} tabindex="-1">
-  <button
-    on:click
-    on:pointerdown={grow}
-    on:pointerup={stopGrowing}
-    bind:this={buttonElement}
-    class="focus-ants">
-    <slot>Click here!</slot>
-  </button>
-</a>

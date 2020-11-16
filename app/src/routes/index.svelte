@@ -1,7 +1,6 @@
 <script>
   import Button from '$components/Button.svelte';
   import List from '$components/List.svelte';
-  import { onMount, getContext, setContext, afterUpdate } from 'svelte';
   import { members } from '$components/members';
 </script>
 
@@ -15,7 +14,6 @@
   {/if}
   <div>
     <Button>Add member</Button>
-    <Button href="/member/dexter">goto dexter</Button>
   </div>
 </main>
 
@@ -28,7 +26,7 @@
 
   :global(html) {
     font-family: system-ui;
-    font-size: 18px;
+    font-size: 1em;
     box-sizing: border-box;
     height: 100%;
   }

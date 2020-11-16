@@ -135,6 +135,13 @@
   dependencies:
     "@sveltejs/app-utils" "0.0.17"
 
+"@sveltejs/adapter-static@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-0.0.14.tgz#118a2b6affcec8a98776b368b7687cf69d61b27e"
+  integrity sha512-hBxaGU3tg16X+cHLv5ZkoM/nonckH1FcBkzBnB2UI6dPsUNIshWKvlCGZtH1SESStxZl7FZL3eUbsjVdu+Zy9w==
+  dependencies:
+    "@sveltejs/app-utils" "0.0.17"
+
 "@sveltejs/app-utils@0.0.17":
   version "0.0.17"
   resolved "https://registry.yarnpkg.com/@sveltejs/app-utils/-/app-utils-0.0.17.tgz#007c53f498ddeaecc08e01dac2a1befb501c79da"
@@ -1317,8 +1324,6 @@ rollup@^2.23.0, rollup@^2.32.0:
   version "2.33.1"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.33.1.tgz#802795164164ee63cd47769d8879c33ec8ae0c40"
   integrity sha512-uY4O/IoL9oNW8MMcbA5hcOaz6tZTMIh7qJHx/tzIJm+n1wLoY38BLn6fuy7DhR57oNFLMbDQtDeJoFURt5933w==
-  dependencies:
-    fsevents "~2.1.2"
   optionalDependencies:
     fsevents "~2.1.2"
 
