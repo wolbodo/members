@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
-    "postgraphile": "^4.9.2"
-  }
-}

@@ -44,6 +44,7 @@ CREATE TABLE auth.person (
   CONSTRAINT is_email CHECK (email ~ '^[^@]+@([a-zA-Z0-9][a-zA-Z0-9-]*\.)+(xn--[a-zA-Z0-9-]{4,}|[a-zA-Z]{2,})$')
   -- CONSTRAINT is_iban  CHECK (bankaccount ~ '^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{4}[0-9]{7}([a-zA-Z0-9]?){0,16}$')
 );
+CREATE INDEX ON auth.person (id);
 CREATE INDEX ON auth.person (email);
 
 -- ALTER TABLE auth.person ENABLE ROW LEVEL SECURITY
@@ -78,6 +79,7 @@ CREATE TABLE auth.person_role (
 
   EXCLUDE USING gist (person_id WITH =, role WITH =, validity WITH &&)
 );
+CREATE INDEX ON auth.person_role(person_id);
 
 CREATE FUNCTION
   auth.check_role_exists() RETURNS trigger AS $$
@@ -101,7 +103,12 @@ INSERT INTO auth.person_role (person_id, role)
   SELECT auth.person.id, alias.role FROM (
     VALUES
       ('Alice', 'admin'),
-      ('Bob', 'board')
+      ('Alice', 'member'),
+      ('Bob', 'board'),
+      ('Bob', 'member'),
+      ('Charly', 'member'),
+      ('Dennis', 'member'),
+      ('Edward', 'member')
   ) ALIAS (name, role)
   JOIN auth.person ON auth.person.name = alias.name
 ;

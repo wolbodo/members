@@ -18,8 +18,7 @@ services:
       context: ./graphql
     env_file:
       - ./.env
+    ports:  
+      - 8080:8080
     depends_on:
       - db
-    ports:
-      - 8080:80
-    command: ["--connection", "${DATABASE_URL}", "--port", "80", "--schema", "auth", "--append-plugins", "postgraphile-plugin-connection-filter"]
