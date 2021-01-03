@@ -47,7 +47,7 @@
   }
 
   @media all and (max-width: 560px) {
-    .mobile-only {
+    .desktop-only {
       display: none;
     }
   }
@@ -57,13 +57,16 @@
   <div class="list-item header">
     <strong>name</strong>
     <strong>email</strong>
-    <strong class="mobile-only">phone</strong>
+    <strong class="desktop-only">phone</strong>
   </div>
   {#each members as { id, name, email, phone }}
     <div class="list-item">
       <a href="/members/{name.toLowerCase()}">{name}</a>
-      <a href="mailto:{email}" target="_blank" title="Send email to {email}">{email}</a>
-      <a href="tel:{phone}" class="mobile-only" title="Call {phone}">{phone}</a>
+      <a
+        href="mailto:{email}"
+        target="_blank"
+        title="Send email to {email}">{email}</a>
+      <a href="tel:{phone}" class="desktop-only" title="Call {phone}">{phone}</a>
     </div>
   {:else}
     <h3>No members found...</h3>

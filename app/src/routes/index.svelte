@@ -1,48 +1,29 @@
 <script>
   import Button from '$components/Button.svelte';
   import List from '$components/List.svelte';
-  import { members } from '$components/members';
+  async function getMembers() {
+    const res = await fetch(`members.json`);
+    const json = await res.json();
+
+    if (res.ok) {
+      return json;
+    } else {
+      throw new Error(json);
+    }
+  }
+  let promise = getMembers().catch((err) => console.log(err));
 </script>
 
-<main>
-  {#if $members.loading}
-    <h1>...waiting on members</h1>
-  {:else if $members.error}
-    <p style="color: red">{$members.error}</p>
-  {:else}
-    <List members={$members.data} />
-  {/if}
-  <div>
-    <Button>Add member</Button>
-  </div>
-</main>
-
-<style>
-  :global(:root) {
-    --main-color: #ff0088;
-    --text-color: black;
-    --color-white: white;
-  }
-
-  :global(html) {
-    font-family: system-ui;
-    font-size: 1em;
-    box-sizing: border-box;
-    height: 100%;
-  }
-
-  :global(body) {
-    height: 100%;
-    margin: 0;
-  }
-
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    max-width: 1000px;
-    margin: auto;
-  }
-</style>
+{#await promise}
+  <h1>...waiting on members</h1>
+{:then members}
+  <List {members} />
+  <List {members} />
+  <List {members} />
+  <List {members} />
+{:catch error}
+  <p style="color: red">{error}</p>
+{/await}
+<div>
+  <Button>Add member</Button>
+</div>

@@ -28,7 +28,7 @@
     on:pointerdown={grow}
     on:pointerup={stopGrowing}
     bind:this={buttonElement}
-    class="focus-ants">
+    class="focus-dashed">
     <slot>Click here!</slot>
   </button>
   </a>
@@ -36,13 +36,13 @@
 <style>
   button {
     position: relative;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 1rem;
     background: var(--main-color);
     color: var(--color-white);
     font-weight: 800;
     font-size: 1rem;
     text-transform: uppercase;
-    border: solid 0.25rem var(--main-color);
+    border: none;
     border-radius: 10rem;
     outline: none;
   }
@@ -50,24 +50,6 @@
   button.focus-dashed:focus {
     outline: dashed 0.25rem var(--main-color);
     outline-offset: 0.125rem;
-  }
-
-  button.focus-inset-shadow:focus {
-    box-shadow: inset 0 0 0.125rem 0.25rem var(--color-white);
-  }
-
-  button.focus-ants:focus::before {
-    content: '';
-    position: absolute;
-    top: -0.75rem;
-    right: -1rem;
-    bottom: -0.75rem;
-    left: -1rem;
-    background-color: var(--main-color);
-    -webkit-mask-image: url('ant-border-rectangle.svg#svgView(preserveAspectRatio(none))');
-    -webkit-mask-size: 100% 100%;
-    mask-image: url('ant-border-rectangle.svg#svgView(preserveAspectRatio(none))');
-    mask-size: 100% 100%;
   }
 
   button:hover {
@@ -83,8 +65,8 @@
       orange,
       red
     );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    /* -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; */
     background-size: 800% 800%;
     animation: rainbow 2s linear infinite;
   }
