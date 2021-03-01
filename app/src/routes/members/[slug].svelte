@@ -5,7 +5,8 @@
   }
 </script>
 
-<script>
+<script lang="ts">
+  import { onDestroy } from 'svelte';
   import Button from '$components/Button.svelte';
   export let slug;
   async function getMembers() {
@@ -18,9 +19,11 @@
       throw new Error(json);
     }
   }
-  let promise = getMembers().then((members) =>
-    members.find((m) => m.name.toLowerCase() === slug.toLowerCase())
-  ).catch((err) => console.log(err));
+  let promise = getMembers()
+    .then((members) =>
+      members.find((m) => m.name.toLowerCase() === slug.toLowerCase())
+    )
+    .catch((err) => console.log(err));
 </script>
 
 <Button href="/">Back</Button>

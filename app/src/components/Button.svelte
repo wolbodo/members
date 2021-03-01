@@ -1,44 +1,50 @@
-<script>
-  export let href;
+<script lang="ts">
+  export let href: string;
   let growFactor = 1.0;
   let stop = false;
   let buttonElement;
 
-  const grow = (time) => {
-    if (!buttonElement) return;
-    if (stop) {
-      stop = false;
-      growFactor = 1.0;
-      buttonElement.style.transform = 'none';
-      return;
-    }
+  let focusInvaders = true;
+
+  const grow = () => {
+    if (!buttonElement || stop) return;
     buttonElement.style.transform = `scale(${growFactor})`;
     growFactor += 0.01;
     requestAnimationFrame(grow);
   };
 
+  const startGrowing = () => {
+    stop = false;
+    requestAnimationFrame(grow);
+  }
+
   const stopGrowing = () => {
     stop = true;
+    growFactor = 1.0;
+    buttonElement.style.transform = 'none';
+  };
+
+  const clickChildLink = (e: Event) => {
+    const { firstElementChild } = e.currentTarget as Element;
+    (firstElementChild as HTMLElement).click();
   };
 </script>
 
-<a href={href} >
-  <button
-    on:click
-    on:pointerdown={grow}
-    on:pointerup={stopGrowing}
-    bind:this={buttonElement}
-    class="focus-dashed">
+<button on:click={clickChildLink} bind:this={buttonElement}>
+  <a {href} />
+  <div tabindex="-1" on:pointerdown={startGrowing} on:pointerup={stopGrowing}>
     <slot>Click here!</slot>
-  </button>
-  </a>
+  </div>
+</button>
 
 <style>
+  a {
+    display: none;
+  }
   button {
-    position: relative;
     padding: 0.5rem 1rem;
-    background: var(--main-color);
-    color: var(--color-white);
+    background: var(--primary-color);
+    color: var(--background-color);
     font-weight: 800;
     font-size: 1rem;
     text-transform: uppercase;
@@ -47,28 +53,31 @@
     outline: none;
   }
 
-  button.focus-dashed:focus {
-    outline: dashed 0.25rem var(--main-color);
-    outline-offset: 0.125rem;
+  button:focus > div {
+    border-image: url(/SpaceInvader.svg) 13 fill / 13px / 1.5rem 2rem space;
+  }
+
+  div:focus {
+    outline: none;
   }
 
   button:hover {
+    cursor: pointer;
     background-color: transparent;
     background-image: repeating-linear-gradient(
-      to right,
-      var(--main-color),
-      violet,
+      to bottom,
       indigo,
       blue,
-      green,
+      turquoise,
+      limegreen,
       yellow,
       orange,
-      red
+      red,
+      indigo,
+      blue
     );
-    /* -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; */
     background-size: 800% 800%;
-    animation: rainbow 2s linear infinite;
+    animation: rainbow 4s linear infinite;
   }
 
   @keyframes rainbow {
@@ -76,7 +85,7 @@
       background-position: 0% 0%;
     }
     to {
-      background-position: 100% 0%;
+      background-position: 0% 100%;
     }
   }
 </style>

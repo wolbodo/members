@@ -2,6 +2,34 @@
   export let members = [];
 </script>
 
+<div class="list">
+  <div class="list-item header">
+    <strong>name</strong>
+    <strong>email</strong>
+    <strong class="desktop-only">phone</strong>
+  </div>
+  {#each members as { id, name, email, phone }}
+    <div class="list-item">
+      <a href="/members/{name.toLowerCase()}">{name}</a>
+      <a
+        href="mailto:{email}"
+        target="_blank"
+        title="Send email to {email}"
+        tabindex="-1">{email}</a
+      >
+      <a
+        href="tel:{phone}"
+        class="desktop-only"
+        title="Call {phone}"
+        tabindex="-1"
+        >{phone}
+      </a>
+    </div>
+  {:else}
+    <h3>No members found...</h3>
+  {/each}
+</div>
+
 <style>
   .list {
     overflow: auto;
@@ -14,8 +42,13 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: 8rem 1fr;
-    padding: 0.5rem 1rem;
     border-bottom: solid 1px grey;
+  }
+
+  .list-item:not(:first-of-type):focus-within,
+  .list-item:not(:first-of-type):hover {
+    color: var(--background-color);
+    background: var(--foreground-color);
   }
 
   @media (min-width: 560px) {
@@ -38,11 +71,11 @@
     width: fit-content;
   }
   a {
-    color: var(--main-color);
+    color: var(--primary-color);
     text-decoration: none;
   }
   a:focus {
-    outline: dashed 0.25rem var(--main-color);
+    outline: dashed 0.25rem var(--primary-color);
     outline-offset: 0.125rem;
   }
 
@@ -52,23 +85,3 @@
     }
   }
 </style>
-
-<div class="list">
-  <div class="list-item header">
-    <strong>name</strong>
-    <strong>email</strong>
-    <strong class="desktop-only">phone</strong>
-  </div>
-  {#each members as { id, name, email, phone }}
-    <div class="list-item">
-      <a href="/members/{name.toLowerCase()}">{name}</a>
-      <a
-        href="mailto:{email}"
-        target="_blank"
-        title="Send email to {email}">{email}</a>
-      <a href="tel:{phone}" class="desktop-only" title="Call {phone}">{phone}</a>
-    </div>
-  {:else}
-    <h3>No members found...</h3>
-  {/each}
-</div>
