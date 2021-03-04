@@ -1,23 +1,22 @@
-<script lang="ts">
-  if (
-    window.matchMedia &&
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-  ) {
-    const root: HTMLElement = document.querySelector(':root');
-    root.style.setProperty('--foreground-color', 'white');
-    root.style.setProperty('--background-color', 'black');
-  }
-</script>
-
 <main>
   <slot />
 </main>
 
 <style>
-  :global(:root) {
-    --primary-color: #ff0088;
-    --foreground-color: black;
-    --background-color: white;
+  @media (prefers-color-scheme: dark) {
+    :global(:root) {
+      --primary-color: #ff0088;
+      --foreground-color: white;
+      --background-color: black;
+    }
+  }
+
+  @media (prefers-color-scheme: light) {
+    :global(:root) {
+      --primary-color: #ff0088;
+      --foreground-color: black;
+      --background-color: white;
+    }
   }
 
   :global(html) {

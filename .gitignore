@@ -5,3 +5,4 @@ node_modules
 /functions
 yarn.lock
 yarn-error.log
+db/data

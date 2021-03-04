@@ -1,13 +1,35 @@
 version: "3.8"
 
+networks:
+  default:
+    external:
+      name: wolbodo
+
+volumes:
+  node_modules:
+  __sapper__:
+  yarn-cache:
+
 services:
+  app:
+    restart: always
+    image: node:alpine
+    depends_on:
+      - graphql
+    volumes:
+      - ./app:/app
+      - "yarn-cache:/usr/local/share/.cache/yarn/"
+    command: sh -c "cd app; yarn install --frozen-lockfile; yarn run dev -p 80"
+    ports:
+      - "80"
+
   db:
-    image: postgres
+    image: postgres:13-alpine
     environment:
       POSTGRES_INITDB_ARGS: --data-checksums
     env_file:
       - ./.env
-    image: postgres:13-alpine
+    restart: always
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d:ro
       - ./db/data:/var/lib/postgresql/data
@@ -16,9 +38,9 @@ services:
     restart: always
     build:
       context: ./graphql
-    env_file:
-      - ./.env
-    ports:  
-      - 8080:8080
     depends_on:
       - db
+    env_file:
+      - ./.env
+    ports:
+      - "80"

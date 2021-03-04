@@ -10,11 +10,13 @@ COPY ./src/package.json .
 COPY ./src/package-lock.json .
 
 # Install dependencies
+RUN chown node:node -R .
+
 USER node
-RUN npm install
+RUN yarn install --frozen-lockfile
 
 # Copy application files
 COPY --chown=node:node ./src .
 
-EXPOSE 8080
+EXPOSE 80
 CMD [ "node", "server.js" ]

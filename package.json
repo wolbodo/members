@@ -1,0 +1,22 @@
+{
+  "name": "members",
+  "version": "1.0.0",
+  "description": "Postgres + Postgraphile + svelte",
+  "main": "index.js",
+  "scripts": {
+    "compose": "docker-compose -p members",
+    "start": "yarn compose up app",
+    "stop": "yarn compose stop",
+    "restart": "yarn compose restart"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wolbodo/members.git"
+  },
+  "author": "Dexter",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wolbodo/members/issues"
+  },
+  "homepage": "https://github.com/wolbodo/members#readme"
+}
