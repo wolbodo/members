@@ -865,6 +865,13 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.11.tgz#aeb16f50649a91af79dbe36574b66d0f9e4d9f71"
   integrity sha512-3NsZsJIA/22P3QUyrEDNA2D133H4j224twJrdipXN38dpnIOzAbUDtOwkcJ5pXmn75w7LSQDjA4tO9dm1XlqlA==
 
+"@rollup/plugin-alias@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-alias/-/plugin-alias-3.1.2.tgz#c585b05be4a7782d269c69d13def56f44e417772"
+  integrity sha512-wzDnQ6v7CcoRzS0qVwFPrFdYA4Qlr+ookA217Y2Z3DPZE1R8jrFNM3jvGgOf6o6DMjbnQIn5lCIJgHPe1Bt3uw==
+  dependencies:
+    slash "^3.0.0"
+
 "@rollup/plugin-babel@^5.0.0":
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-5.3.0.tgz#9cb1c5146ddd6a4968ad96f209c50c62f92f9879"
@@ -1482,6 +1489,11 @@ json5@^2.1.2:
   dependencies:
     minimist "^1.2.5"
 
+lodash-es@^4.0.0:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
+
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
@@ -1868,6 +1880,11 @@ sirv@^1.0.0:
     mime "^2.3.1"
     totalist "^1.0.0"
 
+slash@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
+  integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+
 source-map-support@~0.5.19:
   version "0.5.19"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.19.tgz#a98b62f86dcaf4f67399648c085291ab9e8fed61"
@@ -1925,10 +1942,23 @@ supports-color@^7.0.0:
   resolved "https://registry.yarnpkg.com/@dxlb/svelte-apollo/-/svelte-apollo-0.4.0.tgz#f35a09be13a3472a456ba480c4c9d111644a8bf0"
   integrity sha512-jLKn0vE4y3T7bikZBB4c151i2z1ixVeT5u4zoO4wl2E9CULDJcTKidARQIPT8od5JVs9jlX5Wt9/xsls3e2JWQ==
 
-svelte@^3.17.3:
+svelte-forms@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/svelte-forms/-/svelte-forms-1.1.4.tgz#461a6cdcbec3e6852c223a4a8879267eb60dffb6"
+  integrity sha512-h3zOGR8hyxS4AwoAo0tqt4ivR5mBrmuClQnYjkbiXDQEtkQvpfq/8Fej3Z34TTknglr5+sSpp+2nVKuirVHH2g==
+
+svelte@^3.17.3, svelte@^3.23.0:
   version "3.35.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.35.0.tgz#e0d0ba60c4852181c2b4fd851194be6fda493e65"
   integrity sha512-gknlZkR2sXheu/X+B7dDImwANVvK1R0QGQLd8CNIfxxGPeXBmePnxfzb6fWwTQRsYQG7lYkZXvpXJvxvpsoB7g==
+
+sveltik@^0.1.16:
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/sveltik/-/sveltik-0.1.16.tgz#cdf8667ad4eb9253607c5b293157b5378aa00d16"
+  integrity sha512-TWJhF48zijTVPqr0nCKFH4Y0DqLmqnXxQh4eqPMVwRNGInwt2JXVt98QS4LySjOwAiGL/Xfn+6LScIm9SxNjLg==
+  dependencies:
+    lodash-es "^4.0.0"
+    svelte "^3.23.0"
 
 symbol-observable@^2.0.0:
   version "2.0.3"
