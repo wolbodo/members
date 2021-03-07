@@ -7,7 +7,8 @@
     "compose": "docker-compose -p members",
     "start": "yarn compose up app",
     "stop": "yarn compose stop",
-    "restart": "yarn compose restart"
+    "restart": "yarn compose restart",
+    "clean": "yarn compose stop && yarn compose rm -f"
   },
   "repository": {
     "type": "git",

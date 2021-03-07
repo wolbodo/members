@@ -1,3 +1,15 @@
+<script lang="ts">
+  import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
+  import { setClient } from "svelte-apollo";
+
+  setClient(
+    new ApolloClient({
+      uri: "http://graphql.wolbodo/graphql",
+      cache: new InMemoryCache(),
+    })
+  );
+</script>
+
 <main>
   <slot />
 </main>

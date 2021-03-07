@@ -8,7 +8,7 @@
     <strong>email</strong>
     <strong class="desktop-only">phone</strong>
   </div>
-  {#each members as { id, name, email, phone }}
+  {#each members as { node: { id, name, email, phone } }}
     <div class="list-item">
       <a href="/members/{name.toLowerCase()}">{name}</a>
       <a

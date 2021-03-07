@@ -1,3 +1,5 @@
+/// <reference types="@sveltejs/kit" />
+
 //#region Ensure Svelte file endings have a type for TypeScript
 /**
  * These declarations tell TypeScript that we allow import of Svelte files in TS files, e.g.
