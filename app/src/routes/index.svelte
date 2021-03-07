@@ -6,6 +6,7 @@
 
   import gql from "graphql-tag";
 
+  debugger;
   const allMembers = query(gql`
     query People {
       people {
@@ -20,18 +21,6 @@
       }
     }
   `);
-
-  async function getMembers() {
-    const res = await fetch(`members.json`);
-    const json = await res.json();
-
-    if (res.ok) {
-      return json;
-    } else {
-      throw new Error(json);
-    }
-  }
-  let promise = getMembers().catch((err) => console.log(err));
 </script>
 
 {#if $allMembers.loading}
@@ -39,7 +28,8 @@
 {:else if $allMembers.error}
   <p style="color: red">{$allMembers.error}</p>
 {:else}
-  <List members={$allMembers.data.people.edges} />
+  <p>Result</p>
+  <!-- <List members={$allMembers.data.people.edges} /> -->
 {/if}
 <div>
   <Button>Add member</Button>
