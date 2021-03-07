@@ -1,10 +1,21 @@
 <script>
+  import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
+  import { setClient } from "svelte-apollo";
+  import fetch from "cross-fetch";
+
   import { query } from "svelte-apollo";
 
   import Button from "$components/Button.svelte";
   import List from "$components/List.svelte";
 
   import gql from "graphql-tag";
+
+  setClient(
+    new ApolloClient({
+      link: new HttpLink({ uri: "http://graphql.wolbodo/graphql", fetch }),
+      cache: new InMemoryCache(),
+    })
+  );
 
   const allMembers = query(gql`
     query People {
@@ -20,18 +31,6 @@
       }
     }
   `);
-
-  async function getMembers() {
-    const res = await fetch(`members.json`);
-    const json = await res.json();
-
-    if (res.ok) {
-      return json;
-    } else {
-      throw new Error(json);
-    }
-  }
-  let promise = getMembers().catch((err) => console.log(err));
 </script>
 
 {#if $allMembers.loading}
