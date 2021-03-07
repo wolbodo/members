@@ -1,4 +1,8 @@
 <script>
+  import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
+  import { setClient } from "svelte-apollo";
+  import fetch from "cross-fetch";
+
   import { query } from "svelte-apollo";
 
   import Button from "$components/Button.svelte";
@@ -6,7 +10,7 @@
 
   import gql from "graphql-tag";
 
-  debugger;
+  
   const allMembers = query(gql`
     query People {
       people {
