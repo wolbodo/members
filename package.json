@@ -8,6 +8,7 @@
     "start": "yarn compose up app",
     "stop": "yarn compose stop",
     "restart": "yarn compose restart",
+    "logs": "yarn compose logs -f app",
     "clean": "yarn compose stop && yarn compose rm -f"
   },
   "repository": {

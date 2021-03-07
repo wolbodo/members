@@ -2,10 +2,11 @@
   import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
   import { setClient } from "svelte-apollo";
   import fetch from "cross-fetch";
+  import { setContext } from "svelte";
 
   setClient(
     new ApolloClient({
-      link: new HttpLink({ uri: "http://graphql.wolbodo/graphql", fetch }),
+      link: new HttpLink({ uri: "/graphql", fetch }),
       cache: new InMemoryCache(),
     })
   );
