@@ -27,8 +27,7 @@
 {:else if $allMembers.error}
   <p style="color: red">{$allMembers.error}</p>
 {:else}
-  <p>Result</p>
-  <!-- <List members={$allMembers.data.people.edges} /> -->
+  <List members={$allMembers.data.people.edges} />
 {/if}
 <div>
   <Button>Add member</Button>
