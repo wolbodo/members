@@ -1,5 +1,5 @@
-<script lang="ts">
-  export let href: string;
+<script>
+  export let href;
   let growFactor = 1.0;
   let stop = false;
   let buttonElement;
@@ -16,17 +16,17 @@
   const startGrowing = () => {
     stop = false;
     requestAnimationFrame(grow);
-  }
+  };
 
   const stopGrowing = () => {
     stop = true;
     growFactor = 1.0;
-    buttonElement.style.transform = 'none';
+    buttonElement.style.transform = "none";
   };
 
-  const clickChildLink = (e: Event) => {
-    const { firstElementChild } = e.currentTarget as Element;
-    (firstElementChild as HTMLElement).click();
+  const clickChildLink = (e) => {
+    const { firstElementChild } = e.currentTarget;
+    firstElementChild.click();
   };
 </script>
 

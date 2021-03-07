@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
   import { setClient } from "svelte-apollo";
   import fetch from "cross-fetch";

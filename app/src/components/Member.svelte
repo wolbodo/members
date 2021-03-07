@@ -1,5 +1,5 @@
 <script context="module">
-  import Button from '$components/Button.svelte';
+  import Button from "./Button.svelte";
   export async function preload(page) {
     const { name } = page.params;
     return { name };
@@ -7,7 +7,7 @@
 </script>
 
 <script>
-  import { members } from '$components/members';
+  import { members } from "$components/members";
   export let name;
 
   $: member = $members.data.find(

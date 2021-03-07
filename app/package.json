@@ -1,26 +1,38 @@
 {
-	"name": "members-app",
-	"version": "0.0.1",
-	"scripts": {
-		"dev": "svelte dev",
-		"build": "svelte build"
-	},
-	"devDependencies": {
-		"@snowpack/plugin-typescript": "^1.0.0",
-		"@sveltejs/adapter-node": "0.0.14",
-		"@sveltejs/adapter-static": "^0.0.14",
-		"@sveltejs/kit": "0.0.25",
-		"@sveltejs/snowpack-config": "0.0.5",
-		"svelte": "^3.29.0",
-		"svelte-apollo": "npm:@dxlb/svelte-apollo",
-		"svelte-preprocess": "^4.0.0",
-		"tslib": "^2.0.0",
-		"typescript": "^4.0.0"
-	},
-	"dependencies": {
-		"@apollo/client": "^3.3.11",
-		"cross-fetch": "^3.0.6",
-		"graphql": "^15.5.0",
-		"graphql-tag": "^2.11.0"
-	}
+  "name": "TODO",
+  "description": "TODO",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "sapper dev",
+    "build": "sapper build --legacy",
+    "export": "sapper export --legacy",
+    "start": "node __sapper__/build"
+  },
+  "dependencies": {
+    "compression": "^1.7.1",
+    "polka": "next",
+    "sirv": "^1.0.0",
+    "svelte-apollo": "npm:@dxlb/svelte-apollo",
+    "@apollo/client": "^3.3.11",
+    "cross-fetch": "^3.0.6",
+    "graphql": "^15.5.0",
+    "graphql-tag": "^2.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "@rollup/plugin-babel": "^5.0.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-replace": "^2.4.0",
+    "@rollup/plugin-url": "^5.0.0",
+    "rollup": "^2.3.4",
+    "rollup-plugin-svelte": "^7.0.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "sapper": "^0.28.0",
+    "svelte": "^3.17.3"
+  }
 }
