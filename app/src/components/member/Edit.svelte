@@ -3,7 +3,7 @@
   import gql from "graphql-tag";
   import { Sveltik, Form, Field, ErrorMessage } from "sveltik";
 
-  import { query } from "svelte-apollo";
+  import { mutation, query } from "svelte-apollo";
 
   export let id;
 
@@ -44,11 +44,38 @@
     }
     return errors;
   };
-  const onSubmit = (values, { setSubmitting }) => {
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2));
-      setSubmitting(false);
-    }, 400);
+  const saveMember = mutation(
+    gql`
+      mutation saveMember($id: Int!, $patch: PersonPatch!) {
+        updatePersonById(input: { id: $id, patch: $patch }) {
+          clientMutationId
+          person {
+            name
+            lastname
+          }
+        }
+      }
+    `,
+    {
+      variables: { id },
+    }
+  );
+  const onSubmit = async (values, { setSubmitting, touched }) => {
+    setSubmitting(true);
+
+    await saveMember({
+      variables: {
+        id,
+        patch: Object.fromEntries(
+          Object.entries(touched)
+            .filter(([, touched]) => touched)
+            .map(([key]) => [key, values[key]])
+        ),
+      },
+    });
+
+    getMember.refetch();
+    setSubmitting(false);
   };
 </script>
 
@@ -104,34 +131,8 @@
       <ErrorMessage name="note" as="div" class="error" />
 
       <button type="submit" disabled={isSubmitting || !isDirty}>Submit</button>
-      <pre>{isDirty}</pre>
     </Form>
   </Sveltik>
 
   <pre>{JSON.stringify($member, null, 2)}</pre>
 {/if}
-
-<style>
-  :global(.form) {
-    display: grid;
-    grid-template-columns: auto auto;
-  }
-
-  :global(.form > .error) {
-    grid-column-end: span 2;
-  }
-
-  :global(.form input) {
-    border: none;
-    background: #ffa5002e;
-    font-size: 1.2rem;
-    padding: 0.3rem;
-    color: white;
-    border-bottom: 1px solid orange;
-  }
-
-  h1,
-  label {
-    color: white;
-  }
-</style>

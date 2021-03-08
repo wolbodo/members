@@ -1,5 +1,5 @@
 <script context="module">
-  import Button from "./Button.svelte";
+  import Button from "./KarelButton.svelte";
   export async function preload(page) {
     const { name } = page.params;
     return { name };

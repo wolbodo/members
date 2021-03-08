@@ -5,7 +5,7 @@
 
   import { query } from "svelte-apollo";
 
-  import MemberView from "src/components/MemberView.svelte";
+  import EditMember from "src/components/member/Edit.svelte";
 
   const { page } = stores();
 
@@ -47,5 +47,5 @@
 {:else if $getMember.error}
   <p style="color: red">{$getMember.error}</p>
 {:else}
-  <MemberView id={$member.id} />
+  <EditMember id={$member.id} />
 {/if}
