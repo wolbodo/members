@@ -3,10 +3,9 @@
   import { setClient } from "svelte-apollo";
   import fetch from "cross-fetch";
   import { query } from "svelte-apollo";
-  import List from "../components/List.svelte";
   import gql from "graphql-tag";
-  import NavLink from '$components/NavLink.svelte';
-  import List from '$components/List.svelte';
+  import List from "../components/List.svelte";
+  import NavLink from '../components/NavLink.svelte';
 
   setClient(
     new ApolloClient({

@@ -1942,11 +1942,6 @@ supports-color@^7.0.0:
   resolved "https://registry.yarnpkg.com/@dxlb/svelte-apollo/-/svelte-apollo-0.4.0.tgz#f35a09be13a3472a456ba480c4c9d111644a8bf0"
   integrity sha512-jLKn0vE4y3T7bikZBB4c151i2z1ixVeT5u4zoO4wl2E9CULDJcTKidARQIPT8od5JVs9jlX5Wt9/xsls3e2JWQ==
 
-svelte-forms@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/svelte-forms/-/svelte-forms-1.1.4.tgz#461a6cdcbec3e6852c223a4a8879267eb60dffb6"
-  integrity sha512-h3zOGR8hyxS4AwoAo0tqt4ivR5mBrmuClQnYjkbiXDQEtkQvpfq/8Fej3Z34TTknglr5+sSpp+2nVKuirVHH2g==
-
 svelte@^3.17.3, svelte@^3.23.0:
   version "3.35.0"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-3.35.0.tgz#e0d0ba60c4852181c2b4fd851194be6fda493e65"

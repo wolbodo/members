@@ -1,7 +1,7 @@
-<script lang="ts">
-  export let name: string = "";
-  export let email: string = "";
-  export let phone: string = "";
+<script>
+  export let name = "";
+  export let email = "";
+  export let phone = "";
 </script>
 
 <div>
