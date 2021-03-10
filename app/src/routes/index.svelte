@@ -1,10 +1,19 @@
 <script>
+  import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client/core";
+  import { setClient } from "svelte-apollo";
+  import fetch from "cross-fetch";
   import { query } from "svelte-apollo";
-
-  import Button from "../components/KarelButton.svelte";
   import List from "../components/List.svelte";
-
   import gql from "graphql-tag";
+  import NavLink from '$components/NavLink.svelte';
+  import List from '$components/List.svelte';
+
+  setClient(
+    new ApolloClient({
+      link: new HttpLink({ uri: "http://graphql.wolbodo/graphql", fetch }),
+      cache: new InMemoryCache(),
+    })
+  );
 
   const allMembers = query(gql`
     query People {
@@ -30,5 +39,5 @@
   <List members={$allMembers.data.people.edges} />
 {/if}
 <div>
-  <Button>Add member</Button>
+  <NavLink>Add member</NavLink>
 </div>
