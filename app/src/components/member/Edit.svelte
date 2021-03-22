@@ -133,6 +133,4 @@
       <button type="submit" disabled={isSubmitting || !isDirty}>Submit</button>
     </Form>
   </Sveltik>
-
-  <pre>{JSON.stringify($member, null, 2)}</pre>
 {/if}

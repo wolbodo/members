@@ -6,15 +6,15 @@
 
 <style>
   div {
-    font-family: 'Fredoka One', cursive;
-    font-weight: bolder;
+    font-family: 'Truculenta', 'Ubuntu', sans-serif;
+    font-weight: bold;
     text-transform: uppercase;
-    color: var(--foreground-color);
+    color: var(--foreground);
     display: grid;
     grid-template-columns: 1fr 17rem 9rem;
     gap: 1rem;
     padding: 0.3rem 0 0.2rem 0;
-    border-bottom: solid 1px var(--highlight-color);
+    border-bottom: solid 1px var(--primary);
   }
 
   @media screen and (max-width: 560px) {

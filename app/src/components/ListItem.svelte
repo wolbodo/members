@@ -27,21 +27,24 @@
     grid-template-columns: 1fr 17rem 9rem;
     gap: 1rem;
     padding: 0.3rem 0 0.2rem 0;
-    border-bottom: solid 1px var(--highlight-color);
+    border-bottom: solid 1px var(--primary-dark);
   }
 
   div:hover {
-    color: var(--background-color);
-    background: var(--highlight-color);
+    background: var(--primary);
+  }
+
+  div:hover a {
+    color: var(--foreground);
   }
 
   div:focus-within {
-    outline: dashed 0.25rem var(--primary-color);
+    outline: dashed 0.25rem var(--primary);
     outline-offset: 0.125rem;
   }
 
   a {
-    color: var(--primary-color);
+    color: var(--primary);
     text-decoration: none;
   }
 

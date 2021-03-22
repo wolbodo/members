@@ -25,8 +25,8 @@
 
   div {
     padding: 0.5rem 1rem;
-    background: var(--primary-color);
-    color: var(--background-color);
+    background: var(--primary);
+    color: var(--background);
     font-weight: 800;
     font-size: 1rem;
     text-transform: uppercase;
@@ -42,8 +42,8 @@
     background-color: transparent;
     background-image: repeating-linear-gradient(
       45deg,
-      var(--primary-color),
-      var(--background-color)
+      var(--primary),
+      var(--background)
     );
     background-size: 0.13rem 0.1rem;
     background-repeat: repeat;

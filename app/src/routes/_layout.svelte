@@ -6,7 +6,7 @@
 
   setClient(
     new ApolloClient({
-      link: new HttpLink({ uri: "/graphql", fetch }),
+      link: new HttpLink({ uri: "http://localhost:5001/graphql", fetch }),
       cache: new InMemoryCache({
         dataIdFromObject: (result) => {
           if (result.id && result.__typename) {
@@ -24,48 +24,3 @@
 <main>
   <slot />
 </main>
-
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Ubuntu:wght@300&display=swap');
-
-  :global(:root) {
-    --primary-color: #ff0088;
-    --primary-color: #ff0088;
-    --highlight-color: rgb(187, 187, 187);
-    --foreground-color: black;
-    --background-color: white;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :global(:root) {
-      --primary-color: #ff0088;
-      --highlight-color: rgb(51, 51, 51);
-      --foreground-color: white;
-      --background-color: black;
-    }
-  }
-
-  :global(html) {
-    font-family: 'Ubuntu', sans-serif;
-    font-size: 1em;
-    box-sizing: border-box;
-    height: 100%;
-    background: var(--background-color);
-    color: var(--foreground-color);
-  }
-
-  :global(body) {
-    height: 100%;
-    margin: 0;
-  }
-
-  main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    max-width: 1000px;
-    margin: auto;
-  }
-</style>

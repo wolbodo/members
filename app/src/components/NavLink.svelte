@@ -15,7 +15,8 @@
     border: none;
     text-decoration: none;
     user-select: none;
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Truculenta', 'Ubuntu', sans-serif;
+    font-weight: bold;
   }
 
   a:focus > div {
@@ -25,8 +26,8 @@
 
   div {
     padding: 0.5rem 1rem;
-    background: var(--foreground-color);
-    color: var(--background-color);
+    background: var(--foreground);
+    color: var(--background);
     font-weight: 800;
     font-size: 1rem;
     text-transform: uppercase;
@@ -41,8 +42,8 @@
     background-color: transparent;
     background-image: repeating-linear-gradient(
       45deg,
-      var(--foreground-color),
-      var(--background-color)
+      var(--foreground),
+      var(--background)
     );
     background-size: 0.13rem 0.1rem;
     background-repeat: repeat;

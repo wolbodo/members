@@ -22,7 +22,7 @@ services:
       - "yarn-cache:/usr/local/share/.cache/yarn/"
     command: sh -c "cd app; yarn install --frozen-lockfile; yarn run dev -p 80"
     ports:
-      - "80"
+      - "5000:80"
 
   db:
     image: postgres:13-alpine
@@ -44,4 +44,4 @@ services:
     env_file:
       - ./.env
     ports:
-      - "80"
+      - "5001:80"

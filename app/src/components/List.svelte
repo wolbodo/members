@@ -16,15 +16,13 @@
 <style>
   .list {
     overflow: auto;
-    width: 100%;
-    margin: 1rem 0rem;
+    margin: 1rem 0;
     max-height: 80vh;
   }
 
   @media (min-width: 560px) {
     .list {
       overflow: visible;
-      margin: 1rem 2rem;
       max-height: 100%;
     }
   }
