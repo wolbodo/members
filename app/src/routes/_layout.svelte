@@ -6,7 +6,7 @@
 
   setClient(
     new ApolloClient({
-      link: new HttpLink({ uri: "http://localhost:5001/graphql", fetch }),
+      link: new HttpLink({ uri: "/graphql", fetch }),
       cache: new InMemoryCache({
         dataIdFromObject: (result) => {
           if (result.id && result.__typename) {

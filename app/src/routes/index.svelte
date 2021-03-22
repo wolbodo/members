@@ -9,8 +9,8 @@
 
   setClient(
     new ApolloClient({
-      link: new HttpLink({ uri: "http://localhost:5001/graphql", fetch }),
-      cache: new InMemoryCache(),
+      link: new HttpLink({ uri: "http://graphql.wolbodo/graphql", fetch }),
+      cache: new InMemoryCache()
     })
   );
 
