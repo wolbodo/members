@@ -12,7 +12,7 @@
     "@rollup/plugin-alias": "^3.1.2",
     "body-parser": "^1.19.0",
     "compression": "^1.7.1",
-    "polka": "next",
+    "polka": "^1.0.0-next.15",
     "sirv": "^1.0.0"
   },
   "devDependencies": {
@@ -23,19 +23,19 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "@rollup/plugin-babel": "^5.0.0",
-    "@rollup/plugin-commonjs": "^14.0.0",
-    "@rollup/plugin-node-resolve": "^8.0.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-replace": "^2.4.0",
-    "@rollup/plugin-url": "^5.0.0",
+    "@rollup/plugin-url": "^6.0.0",
     "cross-fetch": "^3.0.6",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.11.0",
     "rollup": "^2.3.4",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "sapper": "^0.28.0",
+    "sapper": "^0.29.1",
     "svelte": "^3.17.3",
-    "svelte-apollo": "npm:@dxlb/svelte-apollo",
+    "svelte-apollo": "^0.4.0",
     "sveltik": "^0.1.16"
   }
 }
