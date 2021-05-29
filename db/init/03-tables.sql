@@ -1,18 +1,4 @@
-\c members;
-CREATE EXTENSION btree_gist;
-
 BEGIN;
-
-CREATE SCHEMA auth;
-
-create type auth.jwt_token as (
-  role text,
-  exp integer,
-  person_id integer,
-  is_admin boolean,
-  username varchar
-);
-
 
 CREATE TABLE auth.person (
   id                SERIAL,
@@ -59,17 +45,6 @@ CREATE INDEX ON auth.person (email);
 -- Users can edit their own data
 -- Bestuur can edit all users
 
-INSERT INTO auth.person (name, email) VALUES
-  ('Alice', 'alice@example.com'),
-  ('Bob', 'bob@example.com'),
-  ('Charly', 'charly@example.com'),
-  ('Dennis', NULL),
-  ('Edward', NULL);
-
-
-CREATE ROLE member;
-CREATE ROLE admin;
-CREATE ROLE board;
 
 CREATE TABLE auth.person_role (
   person_id   INTEGER   NOT NULL REFERENCES auth.person(id),
@@ -80,38 +55,5 @@ CREATE TABLE auth.person_role (
   EXCLUDE USING gist (person_id WITH =, role WITH =, validity WITH &&)
 );
 CREATE INDEX ON auth.person_role(person_id);
-
-CREATE FUNCTION
-  auth.check_role_exists() RETURNS trigger AS $$
-BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_roles AS r WHERE r.rolname = new.role) THEN
-    RAISE foreign_key_violation USING message =
-      'unknown database role: ' || new.role;
-    RETURN NULL;
-  END IF;
-  RETURN new;
-END
-$$ LANGUAGE plpgsql;
-
-CREATE CONSTRAINT TRIGGER ensure_user_role_exists
-  AFTER INSERT OR UPDATE ON auth.person_role
-  FOR EACH ROW
-  EXECUTE PROCEDURE auth.check_role_exists();
-
-
-INSERT INTO auth.person_role (person_id, role)
-  SELECT auth.person.id, alias.role FROM (
-    VALUES
-      ('Alice', 'admin'),
-      ('Alice', 'member'),
-      ('Bob', 'board'),
-      ('Bob', 'member'),
-      ('Charly', 'member'),
-      ('Dennis', 'member'),
-      ('Edward', 'member')
-  ) ALIAS (name, role)
-  JOIN auth.person ON auth.person.name = alias.name
-;
-
 
 COMMIT;

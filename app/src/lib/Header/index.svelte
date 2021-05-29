@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { user } from '$lib/graphql';
 	import logo from './svelte-logo.svg';
+
+	async function logout() {
+		user.set(null)
+		await fetch('/logout')
+	}
 </script>
 
 <header>
@@ -17,7 +23,9 @@
 		<ul>
 			<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Home</a></li>
 			<li class:active={$page.path === '/about'}><a sveltekit:prefetch href="/about">About</a></li>
-			<li class:active={$page.path === '/todos'}><a sveltekit:prefetch href="/todos">Todos</a></li>
+			{#if $user}
+				<li><button on:click={logout}>Logout</button></li>
+			{/if}
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
 			<path d="M0,0 L0,3 C0.5,3 0.5,3 1,2 L2,0 Z" />
@@ -100,7 +108,22 @@
 		border-top: var(--size) solid var(--accent-color);
 	}
 
-	nav a {
+	button:hover:not(:disabled) {
+    background-color: initial;
+}
+	button {
+    background-color: initial;
+    border: initial;
+    outline: initial;
+    border-radius: initial;
+		letter-spacing: initial;
+    margin-top: initial;
+    line-height: initial;
+    min-width: initial;
+    cursor: pointer;
+	}
+
+	nav a, nav button {
 		display: flex;
 		height: 100%;
 		align-items: center;
@@ -114,7 +137,7 @@
 		transition: color 0.2s linear;
 	}
 
-	a:hover {
+	a:hover, button:hover {
 		color: var(--accent-color);
 	}
 </style>

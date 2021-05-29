@@ -17,9 +17,11 @@ services:
     depends_on:
       - graphql
     volumes:
-      - ./new-app:/app
+      - ./app:/app
       - node_modules:/app/node_modules
       - "yarn-cache:/usr/local/share/.cache/yarn/"
+    environment:
+      AUTH_JWT_SECRET: $AUTH_JWT_SECRET
     command: |
       sh -c "
         cd app
@@ -58,5 +60,4 @@ services:
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB
       HASURA_GRAPHQL_JWT_SECRET: $AUTH_JWT_SECRET
-      HASURA_GRAPHQL_CORS_DOMAIN: http://drukwerk-frontend-1.kabel.dock
-    
+      HASURA_GRAPHQL_CORS_DOMAIN: http://app.wolbodo
