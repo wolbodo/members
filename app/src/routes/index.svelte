@@ -4,6 +4,7 @@
 
 <script lang='ts'>
 	import { client, user } from '$lib/graphql'
+	import List from '$lib/List.svelte'
 	import { gql } from 'graphql-request'
 </script>
 
@@ -19,14 +20,14 @@
 	{#if $user}
 		{#await client.request(gql`
 			{
-				auth_person{
+				people: auth_person{
 					name email
 				}
 			}
 		`)}
 			<p>Loading</p>
 		{:then data} 
-			<pre>{JSON.stringify(data, null, 2)}</pre>
+			<List people={data.people} />
 		{/await}
 	{:else}
 		<h2>
