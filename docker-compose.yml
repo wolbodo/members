@@ -34,12 +34,15 @@ services:
   db:
     image: postgres:13-alpine
     restart: always
+    command: postgres
+    entrypoint: ./upgrade/docker-upgrade-entrypoint-wrapper.sh
     environment:
       POSTGRES_INITDB_ARGS: --data-checksums
     env_file:
       - ./.env
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db/upgrade:/upgrade:ro
       - ./db/data:/var/lib/postgresql/data
 
   graphql:

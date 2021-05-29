@@ -1,0 +1,98 @@
+{
+  "version": 2,
+  "tables": [
+    {
+      "table": {
+        "schema": "auth",
+        "name": "person"
+      },
+      "array_relationships": [
+        {
+          "name": "roles",
+          "using": {
+            "foreign_key_constraint_on": {
+              "column": "person_id",
+              "table": {
+                "schema": "auth",
+                "name": "person_role"
+              }
+            }
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "address",
+              "city",
+              "country",
+              "created",
+              "email",
+              "firstname",
+              "id",
+              "lastname",
+              "modified",
+              "name",
+              "note",
+              "phone",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "server",
+          "permission": {
+            "columns": [
+              "email",
+              "id",
+              "name",
+              "password"
+            ],
+            "filter": {}
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "auth",
+        "name": "person_role"
+      },
+      "object_relationships": [
+        {
+          "name": "person",
+          "using": {
+            "foreign_key_constraint_on": "person_id"
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "member",
+          "permission": {
+            "columns": [
+              "person_id",
+              "role",
+              "validity"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "server",
+          "permission": {
+            "columns": [
+              "person_id",
+              "role",
+              "validity"
+            ],
+            "filter": {}
+          }
+        }
+      ]
+    }
+  ]
+}
