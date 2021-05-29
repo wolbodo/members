@@ -3,9 +3,8 @@
 </script>
 
 <script lang='ts'>
-	import { client, user } from '$lib/graphql'
+	import { user } from '$lib/graphql'
 	import List from '$lib/List.svelte'
-	import { gql } from 'graphql-request'
 </script>
 
 <svelte:head>
@@ -18,22 +17,11 @@
 	</h1>
 
 	{#if $user}
-		{#await client.request(gql`
-			{
-				people: auth_person{
-					name email
-				}
-			}
-		`)}
-			<p>Loading</p>
-		{:then data} 
-			<List people={data.people} />
-		{/await}
+		<List />
 	{:else}
 		<h2>
 			try logging in <a href='/login'>here</a>
 		</h2>
-	
 	{/if}
 </section>
 
