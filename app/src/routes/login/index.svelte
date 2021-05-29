@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { enhance } from '$lib/form'
+  import { enhance } from '$lib/Form'
   import { user } from '$lib/graphql'
   let error
 </script>
