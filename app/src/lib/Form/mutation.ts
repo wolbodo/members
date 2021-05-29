@@ -3,9 +3,10 @@ import { client } from '$lib/graphql'
 
 export function mutation(
   form: HTMLFormElement, {
-    mutation, error, result, pending
+    mutation, role, error, result, pending
   }: {
     mutation: gql;
+    role?: string;
     pending?: (data: FormData, form: HTMLFormElement) => void;
     error?: (res: Response, error: Error, form: HTMLFormElement) => void;
     result?: (res: Response, form: HTMLFormElement) => void;
@@ -27,7 +28,7 @@ export function mutation(
     )
     console.log(formdata)
 
-    const result = await client.request(mutation, { formdata })
+    const result = await client.request(mutation, { formdata }, role && { 'X-Hasura-Role': role })
 
     console.log(result)
     

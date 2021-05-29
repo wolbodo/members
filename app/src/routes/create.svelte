@@ -7,6 +7,7 @@ import type { GraphQLClient } from "graphql-request";
 </script>
 
 <form use:mutation={{
+  role: 'board',
   mutation: gql`
     mutation addPerson($formdata:auth_person_insert_input!) {
       insert_auth_person_one(object:$formdata) {
@@ -15,12 +16,13 @@ import type { GraphQLClient } from "graphql-request";
   }`
 }}>
   <section>
-    <Input name={'name'} label={'Name'} />
+    <Input class='wide' name={'name'} label={'Name'} />
   </section>
 
   <section>
     <Input name='firstname' label='firstname' />
     <Input name='lastname' label='lastname' />
+
     <Input name='email' label='email' />
     <Input name='phone' label='phone'/>
   </section>
@@ -50,3 +52,21 @@ import type { GraphQLClient } from "graphql-request";
 
   <button type='submit'>Submit</button>
 </form>
+
+<style>
+  form {
+    display: grid;
+
+    grid-template-columns: auto auto;
+    grid-gap: 1rem;
+  }
+
+  section {
+    display: grid;
+    grid-template-columns: repeat(2,auto);
+  }
+
+  .wide {
+    width: 100%;
+  }
+</style>
