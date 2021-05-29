@@ -12,36 +12,52 @@ volumes:
 
 services:
   app:
-    restart: always
     image: node:alpine
+    restart: always
     depends_on:
       - graphql
     volumes:
       - ./app:/app
       - node_modules:/app/node_modules
       - "yarn-cache:/usr/local/share/.cache/yarn/"
-    command: sh -c "cd app; yarn install --frozen-lockfile; yarn run dev -p 80"
+    environment:
+      AUTH_JWT_SECRET: $AUTH_JWT_SECRET
+    command: |
+      sh -c "
+        cd app
+        yarn install --frozen-lockfile
+        yarn run dev --host 0.0.0.0 --port 80
+      "
     ports:
       - "80"
 
   db:
     image: postgres:13-alpine
+    restart: always
     environment:
       POSTGRES_INITDB_ARGS: --data-checksums
     env_file:
       - ./.env
-    restart: always
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d:ro
       - ./db/data:/var/lib/postgresql/data
 
   graphql:
+    image: hasura/graphql-engine:latest
     restart: always
-    build:
-      context: ./graphql
     depends_on:
       - db
-    env_file:
-      - ./.env
     ports:
-      - "80"
+      - 80
+    command: >
+      /bin/sh -c "
+      graphql-engine \
+        serve \
+        --server-port 80 \
+        --access-key $HASURA_ACCESS_KEY \
+        --enable-console;
+      "
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB
+      HASURA_GRAPHQL_JWT_SECRET: $AUTH_JWT_SECRET
+      HASURA_GRAPHQL_CORS_DOMAIN: http://app.wolbodo
