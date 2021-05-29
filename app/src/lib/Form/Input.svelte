@@ -1,23 +1,22 @@
 <script lang="ts">
   export let name: string
   export let label: string
-  export let type: string = 'text'
-  export let placeholder: string | null = null
 
 
   let changed = false
 </script>
 
-<label class:changed for={name}>{label}</label>
-<input class:changed
-  {name}
-  {placeholder}
-  {type}
+<section>
+  <label class:changed for={name}>{label}</label>
+  <input class:changed
+  {...$$props}
   id={name}
   on:change={() => changed = true }
-/>
+  />
+</section>
 
 <style>
+
   label.changed {
     color: var(--accent-color);
   }
