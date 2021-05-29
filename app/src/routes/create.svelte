@@ -13,7 +13,9 @@ import type { GraphQLClient } from "graphql-request";
       insert_auth_person_one(object:$formdata) {
         id
       }
-  }`
+  }`,
+  error: (_, err) => error = err.toString(),
+  result: data => console.log('created', data)
 }}>
   <section>
     <Input class='wide' name={'name'} label={'Name'} />
@@ -66,7 +68,7 @@ import type { GraphQLClient } from "graphql-request";
     grid-template-columns: repeat(2,auto);
   }
 
-  .wide {
-    width: 100%;
+  button, small {
+    grid-column: 1/3;
   }
 </style>

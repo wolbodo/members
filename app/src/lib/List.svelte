@@ -4,7 +4,7 @@
 
 <section class='actions'>
 
-  {#if $user.roles.includes('board')}
+  {#if $user?.roles && $user.roles.includes('board')}
     <a href='create'>Create</a>
   {/if}
 </section>
