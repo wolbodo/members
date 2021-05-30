@@ -33,7 +33,7 @@
     {:then { people }} 
       {#each people as { name, email, phone}}
         <tr>
-          <td>{name}</td>
+          <td><a href='m/{name.toLowerCase()}'>{name}</a></td>
           <td>{email}</td>
           <td>{phone}</td>
         </tr>
