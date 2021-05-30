@@ -20,7 +20,7 @@
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "jsonwebtoken": "^8.5.1",
-    "prettier": "~2.2.1",
+    "prettier": "^2.3.0",
     "prettier-plugin-svelte": "^2.2.0",
     "skeleton-screen-css": "^1.0.1",
     "svelte": "^3.34.0",
