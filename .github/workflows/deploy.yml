@@ -1,0 +1,24 @@
+name: Publish image
+on: [push]
+jobs:  
+  deploy:    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: yarn --cwd app
+
+
+      # - name: deploy website to example.com
+      #   uses: appleboy/scp-action@master
+      #   env:
+      #     HOST: ${{ secrets.HOST }}
+      #     USERNAME: ${{ secrets.USERNAME }}
+      #     PORT: ${{ secrets.PORT }}
+      #     KEY: ${{ secrets.KEY }}
+      #   with:
+      #     source: "dest/*"
+      #     target: "/var/www/example.com/public_html"
+      #     strip_components: 1
