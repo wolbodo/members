@@ -1,7 +1,7 @@
 <script lang="ts">
-import type { GraphQLClient } from "graphql-request";
   import { gql } from '$lib/graphql'
-  import { Input, mutation } from '$lib/Form'
+  import { mutation } from '$lib/Form'
+  import Person from '$lib/Person.svelte'
 
   let error
 </script>
@@ -17,36 +17,8 @@ import type { GraphQLClient } from "graphql-request";
   error: (_, err) => error = err.toString(),
   result: data => console.log('created', data)
 }}>
-  <section>
-    <Input class='wide' name={'name'} label={'Name'} />
-  </section>
 
-  <section>
-    <Input name='firstname' label='firstname' />
-    <Input name='lastname' label='lastname' />
-
-    <Input name='email' label='email' />
-    <Input name='phone' label='phone'/>
-  </section>
-  
-  <section>
-    <Input name='address' label='address' />
-    <Input name='city' label='city' />
-    <Input name='country' label='country' />
-  </section>
-    
-  <section>
-    <Input name='bankaccount' label='bankaccount' />
-    <Input name='key_code' label='key_code' />
-  </section>
-    
-  <section>
-    <Input name='id' label='id' />
-    <Input name='created' label='created' />
-    <Input name='modified' label='modified' />
-    <Input name='password' label='password' />
-    <Input name='note' label='note' />
-  </section>
+  <Person />
 
   {#if error}
     <small>{error}</small>
@@ -63,10 +35,6 @@ import type { GraphQLClient } from "graphql-request";
     grid-gap: 1rem;
   }
 
-  section {
-    display: grid;
-    grid-template-columns: repeat(2,auto);
-  }
 
   button, small {
     grid-column: 1/3;
