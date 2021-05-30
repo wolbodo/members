@@ -1,6 +1,6 @@
 {
   "name": "members",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
@@ -9,7 +9,8 @@
     "format": "prettier --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@sveltejs/kit": "next",
+    "@sveltejs/adapter-node": "^1.0.0-next.23",
+    "@sveltejs/kit": "^1.0.0-next.111",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
     "bcryptjs": "^2.4.3",
