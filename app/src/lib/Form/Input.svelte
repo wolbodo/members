@@ -10,8 +10,8 @@
   }
 </script>
 
-<section>
-  <label class:changed for={name}>{label}</label>
+<section class:changed>
+  <label for={name}>{label}</label>
   {#if type === 'textarea' }
     <textarea
       {...$$props}
@@ -29,7 +29,16 @@
 
 <style>
 
-  label.changed {
+  input {
+    background: initial;
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  input:focus, section:hover input, .changed input {
+    background: var(--pure-white);
+  }
+
+  .changed label {
     color: var(--accent-color);
   }
 </style>

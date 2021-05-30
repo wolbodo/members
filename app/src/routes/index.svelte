@@ -17,8 +17,6 @@
 	</h1>
 
 	{#if $user}
-		<pre style='max-width: 40rem;'>User: {JSON.stringify($user, null, 2)}</pre>
-	
 		<List />
 	{:else}
 		<h2>
