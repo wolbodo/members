@@ -5,10 +5,6 @@ import type { Locals } from '$lib/types';
 import { serverToken, createToken } from '$lib/jwt'
 import { client, user, gql } from '$lib/graphql'
 
-
-const graphql = 'http://graphql.wolbodo';
-
-// POST /todos.json
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const name = request.body.get('name')
 	const password = request.body.get('password')
