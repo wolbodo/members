@@ -10,7 +10,7 @@
     'id', 'created', 'modified',
   ]
   const BOARD_FIELDS = [
-    // 'bankaccount', 'key_code', 'password',
+    'bankaccount', 'key_code', 'password',
   ]
 
 	/**
@@ -29,6 +29,7 @@
         }
       }
     `, { name: page.params.name}, {
+      'X-Hasura-Role': isBoard ? 'board' : 'member',
       authorization: `Bearer ${user.token}`
     })
     
@@ -52,9 +53,6 @@
 
   export let person: object
 </script>
-
-<pre>{JSON.stringify(person, null, 2)}</pre>
-
 
 <form use:mutation={{
   role: 'board',

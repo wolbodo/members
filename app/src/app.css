@@ -108,6 +108,7 @@ textarea {
   padding: 12px;
   box-sizing: border-box;
   border: 1px solid var(--secondary-color);
+  box-shadow: 0 0 0 4px rgb(218, 218, 230);
   border-radius: 4px;
   transition: all 150ms ease;
   background: var(--pure-white);
@@ -127,8 +128,15 @@ textarea:focus {
 
 input:disabled,
 select:disabled,
-textarea:disabled {
+textarea:disabled
+ {
   color: #ccc;
+}
+
+input[readonly],
+select[readonly],
+textarea[readonly] {
+	box-shadow: none;
 }
 
 
