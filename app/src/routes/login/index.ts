@@ -3,14 +3,14 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 import type { Locals } from '$lib/types';
 import { serverToken, createToken } from '$lib/jwt'
-import { client, user, gql } from '$lib/graphql'
+import { client, token, gql } from '$lib/graphql'
 
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const name = request.body.get('name')
 	const password = request.body.get('password')
 
-	const token = serverToken('login')
-	user.set({ token })
+	const _token = serverToken('login')
+	token.set(_token)
 
 	const { auth_person: [person] } = await client.request(gql`
 		query getPassword($name: String!) {

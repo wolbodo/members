@@ -3,7 +3,7 @@
 </script>
 
 <script lang='ts'>
-	import { user } from '$lib/graphql'
+  import { session } from '$app/stores';
 	import List from '$lib/List.svelte'
 </script>
 
@@ -16,7 +16,7 @@
 		Wolbodo Members list
 	</h1>
 
-	{#if $user}
+	{#if $session.user}
 		<List />
 	{:else}
 		<h2>

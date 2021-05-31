@@ -1,13 +1,18 @@
 <script context='module'>
-	import { user } from '$lib/graphql'
-	
+	import { token } from '$lib/graphql'
+
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ page, fetch, session, context }) {
+	export async function load({ page, session }) {
+		console.log("Layout:", session, page)
 		if (session.user) {
-			console.log('in layout', session.user)
-			user.set(session.user)
+			token.set(session.user.token)
+		} else if (!['/', '/login'].includes(page.path)) {
+			return {
+				status: 302,
+				redirect: '/'
+			}
 		}
 
 		return {}
@@ -15,8 +20,15 @@
 </script>
 
 <script lang="ts">
+  import { session } from '$app/stores';
+
 	import Header from '$lib/Header/index.svelte';
 	import '../app.css';
+
+	$: if ($session.user) {
+		$token = $session.user.token
+		console.log("User changed, setting token", $token)
+	}
 </script>
 
 <Header />

@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { user } from '$lib/graphql';
+	import { goto } from '$app/navigation';
+	import { session, page } from '$app/stores';
 	import logo from './svelte-logo.svg';
 
 	async function logout() {
-		user.set(null)
+		goto('/')
+		$session.user = null
 		await fetch('/logout')
 	}
 </script>
@@ -19,7 +20,7 @@
 	<nav>
 		<ul>
 			<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Home</a></li>
-			{#if $user}
+			{#if $session.user}
 				<li><button on:click={logout}>Logout</button></li>
 			{/if}
 		</ul>
