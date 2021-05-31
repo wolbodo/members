@@ -1,17 +1,9 @@
 <script lang='ts'>
+  import { session } from '$app/stores';
   import { Input } from '$lib/Form'
+  import { getPermissions } from './permissions';
 
   export let person
-
-  export let fields: string[] = [
-    'firstname', 'lastname',
-    'email', 'phone',
-    'address', 'city',
-    'country', 'bankaccount',
-    'key_code', 'id',
-    'created', 'modified',
-    'password', 'note'
-  ]
 
   export let fieldSet: string[][] = [
     [ 'name', ],
@@ -20,6 +12,7 @@
     [ 'bankaccount', 'key_code'],
     [ 'id', 'created', 'modified', 'password', 'note']
   ]
+  $: permissions = getPermissions($session.user?.roles)
 
   const fieldOptions = {
     name: {
@@ -76,13 +69,30 @@
       type: 'textarea'
     },
   }
+
+  $: fieldInfo = fieldSet
+                  .map(fields =>
+                    fields.filter(field => permissions.view.includes(field))
+                      .map(name => {
+                        const field = {
+                          name,
+                          readonly: true,
+                          value: person && person[name],
+                          ...fieldOptions[name]
+                        }
+                        if (permissions.edit.includes(name)) {
+                          delete field.readonly
+                        }
+                        return field
+                      })
+                  )
+                  .filter(fields => fields.length)
 </script>
 
-  {#each fieldSet as group }
+  {#each fieldInfo as group }
     <section>
-      <!-- {JSON.stringify(group)} -->
-      {#each group as field}
-        <Input name={field} {...fieldOptions[field]} value={person && person[field]} />
+      {#each group as input}
+        <Input {...input} />
       {/each}
     </section>
     
