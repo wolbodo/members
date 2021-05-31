@@ -9,6 +9,7 @@ volumes:
   node_modules:
   __sapper__:
   yarn-cache:
+  members-db:
 
 services:
   app:
@@ -44,7 +45,7 @@ services:
     volumes:
       - ./db/init:/docker-entrypoint-initdb.d:ro
       - ./db/upgrade:/upgrade:ro
-      - ./db/data:/var/lib/postgresql/data
+      - members-db:/var/lib/postgresql/data
 
   graphql:
     image: hasura/graphql-engine:latest

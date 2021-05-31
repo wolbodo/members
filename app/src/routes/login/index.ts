@@ -24,7 +24,8 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 		}
 	`, { name })
 
-	if (person) {
+
+	if (person && person.password) {
 		const ok = await bcrypt.compare(
 			password,
 			person.password
