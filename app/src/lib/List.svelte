@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { user, client, gql } from '$lib/graphql'
+  import { session } from '$app/stores';
+	import { client, gql } from '$lib/graphql'
 </script>
 
 <section class='actions'>
 
-  {#if $user?.roles && $user.roles.includes('board')}
+  {#if $session.user?.roles && $session.user.roles.includes('board')}
     <a href='create'>Create</a>
   {/if}
 </section>

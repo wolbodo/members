@@ -18,6 +18,8 @@
 	export async function load({ page, fetch, session, context }) {
     const isBoard = session.user.roles.includes('board')
     const allFields = isBoard ? [...FIELDS, ...BOARD_FIELDS] : FIELDS
+    console.log('Doing query:',session.user )
+    
     const { person: [person] } =  await client.request(gql`
         query getPerson($name:String) {
           person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
@@ -44,7 +46,7 @@
 
   let error
 
-  $: isBoard = $session.user.roles.includes('board')
+  $: isBoard = $session.user?.roles.includes('board')
   $: allFields = isBoard ? [...FIELDS, ...BOARD_FIELDS] : FIELDS
 
   export let person: object

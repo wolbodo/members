@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { session } from '$app/stores';
   import { enhance } from '$lib/Form'
-  import { user } from '$lib/graphql'
   let error
 </script>
 
@@ -13,7 +13,10 @@
       error = null
     },
     result: async (res, form) => {
-      user.set(await res.json())
+      $session = {
+        ...$session,
+        user: await res.json()
+      }
       form.reset();
       goto('/')
     },
