@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { session } from '$app/stores';
 	import { client, gql } from '$lib/graphql'
 
   type Column = {
@@ -18,15 +17,6 @@
       format: ({ firstname, lastname }) => `${firstname??''} ${lastname??''}`.trim() },
   ]
 </script>
-
-<section class='actions'>
-  {#if $session.user?.roles && $session.user.roles.includes('board')}
-    <a class='button accent' href='create'>Create</a>
-    <a class='button accent' href='create'>Create</a>
-    <a class='button accent' href='create'>Create</a>
-    <a class='button accent' href='create'>Create</a>
-  {/if}
-</section>
 
 <table>
   <thead>
@@ -70,13 +60,6 @@
 </table>
 
 <style>
-  .actions {
-    width: 100%;
-    display:flex;
-  }
-  .actions > * {
-    margin: .5rem;
-  }
   table {
     border-collapse: collapse;
     width: 100%;

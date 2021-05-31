@@ -8,7 +8,7 @@
 		console.log("Layout:", session, page)
 		if (session.user) {
 			token.set(session.user.token)
-		} else if (!['/', '/login'].includes(page.path)) {
+		} else if ('/' !== page.path) {
 			return {
 				status: 302,
 				redirect: '/'
