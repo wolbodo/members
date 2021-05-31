@@ -25,6 +25,7 @@
     "proposal-temporal": "^0.8.0",
     "skeleton-screen-css": "^1.0.1",
     "svelte": "^3.34.0",
+    "svelte-multiselect": "^1.1.2",
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
     "typescript": "^4.0.0"

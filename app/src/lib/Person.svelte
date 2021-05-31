@@ -1,7 +1,8 @@
 <script lang='ts'>
+
   import { session } from '$app/stores';
   import { Input } from '$lib/Form'
-  import { getPermissions } from './permissions';
+  import { Role, getPermissions } from './permissions';
 
   export let person
 
@@ -10,7 +11,8 @@
     [ 'firstname', 'lastname', 'email', 'phone'],
     [ 'address', 'city', 'country'],
     [ 'bankaccount', 'key_code'],
-    [ 'id', 'created', 'modified', 'password', 'note']
+    [ 'id', 'created', 'modified', 'password', 'note'],
+    [ 'roles',],
   ]
   $: permissions = getPermissions($session.user?.roles)
 
@@ -61,13 +63,18 @@
       readonly: true
     },
     password: {
-      label: 'password',
+      label: 'Password',
       type: 'password'
     },
     note: {
-      label: 'note',
+      label: 'Note',
       type: 'textarea'
     },
+    roles: {
+      label: 'Roles',
+      type: 'multiselect',
+      options: Object.keys(Role)
+    }
   }
 
   $: fieldInfo = fieldSet
@@ -83,27 +90,42 @@
                         if (permissions.edit.includes(name)) {
                           delete field.readonly
                         }
+                        if (name === 'roles') {
+                          field.value = field.value?.map(({ role }) => role);
+                        }
                         return field
                       })
                   )
                   .filter(fields => fields.length)
+
 </script>
 
   {#each fieldInfo as group }
-    <section>
+    <section class='grid'>
       {#each group as input}
         <Input {...input} />
       {/each}
     </section>
-    
   {/each}
 
-  <style>
+<style>
 
   section {
     display: grid;
     grid-template-columns: repeat(2,auto);
     grid-column-gap: 1rem;
+  }
+
+  section.roles {
+    display: block;
+  }
+  .roles label {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
+  .roles input {
+    width: auto;
   }
 
   @media screen and (max-width: 500px) {
