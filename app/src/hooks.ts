@@ -10,6 +10,7 @@ const getCookies = ({headers: {cookie}}) => Object.fromEntries(
 /** @type {import('@sveltejs/kit').GetSession} */
 export function getSession(request) {
   const { token } = getCookies(request)
+  console.log("Constructing session:", token)
   if (token) {
     const user = parseToken(token)
     return {
