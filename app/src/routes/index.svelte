@@ -1,7 +1,3 @@
-<script context="module" lang="ts">
-	export const prerender = true;
-</script>
-
 <script lang='ts'>
   import { session } from '$app/stores';
 	import List from '$lib/List.svelte'
