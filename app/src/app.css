@@ -140,7 +140,7 @@ textarea[readonly] {
 }
 
 
-button {
+button,a.button {
   color: #fff;
   background-color: var(--primary-color);
   border: none;
@@ -153,21 +153,25 @@ button {
   line-height: 1.8;
   font-size: 12px;
   padding: 10px 18px;
-  min-width: 120px;
   transition: all 150ms ease;
   cursor: pointer;
 }
+button.accent,a.button.accent {
+	background-color: var(--accent-color);
+}
 
-button:disabled {
+button:disabled,a.button:disabled {
   background-color: var(--secondary-color);
 }
 
 
-button:focus:not(:disabled) {
+button:focus:not(:disabled),
+a.button:focus:not(:disabled) {
   box-shadow: 0 0 0 4px var(--secondary-color);
 }
 
-button:hover:not(:disabled) {
+button:hover:not(:disabled),
+a.button:hover:not(:disabled) {
   background-color: var(--quaternary-color);
 }
 
