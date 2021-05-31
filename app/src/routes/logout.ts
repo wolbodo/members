@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type { Locals } from '$lib/types';
 
-export const get: RequestHandler<Locals, FormData> = () => ({
+export const post: RequestHandler<Locals, FormData> = () => ({
   status: 200,
   body: null,
   headers: {
