@@ -17,10 +17,7 @@
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, fetch, session, context }) {
-    
-    const { user } = session
-
-    const isBoard = user.roles.includes('board')
+    const isBoard = session.user.roles.includes('board')
     const allFields = isBoard ? [...FIELDS, ...BOARD_FIELDS] : FIELDS
     const { person: [person] } =  await client.request(gql`
       query getPerson($name:String) {
@@ -30,7 +27,7 @@
       }
     `, { name: page.params.name}, {
       'X-Hasura-Role': isBoard ? 'board' : 'member',
-      authorization: `Bearer ${user.token}`
+      authorization: `Bearer ${session.user.token}`
     })
     
     return {
