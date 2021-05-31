@@ -1,6 +1,11 @@
 
+export enum Role {
+  board = 'board',
+  member = 'member',
+}
+
 export type PermissionSet = {
-  [key:string] : {
+  [key:Role] : {
     edit?: string[];
     view?: string[];
   }
@@ -13,7 +18,8 @@ export const Permissions: PermissionSet = {
       'firstname', 'lastname', 'email',
       'phone', 'address', 'city', 'country',
       'note', 
-      'bankaccount', 'key_code', 'password'
+      'bankaccount', 'key_code', 'password',
+      'roles'
     ]
   },
   'member': {
@@ -23,11 +29,14 @@ export const Permissions: PermissionSet = {
       'phone', 'address', 'city', 'country',
       'note', 
       'id', 'created', 'modified',
+      'roles',
     ]
   }
 }
 
-export const getPermissions = (roles:string[], permissions:PermissionSet = Permissions) : { view: string[], edit: string[]} => {
+export const getQueryFields = (fields) => fields.map(field => field === 'roles' ? 'roles { name }' : field).join(' ')
+
+export const getPermissions = (roles:Role[], permissions:PermissionSet = Permissions) : { view: string[], edit: string[]} => {
   const editSet : Set<string> = new Set()
   const viewSet : Set<string> = new Set()
 
@@ -36,7 +45,6 @@ export const getPermissions = (roles:string[], permissions:PermissionSet = Permi
     view.forEach(p => viewSet.add(p))
     edit.forEach(p => (editSet.add(p), viewSet.add(p)))
   }
-  console.log(editSet, viewSet)
 
   return {
     view: Array.from(viewSet),

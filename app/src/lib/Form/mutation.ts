@@ -14,6 +14,11 @@ export function mutation(
   }
 ) {
   let current_token: {};
+  let initialState = Object.fromEntries(
+    (new FormData(form)).entries()
+  )
+
+  console.log("Initial:", initialState)
 
   async function handle_submit(e: Event) {
     const token = (current_token = {});
@@ -24,9 +29,10 @@ export function mutation(
     const formdata = Object.fromEntries(
       Array.from(body.entries())
         .filter(
-          ([name,]) => form[name].classList.contains('changed')
+          ([name,value]) => initialState[name] !== value
         )
     )
+    console.log("Sending formdata:", formdata)
 
 		if (pending) pending(body, form);
 
