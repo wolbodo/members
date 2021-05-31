@@ -4,9 +4,9 @@
 	import logo from './svelte-logo.svg';
 
 	async function logout() {
-		goto('/')
 		$session.user = null
-		await fetch('/logout')
+		await fetch('/logout', { method: 'post'})
+		goto('/')
 	}
 </script>
 
