@@ -10,12 +10,14 @@ const getCookies = ({headers: {cookie}}) => Object.fromEntries(
 /** @type {import('@sveltejs/kit').GetSession} */
 export function getSession(request) {
   const { token } = getCookies(request)
-  const user = parseToken(token)
-
-	return {
-		user: {
-      ...user,
-      token
-    }
-	};
+  if (token) {
+    const user = parseToken(token)
+    return {
+      user: {
+        ...user,
+        token
+      }
+    };
+  }
+  return {}
 }
