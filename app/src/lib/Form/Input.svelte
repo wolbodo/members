@@ -30,12 +30,18 @@
 <style>
 
   input {
-    background: initial;
+    background: var(--tertiary-color);
     border-color: rgba(255,255,255,0.1);
   }
 
+
   input:focus, section:hover input, .changed input {
     background: var(--pure-white);
+  }
+
+  input:read-only, input:read-only:hover, section:hover input:read-only {
+    background: initial;
+    padding:initial;
   }
 
   .changed label {

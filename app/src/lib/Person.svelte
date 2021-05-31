@@ -93,5 +93,12 @@
   section {
     display: grid;
     grid-template-columns: repeat(2,auto);
+    grid-column-gap: 1rem;
+  }
+
+  @media screen and (max-width: 500px) {
+      section {
+        grid-template-columns: auto;
+      }
   }
   </style>
