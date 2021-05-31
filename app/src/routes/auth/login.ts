@@ -4,6 +4,9 @@ import type { RequestHandler } from '@sveltejs/kit';
 import type { Locals } from '$lib/types';
 import { serverToken, createToken } from '$lib/jwt'
 import { client, token, gql } from '$lib/graphql'
+import { cookie } from './_cookie';
+
+const addDays = (date = new Date(), days = 1) => (date.setDate(date.getDate() + days), date)
 
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const name = request.body.get('name')
@@ -48,7 +51,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 			return {
 				status: 200,
 				headers: {
-					'Set-Cookie': `token=${user.token}; Path=/; SameSite=Strict; HttpOnly`
+					'Set-Cookie': cookie(user.token, addDays())
 				},
 				body: user
 			}
