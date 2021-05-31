@@ -20,7 +20,55 @@
           }
         }
       ],
+      "insert_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "check": {},
+            "columns": [
+              "address",
+              "bankaccount",
+              "city",
+              "country",
+              "email",
+              "firstname",
+              "key_code",
+              "lastname",
+              "name",
+              "note",
+              "password",
+              "phone",
+              "zipcode"
+            ],
+            "backend_only": false
+          }
+        }
+      ],
       "select_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "columns": [
+              "id",
+              "key_code",
+              "note",
+              "created",
+              "modified",
+              "address",
+              "bankaccount",
+              "city",
+              "country",
+              "email",
+              "firstname",
+              "lastname",
+              "name",
+              "password",
+              "phone",
+              "zipcode"
+            ],
+            "filter": {}
+          }
+        },
         {
           "role": "member",
           "permission": {
@@ -54,6 +102,30 @@
             "filter": {}
           }
         }
+      ],
+      "update_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "columns": [
+              "address",
+              "bankaccount",
+              "city",
+              "country",
+              "email",
+              "firstname",
+              "key_code",
+              "lastname",
+              "name",
+              "note",
+              "password",
+              "phone",
+              "zipcode"
+            ],
+            "filter": {},
+            "check": null
+          }
+        }
       ]
     },
     {
@@ -70,6 +142,17 @@
         }
       ],
       "select_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "columns": [
+              "person_id",
+              "role",
+              "validity"
+            ],
+            "filter": {}
+          }
+        },
         {
           "role": "member",
           "permission": {
