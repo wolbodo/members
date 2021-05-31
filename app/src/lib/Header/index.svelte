@@ -5,7 +5,7 @@
 
 	async function logout() {
 		$session.user = null
-		await fetch('/logout', { method: 'post'})
+		await fetch('/auth/logout', { method: 'post'})
 		goto('/')
 	}
 </script>
@@ -20,6 +20,7 @@
 	<nav>
 		<ul>
 			<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Home</a></li>
+			<li class:active={$page.path === '/create'}><a sveltekit:prefetch href="/create">Create</a></li>
 			{#if $session.user}
 				<li><button on:click={logout}>Logout</button></li>
 			{/if}

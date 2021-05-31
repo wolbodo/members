@@ -6,7 +6,7 @@
 </script>
 
 <form
-  action="/login"
+  action="/auth/login"
   method="post"
   use:enhance={{
     pending: () => {
@@ -18,7 +18,6 @@
         user: await res.json()
       }
       form.reset();
-      goto('/')
     },
     error: async (res) => {
       error = await res.text()

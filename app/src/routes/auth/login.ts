@@ -48,7 +48,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 			return {
 				status: 200,
 				headers: {
-					'Set-Cookie': `token=${user.token}; SameSite=Strict; HttpOnly`
+					'Set-Cookie': `token=${user.token}; Path=/; SameSite=Strict; HttpOnly`
 				},
 				body: user
 			}

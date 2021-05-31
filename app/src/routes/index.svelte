@@ -1,6 +1,7 @@
 <script lang='ts'>
   import { session } from '$app/stores';
 	import List from '$lib/List.svelte'
+	import Login from '$lib/Login.svelte'
 </script>
 
 <svelte:head>
@@ -11,9 +12,7 @@
 	{#if $session.user}
 		<List />
 	{:else}
-		<h2>
-			try logging in <a href='/login'>here</a>
-		</h2>
+		<Login />
 	{/if}
 </section>
 
