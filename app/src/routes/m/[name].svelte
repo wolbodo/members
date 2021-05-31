@@ -1,5 +1,4 @@
 <script context="module">
-  import { get } from 'svelte/store'
   import { client, gql } from '$lib/graphql'
   
   const FIELDS = [
@@ -20,15 +19,15 @@
     const isBoard = session.user.roles.includes('board')
     const allFields = isBoard ? [...FIELDS, ...BOARD_FIELDS] : FIELDS
     const { person: [person] } =  await client.request(gql`
-      query getPerson($name:String) {
-        person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
-          ${allFields.join(' ')}
+        query getPerson($name:String) {
+          person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
+            ${allFields.join(' ')}
+          }
         }
-      }
-    `, { name: page.params.name}, {
-      'X-Hasura-Role': isBoard ? 'board' : 'member',
-      authorization: `Bearer ${session.user.token}`
-    })
+      `,
+      { name: page.params.name}, 
+      { 'X-Hasura-Role': isBoard ? 'board' : 'member' }
+    )
     
     return {
       props: {
