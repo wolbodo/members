@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { session } from '$app/stores';
   import { enhance } from '$lib/Form'
   let error
