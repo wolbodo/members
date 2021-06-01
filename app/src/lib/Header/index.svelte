@@ -19,7 +19,7 @@
 
 	<nav>
 		<ul>
-			<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Home</a></li>
+			<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
 			{#if $session.user}
 				{#if $session.user.roles.includes('board')}
 					<li class:active={$page.path === '/create'}><a sveltekit:prefetch href="/create">Create</a></li>

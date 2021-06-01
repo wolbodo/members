@@ -35,8 +35,10 @@
 
 <script lang="ts">
   import { mutation } from "$lib/Form"
-  import { session } from '$app/stores';
   import Person from '$lib/Person.svelte'
+  
+  import { session } from '$app/stores';
+  import { goto } from '$app/navigation';
 
   let error
 
@@ -60,7 +62,7 @@
       id: person.id
     },
     error: (_, err) => error = err.toString(),
-    result: ({ person: _person }) => person = _person
+    result: ({ person: _person }) => goto('/')
   }}>
     <Person {person}/>
 
@@ -79,16 +81,19 @@
     --sms-active-color: var(--primary-color);
   }
   form {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* display: grid; */
 
-    grid-template-columns: auto auto;
-    grid-gap: 1rem;
+    /* grid-template-columns: auto auto; */
+    /* grid-gap: 1rem; */
   }
 
 
   button, small {
     
-    grid-column: 1/3;
+    /* grid-column: 1/3; */
   }
   button {
     background: var(--accent-color);

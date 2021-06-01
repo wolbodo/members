@@ -1,6 +1,4 @@
 <script lang="ts">
-  import MultiSelect from 'svelte-multiselect'
-
   export let name: string
   export let label: string
   export let type: string = 'text'
@@ -10,8 +8,6 @@
   $: if (value) {
     changed = false
   }
-
-  let selected
 </script>
 
 <section class:changed>
@@ -23,13 +19,7 @@
       on:change={() => changed = true }
   />
   {:else if type === 'multiselect'}
-  
-    <MultiSelect
-      {...$$props}
-      id={name}
-      selected={value}
-      on:add={() => changed = true }
-      on:remove={() => changed = true } />
+    <pre>{JSON.stringify($$props, null, 2)}</pre>
 
   {:else}
     <input class:changed
@@ -45,6 +35,10 @@
   input {
     background: var(--tertiary-color);
     border-color: rgba(255,255,255,0.1);
+  }
+
+  input.wide {
+    width: 100%;
   }
 
 

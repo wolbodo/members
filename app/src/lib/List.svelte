@@ -12,9 +12,19 @@
     { label: 'Email', fields: ['email'] },
     { label: 'Phone', fields: ['phone'] },
     {
+      label: 'Address',
+      fields: ['address', 'city'],
+      format: ({ address, city }) => `${address ?? ''} ${city ?? ''}`.trim()
+    },
+    {
       label: 'Full name',
       fields:['firstname', 'lastname'],
       format: ({ firstname, lastname }) => `${firstname??''} ${lastname??''}`.trim() },
+    {
+      label: 'Roles',
+      fields: ['roles { role }'],
+      format: ({ roles }) => roles.map(({ role }) => role)
+    }
   ]
 </script>
 
