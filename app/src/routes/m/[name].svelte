@@ -68,7 +68,9 @@
       <small>{error}</small>
     {/if}
 
-    <button type='submit'>Submit</button>
+    {#if permissions.edit.length}
+      <button type='submit'>Submit</button>
+    {/if}
   </form>
 </content>
 
