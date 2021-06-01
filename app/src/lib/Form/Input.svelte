@@ -23,6 +23,7 @@
       on:change={() => changed = true }
   />
   {:else if type === 'multiselect'}
+  
     <MultiSelect
       {...$$props}
       id={name}
