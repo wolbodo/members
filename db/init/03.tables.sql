@@ -1,7 +1,7 @@
 BEGIN;
 
 CREATE TABLE auth.person (
-  id                SERIAL,
+  id                SERIAL PRIMARY KEY,
 
   name              VARCHAR(255)        NOT NULL,
   email             VARCHAR(255)        UNIQUE,
@@ -16,6 +16,7 @@ CREATE TABLE auth.person (
   country           VARCHAR(255)        ,
 
   bankaccount       VARCHAR(80)         ,
+  key_code          VARCHAR(80)         ,
 
   note              TEXT                ,
 
@@ -47,12 +48,15 @@ CREATE INDEX ON auth.person (email);
 
 
 CREATE TABLE auth.person_role (
-  person_id   INTEGER   NOT NULL REFERENCES auth.person(id),
-  role        VARCHAR   NOT NULL, --     INTEGER   REFERENCES auth.role   (id),
+  id          SERIAL PRIMARY KEY,
 
-  validity    TSTZRANGE           DEFAULT TSTZRANGE(now(),NULL),
+  person_id   INTEGER      NOT NULL REFERENCES auth.person(id),
+  role        VARCHAR      NOT NULL, --     INTEGER   REFERENCES auth.role   (id),
 
-  EXCLUDE USING gist (person_id WITH =, role WITH =, validity WITH &&)
+  valid_from  TIMESTAMPTZ  DEFAULT NOW(),
+  valid_till  TIMESTAMPTZ  DEFAULT NULL
+
+  -- EXCLUDE USING gist (person_id WITH =, role WITH =, validity WITH &&)
 );
 CREATE INDEX ON auth.person_role(person_id);
 

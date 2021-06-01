@@ -148,7 +148,8 @@
             "columns": [
               "person_id",
               "role",
-              "validity"
+              "valid_from",
+              "valid_till"
             ],
             "filter": {}
           }
@@ -159,7 +160,8 @@
             "columns": [
               "person_id",
               "role",
-              "validity"
+              "valid_from",
+              "valid_till"
             ],
             "filter": {}
           }
@@ -170,7 +172,8 @@
             "columns": [
               "person_id",
               "role",
-              "validity"
+              "valid_from",
+              "valid_till"
             ],
             "filter": {}
           }

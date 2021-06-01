@@ -11,8 +11,10 @@
     [ 'firstname', 'lastname', 'email', 'phone'],
     [ 'address', 'city', 'country'],
     [ 'bankaccount', 'key_code'],
-    [ 'id', 'created', 'modified', 'password', 'note'],
     [ 'roles',],
+    ['password'],
+    [ 'note'],
+    [ 'created', 'modified', 'id' ],
   ]
   $: permissions = getPermissions($session.user?.roles)
 
@@ -111,6 +113,8 @@
 <style>
 
   section {
+    min-width: 600px;
+
     display: grid;
     grid-template-columns: repeat(2,auto);
     grid-column-gap: 1rem;
