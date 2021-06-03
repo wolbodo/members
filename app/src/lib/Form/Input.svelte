@@ -1,7 +1,7 @@
 <script lang="ts">
   export let name: string
   export let label: string
-  export let type: string = 'text'
+  export let type: string | SvelteComponent = 'text'
   export let value: any
 
   let changed = false
@@ -18,15 +18,14 @@
       id={name}
       on:change={() => changed = true }
   />
-  {:else if type === 'multiselect'}
-    <pre>{JSON.stringify($$props, null, 2)}</pre>
-
-  {:else}
+  {:else if typeof type === 'string'}
     <input class:changed
       {...$$props}
       id={name}
       on:change={() => changed = true }
     />
+  {:else}
+    <svelte:component this={type} id={name} {...$$props} />
   {/if}
 </section>
 

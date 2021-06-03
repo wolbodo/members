@@ -6,4 +6,4 @@ WORKDIR /app
 
 COPY package.json /app
 COPY yarn.lock /app
-RUN yarn --pure-lockfile
+RUN yarn --production --pure-lockfile

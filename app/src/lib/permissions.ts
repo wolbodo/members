@@ -1,8 +1,5 @@
 
-export enum Role {
-  board = 'board',
-  member = 'member',
-}
+type Role = string;
 
 export type PermissionSet = {
   [key:Role] : {
