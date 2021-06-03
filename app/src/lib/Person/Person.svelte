@@ -1,10 +1,14 @@
 <script lang='ts'>
-
+  import { onMount } from 'svelte'
   import { session } from '$app/stores';
-  import { Input } from '$lib/Form'
-  import { Role, getPermissions } from './permissions';
+  import { client, gql } from '$lib/graphql'
+  import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form'
+  import { getPermissions } from '$lib/permissions';
 
+  let error
+  export let mutation, variables
   export let person
+  let roles
 
   export let fieldSet: string[][] = [
     [ 'name', ],
@@ -16,9 +20,22 @@
     [ 'note'],
     [ 'created', 'modified', 'id' ],
   ]
+
+  onMount(async () => {
+    const data =  await client.request(gql`
+        query getRoles {
+          roles: auth_person_role(distinct_on:role) {
+            role
+          }
+        }
+      `
+    )
+    roles = data.roles.map(({ role }) => role)
+  })
+
   $: permissions = getPermissions($session.user?.roles)
 
-  const fieldOptions = {
+  $: fieldOptions = {
     name: {
       label: 'Name',
       class: 'wide'
@@ -74,8 +91,8 @@
     },
     roles: {
       label: 'Roles',
-      type: 'multiselect',
-      options: Object.keys(Role)
+      type: RoleSelector,
+      options: roles
     }
   }
 
@@ -92,15 +109,19 @@
                         if (permissions.edit.includes(name)) {
                           delete field.readonly
                         }
-                        if (name === 'roles') {
-                          field.value = field.value?.map(({ role }) => role);
-                        }
                         return field
                       })
                   )
                   .filter(fields => fields.length)
 
 </script>
+
+<form use:gqlMutation={{
+  role: 'board',
+  mutation, variables,
+  error: (_, err) => error = err.toString(),
+  result: data => console.log('created', data)
+}}>
 
   {#each fieldInfo as group }
     <section class='grid'>
@@ -110,7 +131,25 @@
     </section>
   {/each}
 
+  {#if error}
+    <small>{error}</small>
+  {/if}
+
+  {#if permissions.edit.length}
+    <button type='submit'>Submit</button>
+  {/if}
+</form>
+
 <style>
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  button {
+    background: var(--accent-color);
+  }
 
   section {
     min-width: 600px;

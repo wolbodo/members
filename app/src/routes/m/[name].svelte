@@ -16,7 +16,7 @@
           person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
             ${fields.view.filter(p => p!='roles').join(' ')}
             roles {
-              role
+              role valid_from valid_till
             }
           }
         }
@@ -34,13 +34,10 @@
 </script>
 
 <script lang="ts">
-  import { mutation } from "$lib/Form"
-  import Person from '$lib/Person.svelte'
+  import { Person } from '$lib/Person'
   
   import { session } from '$app/stores';
   import { goto } from '$app/navigation';
-
-  let error
 
   $: permissions = getPermissions($session.user?.roles)
 
@@ -49,53 +46,20 @@
 
 <content>
 
-  <form use:mutation={{
-    role: 'board',
-    mutation: gql`
+  <Person {person}
+    mutation={gql`
       mutation updatePerson($id:Int!, $formdata:auth_person_set_input) {
         person: update_auth_person_by_pk(pk_columns:{id:$id} _set:$formdata) {
           ${permissions.edit.filter(p => p!='roles').join(' ')}
         }
       }
-    `,
-    variables: {
+    `}
+    variables={{
       id: person.id
-    },
-    error: (_, err) => error = err.toString(),
-    result: ({ person: _person }) => goto('/')
-  }}>
-    <Person {person}/>
-
-    {#if error}
-      <small>{error}</small>
-    {/if}
-
-    {#if permissions.edit.length}
-      <button type='submit'>Submit</button>
-    {/if}
-  </form>
+    }}
+    result={({ person: _person }) => goto('/')}
+  />
 </content>
 
 <style>
-  :root {
-    --sms-active-color: var(--primary-color);
-  }
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* display: grid; */
-
-    /* grid-template-columns: auto auto; */
-    /* grid-gap: 1rem; */
-  }
-
-
-  button, small {
-    
-    /* grid-column: 1/3; */
-  }
-  button {
-    background: var(--accent-color);
-  }
 </style>

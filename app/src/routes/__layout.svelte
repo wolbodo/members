@@ -5,7 +5,6 @@
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, session }) {
-		console.log("Layout:", session, page)
 		if (session.user) {
 			token.set(session.user.token)
 		} else if ('/' !== page.path) {
