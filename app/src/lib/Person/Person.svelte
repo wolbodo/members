@@ -4,6 +4,7 @@
   import { client, gql } from '$lib/graphql'
   import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form'
   import { getPermissions } from '$lib/permissions';
+  import { goto } from '$app/navigation';
 
   let error
   export let mutation, variables
@@ -120,7 +121,7 @@
   role: 'board',
   mutation, variables,
   error: (_, err) => error = err.toString(),
-  result: data => console.log('created', data)
+  result: data => goto('/')
 }}>
 
   {#each fieldInfo as group }

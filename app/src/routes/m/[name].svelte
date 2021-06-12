@@ -16,7 +16,7 @@
           person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
             ${fields.view.filter(p => p!='roles').join(' ')}
             roles {
-              role valid_from valid_till
+              id role valid_from valid_till
             }
           }
         }
@@ -34,6 +34,7 @@
 </script>
 
 <script lang="ts">
+  import { setContext } from 'svelte'
   import { Person } from '$lib/Person'
   
   import { session } from '$app/stores';
@@ -42,6 +43,8 @@
   $: permissions = getPermissions($session.user?.roles)
 
   export let person: object
+
+  setContext('person', person)
 </script>
 
 <content>

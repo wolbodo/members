@@ -22,7 +22,7 @@
       format: ({ firstname, lastname }) => `${firstname??''} ${lastname??''}`.trim() },
     {
       label: 'Roles',
-      fields: ['roles { role }'],
+      fields: ['roles(where:{valid_till:{_is_null:true}, valid_from:{_lte:"NOW()"}}) { role }'],
       format: ({ roles }) => roles.map(({ role }) => role)
     }
   ]
