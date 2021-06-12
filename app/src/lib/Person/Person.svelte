@@ -38,63 +38,23 @@
 
   $: fieldOptions = {
     name: {
-      label: 'Name',
       class: 'wide'
     },
-    firstname: {
-      label: 'Firstname',
-    },
-    lastname: {
-      label: 'Lastname',
-    },
-    email: {
-      label: 'Email',
-      type: 'email'
-    },
-    phone: {
-      label: 'Phone',
-      type: 'tel'
-    },
-    address: {
-      label: 'address'
-    },
-    city: {
-      label: 'city'
-    },
-    country: {
-      label: 'country'
-    },
-    bankaccount: {
-      label: 'bankaccount'
-    },
-    key_code: {
-      label: 'key_code'
-    },
-    id: {
-      label: 'id',
-      readonly: true
-    },
-    created: {
-      label: 'created',
-      readonly: true
-    },
-    modified: {
-      label: 'modified',
-      readonly: true
-    },
-    password: {
-      label: 'Password',
-      type: 'password'
-    },
-    note: {
-      label: 'Note',
-      type: 'textarea'
-    },
-    roles: {
-      label: 'Roles',
-      type: RoleSelector,
-      options: roles
-    }
+    firstname: { },
+    lastname: { },
+    email: { type: 'email' },
+    phone: { type: 'tel' },
+    address: { },
+    city: { },
+    country: { },
+    bankaccount: { },
+    key_code: { },
+    id: { readonly: true },
+    created: { readonly: true },
+    modified: { readonly: true },
+    password: { type: 'password' },
+    note: { type: 'textarea' },
+    roles: { type: RoleSelector, options: roles }
   }
 
   $: fieldInfo = fieldSet

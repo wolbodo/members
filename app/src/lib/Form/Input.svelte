@@ -11,7 +11,7 @@
 </script>
 
 <section class:changed>
-  <label for={name}>{label}</label>
+  <label for={name}>{label || name}</label>
   {#if type === 'textarea' }
     <textarea
       {...$$props}
