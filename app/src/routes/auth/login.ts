@@ -7,6 +7,9 @@ import { serverToken, createToken } from '$lib/jwt'
 import { client, token, gql } from '$lib/graphql'
 import { cookie } from './_cookie';
 
+// These are the only roles passed to the token, and in this order.
+const ALL_ROLES = ['member', 'board', 'admin']
+
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const name = request.body.get('name')
 	const password = request.body.get('password')
@@ -19,7 +22,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 			auth_person(where:{name:{_ilike:$name}}) {
 				email name id
 				password
-				roles {
+				roles(where:{valid_till:{_is_null:true}, valid_from:{_lte:"NOW()"}}) {
 					role
 				}
 			}
@@ -27,7 +30,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 	`, { name })
 
 
-	if (person && person.password) {
+	if (person && person.password && person.roles.length) {
 		const ok = await bcrypt.compare(
 			password,
 			person.password
@@ -35,9 +38,10 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 
 		if (ok) {
 			delete person.password
+			const roles = person.roles.map(({ role }) => role)
 			const user = {
 				...person,
-				roles: person.roles.map(({ role }) => role)
+				roles: ALL_ROLES.filter(role => roles.includes(role))
 			}
 			delete user.password
 			user.token = createToken({

@@ -141,11 +141,25 @@
           }
         }
       ],
+      "insert_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "check": {},
+            "columns": [
+              "person_id",
+              "role"
+            ],
+            "backend_only": false
+          }
+        }
+      ],
       "select_permissions": [
         {
           "role": "board",
           "permission": {
             "columns": [
+              "id",
               "person_id",
               "role",
               "valid_from",
@@ -158,6 +172,7 @@
           "role": "member",
           "permission": {
             "columns": [
+              "id",
               "person_id",
               "role",
               "valid_from",
@@ -170,12 +185,26 @@
           "role": "server",
           "permission": {
             "columns": [
+              "id",
               "person_id",
               "role",
               "valid_from",
               "valid_till"
             ],
             "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "columns": [
+              "valid_from",
+              "valid_till"
+            ],
+            "filter": {},
+            "check": null
           }
         }
       ]
