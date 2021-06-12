@@ -1,13 +1,21 @@
+<script context="module">
+	import { writable } from 'svelte/store'
+
+	export const searchValue = writable('')
+</script>
+
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { session, page } from '$app/stores';
-	import logo from './svelte-logo.svg';
+	import logo from './logo.svg';
 
 	async function logout() {
 		$session.user = null
 		await fetch('/auth/logout', { method: 'post'})
 		goto('/')
 	}
+
+	const focus = node => node.focus()
 </script>
 
 <header>
@@ -15,6 +23,10 @@
 		<a href="/">
 			<img src={logo} alt="SvelteKit" />
 		</a>
+	</div>
+
+	<div class='search'>
+		<input bind:value={$searchValue} use:focus placeholder="Search" />
 	</div>
 
 	<nav>
@@ -37,7 +49,13 @@
 <style>
 	header {
 		display: flex;
-		justify-content: space-between;
+		margin-bottom: 0.5rem;
+	}
+
+	input {
+		height: 3rem;
+		border-radius: 0;
+		box-shadow: none;
 	}
 
 	.corner {
