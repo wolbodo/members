@@ -13,7 +13,7 @@ export const Permissions: PermissionSet = {
     edit: [
       'name', 
       'firstname', 'lastname', 'email',
-      'phone', 'address', 'city', 'country',
+      'phone', 'address', 'zipcode', 'city', 'country',
       'note', 
       'bankaccount', 'key_code', 'password',
       'roles'
@@ -23,7 +23,7 @@ export const Permissions: PermissionSet = {
     view: [
       'name', 
       'firstname', 'lastname', 'email',
-      'phone', 'address', 'city', 'country',
+      'phone', 'address', 'zipcode', 'city', 'country',
       'note', 
       'id', 'created', 'modified',
       'roles',

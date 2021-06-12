@@ -14,7 +14,7 @@
   export let fieldSet: string[][] = [
     [ 'name', ],
     [ 'firstname', 'lastname', 'email', 'phone'],
-    [ 'address', 'city', 'country'],
+    [ 'address', 'zipcode', 'city', 'country'],
     [ 'bankaccount', 'key_code'],
     [ 'roles',],
     ['password'],
