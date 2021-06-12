@@ -105,7 +105,8 @@ textarea {
   font-size: inherit;
   max-width: 400px;
   width: 100%;
-  padding: 12px;
+  padding: .5rem;
+  margin: .5rem;
   box-sizing: border-box;
   border: 1px solid var(--secondary-color);
   box-shadow: 0 0 0 4px rgb(218, 218, 230);
@@ -185,6 +186,11 @@ label {
   font-size: 12px;
   letter-spacing: 1.9px;
   line-height: 2;
+	margin: .5rem;
+	margin-bottom: 0;
+}
+label + input {
+	margin-top: 0;
 }
 
 /* used for errors */

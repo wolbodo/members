@@ -42,7 +42,6 @@
 		display: flex;
 		flex-direction: column;
 		margin: 1rem;
-		width: 100%;
 		max-width: 1024px;
 		margin: 0 auto;
 		box-sizing: border-box;
