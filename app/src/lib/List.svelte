@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { searchValue } from '$lib/Header/index.svelte'
 	import { client, gql } from '$lib/graphql'
 
   type Column = {
@@ -26,6 +27,18 @@
       format: ({ roles }) => roles.map(({ role }) => role)
     }
   ]
+
+  const getData = async () => {
+    return client.request(gql`
+      {
+        people: auth_person (order_by:{id:asc}) {
+          ${columns.flatMap(({ fields }) => fields).join(' ')}
+        }
+      }
+    `)
+  }
+
+    $: searchRegex = new RegExp($searchValue, 'i')
 </script>
 
 <table>
@@ -35,16 +48,10 @@
     {/each}
   </thead>
   <tbody>
-    {#await client.request(gql`
-      {
-        people: auth_person (order_by:{id:asc}) {
-          ${columns.flatMap(({ fields }) => fields).join(' ')}
-        }
-      }
-    `)}
+    {#await getData()}
       <tr class="ssc-line"></tr>
     {:then { people }} 
-      {#each people as person}
+      {#each people.filter(person => $searchValue ? person.name.match(searchRegex) : true) as person}
         <tr>
           {#each columns as { fields, href, format }}
           <td>
@@ -95,7 +102,11 @@
     background-color: var(--pure-white);
     border-bottom: 1px solid var(--primary-color);
   }
+
   tr:hover {
     background-color: var(--secondary-color);
+  }
+  tr:global(.highlight) {
+    background-color: var(--quaternary-color);
   }
 </style>

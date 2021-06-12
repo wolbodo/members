@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 238.12532 238.12454"
+   height="900"
+   width="900"
+   version="1.1"
+   id="svg823"
+   sodipodi:docname="logo-black.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   inkscape:export-filename="/home/dexter/Projects/wolbodo/members/logo.png"
+   inkscape:export-xdpi="1"
+   inkscape:export-ydpi="1">
+  <metadata
+     id="metadata829">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs827" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     id="namedview825"
+     showgrid="false"
+     inkscape:zoom="0.47854043"
+     inkscape:cx="317.6182"
+     inkscape:cy="189.05031"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg823" />
+  <path
+     d="m 119.21834,21.206416 32.189,65.222 71.977,10.459982 -52.083,50.767982 12.295,71.686 -64.379,-33.845 -64.378006,33.845 12.295,-71.686 -52.083,-50.768982 71.977,-10.458982 z"
+     id="path815"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#ff3e00;stroke-width:13.02299976;paint-order:fill markers stroke" />
+  <g
+     aria-label="Wolbodo"
+     style="font-style:normal;font-weight:normal;font-size:11.92547703px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.29813692"
+     id="text833"
+     transform="translate(1.0583348,6.4934132)">
+    <path
+       d="m 181.82911,145.42922 q 0,7.84509 -2.99702,14.80871 -2.90883,6.87546 -8.10952,12.07614 -5.11252,5.11252 -12.07614,8.10955 -6.87546,2.90884 -14.72055,2.90884 -7.05176,0 -13.57464,-2.46812 -6.43474,-2.46811 -11.6354,-7.22807 -5.20069,4.75996 -11.72356,7.22807 -6.52288,2.46812 -13.574648,2.46812 -7.845085,0 -14.808702,-2.90884 -6.875465,-2.99703 -12.076142,-8.10955 -5.112526,-5.20068 -8.109525,-12.07614 -2.908854,-6.96362 -2.908854,-14.80871 V 55.166688 h 25.298196 v 90.262532 q 0,2.64441 0.969618,5.02439 0.969618,2.29182 2.644412,4.05478 1.76294,1.67477 4.054764,2.64441 2.291823,0.9696 4.936233,0.9696 2.644412,0 4.936239,-0.9696 2.291819,-0.96964 3.966609,-2.64441 1.76293,-1.76296 2.73256,-4.05478 0.96961,-2.37998 0.96961,-5.02439 V 55.166688 h 25.29822 v 90.262532 q 0,2.64441 0.9696,5.02439 0.96964,2.29182 2.64442,4.05478 1.76294,1.67477 4.05476,2.64441 2.29183,0.9696 4.93623,0.9696 2.64441,0 4.93623,-0.9696 2.29182,-0.96964 3.96663,-2.64441 1.76293,-1.76296 2.73255,-4.05478 1.05776,-2.37998 1.05776,-5.02439 V 55.166688 h 25.21006 z"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:57.2422905px;font-family:Righteous;-inkscape-font-specification:Righteous;stroke-width:0.94023484"
+       id="path900"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
