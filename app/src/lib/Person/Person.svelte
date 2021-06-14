@@ -3,12 +3,13 @@
   import { session } from '$app/stores';
   import { client, gql } from '$lib/graphql'
   import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form'
-  import { getPermissions } from '$lib/permissions';
   import { goto } from '$app/navigation';
 
   let error
   export let mutation, variables
   export let person
+  export let role = 'board'
+  export let permissions = {view: [], edit: []}
   let roles
 
   export let fieldSet: string[][] = [
@@ -34,7 +35,6 @@
     roles = data.roles.map(({ role }) => role)
   })
 
-  $: permissions = getPermissions($session.user?.roles)
 
   $: fieldOptions = {
     name: {
@@ -78,7 +78,7 @@
 </script>
 
 <form use:gqlMutation={{
-  role: 'board',
+  role,
   mutation, variables,
   error: (_, err) => error = err.toString(),
   result: data => goto('/')

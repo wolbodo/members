@@ -5,16 +5,27 @@
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ page, fetch, session, context }) {
-    const isBoard = session.user.roles.includes('board')
-    const fields = getPermissions(session.user.roles)
-    // const allFields = isBoard ? [...FIELDS, ...BOARD_FIELDS] : FIELDS
-    console.log('Doing query:',session.user )
+	export async function load({ page, session }) {
+    // Query id for resolving roles and permissions
+
+    const { person: [{ id }]} =  await client.request(gql`
+        query getPerson($name:String) {
+          person: auth_person(where:{name:{_ilike:$name}}, limit:1) { id }
+        }
+      `,
+      { name: page.params.name},
+    )
     
-    const { person: [person] } =  await client.request(gql`
+    const isSelf = id === parseInt(session.user.id)
+    const validRoles = session.user.roles.filter(role => role === 'self' ? isSelf : true)
+    const role = ['board', 'self', 'member'].find(option => validRoles.includes(option))
+
+    console.log("tst", id, isSelf, validRoles, role)
+
+    const { person: [person] } = await client.request(gql`
         query getPerson($name:String) {
           person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
-            ${fields.view.filter(p => p!='roles').join(' ')}
+            ${getPermissions(validRoles).view.filter(p => p!='roles').join(' ')}
             roles {
               id role valid_from valid_till
             }
@@ -22,7 +33,7 @@
         }
       `,
       { name: page.params.name}, 
-      { 'X-Hasura-Role': isBoard ? 'board' : 'member' }
+      { 'X-Hasura-Role': role }
     )
     
     return {
@@ -40,7 +51,10 @@
   import { session } from '$app/stores';
   import { goto } from '$app/navigation';
 
-  $: permissions = getPermissions($session.user?.roles)
+  $: isSelf = person.id === parseInt($session.user.id)
+  $: validRoles = $session.user?.roles.filter(role => role === 'self' ? isSelf : true)
+  $: permissions = getPermissions(validRoles)
+  $: role = ['board', 'self', 'member'].find(option => validRoles.includes(option))
 
   export let person: object
 
@@ -48,8 +62,8 @@
 </script>
 
 <content>
-
-  <Person {person}
+  <Person {person} {permissions}
+    {role}
     mutation={gql`
       mutation updatePerson($id:Int!, $formdata:auth_person_set_input) {
         person: update_auth_person_by_pk(pk_columns:{id:$id} _set:$formdata) {

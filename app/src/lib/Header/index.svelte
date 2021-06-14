@@ -25,25 +25,25 @@
 		</a>
 	</div>
 
-	<div class='search'>
-		<input bind:value={$searchValue} use:focus placeholder="Search" />
-	</div>
+	{#if $session.user}
+		<div class='search'>
+			<input bind:value={$searchValue} use:focus placeholder="Search" />
+		</div>
 
-	<nav>
-		<ul>
-			<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
-			{#if $session.user}
-				{#if $session.user.roles.includes('board')}
-					<li class:active={$page.path === '/create'}><a sveltekit:prefetch href="/create">Create</a></li>
-				{/if}
+		<nav>
+			<ul>
+				<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
+					{#if $session.user.roles.includes('board')}
+						<li class:active={$page.path === '/create'}><a sveltekit:prefetch href="/create">Create</a></li>
+					{/if}
 				<li><button on:click={logout}>Logout</button></li>
-			{/if}
-		</ul>
-	</nav>
-
-	<div class="corner">
-		<!-- TODO put something else here? github link? -->
-	</div>
+			</ul>
+		</nav>
+	{/if}
+		
+		<div class="corner">
+			<!-- TODO put something else here? github link? -->
+		</div>
 </header>
 
 <style>
