@@ -9,7 +9,7 @@ export type PermissionSet = {
 }
 
 export const Permissions: PermissionSet = {
-  'board': {
+  board: {
     edit: [
       'name', 
       'firstname', 'lastname', 'email',
@@ -19,7 +19,7 @@ export const Permissions: PermissionSet = {
       'roles'
     ]
   },
-  'member': {
+  member: {
     view: [
       'name', 
       'firstname', 'lastname', 'email',
@@ -27,6 +27,12 @@ export const Permissions: PermissionSet = {
       'note', 
       'id', 'created', 'modified',
       'roles',
+    ]
+  },
+  self: {
+    edit: [
+      'email', 'phone', 'address', 'zipcode', 'city', 'country',
+      'bankaccount', 'password'
     ]
   }
 }

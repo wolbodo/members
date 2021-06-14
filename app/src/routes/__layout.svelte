@@ -26,13 +26,12 @@
 
 	$: if ($session.user) {
 		$token = $session.user.token
-		console.log("User changed, setting token", $token)
 	}
 </script>
 
-<Header />
-
 <main>
+	<Header />
+
 	<slot />
 </main>
 

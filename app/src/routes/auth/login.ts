@@ -8,7 +8,7 @@ import { client, token, gql } from '$lib/graphql'
 import { cookie } from './_cookie';
 
 // These are the only roles passed to the token, and in this order.
-const ALL_ROLES = ['member', 'board', 'admin']
+const ALL_ROLES = ['member', 'board', 'admin', 'self']
 
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const name = request.body.get('name')
@@ -38,7 +38,10 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 
 		if (ok) {
 			delete person.password
-			const roles = person.roles.map(({ role }) => role)
+			const roles = [
+				...person.roles.map(({ role }) => role),
+				'self'
+			]
 			const user = {
 				...person,
 				roles: ALL_ROLES.filter(role => roles.includes(role))

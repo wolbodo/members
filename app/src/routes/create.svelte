@@ -1,9 +1,14 @@
 <script lang="ts">
+  import { getPermissions } from '$lib/permissions'
+  import { session } from '$app/stores';
+
   import { gql } from '$lib/graphql'
   import { Person } from '$lib/Person'
+
+  $: permissions = getPermissions($session.user?.roles)
 </script>
 
-<Person mutation={gql`
+<Person {permissions} mutation={gql`
   mutation addPerson($formdata:auth_person_insert_input!) {
     insert_auth_person_one(object:$formdata) {
       id
