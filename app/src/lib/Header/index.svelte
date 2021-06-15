@@ -1,7 +1,8 @@
 <script context="module">
 	import { writable } from 'svelte/store'
 
-	export const searchValue = writable('')
+	export const filterFields = (search, ...fields) => fields.some(field => field && field.match(search))
+	export const searchValue = writable(new RegExp('', 'i'))
 </script>
 
 <script lang="ts">
@@ -16,6 +17,9 @@
 	}
 
 	const focus = node => node.focus()
+	let _searchValue = ''
+
+	$: { $searchValue = new RegExp(_searchValue, 'i') }
 </script>
 
 <header>
@@ -27,7 +31,7 @@
 
 	{#if $session.user}
 		<div class='search'>
-			<input bind:value={$searchValue} use:focus placeholder="Search" />
+			<input bind:value={_searchValue} use:focus placeholder="Search" />
 		</div>
 
 		<nav>

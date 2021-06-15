@@ -1,6 +1,5 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
-  import { session } from '$app/stores';
   import { client, gql } from '$lib/graphql'
   import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form'
   import { goto } from '$app/navigation';
