@@ -1,6 +1,6 @@
 {
   "name": "members",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Postgres + Postgraphile + svelte",
   "main": "index.js",
   "scripts": {
