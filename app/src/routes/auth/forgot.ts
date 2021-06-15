@@ -16,7 +16,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 
   const { person: [person]} = await client.request(gql`
     query personByEmail($email: String!) {
-      person: auth_person(where: {email: {_eq: $email}}) {
+      person: auth_person(where: {email: {_ilike: $email}}) {
         id name
       }
     }
