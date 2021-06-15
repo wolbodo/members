@@ -24,6 +24,10 @@ services:
       VIRTUAL_HOST: members.wolbodo.nl
       CERT_NAME: wildcard
       AUTH_JWT_SECRET: $AUTH_JWT_SECRET
+      EMAIL_HOST: $EMAIL_HOST
+      EMAIL_PORT: $EMAIL_PORT
+      EMAIL_USER: $EMAIL_USER
+      EMAIL_PASS: $EMAIL_PASS
     ports:
       - "80"
 
