@@ -91,6 +91,33 @@
           }
         },
         {
+          "role": "self",
+          "permission": {
+            "columns": [
+              "address",
+              "bankaccount",
+              "city",
+              "country",
+              "created",
+              "email",
+              "firstname",
+              "id",
+              "lastname",
+              "modified",
+              "name",
+              "note",
+              "password",
+              "phone",
+              "zipcode"
+            ],
+            "filter": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            }
+          }
+        },
+        {
           "role": "server",
           "permission": {
             "columns": [
@@ -123,6 +150,27 @@
               "zipcode"
             ],
             "filter": {},
+            "check": null
+          }
+        },
+        {
+          "role": "self",
+          "permission": {
+            "columns": [
+              "address",
+              "bankaccount",
+              "city",
+              "country",
+              "email",
+              "password",
+              "phone",
+              "zipcode"
+            ],
+            "filter": {
+              "id": {
+                "_eq": "X-Hasura-User-Id"
+              }
+            },
             "check": null
           }
         }
@@ -182,6 +230,19 @@
           }
         },
         {
+          "role": "self",
+          "permission": {
+            "columns": [
+              "id",
+              "person_id",
+              "role",
+              "valid_from",
+              "valid_till"
+            ],
+            "filter": {}
+          }
+        },
+        {
           "role": "server",
           "permission": {
             "columns": [
@@ -202,6 +263,65 @@
             "columns": [
               "valid_from",
               "valid_till"
+            ],
+            "filter": {},
+            "check": null
+          }
+        }
+      ]
+    },
+    {
+      "table": {
+        "schema": "mail",
+        "name": "entries"
+      },
+      "object_relationships": [
+        {
+          "name": "person",
+          "using": {
+            "foreign_key_constraint_on": "person_id"
+          }
+        }
+      ],
+      "select_permissions": [
+        {
+          "role": "board",
+          "permission": {
+            "columns": [
+              "created",
+              "data",
+              "id",
+              "message_info",
+              "person_id",
+              "status",
+              "template"
+            ],
+            "filter": {}
+          }
+        },
+        {
+          "role": "server",
+          "permission": {
+            "columns": [
+              "id",
+              "status",
+              "person_id",
+              "template",
+              "data",
+              "created",
+              "message_info"
+            ],
+            "filter": {}
+          }
+        }
+      ],
+      "update_permissions": [
+        {
+          "role": "server",
+          "permission": {
+            "columns": [
+              "message_info",
+              "status"
             ],
             "filter": {},
             "check": null

@@ -42,7 +42,7 @@ services:
       - members-db:/var/lib/postgresql/data
 
   graphql:
-    image: hasura/graphql-engine:latest
+    image: hasura/graphql-engine:v2.0.0-beta.1
     restart: always
     networks: [proxy, default]
     depends_on:

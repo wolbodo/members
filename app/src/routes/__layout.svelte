@@ -7,7 +7,7 @@
 	export async function load({ page, session }) {
 		if (session.user) {
 			token.set(session.user.token)
-		} else if ('/' !== page.path) {
+		} else if (!['/', '/auth/forgot', '/auth/reset'].includes(page.path)) {
 			return {
 				status: 302,
 				redirect: '/'
