@@ -23,6 +23,10 @@ services:
       - "yarn-cache:/usr/local/share/.cache/yarn/"
     environment:
       AUTH_JWT_SECRET: $AUTH_JWT_SECRET
+      EMAIL_HOST: $EMAIL_HOST
+      EMAIL_PORT: $EMAIL_PORT
+      EMAIL_USER: $EMAIL_USER
+      EMAIL_PASS: $EMAIL_PASS
       VITE_GRAPHQL_ENDPOINT: http://graphql.wolbodo/v1/graphql
     command: |
       sh -c "
@@ -48,7 +52,7 @@ services:
       - members-db:/var/lib/postgresql/data
 
   graphql:
-    image: hasura/graphql-engine:v2.0.0-beta.1
+    image: hasura/graphql-engine:latest
     restart: always
     depends_on:
       - db

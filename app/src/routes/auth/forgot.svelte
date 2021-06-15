@@ -4,7 +4,9 @@
   let error
 </script>
 
-<h1>Log in</h1>
+<h1>Forgot your password?</h1>
+
+<p>We'll send a password reset link to your email to get you going.</p>
 
 <form
   action="/auth/login"
@@ -25,11 +27,8 @@
     }
   }}
 >
-  <label for='name'>Name</label>
-  <input id='name' name='name' placeholder="Use your nickname" />
-
-  <label for='password'>Password</label>
-  <input id='password' name='password' type='password' />
+  <label for='email'>Email</label>
+  <input id='email' name='email' type='email' />
 
   {#if error}
     <small>{error}</small>
