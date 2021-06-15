@@ -40,6 +40,7 @@
 					{#if $session.user.roles.includes('board')}
 						<li class:active={$page.path === '/create'}><a sveltekit:prefetch href="/create">Create</a></li>
 						<li class:active={$page.path === '/mail'}><a sveltekit:prefetch href="/mail">Mail</a></li>
+						<li class:active={$page.path === '/changes'}><a sveltekit:prefetch href="/changes">Changes</a></li>
 					{/if}
 				<li><button on:click={logout}>Logout</button></li>
 			</ul>

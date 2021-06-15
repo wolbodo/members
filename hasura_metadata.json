@@ -1,5 +1,5 @@
 {
-  "resource_version": 8,
+  "resource_version": 24,
   "metadata": {
     "version": 3,
     "sources": [
@@ -10,9 +10,58 @@
           {
             "table": {
               "schema": "auth",
+              "name": "history"
+            },
+            "object_relationships": [
+              {
+                "name": "author",
+                "using": {
+                  "foreign_key_constraint_on": "author_id"
+                }
+              },
+              {
+                "name": "person",
+                "using": {
+                  "foreign_key_constraint_on": "person_id"
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "author_id",
+                    "person_id",
+                    "role",
+                    "timestamp",
+                    "new_values",
+                    "old_values"
+                  ],
+                  "filter": {}
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "auth",
               "name": "person"
             },
             "array_relationships": [
+              {
+                "name": "history",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "person_id",
+                    "table": {
+                      "schema": "auth",
+                      "name": "history"
+                    }
+                  }
+                }
+              },
               {
                 "name": "roles",
                 "using": {
