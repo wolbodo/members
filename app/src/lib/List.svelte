@@ -1,6 +1,6 @@
 <script lang="ts">
   import Table from '$lib/Table.svelte'
-  import { searchValue } from '$lib/Header/index.svelte'
+  import { searchValue, filterFields } from '$lib/Header/index.svelte'
 	import { client, gql } from '$lib/graphql'
 
   type Column = {
@@ -38,8 +38,6 @@
       }
     `)
   }
-
-    $: searchRegex = new RegExp($searchValue, 'i')
 </script>
 
 <Table>
@@ -54,7 +52,7 @@
     {#await getData()}
       <tr class="ssc-line"></tr>
     {:then { people }} 
-      {#each people.filter(person => $searchValue ? person.name.match(searchRegex) : true) as person}
+      {#each people.filter(person => filterFields($searchValue, person.name, person.firstname, person.lastname)) as person}
         <tr>
           {#each columns as { fields, href, format }}
           <td>
