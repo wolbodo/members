@@ -14,3 +14,13 @@ BEGIN
    RETURN NEW;
 END;
 $$ language 'plpgsql';
+
+CREATE OR REPLACE FUNCTION mail.notify_password_change()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO mail.entries
+    (person_id, template)
+  VALUES
+    (NEW.id, 'password-change-notification');
+  RETURN NEW;
+END; $$ LANGUAGE 'plpgsql';

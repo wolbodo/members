@@ -10,3 +10,10 @@ CREATE TRIGGER hash_password
   ON auth.person
   FOR EACH ROW EXECUTE PROCEDURE 
   auth.hash_password();
+
+CREATE TRIGGER notify_password_change
+  AFTER UPDATE OF password
+  ON auth.person
+  FOR EACH ROW EXECUTE PROCEDURE 
+  mail.notify_password_change();
+

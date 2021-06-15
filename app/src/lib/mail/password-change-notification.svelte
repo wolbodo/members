@@ -6,4 +6,4 @@
 
 <h1>Hi {person.name},</h1>
 
-<p>Just now, your Wolbodo password has changed</p>
+<p>Just now, your Wolbodo password has changed.</p>
