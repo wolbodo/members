@@ -3,6 +3,7 @@
   export let label: string
   export let type: string | SvelteComponent = 'text'
   export let value: any
+  export let format: (any) => any
 
   let changed = false
   $: if (value) {
@@ -21,6 +22,7 @@
   {:else if typeof type === 'string'}
     <input class:changed
       {...$$props}
+      value={(format&&value) ? format(value) : value || ''}
       id={name}
       on:change={() => changed = true }
     />

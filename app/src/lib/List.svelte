@@ -32,7 +32,7 @@
   const getData = async () => {
     return client.request(gql`
       {
-        people: auth_person (order_by:{id:asc}) {
+        people: auth_person (order_by:{name:asc}) {
           ${columns.flatMap(({ fields }) => fields).join(' ')}
         }
       }

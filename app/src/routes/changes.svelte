@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { DateTime } from 'luxon'
+  import { datetime } from '$lib/format';
   import { client, gql } from '$lib/graphql';
   import Table from '$lib/Table.svelte'
   import { searchValue, filterFields } from '$lib/Header/index.svelte'
@@ -34,14 +34,10 @@
   {:then { history }}
     {#each history
             .filter(({ author, person, role }) => filterFields($searchValue, author.name, person.name, role))
-            .map(change => ({...change, timestamp: DateTime.fromISO(change.timestamp)}))
       as { timestamp, new_values, old_values, role, author, person }
     }
       <tr>
-        <td>
-          {timestamp.toLocaleString()}
-          {timestamp.toLocaleString(DateTime.TIME_24_SIMPLE)}
-        </td>
+        <td>{datetime(timestamp)}</td>
         <td>{author.name}</td>
         <td>{person.name}</td>
         <td>{role}</td>
