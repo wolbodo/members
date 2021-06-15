@@ -29,6 +29,8 @@
   "type": "module",
   "dependencies": {
     "@fontsource/fira-mono": "^4.2.2",
+    "@fontsource/righteous": "^4.4.5",
+    "@fontsource/rubik": "^4.4.5",
     "@lukeed/uuid": "^2.0.0",
     "@sveltejs/kit": "^1.0.0-next.111",
     "bcryptjs": "^2.4.3",
@@ -36,6 +38,7 @@
     "graphql-request": "^3.4.0",
     "jsonwebtoken": "^8.5.1",
     "luxon": "^1.27.0",
+    "mjml": "^4.9.3",
     "proposal-temporal": "^0.8.0",
     "svelte": "^3.34.0"
   }

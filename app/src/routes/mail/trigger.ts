@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import mjml from 'mjml'
 import { JSDOM } from 'jsdom'
 
 import { serverToken } from '$lib/jwt'
@@ -62,18 +63,19 @@ export async function post({ body }) {
     throw new Error(`Template '${mail.template}' not found`)
   }
 
-  const { html, head } = template.default.render(mail)
-  const text = new JSDOM(html).window.document.body.textContent.trim()
-  console.log("Template:", html, head)
+  const { html: mjmlTemplate, head } = template.default.render(mail)
+  const output = mjml(mjmlTemplate)
+  
+  if (output.errors.length) {
+    console.log("Errors in mjml rendering:", output.errors)
+  }
 
-  // Send email
-  // setup email data with unicode symbols
   const mailOptions = {
-    from: '"WolboBot" <bot@wolbodo.nl>', // sender address
+    from: '"Wolbodo" <bot@wolbodo.nl>', // sender address
     to: mail.person.email,
     subject: head.trim(),
-    text,
-    html,
+    text: new JSDOM(output.html).window.document.body.textContent.trim(),
+    html: output.html,
   }
   const messageInfo = await transporter.sendMail(mailOptions)
 
