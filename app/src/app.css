@@ -1,9 +1,11 @@
 @import 'skeleton-screen-css';
 @import '@fontsource/fira-mono';
+@import '@fontsource/righteous';
+@import '@fontsource/rubik';
 
 :root {
-	font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	--font: "Rubit", 'Open Sans', 'Helvetica Neue', sans-serif;
+	--font-heading: "Righteous";
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
 	--primary-color: #b9c6d2;
@@ -16,6 +18,8 @@
 	--background-without-opacity: rgba(255, 255, 255, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+
+	font-family: var(--font);
 }
 
 body {
@@ -50,6 +54,10 @@ body::before {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-heading);
 }
 
 h1,
