@@ -35,5 +35,7 @@
     <small>{error}</small>
   {/if}
 
+  <a href='/auth/forgot'>Reset your password</a>
+
   <button type='submit'>Submit</button>
 </form>

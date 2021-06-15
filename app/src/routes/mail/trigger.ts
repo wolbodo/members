@@ -50,8 +50,6 @@ export async function post({ body }) {
     }
   `, { id })
 
-  console.log("Mail:", mail)
-
   if (!mail.person.email) {
     throw new Error(`No email for user '${mail.person.name}' known`)
   }
@@ -59,6 +57,11 @@ export async function post({ body }) {
 
   // Render mail template
   const template = templates[mail.template]
+
+  if (!template) {
+    throw new Error(`Template '${mail.template}' not found`)
+  }
+
   const { html, head } = template.default.render(mail)
   const text = new JSDOM(html).window.document.body.textContent.trim()
   console.log("Template:", html, head)

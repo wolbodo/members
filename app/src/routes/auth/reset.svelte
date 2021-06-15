@@ -1,15 +1,15 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+
   import { enhance } from '$lib/Form'
   let error
-  let done
 </script>
 
-<h1>Forgot your password?</h1>
-
-<p>We'll send a password reset link to your email to get you going.</p>
+<h1>Set your new password</h1>
 
 <form
-  action="/auth/forgot"
+  action="/auth/reset"
   method="post"
   use:enhance={{
     pending: () => {
@@ -17,23 +17,20 @@
     },
     result: async (res, form) => {
       console.log("Got response", res)
-      done = true
       form.reset();
+      goto('/')
     },
     error: async (res) => {
       error = await res.text()
     }
   }}
 >
-  <label for='email'>Email</label>
-  <input id='email' name='email' type='email' />
+  <label for='password'>Password</label>
+  <input id='password' name='password' type='password' />
+  <input type='hidden' name='token' value={$page.query.get('token')} />
 
   {#if error}
     <small>{error}</small>
-  {/if}
-
-  {#if done}
-    <small>If the address exists in our database, you'll shortly have an email</small>
   {/if}
 
   <button type='submit'>Submit</button>

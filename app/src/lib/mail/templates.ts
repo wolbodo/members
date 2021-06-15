@@ -1,5 +1,7 @@
-import * as test from './test.svelte';
+import * as passwordChangeNotification from './password-change-notification.svelte';
+import * as passwordReset from './password-reset.svelte';
 
 export default {
-  test
+  'password-change-notification': passwordChangeNotification,
+  'password-reset': passwordReset
 }

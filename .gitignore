@@ -9,3 +9,4 @@ db/data
 .env
 2020-11-18 ledenlijst wolbodo.csv
 members.json
+db/init/10.fixtures.sql
