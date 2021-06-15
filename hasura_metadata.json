@@ -1,333 +1,398 @@
 {
-  "version": 2,
-  "tables": [
-    {
-      "table": {
-        "schema": "auth",
-        "name": "person"
-      },
-      "array_relationships": [
-        {
-          "name": "roles",
-          "using": {
-            "foreign_key_constraint_on": {
-              "column": "person_id",
-              "table": {
-                "schema": "auth",
-                "name": "person_role"
-              }
-            }
-          }
-        }
-      ],
-      "insert_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "check": {},
-            "columns": [
-              "address",
-              "bankaccount",
-              "city",
-              "country",
-              "email",
-              "firstname",
-              "key_code",
-              "lastname",
-              "name",
-              "note",
-              "password",
-              "phone",
-              "zipcode"
-            ],
-            "backend_only": false
-          }
-        }
-      ],
-      "select_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "columns": [
-              "id",
-              "key_code",
-              "note",
-              "created",
-              "modified",
-              "address",
-              "bankaccount",
-              "city",
-              "country",
-              "email",
-              "firstname",
-              "lastname",
-              "name",
-              "password",
-              "phone",
-              "zipcode"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "member",
-          "permission": {
-            "columns": [
-              "address",
-              "city",
-              "country",
-              "created",
-              "email",
-              "firstname",
-              "id",
-              "lastname",
-              "modified",
-              "name",
-              "note",
-              "phone",
-              "zipcode"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "self",
-          "permission": {
-            "columns": [
-              "address",
-              "bankaccount",
-              "city",
-              "country",
-              "created",
-              "email",
-              "firstname",
-              "id",
-              "lastname",
-              "modified",
-              "name",
-              "note",
-              "password",
-              "phone",
-              "zipcode"
-            ],
-            "filter": {
-              "id": {
-                "_eq": "X-Hasura-User-Id"
-              }
-            }
-          }
-        },
-        {
-          "role": "server",
-          "permission": {
-            "columns": [
-              "email",
-              "id",
-              "name",
-              "password"
-            ],
-            "filter": {}
-          }
-        }
-      ],
-      "update_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "columns": [
-              "address",
-              "bankaccount",
-              "city",
-              "country",
-              "email",
-              "firstname",
-              "key_code",
-              "lastname",
-              "name",
-              "note",
-              "password",
-              "phone",
-              "zipcode"
-            ],
-            "filter": {},
-            "check": null
-          }
-        },
-        {
-          "role": "self",
-          "permission": {
-            "columns": [
-              "address",
-              "bankaccount",
-              "city",
-              "country",
-              "email",
-              "password",
-              "phone",
-              "zipcode"
-            ],
-            "filter": {
-              "id": {
-                "_eq": "X-Hasura-User-Id"
-              }
+  "resource_version": 6,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "default",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "schema": "auth",
+              "name": "person"
             },
-            "check": null
+            "array_relationships": [
+              {
+                "name": "roles",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "person_id",
+                    "table": {
+                      "schema": "auth",
+                      "name": "person_role"
+                    }
+                  }
+                }
+              }
+            ],
+            "insert_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "check": {},
+                  "columns": [
+                    "address",
+                    "bankaccount",
+                    "city",
+                    "country",
+                    "email",
+                    "firstname",
+                    "key_code",
+                    "lastname",
+                    "name",
+                    "note",
+                    "password",
+                    "phone",
+                    "zipcode"
+                  ],
+                  "backend_only": false
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "key_code",
+                    "note",
+                    "created",
+                    "modified",
+                    "address",
+                    "bankaccount",
+                    "city",
+                    "country",
+                    "email",
+                    "firstname",
+                    "lastname",
+                    "name",
+                    "password",
+                    "phone",
+                    "zipcode"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "member",
+                "permission": {
+                  "columns": [
+                    "address",
+                    "city",
+                    "country",
+                    "created",
+                    "email",
+                    "firstname",
+                    "id",
+                    "lastname",
+                    "modified",
+                    "name",
+                    "note",
+                    "phone",
+                    "zipcode"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "self",
+                "permission": {
+                  "columns": [
+                    "address",
+                    "bankaccount",
+                    "city",
+                    "country",
+                    "created",
+                    "email",
+                    "firstname",
+                    "id",
+                    "lastname",
+                    "modified",
+                    "name",
+                    "note",
+                    "password",
+                    "phone",
+                    "zipcode"
+                  ],
+                  "filter": {
+                    "id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  }
+                }
+              },
+              {
+                "role": "server",
+                "permission": {
+                  "columns": [
+                    "email",
+                    "id",
+                    "name",
+                    "password"
+                  ],
+                  "filter": {}
+                }
+              }
+            ],
+            "update_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "columns": [
+                    "address",
+                    "bankaccount",
+                    "city",
+                    "country",
+                    "email",
+                    "firstname",
+                    "key_code",
+                    "lastname",
+                    "name",
+                    "note",
+                    "password",
+                    "phone",
+                    "zipcode"
+                  ],
+                  "filter": {},
+                  "check": null
+                }
+              },
+              {
+                "role": "self",
+                "permission": {
+                  "columns": [
+                    "address",
+                    "bankaccount",
+                    "city",
+                    "country",
+                    "email",
+                    "password",
+                    "phone",
+                    "zipcode"
+                  ],
+                  "filter": {
+                    "id": {
+                      "_eq": "X-Hasura-User-Id"
+                    }
+                  },
+                  "check": null
+                }
+              },
+              {
+                "role": "server",
+                "permission": {
+                  "columns": [
+                    "password"
+                  ],
+                  "filter": {},
+                  "check": null
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "auth",
+              "name": "person_role"
+            },
+            "object_relationships": [
+              {
+                "name": "person",
+                "using": {
+                  "foreign_key_constraint_on": "person_id"
+                }
+              }
+            ],
+            "insert_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "check": {},
+                  "columns": [
+                    "person_id",
+                    "role"
+                  ],
+                  "backend_only": false
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "person_id",
+                    "role",
+                    "valid_from",
+                    "valid_till"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "member",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "person_id",
+                    "role",
+                    "valid_from",
+                    "valid_till"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "self",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "person_id",
+                    "role",
+                    "valid_from",
+                    "valid_till"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "server",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "person_id",
+                    "role",
+                    "valid_from",
+                    "valid_till"
+                  ],
+                  "filter": {}
+                }
+              }
+            ],
+            "update_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "columns": [
+                    "valid_from",
+                    "valid_till"
+                  ],
+                  "filter": {},
+                  "check": null
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "schema": "mail",
+              "name": "entries"
+            },
+            "object_relationships": [
+              {
+                "name": "person",
+                "using": {
+                  "foreign_key_constraint_on": "person_id"
+                }
+              }
+            ],
+            "insert_permissions": [
+              {
+                "role": "server",
+                "permission": {
+                  "check": {},
+                  "columns": [
+                    "data",
+                    "person_id",
+                    "template"
+                  ],
+                  "backend_only": false
+                }
+              }
+            ],
+            "select_permissions": [
+              {
+                "role": "board",
+                "permission": {
+                  "columns": [
+                    "created",
+                    "data",
+                    "id",
+                    "message_info",
+                    "person_id",
+                    "status",
+                    "template"
+                  ],
+                  "filter": {}
+                }
+              },
+              {
+                "role": "server",
+                "permission": {
+                  "columns": [
+                    "id",
+                    "status",
+                    "person_id",
+                    "template",
+                    "data",
+                    "created",
+                    "message_info"
+                  ],
+                  "filter": {}
+                }
+              }
+            ],
+            "update_permissions": [
+              {
+                "role": "server",
+                "permission": {
+                  "columns": [
+                    "message_info",
+                    "status"
+                  ],
+                  "filter": {},
+                  "check": null
+                }
+              }
+            ],
+            "event_triggers": [
+              {
+                "name": "mail-trigger",
+                "definition": {
+                  "enable_manual": false,
+                  "insert": {
+                    "columns": "*"
+                  }
+                },
+                "retry_conf": {
+                  "num_retries": 0,
+                  "interval_sec": 10,
+                  "timeout_sec": 60
+                },
+                "webhook": "http://app/mail/trigger"
+              }
+            ]
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "use_prepared_statements": true,
+            "database_url": {
+              "from_env": "HASURA_GRAPHQL_DATABASE_URL"
+            },
+            "isolation_level": "read-committed",
+            "pool_settings": {
+              "connection_lifetime": 600,
+              "retries": 1,
+              "idle_timeout": 180,
+              "max_connections": 50
+            }
           }
         }
-      ]
-    },
-    {
-      "table": {
-        "schema": "auth",
-        "name": "person_role"
-      },
-      "object_relationships": [
-        {
-          "name": "person",
-          "using": {
-            "foreign_key_constraint_on": "person_id"
-          }
-        }
-      ],
-      "insert_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "check": {},
-            "columns": [
-              "person_id",
-              "role"
-            ],
-            "backend_only": false
-          }
-        }
-      ],
-      "select_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "columns": [
-              "id",
-              "person_id",
-              "role",
-              "valid_from",
-              "valid_till"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "member",
-          "permission": {
-            "columns": [
-              "id",
-              "person_id",
-              "role",
-              "valid_from",
-              "valid_till"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "self",
-          "permission": {
-            "columns": [
-              "id",
-              "person_id",
-              "role",
-              "valid_from",
-              "valid_till"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "server",
-          "permission": {
-            "columns": [
-              "id",
-              "person_id",
-              "role",
-              "valid_from",
-              "valid_till"
-            ],
-            "filter": {}
-          }
-        }
-      ],
-      "update_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "columns": [
-              "valid_from",
-              "valid_till"
-            ],
-            "filter": {},
-            "check": null
-          }
-        }
-      ]
-    },
-    {
-      "table": {
-        "schema": "mail",
-        "name": "entries"
-      },
-      "object_relationships": [
-        {
-          "name": "person",
-          "using": {
-            "foreign_key_constraint_on": "person_id"
-          }
-        }
-      ],
-      "select_permissions": [
-        {
-          "role": "board",
-          "permission": {
-            "columns": [
-              "created",
-              "data",
-              "id",
-              "message_info",
-              "person_id",
-              "status",
-              "template"
-            ],
-            "filter": {}
-          }
-        },
-        {
-          "role": "server",
-          "permission": {
-            "columns": [
-              "id",
-              "status",
-              "person_id",
-              "template",
-              "data",
-              "created",
-              "message_info"
-            ],
-            "filter": {}
-          }
-        }
-      ],
-      "update_permissions": [
-        {
-          "role": "server",
-          "permission": {
-            "columns": [
-              "message_info",
-              "status"
-            ],
-            "filter": {},
-            "check": null
-          }
-        }
-      ]
-    }
-  ]
+      }
+    ]
+  }
 }
