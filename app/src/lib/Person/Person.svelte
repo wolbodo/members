@@ -1,5 +1,6 @@
 <script lang='ts'>
   import { onMount } from 'svelte'
+  import { datetime } from '$lib/format'
   import { client, gql } from '$lib/graphql'
   import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form'
   import { goto } from '$app/navigation';
@@ -49,8 +50,8 @@
     bankaccount: { },
     key_code: { },
     id: { readonly: true },
-    created: { readonly: true },
-    modified: { readonly: true },
+    created: { readonly: true, format: datetime },
+    modified: { readonly: true, format: datetime  },
     password: { type: 'password' },
     note: { type: 'textarea' },
     roles: { type: RoleSelector, options: roles }
@@ -117,18 +118,6 @@
     display: grid;
     grid-template-columns: repeat(2,auto);
     grid-column-gap: 1rem;
-  }
-
-  section.roles {
-    display: block;
-  }
-  .roles label {
-    display: inline;
-    margin: 0;
-    padding: 0;
-  }
-  .roles input {
-    width: auto;
   }
 
   @media screen and (max-width: 500px) {

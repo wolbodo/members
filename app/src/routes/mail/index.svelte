@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { DateTime } from 'luxon'
   import { client, gql } from '$lib/graphql';
+  import { datetime } from '$lib/format';
   import Table from '$lib/Table.svelte'
   import { searchValue, filterFields } from '$lib/Header/index.svelte'
 </script>
@@ -27,18 +27,13 @@
   )}
     <tr><td colspan=4>Loading</td></tr>
   {:then { mails }}
-    {#each mails
-            .filter(mail => filterFields($searchValue, mail.person.name, mail.person.email, mail.status, mail.template))
-            .map( mail => ({...mail, created: DateTime.fromISO(mail.created) }))
+    {#each mails.filter(mail => filterFields($searchValue, mail.person.name, mail.person.email, mail.status, mail.template))
       as { status, person, template, created }}
       <tr>
         <td>{status}</td>
         <td><a href='mailto:{person.email}'>{person.name}</a></td>
         <td>{template}</td>
-        <td>
-          {created.toLocaleString()}
-          {created.toLocaleString(DateTime.TIME_24_SIMPLE)}
-        </td>
+        <td>{datetime(created)}</td>
       </tr>
     {/each}
   {/await}

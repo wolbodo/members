@@ -20,8 +20,6 @@
     const validRoles = session.user.roles.filter(role => role === 'self' ? isSelf : true)
     const role = ['board', 'self', 'member'].find(option => validRoles.includes(option))
 
-    console.log("tst", id, isSelf, validRoles, role)
-
     const { person: [person] } = await client.request(gql`
         query getPerson($name:String) {
           person: auth_person(where:{name:{_ilike:$name}}, limit:1) {
