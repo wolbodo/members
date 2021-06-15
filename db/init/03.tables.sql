@@ -60,4 +60,23 @@ CREATE TABLE auth.person_role (
 );
 CREATE INDEX ON auth.person_role(person_id);
 
+
+CREATE TYPE mail.status AS ENUM ('new', 'sent', 'error');
+CREATE TABLE mail.entries (
+  -- Used for representing mail sent to a user and it's status
+  id                SERIAL,
+  status            mail.status         DEFAULT 'new',
+
+  person_id         INTEGER             NOT NULL REFERENCES auth.person(id),
+  template          VARCHAR(255)        NOT NULL,
+  data              JSONB               DEFAULT '{}',
+
+  created           TIMESTAMPTZ         DEFAULT NOW(),
+
+  message_info      JSONB               DEFAULT '{}',
+
+  PRIMARY KEY (id)
+);
+
+
 COMMIT;
