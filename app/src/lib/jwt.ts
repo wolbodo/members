@@ -41,11 +41,11 @@ export async function verifyToken(token : string) : Promise<JSON> {
   return await jwt.verify(token, SECRET.key)
 }
 
-export function serverToken(username : string, role = 'server') : string {
+export function serverToken(username : string, id = -1, role = 'server') : string {
   return createToken({
-    'name': username,
-    'id': '-1',
-    'roles': [role],
+    id: id.toString(),
+    name: username,
+    roles: [role],
   }, {
     subject: '-1'
   })

@@ -13,9 +13,10 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
     return { status: 400 }
   }
     
-	token.set(serverToken('password-reset'))
-
   const { sub, id } = await verifyToken(resetToken)
+
+  // Edit on behalf of the user
+	token.set(serverToken('password-reset', id))
 
   if (sub !== 'password-reset') throw new Error('Token invalid')
 
