@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Table from '$lib/Table.svelte'
   import { searchValue } from '$lib/Header/index.svelte'
 	import { client, gql } from '$lib/graphql'
 
@@ -41,11 +42,13 @@
     $: searchRegex = new RegExp($searchValue, 'i')
 </script>
 
-<table>
+<Table>
   <thead>
-    {#each columns as { label }}
-      <th>{label}</th>
-    {/each}
+    <tr>
+      {#each columns as { label }}
+        <th>{label}</th>
+      {/each}
+    </tr>
   </thead>
   <tbody>
     {#await getData()}
@@ -74,39 +77,4 @@
       {/each}
     {/await}
   </tbody>
-</table>
-
-<style>
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  th {
-    background-color: var(--tertiary-color);
-    position: sticky;
-    top: 0;
-    font-weight: bold;
-    border-bottom: 1px solid var(--accent-color);
-    text-align: left;
-  }
-  th, td {
-    line-height: 1.4;
-    padding-right: .5rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-  th:first-child, td:first-child {
-    padding-left: 1rem;
-  }
-  tr {
-    background-color: var(--pure-white);
-    border-bottom: 1px solid var(--primary-color);
-  }
-
-  tr:hover {
-    background-color: var(--secondary-color);
-  }
-  tr:global(.highlight) {
-    background-color: var(--quaternary-color);
-  }
-</style>
+</Table>
