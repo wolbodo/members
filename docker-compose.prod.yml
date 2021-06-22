@@ -47,6 +47,8 @@ services:
     image: hasura/graphql-engine:v2.0.0-beta.2
     restart: always
     networks: [proxy, default]
+    expose:
+      - "80"
     depends_on:
       - db
     command: >
