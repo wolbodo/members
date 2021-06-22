@@ -16,6 +16,8 @@ services:
       - graphql
     networks: [proxy, default]
     command: node .
+    expose:
+      - "80"
     environment:
       VITE_GRAPHQL_ENDPOINT: https://graphql.wolbodo.nl/v1/graphql
       PORT: 80
@@ -42,7 +44,7 @@ services:
       - members-db:/var/lib/postgresql/data
 
   graphql:
-    image: hasura/graphql-engine:v2.0.0-beta.1
+    image: hasura/graphql-engine:v2.0.0-beta.2
     restart: always
     networks: [proxy, default]
     depends_on:
