@@ -7,7 +7,6 @@
 
 <h1>Changes</h1>
 
-
 <Table>
   <thead>
     <tr>
@@ -33,12 +32,12 @@
     <tr><td colspan=5>Loading</td></tr>
   {:then { history }}
     {#each history
-            .filter(({ author, person, role }) => filterFields($searchValue, author.name, person.name, role))
+            .filter(({ author, person, role }) => filterFields($searchValue, author?.name, person?.name, role))
       as { timestamp, new_values, old_values, role, author, person }
     }
       <tr>
         <td>{datetime(timestamp)}</td>
-        <td>{author.name}</td>
+        <td>{author?.name ?? ''}</td>
         <td>{person.name}</td>
         <td>{role}</td>
         <td>{

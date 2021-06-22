@@ -52,7 +52,7 @@
     {#await getData()}
       <tr class="ssc-line"></tr>
     {:then { people }} 
-      {#each people.filter(person => filterFields($searchValue, person.name, person.firstname, person.lastname)) as person}
+      {#each people.filter(person => filterFields($searchValue, person.name, person.firstname, person.lastname, person.email)) as person}
         <tr>
           {#each columns as { fields, href, format }}
           <td>
