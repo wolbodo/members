@@ -29,7 +29,7 @@
     }
   ]
 
-  const getData = async () => {
+  const getData = async (columns) => {
     return client.request(gql`
       {
         people: auth_person (order_by:{name:asc}) {
@@ -49,7 +49,7 @@
     </tr>
   </thead>
   <tbody>
-    {#await getData()}
+    {#await getData(columns)}
       <tr class="ssc-line"></tr>
     {:then { people }} 
       {#each people.filter(person => filterFields($searchValue, person.name, person.firstname, person.lastname, person.email)) as person}

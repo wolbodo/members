@@ -1,6 +1,5 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { send } from '$lib/mail'
 import type { Locals } from '$lib/types';
 import { serverToken, verifyToken } from '$lib/jwt'
 import { client, token, gql } from '$lib/graphql'
