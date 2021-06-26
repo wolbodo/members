@@ -1,9 +1,15 @@
 #Members
 
 Postgres + Postgraphile + svelte
-
-
 ## Running the backend:
+
+- Install docker and docker-compose (v1.29)
+- Install yarn `sudo npm i -g yarn`
+- Copy .env.template to .env and fill it in.
+  - Make sure the `AUTH_JWT_SECRET` has a key property of at least 32 characters
+- Move or copy db/sample/10.fixtures.sql to db/init/10.fixtures.sql
+- docker network create wolbodo
+- If you'd like you can setup docker-hostmanager
 
 - install docker and docker-compose
 - $: docker-compose build

@@ -1,4 +1,4 @@
-import { parseToken } from '$lib/jwt'
+import { verifyToken } from '$lib/jwt'
 
 const getCookies = ({headers: {cookie}}) => Object.fromEntries(
   cookie
@@ -8,16 +8,20 @@ const getCookies = ({headers: {cookie}}) => Object.fromEntries(
 );
 
 /** @type {import('@sveltejs/kit').GetSession} */
-export function getSession(request) {
+export async function getSession(request) {
   const { token } = getCookies(request)
   if (token) {
-    const user = parseToken(token)
-    return {
-      user: {
-        ...user,
-        token
-      }
-    };
+    try {
+      const user = await verifyToken(token)
+      return {
+        user: {
+          ...user,
+          token
+        }
+      };
+    } catch (e) {
+      return {}
+    }
   }
   return {}
 }

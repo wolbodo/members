@@ -37,7 +37,9 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 		)
 
 		if (ok) {
+			// Remove the password else it will end up at the client.
 			delete person.password
+
 			const roles = [
 				...person.roles.map(({ role }) => role),
 				'self'
@@ -46,7 +48,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 				...person,
 				roles: ALL_ROLES.filter(role => roles.includes(role))
 			}
-			delete user.password
+
 			user.token = createToken({
 				...user,
 				id: user.id.toString()
@@ -57,7 +59,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 			return {
 				status: 200,
 				headers: {
-					'Set-Cookie': cookie(user.token, Temporal.now.plainDateTimeISO().add(Temporal.Duration.from({hours: 1})))
+					'Set-Cookie': cookie(user.token, Temporal.now.plainDateTimeISO().add(Temporal.Duration.from({days: 1})))
 				},
 				body: user
 			}
