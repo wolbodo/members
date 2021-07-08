@@ -1,19 +1,24 @@
 <script lang="ts">
-  import { getPermissions } from '$lib/permissions'
+  import { goto } from '$app/navigation'
   import { session } from '$app/stores';
+  import { getPermissions } from '$lib/permissions'
 
   import { gql } from '$lib/graphql'
-  import { Person } from '$lib/Person'
+  import Detail from '$lib/Person/Detail.svelte'
 
   $: permissions = getPermissions($session.user?.roles)
 </script>
 
-<Person {permissions} mutation={gql`
-  mutation addPerson($formdata:auth_person_insert_input!) {
-    insert_auth_person_one(object:$formdata) {
-      id
-    }
-}`}/>
+<Detail
+  {permissions}
+  on:save={({ detail: { new_person }}) => goto(`/m/${new_person.name.toLowerCase()}`)}
+  mutation={gql`
+    mutation addPerson($formdata:auth_person_insert_input!) {
+      new_person: insert_auth_person_one(object:$formdata) {
+        id name
+      }
+  }`}
+/>
 
 <style>
   form {

@@ -1,9 +1,10 @@
 <script lang='ts'>
-  import { onMount } from 'svelte'
+  import { onMount, createEventDispatcher } from 'svelte'
   import { datetime } from '$lib/format'
   import { client, gql } from '$lib/graphql'
   import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form'
-  import { goto } from '$app/navigation';
+
+  const dispatch = createEventDispatcher();
 
   let error
   export let mutation, variables
@@ -81,7 +82,7 @@
   role,
   mutation, variables,
   error: (_, err) => error = err.toString(),
-  result: data => goto('/')
+  result: data => dispatch('save', data)
 }}>
 
   {#each fieldInfo as group }

@@ -44,7 +44,7 @@
 
 <script lang="ts">
   import { setContext } from 'svelte'
-  import { Person } from '$lib/Person'
+  import Detail from '$lib/Person/Detail.svelte'
   
   import { session } from '$app/stores';
   import { goto } from '$app/navigation';
@@ -60,7 +60,10 @@
 </script>
 
 <content>
-  <Person {person} {permissions}
+  <Detail
+    on:save={data => goto('/')}
+    {person}
+    {permissions}
     {role}
     mutation={gql`
       mutation updatePerson($id:Int!, $formdata:auth_person_set_input) {
