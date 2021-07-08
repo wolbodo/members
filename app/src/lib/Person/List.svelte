@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+  
   import Table from '$lib/Table.svelte'
   import { searchValue, filterFields } from '$lib/Header/index.svelte'
 	import { client, gql } from '$lib/graphql'
+
+  export let where = null
 
   type Column = {
     label: string;
@@ -29,10 +33,23 @@
     }
   ]
 
-  const getData = async (columns) => {
+  interface Person {
+    name: string
+    email: string
+    phone: string
+    address: string
+    city: string
+    firstname: string
+    lastname: string
+    roles: {
+      role: string
+    }[]
+  }
+
+  const getData = async (columns) : Promise<{ people: Person[]}> => {
     return client.request(gql`
       {
-        people: auth_person (order_by:{name:asc}) {
+        people: auth_person (order_by:{name:asc} ${where ? `where: ${where}` : ''}) {
           ${columns.flatMap(({ fields }) => fields).join(' ')}
         }
       }
@@ -53,7 +70,7 @@
       <tr class="ssc-line"></tr>
     {:then { people }} 
       {#each people.filter(person => filterFields($searchValue, person.name, person.firstname, person.lastname, person.email)) as person}
-        <tr>
+        <tr on:click|stopPropagation={() => goto(`m/${person.name.toLowerCase()}`)}>
           {#each columns as { fields, href, format }}
           <td>
             {#if href}
