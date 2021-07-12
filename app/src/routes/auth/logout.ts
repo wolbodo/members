@@ -6,6 +6,6 @@ export const post: RequestHandler<Locals, FormData> = () => ({
   status: 200,
   body: null,
   headers: {
-    'Set-Cookie': cookie('token', '', { expires: new Date(1970) })
+    'Set-Cookie': setCookie('token', '', { expires: new Date(1970), Domain: 'wolbodo.nl' })
   }
 })
