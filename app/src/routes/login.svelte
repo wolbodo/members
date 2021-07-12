@@ -20,10 +20,17 @@
   
   import { session, page } from '$app/stores';
   import { enhance } from '$lib/Form'
+
   let error
+  const redirect = $page.query.get('redirect')
+
 </script>
 
 <h1>Log in</h1>
+
+{#if redirect}
+  <p>After logging in you will be redirected to <a href={redirect}>{redirect}</a></p>
+{/if}
 
 <form
   action="/auth/login"
@@ -37,7 +44,6 @@
         ...$session,
         user: await res.json()
       }
-      const redirect = $page.query.get('redirect')
       goto(redirect ? redirect : '/')
     },
     error: async (res) => {
