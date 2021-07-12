@@ -40,11 +40,11 @@
       error = null
     },
     result: async (res, form) => {
+      goto(redirect ? redirect : '/')
       $session = {
         ...$session,
         user: await res.json()
       }
-      goto(redirect ? redirect : '/')
     },
     error: async (res) => {
       error = await res.text()
@@ -61,7 +61,7 @@
     <small>{error}</small>
   {/if}
 
-  <a href='/auth/forgot'>Reset your password</a>
+  <p><a href='/auth/forgot'>Reset your password</a></p>
 
   <button type='submit'>Submit</button>
 </form>
