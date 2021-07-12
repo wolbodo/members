@@ -1,8 +1,5 @@
 <script lang='ts'>
-  import { session } from '$app/stores';
 	import List from '$lib/Person/List.svelte'
-	import Login from '$lib/Login.svelte'
-
 </script>
 
 <svelte:head>
@@ -10,19 +7,15 @@
 </svelte:head>
 
 <section>
-	{#if $session.user}
-		<List where={`{
-			roles: {
-				_or: [
-					{valid_till: {_gte: "NOW()"}},
-					{valid_till: {_is_null: true}}
-				],
-				valid_from: {_lte: "NOW()"},
-				role:{_eq:"member"}
-			}}`} />
-	{:else}
-		<Login />
-	{/if}
+	<List where={`{
+		roles: {
+			_or: [
+				{valid_till: {_gte: "NOW()"}},
+				{valid_till: {_is_null: true}}
+			],
+			valid_from: {_lte: "NOW()"},
+			role:{_eq:"member"}
+		}}`} />
 </section>
 
 <style>
