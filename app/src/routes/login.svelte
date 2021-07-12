@@ -18,7 +18,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
   
-  import { session } from '$app/stores';
+  import { session, page } from '$app/stores';
   import { enhance } from '$lib/Form'
   let error
 </script>
@@ -37,7 +37,8 @@
         ...$session,
         user: await res.json()
       }
-      goto('/')
+      const redirect = $page.query.get('redirect')
+      goto(redirect ? redirect : '/')
     },
     error: async (res) => {
       error = await res.text()
