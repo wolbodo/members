@@ -1,3 +1,20 @@
+<script context='module'>
+	import { token } from '$lib/graphql'
+
+	/**
+	 * @type {import('@sveltejs/kit').Load}
+	 */
+	export async function load({ session }) {
+		if (session.user) {
+      return {
+        status: 302, 
+        redirect: '/'
+      }
+		}
+
+		return {}
+	}
+</script>
 <script lang="ts">
   import { goto } from '$app/navigation'
   

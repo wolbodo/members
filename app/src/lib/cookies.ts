@@ -17,7 +17,7 @@ interface CookieAttributes {
   [key: string]: string | boolean | Date
 }
 
-export const setCookie = (name: string, value: string, { path = '/', expires, httpOnly = true, secure , ...otherAttrs } : CookieAttributes = {}) : string => {
+export const setCookie = (name: string, value: string, { path = '/', expires, httpOnly = true, secure = true , ...otherAttrs } : CookieAttributes = {}) : string => {
   expires = expires ?? datetimeAfter(60 * 60 * 24);
 
   const parts = [
