@@ -5,7 +5,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import type { Locals } from '$lib/types';
 import { serverToken, createToken } from '$lib/jwt'
 import { client, token, gql } from '$lib/graphql'
-import { cookie } from './_cookie';
+import { setCookie } from '$lib/cookies';
 
 // These are the only roles passed to the token, and in this order.
 const ALL_ROLES = ['member', 'board', 'admin', 'self']
@@ -59,7 +59,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 			return {
 				status: 200,
 				headers: {
-					'Set-Cookie': cookie(user.token, Temporal.now.plainDateTimeISO().add(Temporal.Duration.from({days: 1})))
+					'Set-Cookie': setCookie('token', user.token, { Domain: 'wolbodo.nl' })
 				},
 				body: user
 			}
