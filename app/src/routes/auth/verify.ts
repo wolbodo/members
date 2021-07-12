@@ -10,6 +10,7 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
 
   try {
     const { name, email } = await verifyToken(token)
+    console.log("Token ok", name)
     return {
       status: 200,
       body: {},
