@@ -17,15 +17,14 @@ interface CookieAttributes {
   [key: string]: string | boolean | Date
 }
 
-export const setCookie = (name: string, value: string, { path, expires, httpOnly, secure , ...otherAttrs } : CookieAttributes = { path: '/', httpOnly: true}) : string => {
+export const setCookie = (name: string, value: string, { path = '/', expires, httpOnly = true, secure , ...otherAttrs } : CookieAttributes = {}) : string => {
   expires = expires ?? datetimeAfter(60 * 60 * 24);
 
   const parts = [
     `${name}=${value}`,
     `Path=${path}`,
     `Expires=${expires}`
-  ];
-  parts.concat(Object.entries(otherAttrs).map(([key, value]) => `${key}=${value}`))
+  ].concat(Object.entries(otherAttrs).map(([key, value]) => `${key}=${value}`))
 
   if (secure) {
     parts.push(`Secure`);
