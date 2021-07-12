@@ -43,7 +43,7 @@
 						<li class:active={$page.path === '/mail'}><a sveltekit:prefetch href="/mail">Mail</a></li>
 						<li class:active={$page.path === '/changes'}><a sveltekit:prefetch href="/changes">Changes</a></li>
 					{/if}
-				<li><button on:click={logout}>Logout</button></li>
+				<li class:active={$page.path === '/logout'}><a sveltekit:prefetch href="/logout">Logout</a></li>
 			</ul>
 		</nav>
 	{/if}
@@ -121,22 +121,7 @@
 		border-top: var(--size) solid var(--accent-color);
 	}
 
-	button:hover:not(:disabled) {
-    background-color: initial;
-}
-	button {
-    background-color: initial;
-    border: initial;
-    outline: initial;
-    border-radius: initial;
-		letter-spacing: initial;
-    margin-top: initial;
-    line-height: initial;
-    min-width: initial;
-    cursor: pointer;
-	}
-
-	nav a, nav button {
+	nav a {
 		display: flex;
 		height: 100%;
 		align-items: center;
@@ -150,7 +135,7 @@
 		transition: color 0.2s linear;
 	}
 
-	a:hover, button:hover {
+	a:hover {
 		color: var(--accent-color);
 	}
 </style>
