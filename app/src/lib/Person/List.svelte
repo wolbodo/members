@@ -70,7 +70,7 @@
       <tr class="ssc-line"></tr>
     {:then { people }} 
       {#each people.filter(person => filterFields($searchValue, person.name, person.firstname, person.lastname, person.email)) as person}
-        <tr on:click|stopPropagation={() => goto(`m/${person.name.toLowerCase()}`)}>
+        <tr on:click|stopPropagation={() => goto(`/m/${person.name.toLowerCase()}`)}>
           {#each columns as { fields, href, format }}
           <td>
             {#if href}

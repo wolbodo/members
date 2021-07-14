@@ -1,15 +1,14 @@
-<script context='module'>
-	/**
-	 * @type {import('@sveltejs/kit').Load}
-	 */
-	export async function load({ session, fetch }) {
-		if (session.user) {
-      await fetch('/auth/logout', { method: 'post' })
-		}
+<script lang="ts">
+	import { onMount } from 'svelte'
+	
+	import { goto } from '$app/navigation'
+	import { session } from '$app/stores'
+	
+	onMount(async () => {
+		await fetch('/auth/logout', { method: 'post' })
 
-    return {
-      status: 302, 
-      redirect: '/login'
-    }
-	}
+		console.log("Redirecting")
+		$session = {}
+		goto('/login')
+	})
 </script>

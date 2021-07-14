@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs'
-import { Temporal } from 'proposal-temporal'
 import type { RequestHandler } from '@sveltejs/kit';
 
 import type { Locals } from '$lib/types';
