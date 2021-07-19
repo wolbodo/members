@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
     user: process.env['EMAIL_USER'],
     pass: process.env['EMAIL_PASS'],
   },
-  secure: [465].includes(parseInt(process.env['EMAIL_PORT'])), // true for 465, false for other ports
+  secure: process.env['EMAIL_SECURE'] === 'true' || [465].includes(parseInt(process.env['EMAIL_PORT'])), // true for 465, false for other ports
   tls: {
     rejectUnauthorized: false
   },
@@ -34,7 +34,7 @@ export async function post({ body }) {
         new: { id },
       },
     },
-  } = body
+  } = body  
 
 	const _token = serverToken('mail')
 	token.set(_token)

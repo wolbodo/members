@@ -5,7 +5,6 @@
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, session }) {
-		console.log("This load")
 		if (session.user) {
 			token.set(session.user.token)
 		} else if (!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(page.path)) {
