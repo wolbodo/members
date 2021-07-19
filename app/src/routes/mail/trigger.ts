@@ -71,7 +71,7 @@ export async function post({ body }) {
   }
 
   const mailOptions = {
-    from: '"Wolbodo" <bot@wolbodo.nl>', // sender address
+    from: '"Wolbodo" <it@wolbodo.nl>', // sender address
     to: mail.person.email,
     subject: head.trim(),
     text: new JSDOM(output.html).window.document.body.textContent.trim(),
