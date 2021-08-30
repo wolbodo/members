@@ -15,11 +15,12 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
 	const { token } = getCookies(headers.cookie);
 
   try {
-    const { name } = await verifyToken(token)
-      
+    const { name, roles } = await verifyToken(token)
+
+    const isBoard = roles.includes('board')
     const mercureToken = jwt.sign({
-      name,
       mercure: {
+        payload: { name, isBoard },
         subscribe: ["*"],
         publish: ["*"],
       }
