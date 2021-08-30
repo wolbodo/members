@@ -23,6 +23,7 @@ export const get: RequestHandler<Locals, FormData> = () => {
     status: 200,
     body: null,
     headers: {
+      'Access-Control-Allow-Origin': 'https://votes.wolbodo.nl',
       'Set-Cookie': setCookie('mercureAuthorization', token, { secure: false, Domain: MERCURE_DOMAIN,  SameSite: 'Lax' })
     }
   }
