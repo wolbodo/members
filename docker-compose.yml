@@ -23,6 +23,8 @@ services:
       - "yarn-cache:/usr/local/share/.cache/yarn/"
     environment:
       AUTH_JWT_SECRET: $AUTH_JWT_SECRET
+      MERCURE_JWT_SECRET: $MERCURE_JWT_SECRET
+      MERCURE_DOMAIN: $MERCURE_DOMAIN
       EMAIL_HOST: $EMAIL_HOST
       EMAIL_PORT: $EMAIL_PORT
       EMAIL_USER: $EMAIL_USER
