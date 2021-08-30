@@ -2,30 +2,41 @@
 
 import type { RequestHandler } from '@sveltejs/kit';
 import type { Locals } from '$lib/types';
-import { setCookie } from '$lib/cookies';
+import { setCookie, getCookies } from '$lib/cookies';
+import { verifyToken } from '$lib/jwt';
 import jwt from 'jsonwebtoken'
 
 const MERCURE_JWT_SECRET = process.env['MERCURE_JWT_SECRET']
 const MERCURE_DOMAIN = process.env['MERCURE_DOMAIN']
 
 
-export const get: RequestHandler<Locals, FormData> = () => {
+export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
   // Check login
-  
-  const token = jwt.sign({
-    mercure: {
-      subscribe: ["*"],
-      publish: ["*"],
-    }
-  }, MERCURE_JWT_SECRET)
+	const { token } = getCookies(headers.cookie);
 
-  return {
-    status: 200,
-    body: null,
-    headers: {
-      'Access-Control-Allow-Origin': 'https://votes.wolbodo.nl',
-      'Access-Control-Allow-Credentials': true,
-      'Set-Cookie': setCookie('mercureAuthorization', token, { Domain: MERCURE_DOMAIN,  SameSite: 'None' })
+  try {
+    const { name } = await verifyToken(token)
+      
+    const mercureToken = jwt.sign({
+      name,
+      mercure: {
+        subscribe: ["*"],
+        publish: ["*"],
+      }
+    }, MERCURE_JWT_SECRET)
+
+    return {
+      status: 200,
+      body: null,
+      headers: {
+        'Access-Control-Allow-Origin': 'https://votes.wolbodo.nl',
+        'Access-Control-Allow-Credentials': true,
+        'Set-Cookie': setCookie('mercureAuthorization', mercureToken, { Domain: MERCURE_DOMAIN,  SameSite: 'None' })
+      }
     }
+  } catch (e) {
+    console.error("Error verifying token", e)
+    return { status: 401, body: {} }
   }
+  
 }
