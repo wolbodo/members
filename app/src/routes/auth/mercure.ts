@@ -25,12 +25,16 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
       }
     }, MERCURE_JWT_SECRET)
 
+    const [ref] = headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
+
     return {
       status: 200,
       body: null,
       headers: {
-        'Access-Control-Allow-Origin': 'https://votes.wolbodo.nl',
-        'Access-Control-Allow-Credentials': true,
+        ...ref && {
+              'Access-Control-Allow-Origin': ref,
+              'Access-Control-Allow-Credentials': true,
+        },
         'Set-Cookie': setCookie('mercureAuthorization', mercureToken, { Domain: MERCURE_DOMAIN,  SameSite: 'Lax' })
       }
     }
