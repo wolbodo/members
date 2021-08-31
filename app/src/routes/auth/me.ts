@@ -11,8 +11,12 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
 
   try {
     const data = await verifyToken(token)
-
     return {
+      headers: (/https:\/\/.*\.wolbodo\.nl/.test(headers.referer))
+        ? {
+          'Access-Control-Allow-Origin': headers.referer,
+          'Access-Control-Allow-Credentials': true,
+        } : {},
       body: data
     }
   } catch (e) {
