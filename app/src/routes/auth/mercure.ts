@@ -22,7 +22,6 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
       mercure: {
         payload: { name, isBoard },
         subscribe: ["*"],
-        publish: ["*"],
       }
     }, MERCURE_JWT_SECRET)
 
