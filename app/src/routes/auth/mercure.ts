@@ -31,7 +31,7 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
       headers: {
         'Access-Control-Allow-Origin': 'https://votes.wolbodo.nl',
         'Access-Control-Allow-Credentials': true,
-        'Set-Cookie': setCookie('mercureAuthorization', mercureToken, { Domain: MERCURE_DOMAIN,  SameSite: 'None' })
+        'Set-Cookie': setCookie('mercureAuthorization', mercureToken, { Domain: MERCURE_DOMAIN,  SameSite: 'Lax' })
       }
     }
   } catch (e) {
