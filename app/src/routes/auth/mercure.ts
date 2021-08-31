@@ -35,7 +35,7 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
               'Access-Control-Allow-Origin': ref,
               'Access-Control-Allow-Credentials': true,
         },
-        'Set-Cookie': setCookie('mercureAuthorization', mercureToken, { Domain: MERCURE_DOMAIN,  SameSite: 'Lax' })
+        'Set-Cookie': setCookie('mercureAuthorization', mercureToken, { Domain: MERCURE_DOMAIN,  SameSite: 'None' })
       }
     }
   } catch (e) {
