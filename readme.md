@@ -9,7 +9,8 @@ Postgres + Postgraphile + svelte
   - Make sure the `AUTH_JWT_SECRET` has a key property of at least 32 characters
 - Move or copy db/sample/10.fixtures.sql to db/init/10.fixtures.sql
 - docker network create wolbodo
-- If you'd like you can setup docker-hostmanager
+- If you'd like you can setup [docker-hostmanager](https://github.com/iamluc/docker-hostmanager#usage)
+  Otherwise you'd have to configure ip's in you hosts file
 
 - install docker and docker-compose
 - $: docker-compose build
