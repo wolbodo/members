@@ -4,7 +4,7 @@
 @import '@fontsource/rubik';
 
 :root {
-	--font: "Rubit", 'Open Sans', 'Helvetica Neue', sans-serif;
+	--font: "Rubik", 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-heading: "Righteous";
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
