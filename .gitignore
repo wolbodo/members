@@ -1,12 +1,8 @@
 .DS_Store
 node_modules
-/.svelte
 /build
-/functions
-yarn.lock
-yarn-error.log
-db/data
+/.svelte-kit
+/package
 .env
-2020-11-18 ledenlijst wolbodo.csv
-members.json
-db/init/10.fixtures.sql
+local
+
