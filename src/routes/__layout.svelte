@@ -1,31 +1,35 @@
-<script context='module'>
-	import { token } from '$lib/graphql'
+<script context="module">
+	import env from '../environment';
+	import { setEnvironment } from '$houdini';
+
+	setEnvironment(env);
+	import { token } from '$lib/graphql';
 
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, session }) {
 		if (session.user) {
-			token.set(session.user.token)
+			token.set(session.user.token);
 		} else if (!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(page.path)) {
 			return {
 				status: 302,
 				redirect: '/login'
-			}
+			};
 		}
 
-		return {}
+		return {};
 	}
 </script>
 
 <script lang="ts">
-  import { session } from '$app/stores';
+	import { session } from '$app/stores';
 
 	import Header from '$lib/Header/index.svelte';
 	import '../app.css';
 
 	$: if ($session.user) {
-		$token = $session.user.token
+		$token = $session.user.token;
 	}
 </script>
 
