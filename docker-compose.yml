@@ -1,13 +1,9 @@
 networks:
-  internal: {}
   external:
     external:
       name: proxy_default
 
 volumes:
-  node_modules:
-  __sapper__:
-  yarn-cache:
   members-db:
 
 services:
@@ -16,7 +12,7 @@ services:
     restart: always
     depends_on:
       - graphql
-    networks: [external, internal]
+    networks: [external, default]
     command: node .
     expose:
       - 80
@@ -43,7 +39,7 @@ services:
   graphql:
     image: hasura/graphql-engine:v2.0.10
     restart: unless-stopped
-    networks: [external, internal]
+    networks: [external, default]
     depends_on:
       - db
     expose:
