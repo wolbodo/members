@@ -1,0 +1,23 @@
+networks:
+  external:
+    external:
+      name: wolbodo
+
+volumes:
+  node_modules:
+  svelte-kit:
+  members-db:
+
+services:
+  app:
+    image: node:alpine
+    volumes:
+      - .:/app
+    environment:
+      VITE_GRAPHQL_ENDPOINT: http://graphql.wolbodo/v1/graphql
+    command: |
+      sh -c "
+        cd app
+        npm ci
+        npm run dev -- --host 0.0.0.0 --port 80
+      "
