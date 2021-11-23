@@ -1,0 +1,2296 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+
+  """measured in seconds"""
+  ttl: Int! = 60
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+"""
+columns and relationships of "auth.history"
+"""
+type auth_history {
+  """An object relationship"""
+  author: auth_person
+  author_id: Int
+  id: Int!
+  new_values(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  old_values(
+    """JSON select path"""
+    path: String
+  ): jsonb
+
+  """An object relationship"""
+  person: auth_person!
+  person_id: Int!
+  role: String
+  timestamp: timestamp
+}
+
+"""
+aggregated selection of "auth.history"
+"""
+type auth_history_aggregate {
+  aggregate: auth_history_aggregate_fields
+  nodes: [auth_history!]!
+}
+
+"""
+aggregate fields of "auth.history"
+"""
+type auth_history_aggregate_fields {
+  avg: auth_history_avg_fields
+  count(columns: [auth_history_select_column!], distinct: Boolean): Int!
+  max: auth_history_max_fields
+  min: auth_history_min_fields
+  stddev: auth_history_stddev_fields
+  stddev_pop: auth_history_stddev_pop_fields
+  stddev_samp: auth_history_stddev_samp_fields
+  sum: auth_history_sum_fields
+  var_pop: auth_history_var_pop_fields
+  var_samp: auth_history_var_samp_fields
+  variance: auth_history_variance_fields
+}
+
+"""
+order by aggregate values of table "auth.history"
+"""
+input auth_history_aggregate_order_by {
+  avg: auth_history_avg_order_by
+  count: order_by
+  max: auth_history_max_order_by
+  min: auth_history_min_order_by
+  stddev: auth_history_stddev_order_by
+  stddev_pop: auth_history_stddev_pop_order_by
+  stddev_samp: auth_history_stddev_samp_order_by
+  sum: auth_history_sum_order_by
+  var_pop: auth_history_var_pop_order_by
+  var_samp: auth_history_var_samp_order_by
+  variance: auth_history_variance_order_by
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input auth_history_append_input {
+  new_values: jsonb
+  old_values: jsonb
+}
+
+"""
+input type for inserting array relation for remote table "auth.history"
+"""
+input auth_history_arr_rel_insert_input {
+  data: [auth_history_insert_input!]!
+}
+
+"""aggregate avg on columns"""
+type auth_history_avg_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by avg() on columns of table "auth.history"
+"""
+input auth_history_avg_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "auth.history". All fields are combined with a logical 'AND'.
+"""
+input auth_history_bool_exp {
+  _and: [auth_history_bool_exp!]
+  _not: auth_history_bool_exp
+  _or: [auth_history_bool_exp!]
+  author: auth_person_bool_exp
+  author_id: Int_comparison_exp
+  id: Int_comparison_exp
+  new_values: jsonb_comparison_exp
+  old_values: jsonb_comparison_exp
+  person: auth_person_bool_exp
+  person_id: Int_comparison_exp
+  role: String_comparison_exp
+  timestamp: timestamp_comparison_exp
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input auth_history_delete_at_path_input {
+  new_values: [String!]
+  old_values: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input auth_history_delete_elem_input {
+  new_values: Int
+  old_values: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input auth_history_delete_key_input {
+  new_values: String
+  old_values: String
+}
+
+"""
+input type for incrementing numeric columns in table "auth.history"
+"""
+input auth_history_inc_input {
+  author_id: Int
+  id: Int
+  person_id: Int
+}
+
+"""
+input type for inserting data into table "auth.history"
+"""
+input auth_history_insert_input {
+  author: auth_person_obj_rel_insert_input
+  author_id: Int
+  id: Int
+  new_values: jsonb
+  old_values: jsonb
+  person: auth_person_obj_rel_insert_input
+  person_id: Int
+  role: String
+  timestamp: timestamp
+}
+
+"""aggregate max on columns"""
+type auth_history_max_fields {
+  author_id: Int
+  id: Int
+  person_id: Int
+  role: String
+  timestamp: timestamp
+}
+
+"""
+order by max() on columns of table "auth.history"
+"""
+input auth_history_max_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+  role: order_by
+  timestamp: order_by
+}
+
+"""aggregate min on columns"""
+type auth_history_min_fields {
+  author_id: Int
+  id: Int
+  person_id: Int
+  role: String
+  timestamp: timestamp
+}
+
+"""
+order by min() on columns of table "auth.history"
+"""
+input auth_history_min_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+  role: order_by
+  timestamp: order_by
+}
+
+"""
+response of any mutation on the table "auth.history"
+"""
+type auth_history_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [auth_history!]!
+}
+
+"""Ordering options when selecting data from "auth.history"."""
+input auth_history_order_by {
+  author: auth_person_order_by
+  author_id: order_by
+  id: order_by
+  new_values: order_by
+  old_values: order_by
+  person: auth_person_order_by
+  person_id: order_by
+  role: order_by
+  timestamp: order_by
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input auth_history_prepend_input {
+  new_values: jsonb
+  old_values: jsonb
+}
+
+"""
+select columns of table "auth.history"
+"""
+enum auth_history_select_column {
+  """column name"""
+  author_id
+
+  """column name"""
+  id
+
+  """column name"""
+  new_values
+
+  """column name"""
+  old_values
+
+  """column name"""
+  person_id
+
+  """column name"""
+  role
+
+  """column name"""
+  timestamp
+}
+
+"""
+input type for updating data in table "auth.history"
+"""
+input auth_history_set_input {
+  author_id: Int
+  id: Int
+  new_values: jsonb
+  old_values: jsonb
+  person_id: Int
+  role: String
+  timestamp: timestamp
+}
+
+"""aggregate stddev on columns"""
+type auth_history_stddev_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by stddev() on columns of table "auth.history"
+"""
+input auth_history_stddev_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type auth_history_stddev_pop_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "auth.history"
+"""
+input auth_history_stddev_pop_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type auth_history_stddev_samp_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "auth.history"
+"""
+input auth_history_stddev_samp_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate sum on columns"""
+type auth_history_sum_fields {
+  author_id: Int
+  id: Int
+  person_id: Int
+}
+
+"""
+order by sum() on columns of table "auth.history"
+"""
+input auth_history_sum_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate var_pop on columns"""
+type auth_history_var_pop_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by var_pop() on columns of table "auth.history"
+"""
+input auth_history_var_pop_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type auth_history_var_samp_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by var_samp() on columns of table "auth.history"
+"""
+input auth_history_var_samp_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate variance on columns"""
+type auth_history_variance_fields {
+  author_id: Float
+  id: Float
+  person_id: Float
+}
+
+"""
+order by variance() on columns of table "auth.history"
+"""
+input auth_history_variance_order_by {
+  author_id: order_by
+  id: order_by
+  person_id: order_by
+}
+
+"""
+columns and relationships of "auth.person"
+"""
+type auth_person {
+  address: String
+  bankaccount: String
+  city: String
+  country: String
+  created: timestamptz
+  email: String
+  firstname: String
+
+  """An array relationship"""
+  history(
+    """distinct select on columns"""
+    distinct_on: [auth_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_history_order_by!]
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): [auth_history!]!
+
+  """An aggregate relationship"""
+  history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_history_order_by!]
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): auth_history_aggregate!
+  id: Int!
+  key_code: String
+  lastname: String
+  modified: timestamptz
+  name: String!
+  note: String
+  password: String
+  phone: String
+
+  """An array relationship"""
+  roles(
+    """distinct select on columns"""
+    distinct_on: [auth_person_role_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_role_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): [auth_person_role!]!
+
+  """An aggregate relationship"""
+  roles_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_person_role_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_role_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): auth_person_role_aggregate!
+  zipcode: String
+}
+
+"""
+aggregated selection of "auth.person"
+"""
+type auth_person_aggregate {
+  aggregate: auth_person_aggregate_fields
+  nodes: [auth_person!]!
+}
+
+"""
+aggregate fields of "auth.person"
+"""
+type auth_person_aggregate_fields {
+  avg: auth_person_avg_fields
+  count(columns: [auth_person_select_column!], distinct: Boolean): Int!
+  max: auth_person_max_fields
+  min: auth_person_min_fields
+  stddev: auth_person_stddev_fields
+  stddev_pop: auth_person_stddev_pop_fields
+  stddev_samp: auth_person_stddev_samp_fields
+  sum: auth_person_sum_fields
+  var_pop: auth_person_var_pop_fields
+  var_samp: auth_person_var_samp_fields
+  variance: auth_person_variance_fields
+}
+
+"""aggregate avg on columns"""
+type auth_person_avg_fields {
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "auth.person". All fields are combined with a logical 'AND'.
+"""
+input auth_person_bool_exp {
+  _and: [auth_person_bool_exp!]
+  _not: auth_person_bool_exp
+  _or: [auth_person_bool_exp!]
+  address: String_comparison_exp
+  bankaccount: String_comparison_exp
+  city: String_comparison_exp
+  country: String_comparison_exp
+  created: timestamptz_comparison_exp
+  email: String_comparison_exp
+  firstname: String_comparison_exp
+  history: auth_history_bool_exp
+  id: Int_comparison_exp
+  key_code: String_comparison_exp
+  lastname: String_comparison_exp
+  modified: timestamptz_comparison_exp
+  name: String_comparison_exp
+  note: String_comparison_exp
+  password: String_comparison_exp
+  phone: String_comparison_exp
+  roles: auth_person_role_bool_exp
+  zipcode: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "auth.person"
+"""
+enum auth_person_constraint {
+  """unique or primary key constraint"""
+  person_email_key
+
+  """unique or primary key constraint"""
+  person_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "auth.person"
+"""
+input auth_person_inc_input {
+  id: Int
+}
+
+"""
+input type for inserting data into table "auth.person"
+"""
+input auth_person_insert_input {
+  address: String
+  bankaccount: String
+  city: String
+  country: String
+  created: timestamptz
+  email: String
+  firstname: String
+  history: auth_history_arr_rel_insert_input
+  id: Int
+  key_code: String
+  lastname: String
+  modified: timestamptz
+  name: String
+  note: String
+  password: String
+  phone: String
+  roles: auth_person_role_arr_rel_insert_input
+  zipcode: String
+}
+
+"""aggregate max on columns"""
+type auth_person_max_fields {
+  address: String
+  bankaccount: String
+  city: String
+  country: String
+  created: timestamptz
+  email: String
+  firstname: String
+  id: Int
+  key_code: String
+  lastname: String
+  modified: timestamptz
+  name: String
+  note: String
+  password: String
+  phone: String
+  zipcode: String
+}
+
+"""aggregate min on columns"""
+type auth_person_min_fields {
+  address: String
+  bankaccount: String
+  city: String
+  country: String
+  created: timestamptz
+  email: String
+  firstname: String
+  id: Int
+  key_code: String
+  lastname: String
+  modified: timestamptz
+  name: String
+  note: String
+  password: String
+  phone: String
+  zipcode: String
+}
+
+"""
+response of any mutation on the table "auth.person"
+"""
+type auth_person_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [auth_person!]!
+}
+
+"""
+input type for inserting object relation for remote table "auth.person"
+"""
+input auth_person_obj_rel_insert_input {
+  data: auth_person_insert_input!
+
+  """on conflict condition"""
+  on_conflict: auth_person_on_conflict
+}
+
+"""
+on conflict condition type for table "auth.person"
+"""
+input auth_person_on_conflict {
+  constraint: auth_person_constraint!
+  update_columns: [auth_person_update_column!]! = []
+  where: auth_person_bool_exp
+}
+
+"""Ordering options when selecting data from "auth.person"."""
+input auth_person_order_by {
+  address: order_by
+  bankaccount: order_by
+  city: order_by
+  country: order_by
+  created: order_by
+  email: order_by
+  firstname: order_by
+  history_aggregate: auth_history_aggregate_order_by
+  id: order_by
+  key_code: order_by
+  lastname: order_by
+  modified: order_by
+  name: order_by
+  note: order_by
+  password: order_by
+  phone: order_by
+  roles_aggregate: auth_person_role_aggregate_order_by
+  zipcode: order_by
+}
+
+"""primary key columns input for table: auth_person"""
+input auth_person_pk_columns_input {
+  id: Int!
+}
+
+"""
+columns and relationships of "auth.person_role"
+"""
+type auth_person_role {
+  id: Int!
+
+  """An object relationship"""
+  person: auth_person!
+  person_id: Int!
+  role: String!
+  valid_from: timestamptz
+  valid_till: timestamptz
+}
+
+"""
+aggregated selection of "auth.person_role"
+"""
+type auth_person_role_aggregate {
+  aggregate: auth_person_role_aggregate_fields
+  nodes: [auth_person_role!]!
+}
+
+"""
+aggregate fields of "auth.person_role"
+"""
+type auth_person_role_aggregate_fields {
+  avg: auth_person_role_avg_fields
+  count(columns: [auth_person_role_select_column!], distinct: Boolean): Int!
+  max: auth_person_role_max_fields
+  min: auth_person_role_min_fields
+  stddev: auth_person_role_stddev_fields
+  stddev_pop: auth_person_role_stddev_pop_fields
+  stddev_samp: auth_person_role_stddev_samp_fields
+  sum: auth_person_role_sum_fields
+  var_pop: auth_person_role_var_pop_fields
+  var_samp: auth_person_role_var_samp_fields
+  variance: auth_person_role_variance_fields
+}
+
+"""
+order by aggregate values of table "auth.person_role"
+"""
+input auth_person_role_aggregate_order_by {
+  avg: auth_person_role_avg_order_by
+  count: order_by
+  max: auth_person_role_max_order_by
+  min: auth_person_role_min_order_by
+  stddev: auth_person_role_stddev_order_by
+  stddev_pop: auth_person_role_stddev_pop_order_by
+  stddev_samp: auth_person_role_stddev_samp_order_by
+  sum: auth_person_role_sum_order_by
+  var_pop: auth_person_role_var_pop_order_by
+  var_samp: auth_person_role_var_samp_order_by
+  variance: auth_person_role_variance_order_by
+}
+
+"""
+input type for inserting array relation for remote table "auth.person_role"
+"""
+input auth_person_role_arr_rel_insert_input {
+  data: [auth_person_role_insert_input!]!
+
+  """on conflict condition"""
+  on_conflict: auth_person_role_on_conflict
+}
+
+"""aggregate avg on columns"""
+type auth_person_role_avg_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by avg() on columns of table "auth.person_role"
+"""
+input auth_person_role_avg_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""
+Boolean expression to filter rows from the table "auth.person_role". All fields are combined with a logical 'AND'.
+"""
+input auth_person_role_bool_exp {
+  _and: [auth_person_role_bool_exp!]
+  _not: auth_person_role_bool_exp
+  _or: [auth_person_role_bool_exp!]
+  id: Int_comparison_exp
+  person: auth_person_bool_exp
+  person_id: Int_comparison_exp
+  role: String_comparison_exp
+  valid_from: timestamptz_comparison_exp
+  valid_till: timestamptz_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "auth.person_role"
+"""
+enum auth_person_role_constraint {
+  """unique or primary key constraint"""
+  person_role_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "auth.person_role"
+"""
+input auth_person_role_inc_input {
+  id: Int
+  person_id: Int
+}
+
+"""
+input type for inserting data into table "auth.person_role"
+"""
+input auth_person_role_insert_input {
+  id: Int
+  person: auth_person_obj_rel_insert_input
+  person_id: Int
+  role: String
+  valid_from: timestamptz
+  valid_till: timestamptz
+}
+
+"""aggregate max on columns"""
+type auth_person_role_max_fields {
+  id: Int
+  person_id: Int
+  role: String
+  valid_from: timestamptz
+  valid_till: timestamptz
+}
+
+"""
+order by max() on columns of table "auth.person_role"
+"""
+input auth_person_role_max_order_by {
+  id: order_by
+  person_id: order_by
+  role: order_by
+  valid_from: order_by
+  valid_till: order_by
+}
+
+"""aggregate min on columns"""
+type auth_person_role_min_fields {
+  id: Int
+  person_id: Int
+  role: String
+  valid_from: timestamptz
+  valid_till: timestamptz
+}
+
+"""
+order by min() on columns of table "auth.person_role"
+"""
+input auth_person_role_min_order_by {
+  id: order_by
+  person_id: order_by
+  role: order_by
+  valid_from: order_by
+  valid_till: order_by
+}
+
+"""
+response of any mutation on the table "auth.person_role"
+"""
+type auth_person_role_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [auth_person_role!]!
+}
+
+"""
+on conflict condition type for table "auth.person_role"
+"""
+input auth_person_role_on_conflict {
+  constraint: auth_person_role_constraint!
+  update_columns: [auth_person_role_update_column!]! = []
+  where: auth_person_role_bool_exp
+}
+
+"""Ordering options when selecting data from "auth.person_role"."""
+input auth_person_role_order_by {
+  id: order_by
+  person: auth_person_order_by
+  person_id: order_by
+  role: order_by
+  valid_from: order_by
+  valid_till: order_by
+}
+
+"""primary key columns input for table: auth_person_role"""
+input auth_person_role_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "auth.person_role"
+"""
+enum auth_person_role_select_column {
+  """column name"""
+  id
+
+  """column name"""
+  person_id
+
+  """column name"""
+  role
+
+  """column name"""
+  valid_from
+
+  """column name"""
+  valid_till
+}
+
+"""
+input type for updating data in table "auth.person_role"
+"""
+input auth_person_role_set_input {
+  id: Int
+  person_id: Int
+  role: String
+  valid_from: timestamptz
+  valid_till: timestamptz
+}
+
+"""aggregate stddev on columns"""
+type auth_person_role_stddev_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by stddev() on columns of table "auth.person_role"
+"""
+input auth_person_role_stddev_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate stddev_pop on columns"""
+type auth_person_role_stddev_pop_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by stddev_pop() on columns of table "auth.person_role"
+"""
+input auth_person_role_stddev_pop_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate stddev_samp on columns"""
+type auth_person_role_stddev_samp_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by stddev_samp() on columns of table "auth.person_role"
+"""
+input auth_person_role_stddev_samp_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate sum on columns"""
+type auth_person_role_sum_fields {
+  id: Int
+  person_id: Int
+}
+
+"""
+order by sum() on columns of table "auth.person_role"
+"""
+input auth_person_role_sum_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""
+update columns of table "auth.person_role"
+"""
+enum auth_person_role_update_column {
+  """column name"""
+  id
+
+  """column name"""
+  person_id
+
+  """column name"""
+  role
+
+  """column name"""
+  valid_from
+
+  """column name"""
+  valid_till
+}
+
+"""aggregate var_pop on columns"""
+type auth_person_role_var_pop_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by var_pop() on columns of table "auth.person_role"
+"""
+input auth_person_role_var_pop_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate var_samp on columns"""
+type auth_person_role_var_samp_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by var_samp() on columns of table "auth.person_role"
+"""
+input auth_person_role_var_samp_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""aggregate variance on columns"""
+type auth_person_role_variance_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+order by variance() on columns of table "auth.person_role"
+"""
+input auth_person_role_variance_order_by {
+  id: order_by
+  person_id: order_by
+}
+
+"""
+select columns of table "auth.person"
+"""
+enum auth_person_select_column {
+  """column name"""
+  address
+
+  """column name"""
+  bankaccount
+
+  """column name"""
+  city
+
+  """column name"""
+  country
+
+  """column name"""
+  created
+
+  """column name"""
+  email
+
+  """column name"""
+  firstname
+
+  """column name"""
+  id
+
+  """column name"""
+  key_code
+
+  """column name"""
+  lastname
+
+  """column name"""
+  modified
+
+  """column name"""
+  name
+
+  """column name"""
+  note
+
+  """column name"""
+  password
+
+  """column name"""
+  phone
+
+  """column name"""
+  zipcode
+}
+
+"""
+input type for updating data in table "auth.person"
+"""
+input auth_person_set_input {
+  address: String
+  bankaccount: String
+  city: String
+  country: String
+  created: timestamptz
+  email: String
+  firstname: String
+  id: Int
+  key_code: String
+  lastname: String
+  modified: timestamptz
+  name: String
+  note: String
+  password: String
+  phone: String
+  zipcode: String
+}
+
+"""aggregate stddev on columns"""
+type auth_person_stddev_fields {
+  id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type auth_person_stddev_pop_fields {
+  id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type auth_person_stddev_samp_fields {
+  id: Float
+}
+
+"""aggregate sum on columns"""
+type auth_person_sum_fields {
+  id: Int
+}
+
+"""
+update columns of table "auth.person"
+"""
+enum auth_person_update_column {
+  """column name"""
+  address
+
+  """column name"""
+  bankaccount
+
+  """column name"""
+  city
+
+  """column name"""
+  country
+
+  """column name"""
+  created
+
+  """column name"""
+  email
+
+  """column name"""
+  firstname
+
+  """column name"""
+  id
+
+  """column name"""
+  key_code
+
+  """column name"""
+  lastname
+
+  """column name"""
+  modified
+
+  """column name"""
+  name
+
+  """column name"""
+  note
+
+  """column name"""
+  password
+
+  """column name"""
+  phone
+
+  """column name"""
+  zipcode
+}
+
+"""aggregate var_pop on columns"""
+type auth_person_var_pop_fields {
+  id: Float
+}
+
+"""aggregate var_samp on columns"""
+type auth_person_var_samp_fields {
+  id: Float
+}
+
+"""aggregate variance on columns"""
+type auth_person_variance_fields {
+  id: Float
+}
+
+scalar jsonb
+
+"""
+Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'.
+"""
+input jsonb_comparison_exp {
+  """is the column contained in the given json value"""
+  _contained_in: jsonb
+
+  """does the column contain the given json value at the top level"""
+  _contains: jsonb
+  _eq: jsonb
+  _gt: jsonb
+  _gte: jsonb
+
+  """does the string exist as a top-level key in the column"""
+  _has_key: String
+
+  """do all of these strings exist as top-level keys in the column"""
+  _has_keys_all: [String!]
+
+  """do any of these strings exist as top-level keys in the column"""
+  _has_keys_any: [String!]
+  _in: [jsonb!]
+  _is_null: Boolean
+  _lt: jsonb
+  _lte: jsonb
+  _neq: jsonb
+  _nin: [jsonb!]
+}
+
+"""
+columns and relationships of "mail.entries"
+"""
+type mail_entries {
+  created: timestamptz
+  data(
+    """JSON select path"""
+    path: String
+  ): jsonb
+  id: Int!
+  message_info(
+    """JSON select path"""
+    path: String
+  ): jsonb
+
+  """An object relationship"""
+  person: auth_person!
+  person_id: Int!
+  status: status
+  template: String!
+}
+
+"""
+aggregated selection of "mail.entries"
+"""
+type mail_entries_aggregate {
+  aggregate: mail_entries_aggregate_fields
+  nodes: [mail_entries!]!
+}
+
+"""
+aggregate fields of "mail.entries"
+"""
+type mail_entries_aggregate_fields {
+  avg: mail_entries_avg_fields
+  count(columns: [mail_entries_select_column!], distinct: Boolean): Int!
+  max: mail_entries_max_fields
+  min: mail_entries_min_fields
+  stddev: mail_entries_stddev_fields
+  stddev_pop: mail_entries_stddev_pop_fields
+  stddev_samp: mail_entries_stddev_samp_fields
+  sum: mail_entries_sum_fields
+  var_pop: mail_entries_var_pop_fields
+  var_samp: mail_entries_var_samp_fields
+  variance: mail_entries_variance_fields
+}
+
+"""append existing jsonb value of filtered columns with new jsonb value"""
+input mail_entries_append_input {
+  data: jsonb
+  message_info: jsonb
+}
+
+"""aggregate avg on columns"""
+type mail_entries_avg_fields {
+  id: Float
+  person_id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "mail.entries". All fields are combined with a logical 'AND'.
+"""
+input mail_entries_bool_exp {
+  _and: [mail_entries_bool_exp!]
+  _not: mail_entries_bool_exp
+  _or: [mail_entries_bool_exp!]
+  created: timestamptz_comparison_exp
+  data: jsonb_comparison_exp
+  id: Int_comparison_exp
+  message_info: jsonb_comparison_exp
+  person: auth_person_bool_exp
+  person_id: Int_comparison_exp
+  status: status_comparison_exp
+  template: String_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "mail.entries"
+"""
+enum mail_entries_constraint {
+  """unique or primary key constraint"""
+  entries_pkey
+}
+
+"""
+delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+"""
+input mail_entries_delete_at_path_input {
+  data: [String!]
+  message_info: [String!]
+}
+
+"""
+delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+"""
+input mail_entries_delete_elem_input {
+  data: Int
+  message_info: Int
+}
+
+"""
+delete key/value pair or string element. key/value pairs are matched based on their key value
+"""
+input mail_entries_delete_key_input {
+  data: String
+  message_info: String
+}
+
+"""
+input type for incrementing numeric columns in table "mail.entries"
+"""
+input mail_entries_inc_input {
+  id: Int
+  person_id: Int
+}
+
+"""
+input type for inserting data into table "mail.entries"
+"""
+input mail_entries_insert_input {
+  created: timestamptz
+  data: jsonb
+  id: Int
+  message_info: jsonb
+  person: auth_person_obj_rel_insert_input
+  person_id: Int
+  status: status
+  template: String
+}
+
+"""aggregate max on columns"""
+type mail_entries_max_fields {
+  created: timestamptz
+  id: Int
+  person_id: Int
+  template: String
+}
+
+"""aggregate min on columns"""
+type mail_entries_min_fields {
+  created: timestamptz
+  id: Int
+  person_id: Int
+  template: String
+}
+
+"""
+response of any mutation on the table "mail.entries"
+"""
+type mail_entries_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [mail_entries!]!
+}
+
+"""
+on conflict condition type for table "mail.entries"
+"""
+input mail_entries_on_conflict {
+  constraint: mail_entries_constraint!
+  update_columns: [mail_entries_update_column!]! = []
+  where: mail_entries_bool_exp
+}
+
+"""Ordering options when selecting data from "mail.entries"."""
+input mail_entries_order_by {
+  created: order_by
+  data: order_by
+  id: order_by
+  message_info: order_by
+  person: auth_person_order_by
+  person_id: order_by
+  status: order_by
+  template: order_by
+}
+
+"""primary key columns input for table: mail_entries"""
+input mail_entries_pk_columns_input {
+  id: Int!
+}
+
+"""prepend existing jsonb value of filtered columns with new jsonb value"""
+input mail_entries_prepend_input {
+  data: jsonb
+  message_info: jsonb
+}
+
+"""
+select columns of table "mail.entries"
+"""
+enum mail_entries_select_column {
+  """column name"""
+  created
+
+  """column name"""
+  data
+
+  """column name"""
+  id
+
+  """column name"""
+  message_info
+
+  """column name"""
+  person_id
+
+  """column name"""
+  status
+
+  """column name"""
+  template
+}
+
+"""
+input type for updating data in table "mail.entries"
+"""
+input mail_entries_set_input {
+  created: timestamptz
+  data: jsonb
+  id: Int
+  message_info: jsonb
+  person_id: Int
+  status: status
+  template: String
+}
+
+"""aggregate stddev on columns"""
+type mail_entries_stddev_fields {
+  id: Float
+  person_id: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type mail_entries_stddev_pop_fields {
+  id: Float
+  person_id: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type mail_entries_stddev_samp_fields {
+  id: Float
+  person_id: Float
+}
+
+"""aggregate sum on columns"""
+type mail_entries_sum_fields {
+  id: Int
+  person_id: Int
+}
+
+"""
+update columns of table "mail.entries"
+"""
+enum mail_entries_update_column {
+  """column name"""
+  created
+
+  """column name"""
+  data
+
+  """column name"""
+  id
+
+  """column name"""
+  message_info
+
+  """column name"""
+  person_id
+
+  """column name"""
+  status
+
+  """column name"""
+  template
+}
+
+"""aggregate var_pop on columns"""
+type mail_entries_var_pop_fields {
+  id: Float
+  person_id: Float
+}
+
+"""aggregate var_samp on columns"""
+type mail_entries_var_samp_fields {
+  id: Float
+  person_id: Float
+}
+
+"""aggregate variance on columns"""
+type mail_entries_variance_fields {
+  id: Float
+  person_id: Float
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  delete data from the table: "auth.history"
+  """
+  delete_auth_history(
+    """filter the rows which have to be deleted"""
+    where: auth_history_bool_exp!
+  ): auth_history_mutation_response
+
+  """
+  delete data from the table: "auth.person"
+  """
+  delete_auth_person(
+    """filter the rows which have to be deleted"""
+    where: auth_person_bool_exp!
+  ): auth_person_mutation_response
+
+  """
+  delete single row from the table: "auth.person"
+  """
+  delete_auth_person_by_pk(id: Int!): auth_person
+
+  """
+  delete data from the table: "auth.person_role"
+  """
+  delete_auth_person_role(
+    """filter the rows which have to be deleted"""
+    where: auth_person_role_bool_exp!
+  ): auth_person_role_mutation_response
+
+  """
+  delete single row from the table: "auth.person_role"
+  """
+  delete_auth_person_role_by_pk(id: Int!): auth_person_role
+
+  """
+  delete data from the table: "mail.entries"
+  """
+  delete_mail_entries(
+    """filter the rows which have to be deleted"""
+    where: mail_entries_bool_exp!
+  ): mail_entries_mutation_response
+
+  """
+  delete single row from the table: "mail.entries"
+  """
+  delete_mail_entries_by_pk(id: Int!): mail_entries
+
+  """
+  insert data into the table: "auth.history"
+  """
+  insert_auth_history(
+    """the rows to be inserted"""
+    objects: [auth_history_insert_input!]!
+  ): auth_history_mutation_response
+
+  """
+  insert a single row into the table: "auth.history"
+  """
+  insert_auth_history_one(
+    """the row to be inserted"""
+    object: auth_history_insert_input!
+  ): auth_history
+
+  """
+  insert data into the table: "auth.person"
+  """
+  insert_auth_person(
+    """the rows to be inserted"""
+    objects: [auth_person_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: auth_person_on_conflict
+  ): auth_person_mutation_response
+
+  """
+  insert a single row into the table: "auth.person"
+  """
+  insert_auth_person_one(
+    """the row to be inserted"""
+    object: auth_person_insert_input!
+
+    """on conflict condition"""
+    on_conflict: auth_person_on_conflict
+  ): auth_person
+
+  """
+  insert data into the table: "auth.person_role"
+  """
+  insert_auth_person_role(
+    """the rows to be inserted"""
+    objects: [auth_person_role_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: auth_person_role_on_conflict
+  ): auth_person_role_mutation_response
+
+  """
+  insert a single row into the table: "auth.person_role"
+  """
+  insert_auth_person_role_one(
+    """the row to be inserted"""
+    object: auth_person_role_insert_input!
+
+    """on conflict condition"""
+    on_conflict: auth_person_role_on_conflict
+  ): auth_person_role
+
+  """
+  insert data into the table: "mail.entries"
+  """
+  insert_mail_entries(
+    """the rows to be inserted"""
+    objects: [mail_entries_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: mail_entries_on_conflict
+  ): mail_entries_mutation_response
+
+  """
+  insert a single row into the table: "mail.entries"
+  """
+  insert_mail_entries_one(
+    """the row to be inserted"""
+    object: mail_entries_insert_input!
+
+    """on conflict condition"""
+    on_conflict: mail_entries_on_conflict
+  ): mail_entries
+
+  """
+  update data of the table: "auth.history"
+  """
+  update_auth_history(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: auth_history_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: auth_history_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: auth_history_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: auth_history_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: auth_history_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: auth_history_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_history_set_input
+
+    """filter the rows which have to be updated"""
+    where: auth_history_bool_exp!
+  ): auth_history_mutation_response
+
+  """
+  update data of the table: "auth.person"
+  """
+  update_auth_person(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: auth_person_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_person_set_input
+
+    """filter the rows which have to be updated"""
+    where: auth_person_bool_exp!
+  ): auth_person_mutation_response
+
+  """
+  update single row of the table: "auth.person"
+  """
+  update_auth_person_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: auth_person_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_person_set_input
+    pk_columns: auth_person_pk_columns_input!
+  ): auth_person
+
+  """
+  update data of the table: "auth.person_role"
+  """
+  update_auth_person_role(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: auth_person_role_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_person_role_set_input
+
+    """filter the rows which have to be updated"""
+    where: auth_person_role_bool_exp!
+  ): auth_person_role_mutation_response
+
+  """
+  update single row of the table: "auth.person_role"
+  """
+  update_auth_person_role_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: auth_person_role_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_person_role_set_input
+    pk_columns: auth_person_role_pk_columns_input!
+  ): auth_person_role
+
+  """
+  update data of the table: "mail.entries"
+  """
+  update_mail_entries(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: mail_entries_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: mail_entries_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: mail_entries_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: mail_entries_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: mail_entries_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: mail_entries_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: mail_entries_set_input
+
+    """filter the rows which have to be updated"""
+    where: mail_entries_bool_exp!
+  ): mail_entries_mutation_response
+
+  """
+  update single row of the table: "mail.entries"
+  """
+  update_mail_entries_by_pk(
+    """append existing jsonb value of filtered columns with new jsonb value"""
+    _append: mail_entries_append_input
+
+    """
+    delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+    """
+    _delete_at_path: mail_entries_delete_at_path_input
+
+    """
+    delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+    """
+    _delete_elem: mail_entries_delete_elem_input
+
+    """
+    delete key/value pair or string element. key/value pairs are matched based on their key value
+    """
+    _delete_key: mail_entries_delete_key_input
+
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: mail_entries_inc_input
+
+    """prepend existing jsonb value of filtered columns with new jsonb value"""
+    _prepend: mail_entries_prepend_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: mail_entries_set_input
+    pk_columns: mail_entries_pk_columns_input!
+  ): mail_entries
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+type query_root {
+  """
+  fetch data from the table: "auth.history"
+  """
+  auth_history(
+    """distinct select on columns"""
+    distinct_on: [auth_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_history_order_by!]
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): [auth_history!]!
+
+  """
+  fetch aggregated fields from the table: "auth.history"
+  """
+  auth_history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_history_order_by!]
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): auth_history_aggregate!
+
+  """
+  fetch data from the table: "auth.person"
+  """
+  auth_person(
+    """distinct select on columns"""
+    distinct_on: [auth_person_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_bool_exp
+  ): [auth_person!]!
+
+  """
+  fetch aggregated fields from the table: "auth.person"
+  """
+  auth_person_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_person_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_bool_exp
+  ): auth_person_aggregate!
+
+  """fetch data from the table: "auth.person" using primary key columns"""
+  auth_person_by_pk(id: Int!): auth_person
+
+  """
+  fetch data from the table: "auth.person_role"
+  """
+  auth_person_role(
+    """distinct select on columns"""
+    distinct_on: [auth_person_role_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_role_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): [auth_person_role!]!
+
+  """
+  fetch aggregated fields from the table: "auth.person_role"
+  """
+  auth_person_role_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_person_role_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_role_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): auth_person_role_aggregate!
+
+  """
+  fetch data from the table: "auth.person_role" using primary key columns
+  """
+  auth_person_role_by_pk(id: Int!): auth_person_role
+
+  """
+  fetch data from the table: "mail.entries"
+  """
+  mail_entries(
+    """distinct select on columns"""
+    distinct_on: [mail_entries_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mail_entries_order_by!]
+
+    """filter the rows returned"""
+    where: mail_entries_bool_exp
+  ): [mail_entries!]!
+
+  """
+  fetch aggregated fields from the table: "mail.entries"
+  """
+  mail_entries_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mail_entries_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mail_entries_order_by!]
+
+    """filter the rows returned"""
+    where: mail_entries_bool_exp
+  ): mail_entries_aggregate!
+
+  """fetch data from the table: "mail.entries" using primary key columns"""
+  mail_entries_by_pk(id: Int!): mail_entries
+}
+
+scalar status
+
+"""
+Boolean expression to compare columns of type "status". All fields are combined with logical 'AND'.
+"""
+input status_comparison_exp {
+  _eq: status
+  _gt: status
+  _gte: status
+  _in: [status!]
+  _is_null: Boolean
+  _lt: status
+  _lte: status
+  _neq: status
+  _nin: [status!]
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "auth.history"
+  """
+  auth_history(
+    """distinct select on columns"""
+    distinct_on: [auth_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_history_order_by!]
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): [auth_history!]!
+
+  """
+  fetch aggregated fields from the table: "auth.history"
+  """
+  auth_history_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_history_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_history_order_by!]
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): auth_history_aggregate!
+
+  """
+  fetch data from the table: "auth.person"
+  """
+  auth_person(
+    """distinct select on columns"""
+    distinct_on: [auth_person_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_bool_exp
+  ): [auth_person!]!
+
+  """
+  fetch aggregated fields from the table: "auth.person"
+  """
+  auth_person_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_person_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_bool_exp
+  ): auth_person_aggregate!
+
+  """fetch data from the table: "auth.person" using primary key columns"""
+  auth_person_by_pk(id: Int!): auth_person
+
+  """
+  fetch data from the table: "auth.person_role"
+  """
+  auth_person_role(
+    """distinct select on columns"""
+    distinct_on: [auth_person_role_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_role_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): [auth_person_role!]!
+
+  """
+  fetch aggregated fields from the table: "auth.person_role"
+  """
+  auth_person_role_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_person_role_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_person_role_order_by!]
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): auth_person_role_aggregate!
+
+  """
+  fetch data from the table: "auth.person_role" using primary key columns
+  """
+  auth_person_role_by_pk(id: Int!): auth_person_role
+
+  """
+  fetch data from the table: "mail.entries"
+  """
+  mail_entries(
+    """distinct select on columns"""
+    distinct_on: [mail_entries_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mail_entries_order_by!]
+
+    """filter the rows returned"""
+    where: mail_entries_bool_exp
+  ): [mail_entries!]!
+
+  """
+  fetch aggregated fields from the table: "mail.entries"
+  """
+  mail_entries_aggregate(
+    """distinct select on columns"""
+    distinct_on: [mail_entries_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [mail_entries_order_by!]
+
+    """filter the rows returned"""
+    where: mail_entries_bool_exp
+  ): mail_entries_aggregate!
+
+  """fetch data from the table: "mail.entries" using primary key columns"""
+  mail_entries_by_pk(id: Int!): mail_entries
+}
+
+scalar timestamp
+
+"""
+Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
+"""
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
+}
+
+scalar timestamptz
+
+"""
+Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+"""
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}
