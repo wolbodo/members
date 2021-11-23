@@ -41,34 +41,33 @@ services:
 
   db:
     image: postgres:13-alpine
-    restart: always
+    restart: unless-stopped
     command: postgres
-    entrypoint: ./upgrade/docker-upgrade-entrypoint-wrapper.sh
     environment:
       POSTGRES_INITDB_ARGS: --data-checksums
     env_file:
       - ./.env
     volumes:
-      - ./db/init:/docker-entrypoint-initdb.d:ro
-      - ./db/upgrade:/upgrade:ro
       - members-db:/var/lib/postgresql/data
 
   graphql:
-    image: hasura/graphql-engine:v2.0.0-beta.1
-    restart: always
+    image: hasura/graphql-engine:v2.0.10
+    restart: unless-stopped
     depends_on:
       - db
     ports:
       - 80
+    env_file:
+      - ./.env
     command: >
       /bin/sh -c "
-      graphql-engine \
-        serve \
+      graphql-engine serve \
         --server-port 80 \
-        --access-key $HASURA_ACCESS_KEY \
-        --enable-console;
+        --enable-console
       "
+    volumes:
+      - ./migrations:/hasura-migrations:ro
+      - ./metadata:/hasura-metadata:ro
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB
-      HASURA_GRAPHQL_JWT_SECRET: $AUTH_JWT_SECRET
-      HASURA_GRAPHQL_CORS_DOMAIN: http://app.wolbodo
+      HASURA_GRAPHQL_CORS_DOMAIN: http://app.wolbodo,http://localhost:9695/
