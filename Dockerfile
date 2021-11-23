@@ -5,5 +5,5 @@ COPY build /app
 WORKDIR /app
 
 COPY package.json /app
-COPY yarn.lock /app
-RUN yarn --production --pure-lockfile
+COPY package-lock.json /app
+RUN npm ci
