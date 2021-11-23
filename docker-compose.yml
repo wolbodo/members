@@ -1,74 +1,61 @@
-version: "3.8"
-
 networks:
-  default:
+  external:
     external:
-      name: wolbodo
+      name: proxy_default
 
 volumes:
-  node_modules:
-  __sapper__:
-  yarn-cache:
   members-db:
 
 services:
   app:
-    image: node:alpine
+    image: wolbodo/members:latest
     restart: always
     depends_on:
       - graphql
-    volumes:
-      - ./app:/app
-      - node_modules:/app/node_modules
-      - "yarn-cache:/usr/local/share/.cache/yarn/"
+    networks: [external, default]
+    command: node .
+    expose:
+      - 80
+    env_file:
+      - .env
     environment:
-      AUTH_JWT_SECRET: $AUTH_JWT_SECRET
-      MERCURE_JWT_SECRET: $MERCURE_JWT_SECRET
-      MERCURE_DOMAIN: $MERCURE_DOMAIN
-      EMAIL_HOST: $EMAIL_HOST
-      EMAIL_PORT: $EMAIL_PORT
-      EMAIL_USER: $EMAIL_USER
-      EMAIL_PASS: $EMAIL_PASS
-      VITE_GRAPHQL_ENDPOINT: http://graphql.wolbodo/v1/graphql
-    command: |
-      sh -c "
-        cd app
-        yarn install --frozen-lockfile
-        yarn run dev --host 0.0.0.0 --port 80
-      "
-    ports:
-      - "80"
+      VITE_GRAPHQL_ENDPOINT: https://graphql.wolbodo.nl/v1/graphql
+      PORT: 80
+      VIRTUAL_HOST: members.wolbodo.nl
+      CERT_NAME: wildcard
+      AUTH_JWT_SECRET: $HASURA_GRAPHQL_JWT_SECRET
 
   db:
     image: postgres:13-alpine
-    restart: always
+    restart: unless-stopped
     command: postgres
-    entrypoint: ./upgrade/docker-upgrade-entrypoint-wrapper.sh
     environment:
       POSTGRES_INITDB_ARGS: --data-checksums
     env_file:
-      - ./.env
+      - .env
     volumes:
-      - ./db/init:/docker-entrypoint-initdb.d:ro
-      - ./db/upgrade:/upgrade:ro
       - members-db:/var/lib/postgresql/data
 
   graphql:
-    image: hasura/graphql-engine:v2.0.0-beta.1
-    restart: always
+    image: hasura/graphql-engine:v2.0.10
+    restart: unless-stopped
+    networks: [external, default]
     depends_on:
       - db
-    ports:
+    expose:
       - 80
+    env_file:
+      - .env
     command: >
       /bin/sh -c "
-      graphql-engine \
-        serve \
+      graphql-engine serve \
         --server-port 80 \
-        --access-key $HASURA_ACCESS_KEY \
-        --enable-console;
+        --enable-console
       "
+    volumes:
+      - ./migrations:/hasura-migrations:ro
+      - ./metadata:/hasura-metadata:ro
     environment:
+      VIRTUAL_HOST: graphql.wolbodo.nl
+      CERT_NAME: wildcard
       HASURA_GRAPHQL_DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB
-      HASURA_GRAPHQL_JWT_SECRET: $AUTH_JWT_SECRET
-      HASURA_GRAPHQL_CORS_DOMAIN: http://app.wolbodo
