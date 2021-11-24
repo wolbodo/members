@@ -1,5 +1,5 @@
-<script lang='ts'>
-	import List from '$lib/Person/List.svelte'
+<script lang="ts">
+	import List from '$lib/Person/List.svelte';
 </script>
 
 <svelte:head>
@@ -7,15 +7,15 @@
 </svelte:head>
 
 <section>
-	<List where={`{
-		roles: {
-			_or: [
-				{valid_till: {_gte: "NOW()"}},
-				{valid_till: {_is_null: true}}
-			],
-			valid_from: {_lte: "NOW()"},
-			role:{_eq:"member"}
-		}}`} />
+	<List
+		where={{
+			roles: {
+				_or: [{ valid_till: { _gte: 'NOW()' } }, { valid_till: { _is_null: true } }],
+				valid_from: { _lte: 'NOW()' },
+				role: { _eq: 'member' }
+			}
+		}}
+	/>
 </section>
 
 <style>
@@ -30,5 +30,4 @@
 	h1 {
 		width: 100%;
 	}
-
 </style>
