@@ -3,15 +3,15 @@
 	import { setEnvironment } from '$houdini';
 
 	setEnvironment(env);
-	import { token } from '$lib/graphql';
 
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
 	export async function load({ page, session }) {
-		if (session.user) {
-			token.set(session.user.token);
-		} else if (!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(page.path)) {
+		if (
+			!session.user &&
+			!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(page.path)
+		) {
 			return {
 				status: 302,
 				redirect: '/login'
@@ -23,14 +23,8 @@
 </script>
 
 <script lang="ts">
-	import { session } from '$app/stores';
-
 	import Header from '$lib/Header/index.svelte';
 	import '../app.css';
-
-	$: if ($session.user) {
-		$token = $session.user.token;
-	}
 </script>
 
 <main>

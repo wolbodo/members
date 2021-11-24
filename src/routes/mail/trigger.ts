@@ -3,9 +3,11 @@ import mjml from 'mjml'
 import { JSDOM } from 'jsdom'
 
 import { serverToken } from '$lib/jwt'
-import { client, token, gql } from '$lib/graphql'
+import { gql, GraphQLClient } from 'graphql-request'
+import { GRAPHQL_ENDPOINT } from '$lib/config'
 
 import templates from '$lib/mail/templates'
+const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
 // Try sending the mail, untill the moment the mail is really sent, we can still retry sending.
 const transporter = nodemailer.createTransport({
@@ -36,9 +38,7 @@ export async function post({ body }) {
     },
   } = body  
 
-	const _token = serverToken('mail')
-	token.set(_token)
-  console.log("Mail:", id, _token)
+  client.setHeader('authorization', serverToken('mail'))
 
   const { mail } = await client.request(gql`
     query getEmail($id: Int!) {
