@@ -38,7 +38,7 @@ export async function post({ body }) {
     },
   } = body  
 
-  client.setHeader('authorization', serverToken('mail'))
+  client.setHeader('authorization', `Bearer ${serverToken('mail')}`)
 
   const { mail } = await client.request(gql`
     query getEmail($id: Int!) {

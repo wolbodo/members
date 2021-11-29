@@ -2,6 +2,12 @@
 @import '@fontsource/righteous';
 @import '@fontsource/rubik';
 
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+* {
+	margin: 0;
+}
 :root {
 	--font: "Rubik", 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-heading: "Righteous";
@@ -21,9 +27,13 @@
 	font-family: var(--font);
 }
 
+html, body {
+	height: 100%;
+}
 body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
 	min-height: 100vh;
-	margin: 0;
 	background-color: var(--primary-color);
 	background: linear-gradient(
 		180deg,
@@ -32,7 +42,14 @@ body {
 		var(--tertiary-color) 41.35%
 	);
 }
-
+img, picture, video, canvas, svg {
+	display: block;
+	max-width: 100%;
+}
+p, h1, h2, h3, h4, h5, h6 {
+	overflow-wrap: break-word;
+}
+  
 body::before {
 	content: '';
 	width: 80vw;
@@ -50,6 +67,7 @@ body::before {
 }
 
 #svelte {
+	isolation: isolate;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -110,6 +128,7 @@ select,
 textarea {
   font-family: inherit;
   font-size: inherit;
+  font: inherit;
   max-width: 400px;
   width: 100%;
   padding: .5rem;
