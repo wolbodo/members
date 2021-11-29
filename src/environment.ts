@@ -2,13 +2,13 @@ import { Environment } from '$houdini'
 
 export default new Environment(async function ({ text, variables = {} }, session) {
 	const headers: { Authorization?: string} = {};
-	console.log("HI")
+	console.log("HI", this)
 	if (session.user) {
 		headers.Authorization = `Bearer ${session.user.token}`;
 	}
 	
-	if (this.stuff?.role) {
-		headers['X-Hasura-Role'] = this.stuff.role
+	if (this.stuff?.currentRole || session.currentRole ) {
+		headers['X-Hasura-Role'] = this.stuff?.currentRole || session.currentRole
 	}
 
 	console.log(headers)

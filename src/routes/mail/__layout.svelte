@@ -2,7 +2,7 @@
 	export const load = () => {
 		return {
 			stuff: {
-				role: 'board'
+				currentRole: 'board'
 			}
 		};
 	};

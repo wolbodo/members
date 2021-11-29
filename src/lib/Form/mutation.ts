@@ -1,5 +1,4 @@
 
-import { client } from '$lib/graphql'
 
 export function mutation(
   form: HTMLFormElement, {

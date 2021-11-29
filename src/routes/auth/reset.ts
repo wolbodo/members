@@ -1,8 +1,11 @@
+import { gql, GraphQLClient } from 'graphql-request'
 import type { RequestHandler } from '@sveltejs/kit';
 
 import type { Locals } from '$lib/types';
+import { GRAPHQL_ENDPOINT } from '$lib/config'
 import { serverToken, verifyToken } from '$lib/jwt'
-import { client, token, gql } from '$lib/graphql'
+
+const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const password = request.body.get('password')
@@ -15,7 +18,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
   const { sub, id } = await verifyToken(resetToken)
 
   // Edit on behalf of the user
-	token.set(serverToken('password-reset', id))
+  client.setHeader('authorization', `Bearer ${serverToken('password-reset', id)}`)
 
   if (sub !== 'password-reset') throw new Error('Token invalid')
 

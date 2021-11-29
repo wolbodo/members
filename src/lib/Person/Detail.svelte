@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount, createEventDispatcher } from 'svelte';
 	import { datetime } from '$lib/format';
-	import { client, gql } from '$lib/graphql';
 	import { Input, RoleSelector, mutation as gqlMutation } from '$lib/Form';
 
 	const dispatch = createEventDispatcher();

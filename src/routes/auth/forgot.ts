@@ -1,9 +1,12 @@
+import { gql, GraphQLClient } from 'graphql-request'
 import type { RequestHandler } from '@sveltejs/kit';
 
 import { send } from '$lib/mail'
 import type { Locals } from '$lib/types';
+import { GRAPHQL_ENDPOINT } from '$lib/config'
 import { serverToken, createToken } from '$lib/jwt'
-import { client, token, gql } from '$lib/graphql'
+
+const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
 export const post: RequestHandler<Locals, FormData> = async (request) => {
 	const email = request.body.get('email')
@@ -11,8 +14,8 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
   if (!email) {
     return { status: 400 }
   }
-    
-	token.set(serverToken('password-forgot'))
+  
+  client.setHeader('authorization', `Bearer ${serverToken('password-forgot')}`)
 
   const { person: [person]} = await client.request(gql`
     query personByEmail($email: String!) {

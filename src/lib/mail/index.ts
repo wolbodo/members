@@ -1,4 +1,3 @@
-import { client, gql } from '$lib/graphql'
 
 export { default as templates } from './templates'
 export const send = (personId, template, data) => client.request(gql`
