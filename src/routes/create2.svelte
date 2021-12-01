@@ -34,7 +34,6 @@
 
 	const addPerson = mutation<AddPerson>(graphql`
 		mutation AddPerson($data: auth_person_insert_input!) {
-			asdxmmmn
 			new_person: insert_auth_person_one(object: $data) {
 				id
 				name

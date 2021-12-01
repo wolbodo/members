@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@fontsource/fira-mono": "^4.2.2",
+    "@fontsource/material-icons-outlined": "^4.5.0",
     "@fontsource/righteous": "^4.4.5",
     "@fontsource/rubik": "^4.4.5",
     "@lukeed/uuid": "^2.0.0",
