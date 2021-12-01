@@ -1,6 +1,7 @@
 @import '@fontsource/fira-mono';
 @import '@fontsource/righteous';
 @import '@fontsource/rubik';
+@import '@fontsource/material-icons-outlined';
 
 *, *::before, *::after {
 	box-sizing: border-box;
@@ -13,10 +14,10 @@
 	--font-heading: "Righteous";
 	--font-mono: 'Fira Mono', monospace;
 	--pure-white: #ffffff;
-	--primary-color: #b9c6d2;
+	--primary-color: #2e6aa1;
 	--secondary-color: #d0dde9;
 	--tertiary-color: #edf0f8;
-	--quaternary-color: #9aa7b3;
+	--quaternary-color: #b9c6d2;
 	--accent-color: #ff3e00;
 	--heading-color: rgba(0, 0, 0, 0.7);
 	--text-color: #444444;
@@ -50,6 +51,11 @@ p, h1, h2, h3, h4, h5, h6 {
 	overflow-wrap: break-word;
 }
   
+.icon {
+	font-family: "Material Icons Outlined";
+	text-transform: none;
+}
+
 body::before {
 	content: '';
 	width: 80vw;
@@ -68,9 +74,11 @@ body::before {
 
 #svelte {
 	isolation: isolate;
-	min-height: 100vh;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
+
+	overflow: auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
