@@ -27,9 +27,9 @@
 	import '../app.css';
 </script>
 
-<main>
-	<Header />
+<Header />
 
+<main>
 	<slot />
 </main>
 

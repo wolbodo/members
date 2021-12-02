@@ -6,7 +6,7 @@
 	export let type: string | SvelteComponent = 'text';
 	export let value: any = null;
 	export let format: (any) => string = (value) => value;
-	export let readonly: boolean = false;
+	export let readOnly: boolean = false;
 
 	let _class;
 	export { _class as class };
@@ -18,30 +18,30 @@
 </script>
 
 <section class:changed class={_class}>
-	<!-- {#if value || !readonly} -->
-	<label transition:slide for={name}>{label || name}</label>
-	{#if type === 'textarea'}
-		<textarea
-			transition:slide
-			id={name}
-			{readonly}
-			{...$$restProps}
-			on:change={() => (changed = true)}
-		/>
-	{:else if typeof type === 'string'}
-		<input
-			transition:slide
-			class:changed
-			value={value ? format(value) : ''}
-			id={name}
-			{readonly}
-			{...$$restProps}
-			on:change={() => (changed = true)}
-		/>
-	{:else}
-		<svelte:component this={type} id={name} {...$$restProps} />
+	{#if value || !readOnly}
+		<label transition:slide for={name}>{label || name}</label>
+		{#if type === 'textarea'}
+			<textarea
+				transition:slide
+				id={name}
+				{readOnly}
+				{...$$props}
+				on:change={() => (changed = true)}
+			/>
+		{:else if typeof type === 'string'}
+			<input
+				transition:slide
+				class:changed
+				value={value ? format(value) : ''}
+				id={name}
+				{readOnly}
+				{...$$props}
+				on:change={() => (changed = true)}
+			/>
+		{:else}
+			<svelte:component this={type} id={name} {...$$props} />
+		{/if}
 	{/if}
-	<!-- {/if} -->
 </section>
 
 <style>
@@ -50,25 +50,25 @@
 	}
 	input,
 	textarea {
-		background: var(--tertiary-color);
-		border-color: rgba(255, 255, 255, 0.1);
+		background: var(--white);
+		border-color: var(--neutral-4);
 	}
 
 	input:focus,
 	section:hover input,
 	.changed input {
 		background: var(--pure-white);
-		box-shadow: 0 0 5px 1px var(--accent-color);
+		box-shadow: 0 0 5px 1px var(--info-color);
 	}
 	section:hover input,
 	.changed input {
 		background: var(--pure-white);
-		box-shadow: 0 0 5px 1px var(--quaternary-color);
+		box-shadow: 0 0 5px 1px var(--primary-color);
 	}
 
-	input[readonly],
-	input[readonly]:hover,
-	section:hover input[readonly] {
+	input[readOnly],
+	input[readOnly]:hover,
+	section:hover input[readOnly] {
 		color: black;
 		background: initial;
 		padding: initial;
@@ -78,6 +78,6 @@
 	}
 
 	.changed label {
-		color: var(--quaternary-color);
+		color: var(--primary-color);
 	}
 </style>
