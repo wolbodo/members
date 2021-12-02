@@ -13,15 +13,41 @@
 	--font: "Rubik", 'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-heading: "Righteous";
 	--font-mono: 'Fira Mono', monospace;
-	--pure-white: #ffffff;
-	--primary-color: #2e6aa1;
-	--secondary-color: #d0dde9;
-	--tertiary-color: #edf0f8;
-	--quaternary-color: #b9c6d2;
-	--accent-color: #ff3e00;
-	--heading-color: rgba(0, 0, 0, 0.7);
-	--text-color: #444444;
-	--background-without-opacity: rgba(255, 255, 255, 0.7);
+
+	/* Danger */
+	--danger-1: #2b1306;
+	--danger-2: #811e01;
+	--danger-3: #d23302;
+	--danger-4: #fe8054;
+	--danger-5: #fcd0c0;
+
+	/* Primary */
+	--primary-1: #071d1c;
+	--primary-2: #044d4b;
+	--primary-3: #01807d;
+	--primary-4: #03bab5;
+	--primary-5: #8bebe6;
+
+	/* Info */
+	--info-1: #061c2b;
+	--info-2: #024a6f;
+	--info-3: #097ab4;
+	--info-4: #30b1fe;
+	--info-5: #c1defb;
+
+	/* Neutral */
+	--neutral-1: #181a1a;
+	--neutral-2: #3f4645;
+	--neutral-3: #697473;
+	--neutral-4: #9fa8a7;
+	--neutral-5: #d7dbda;
+
+	--white: #e8ebf0;
+	--pure-white: #f9fbff;
+
+	--primary-color: var(--info-3);
+	--accent-color: var(--danger-3);
+	--text-color: var(--neutral-1);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 
@@ -38,9 +64,8 @@ body {
 	background-color: var(--primary-color);
 	background: linear-gradient(
 		180deg,
-		var(--primary-color) 0%,
-		var(--secondary-color) 10.45%,
-		var(--tertiary-color) 41.35%
+		var(--neutral-5) 20%,
+		var(--primary-5) 90%
 	);
 }
 img, picture, video, canvas, svg {
@@ -89,7 +114,7 @@ h1,
 h2,
 p {
 	font-weight: 400;
-	color: var(--heading-color);
+	color: var(--neutral-2);
 }
 
 p {
@@ -118,7 +143,7 @@ h2 {
 pre {
 	font-size: 16px;
 	font-family: var(--font-mono);
-	background-color: rgba(255, 255, 255, 0.45);
+	background-color: var(--neutral-0);
 	border-radius: 3px;
 	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
 	padding: 0.5em;
@@ -126,10 +151,6 @@ pre {
 	color: var(--text-color);
 }
 
-button {
-	font-size: inherit;
-	font-family: inherit;
-}
 
 input,
 select,
@@ -143,7 +164,7 @@ textarea {
   margin: .5rem;
   box-sizing: border-box;
   border: 1px solid var(--secondary-color);
-  box-shadow: 0 0 0 4px rgb(218, 218, 230);
+  box-shadow: 0 0 0 4px var(--neutral-4);
   border-radius: 4px;
   transition: all 150ms ease;
   background: var(--pure-white);
@@ -157,7 +178,6 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 4px rgb(227, 227, 245);
   border-color: var(--secondary-color);
 }
 
@@ -177,7 +197,7 @@ textarea[readonly] {
 
 button,a.button {
   color: #fff;
-  background-color: var(--primary-color);
+  background-color: var(--primary-3);
   border: none;
   text-transform: uppercase;
   letter-spacing: 1.8px;
@@ -191,24 +211,25 @@ button,a.button {
   transition: all 150ms ease;
   cursor: pointer;
 }
-button.accent,a.button.accent {
-	background-color: var(--accent-color);
-}
-
 button:disabled,a.button:disabled {
-  background-color: var(--secondary-color);
+  background-color: var(--neutral-4);
 }
-
-
 button:focus:not(:disabled),
 a.button:focus:not(:disabled) {
-  box-shadow: 0 0 0 4px var(--secondary-color);
+  box-shadow: 0 0 0 4px var(--info-3);
 }
 
 button:hover:not(:disabled),
 a.button:hover:not(:disabled) {
-  background-color: var(--quaternary-color);
+  background-color: var(--info-4);
 }
+
+button.danger,a.button.danger {
+	background-color: var(--danger-3);
+}
+
+
+
 
 label {
   display: block;

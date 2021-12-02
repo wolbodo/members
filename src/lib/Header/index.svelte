@@ -1,8 +1,9 @@
 <script context="module">
-	import { writable } from 'svelte/store'
+	import { writable } from 'svelte/store';
 
-	export const filterFields = (search, ...fields) => fields.some(field => field && field.match(search))
-	export const searchValue = writable(new RegExp('', 'i'))
+	export const filterFields = (search, ...fields) =>
+		fields.some((field) => field && field.match(search));
+	export const searchValue = writable(new RegExp('', 'i'));
 </script>
 
 <script lang="ts">
@@ -10,53 +11,64 @@
 	import { session, page } from '$app/stores';
 	import logo from './logo.svg';
 
-	async function logout() {
-		$session.user = null
-		await fetch('/auth/logout', { method: 'post'})
-		goto('/')
+	const focus = (node) => node.focus();
+	let _searchValue = '';
+
+	$: {
+		$searchValue = new RegExp(_searchValue, 'i');
 	}
-
-	const focus = node => node.focus()
-	let _searchValue = ''
-
-	$: { $searchValue = new RegExp(_searchValue, 'i') }
 </script>
 
 <header>
-	<div class="corner">
-		<a href="/">
-			<img src={logo} alt="SvelteKit" />
-		</a>
-	</div>
+	<nav>
+		<section class="corner">
+			<a href="/">
+				<img src={logo} alt="SvelteKit" />
+			</a>
+		</section>
 
-	{#if $session.user}
-		<div class='search'>
-			<input bind:value={_searchValue} use:focus placeholder="Search" />
-		</div>
+		{#if $session.user}
+			<section class="search">
+				<input bind:value={_searchValue} use:focus placeholder="Search" />
+			</section>
 
-		<nav>
-			<ul>
-				<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
-				<li class:active={$page.path === '/all'}><a sveltekit:prefetch href="/all">All</a></li>
+			<nav>
+				<ul>
+					<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
+					<li class:active={$page.path === '/all'}><a sveltekit:prefetch href="/all">All</a></li>
 					{#if $session.user.roles.includes('board')}
-						<li class:active={$page.path === '/create'}><a sveltekit:prefetch href="/create">Create</a></li>
-						<li class:active={$page.path === '/mail'}><a sveltekit:prefetch href="/mail">Mail</a></li>
-						<li class:active={$page.path === '/changes'}><a sveltekit:prefetch href="/changes">Changes</a></li>
+						<li class:active={$page.path === '/create'}>
+							<a sveltekit:prefetch href="/create">Create</a>
+						</li>
+						<li class:active={$page.path === '/mail'}>
+							<a sveltekit:prefetch href="/mail">Mail</a>
+						</li>
+						<li class:active={$page.path === '/changes'}>
+							<a sveltekit:prefetch href="/changes">Changes</a>
+						</li>
 					{/if}
-				<li class:active={$page.path === '/logout'}><a sveltekit:prefetch href="/logout">Logout</a></li>
-			</ul>
-		</nav>
-	{/if}
-		
-		<div class="corner">
+					<li class:active={$page.path === '/logout'}>
+						<a sveltekit:prefetch href="/logout">Logout</a>
+					</li>
+				</ul>
+			</nav>
+		{/if}
+
+		<section class="corner">
 			<!-- TODO put something else here? github link? -->
-		</div>
+		</section>
+	</nav>
 </header>
 
 <style>
 	header {
 		display: flex;
 		margin-bottom: 0.5rem;
+		background: var(--primary-3);
+	}
+	nav {
+		max-width: 1024px;
+		margin: 0 auto;
 	}
 
 	input {

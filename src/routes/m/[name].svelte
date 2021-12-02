@@ -74,14 +74,9 @@
 	import { datetime } from '$lib/format';
 	import { Input } from '$lib/Form';
 
-	import { session } from '$app/stores';
-	import { goto } from '$app/navigation';
-
 	export let isSelf = false;
 
-	let form,
-		edit = true,
-		error;
+	let form, edit, error;
 
 	const editPerson = mutation<EditPerson>(graphql`
 		mutation EditPerson($id: Int!, $data: auth_person_set_input!) {
@@ -141,7 +136,6 @@
 			Array.from(entries).filter(([name, value]) => person[name] !== value)
 		);
 		console.log('Should update person', formData, Array.from(entries), data);
-		debugger;
 
 		try {
 			const result = await editPerson({ id: person.id, data });
@@ -160,18 +154,18 @@
 			{edit ? 'close' : 'mode_edit'}
 		</button>
 
-		<Input name="name" value={person.name} class="wide" readonly={!edit} />
-		<Input name="firstname" value={person.firstname} readonly={!edit} />
-		<Input name="lastname" value={person.lastname} readonly={!edit} />
-		<Input name="email" value={person.email} type="email" readonly={!edit} />
-		<Input name="phone" value={person.phone} type="phone" readonly={!edit} />
+		<Input name="name" value={person.name} class="wide" readOnly={!edit} />
+		<Input name="firstname" value={person.firstname} readOnly={!edit} />
+		<Input name="lastname" value={person.lastname} readOnly={!edit} />
+		<Input name="email" value={person.email} type="email" readOnly={!edit} />
+		<Input name="phone" value={person.phone} type="phone" readOnly={!edit} />
 
-		<Input name="bankaccount" value={person.bankaccount} readonly={!edit} />
-		<Input label="keycode" name="key_code" value={person.key} readonly={!edit} />
+		<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
+		<Input label="keycode" name="key_code" value={person.key} readOnly={!edit} />
 
 		<!-- <Input name="roles" value={person.roles} /> -->
-		<Input name="password" value={person.password} readonly={!edit} />
-		<Input name="note" value={person.note} type="textarea" readonly={!edit} />
+		<Input name="password" value={person.password} readOnly={!edit} />
+		<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
 
 		<section>
 			<b>#{person.id}</b>
@@ -219,7 +213,7 @@
 		justify-self: end;
 	}
 	button.edit {
-		background-color: var(--accent-color);
+		background-color: var(--danger-3);
 	}
 	pre {
 		height: 10rem;
