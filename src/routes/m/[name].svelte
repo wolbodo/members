@@ -53,6 +53,7 @@
 <script lang="ts" context="module">
 	export function onLoad({ page, session }) {
 		return {
+			name: page.params.name,
 			isSelf: session.user?.name.toLowerCase() === page.params.name.toLowerCase()
 		};
 	}
@@ -72,8 +73,9 @@
 
 	import { query, mutation, graphql, EditPerson, GetPersonForEdit } from '$houdini';
 	import { datetime } from '$lib/format';
-	import { Input } from '$lib/Form';
+	import { Input, RoleSelector } from '$lib/Form';
 
+	export let name;
 	export let isSelf = false;
 
 	let form, edit, error;
@@ -101,7 +103,7 @@
 
 	const { data, refetch } = query<GetPersonForEdit>(graphql`
 		query GetPersonForEdit($name: String, $isSelf: Boolean = false) {
-			person: auth_person(where: { name: { _ilike: $name } }, limit: 1) {
+			auth_person(where: { name: { _ilike: $name } }, limit: 1) {
 				name
 				firstname
 				lastname
@@ -115,17 +117,12 @@
 				id
 				created
 				modified
-				roles {
-					id
-					role
-					valid_from
-					valid_till
-				}
+				...RoleSelector
 				bankaccount @include(if: $isSelf)
 			}
 		}
 	`);
-	$: [person] = $data.person;
+	$: [person] = $data.auth_person;
 
 	const submit = async (e) => {
 		e.preventDefault();
@@ -146,6 +143,10 @@
 			console.log('err', err);
 		}
 	};
+
+	$: {
+		console.log('person', person);
+	}
 </script>
 
 <content>
@@ -162,6 +163,12 @@
 
 		<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
 		<Input label="keycode" name="key_code" value={person.key} readOnly={!edit} />
+
+		<RoleSelector
+			personId={person.id}
+			roles={person.roles}
+			refetch={() => refetch({ name, isSelf })}
+		/>
 
 		<!-- <Input name="roles" value={person.roles} /> -->
 		<Input name="password" value={person.password} readOnly={!edit} />

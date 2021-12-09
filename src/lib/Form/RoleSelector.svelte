@@ -1,94 +1,101 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import { DateTime, Settings } from 'luxon';
+	import { formatDate } from '$lib/util';
 
-	Settings.defaultLocale = 'nl';
+	import {
+		graphql,
+		query,
+		mutation,
+		fragment,
+		RoleSelector,
+		StopRole,
+		CreateRole,
+		AllRolesForOptions
+	} from '$houdini';
 
-	export let name;
-	export let readonly;
-	export let value = [];
+	export let roles;
+	export let personId: number;
+	export let refetch;
+	export let readOnly: boolean = false;
 	export let options = [];
 
-	const person = getContext('person');
+	const { data: rolesData } = query<AllRolesForOptions>(graphql`
+		query AllRolesForOptions {
+			auth_person_role(distinct_on: role) {
+				role
+			}
+		}
+	`);
+
+	const data = fragment<RoleSelector>(
+		graphql`
+			fragment RoleSelector on auth_person {
+				roles {
+					id
+					role
+					valid_from
+					valid_till
+				}
+			}
+		`,
+		roles
+	);
+	const stopRole = mutation<StopRole>(graphql`
+		mutation StopRole($id: Int!) {
+			update_auth_person_role_by_pk(pk_columns: { id: $id }, _set: { valid_till: "NOW()" }) {
+				id
+			}
+		}
+	`);
+	const createRole = mutation<CreateRole>(graphql`
+		mutation CreateRole($personId: Int!, $role: String!) {
+			insert_auth_person_role_one(object: { person_id: $personId, role: $role }) {
+				id
+			}
+		}
+	`);
+
+	$: {
+		console.log('roles', roles, $data);
+	}
 
 	let newRoleName = '';
-	$: currentRoles = value
-		? value
+	$: currentRoles = roles
+		? roles
 				.filter(({ valid_till }) => !valid_till)
 				.sort(({ valid_from: a }, { valid_from: b }) => b - a)
 		: [];
-	$: pastRoles = value
-		? value
+	$: pastRoles = roles
+		? roles
 				.filter(({ valid_till }) => valid_till)
 				.sort(({ valid_from: a }, { valid_from: b }) => b - a)
 		: [];
-
-	const stopRole = async (roleId) => {
-		const {
-			stoppedRole: { valid_till }
-		} = await client.request(
-			gql`
-				mutation stopRole($roleId: Int!) {
-					stoppedRole: update_auth_person_role_by_pk(
-						pk_columns: { id: $roleId }
-						_set: { valid_till: "NOW()" }
-					) {
-						id
-						valid_from
-						valid_till
-					}
-				}
-			`,
-			{ roleId },
-			{ 'X-Hasura-Role': 'board' }
-		);
-
-		const role = value.find(({ id }) => id === roleId);
-		role.valid_till = valid_till;
-
-		value = value;
-	};
-
-	const createRole = async (personId, role) => {
-		const response = await client.request(
-			gql`
-				mutation createRole($personId: Int!, $role: String!) {
-					newRole: insert_auth_person_role_one(object: { person_id: $personId, role: $role }) {
-						id
-						person_id
-						role
-						valid_from
-						valid_till
-					}
-				}
-			`,
-			{ personId, role },
-			{ 'X-Hasura-Role': 'board' }
-		);
-		const { newRole } = response;
-		value = [...value, newRole];
-	};
+	$: possibleRoles = $rolesData?.auth_person_role;
+	$: {
+		console.log(possibleRoles);
+	}
+	// $: possibleRoles = $rolesData?.auth_person_role.filter((opt) => !currentRoles
+	// 							.map(({ role }) => role)
+	// 							.includes(opt) && opt.match(newRoleName))
 
 	const submitForm = (e) => {
 		e.preventDefault();
 		e.stopPropagation();
 		console.log('Stopped form', newRoleName);
 
-		createRole(person.id, newRoleName.toLowerCase());
+		createRole(personId, newRoleName.toLowerCase());
 		newRoleName = '';
 	};
 </script>
 
 <form on:submit={submitForm}>
-	{#if !readonly}
+	{#if !readOnly}
 		<section>
 			<input type="text" bind:value={newRoleName} placeholder="type to add a role" />
-
+			{newRoleName}
 			{#if newRoleName}
 				<ul class="options">
-					{#each options.filter((opt) => !currentRoles
-								.map(({ role }) => role)
-								.includes(opt) && opt.match(newRoleName)) as option}
+					{#each possibleRoles as option}
 						<li>
 							<button
 								type="button"
@@ -107,14 +114,20 @@
 	{/if}
 </form>
 
-{#if value}
+{#if roles}
 	<ul class="roles">
 		{#each currentRoles as role}
 			<li>
-				<span>{role.role} since {DateTime.fromISO(role.valid_from).toLocaleString()}</span>
+				<span>{role.role} since {formatDate(role.valid_from)}</span>
 
-				{#if !readonly}
-					<button type="button" on:click={() => stopRole(role.id)}>Stop</button>
+				{#if !readOnly}
+					<button
+						type="button"
+						on:click={async () => {
+							await stopRole({ id: role.id });
+							await refetch();
+						}}>Stop</button
+					>
 				{/if}
 			</li>
 		{:else}
@@ -126,11 +139,7 @@
 				<li>
 					<span>{role}</span>
 
-					<span
-						>from {DateTime.fromISO(valid_from).toLocaleString()} until {DateTime.fromISO(
-							valid_till
-						).toLocaleString()}</span
-					>
+					<span>from {formatDate(valid_from)} until {formatDate(valid_till)}</span>
 				</li>
 			{/each}
 		{/if}
