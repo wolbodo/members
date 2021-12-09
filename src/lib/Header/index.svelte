@@ -11,10 +11,20 @@
 	import logo from './logo.svg';
 
 	const focus = (node) => node.focus();
+	let searchOpen = false;
 	let _searchValue = '';
 
 	$: {
 		$searchValue = new RegExp(_searchValue, 'i');
+	}
+
+	function scale(node, { delay = 0, duration = 400 }) {
+		const o = parseFloat(getComputedStyle(node).width);
+		return {
+			delay,
+			duration,
+			css: (t) => `width: ${t * o}px`
+		};
 	}
 </script>
 
@@ -28,8 +38,13 @@
 		</section>
 
 		{#if $session.user}
-			<section class="search">
-				<input bind:value={_searchValue} use:focus placeholder="Search" />
+			<section class="search" class:searchOpen>
+				{#if searchOpen}
+					<input transition:scale bind:value={_searchValue} use:focus placeholder="Search" />
+				{/if}
+				<button type="button" class="icon" on:click={() => (searchOpen = !searchOpen)}>
+					{searchOpen ? 'close' : 'search'}
+				</button>
 			</section>
 
 			<ul>
@@ -51,10 +66,6 @@
 				</li>
 			</ul>
 		{/if}
-
-		<section class="corner">
-			<!-- TODO put something else here? github link? -->
-		</section>
 	</nav>
 </header>
 
@@ -88,8 +99,37 @@
 		transition: color 0.2s linear;
 	}
 
-	input {
+	.search {
+		position: relative;
+		min-width: 3rem;
+	}
+	.search button {
+		margin: 0;
+		font-size: 1.5rem;
+		line-height: 1.5rem;
+		padding: 0 0.7rem;
+		height: 100%;
+		border-radius: 0;
+		background: var(--primary-4);
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	.search button:focus {
+		box-shadow: none;
+		outline: 4px solid var(--primary-4);
+		outline-offset: -4px;
+		background: var(--primary-5);
+		color: var(--heading-color);
+	}
+	.search.searchOpen button {
+		background: none;
+		color: var(--primary-1);
+	}
+
+	.search input {
 		height: 3rem;
+		min-width: 3rem;
 		margin: 0;
 		border-radius: 0;
 		box-shadow: none;
@@ -112,6 +152,13 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
+	}
+	nav a:focus {
+		outline: 4px solid var(--primary-4);
+		outline-offset: -4px;
+	}
+	nav a:hover {
+		color: var(--primary-1);
 	}
 
 	nav img {
@@ -147,10 +194,6 @@
 		top: 0;
 		left: calc(50% - var(--size));
 		border: var(--size) solid transparent;
-		border-top: var(--size) solid var(--accent-color);
-	}
-
-	a:hover {
-		color: var(--accent-color);
+		border-top: var(--size) solid var(--primary-2);
 	}
 </style>
