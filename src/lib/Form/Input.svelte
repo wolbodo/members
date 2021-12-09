@@ -3,7 +3,7 @@
 
 	export let name: string;
 	export let label: string = null;
-	export let type: string | SvelteComponent = 'text';
+	export let type: string = 'text';
 	export let value: any = null;
 	export let format: (any) => string = (value) => value;
 	export let readOnly: boolean = false;
@@ -38,8 +38,6 @@
 				{...$$props}
 				on:change={() => (changed = true)}
 			/>
-		{:else}
-			<svelte:component this={type} id={name} {...$$props} />
 		{/if}
 	{/if}
 </section>

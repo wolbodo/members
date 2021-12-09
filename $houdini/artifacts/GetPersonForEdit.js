@@ -1,10 +1,10 @@
 export default {
     name: "GetPersonForEdit",
     kind: "HoudiniQuery",
-    hash: "3b696f6fc9d8f2fa178e88044a9c348368a6dcb146db2ca7ce72f57aa2abe0ee",
+    hash: "62459e312a24361e4978a2e21f8ca6e30b0cb98c87da6233c569fb497e106edb",
 
     raw: `query GetPersonForEdit($name: String, $isSelf: Boolean = false) {
-  person: auth_person(where: {name: {_ilike: $name}}, limit: 1) {
+  auth_person(where: {name: {_ilike: $name}}, limit: 1) {
     name
     firstname
     lastname
@@ -18,13 +18,17 @@ export default {
     id
     created
     modified
-    roles {
-      id
-      role
-      valid_from
-      valid_till
-    }
+    ...RoleSelector
     bankaccount @include(if: $isSelf)
+  }
+}
+
+fragment RoleSelector on auth_person {
+  roles {
+    id
+    role
+    valid_from
+    valid_till
   }
 }
 `,
@@ -32,9 +36,9 @@ export default {
     rootType: "query_root",
 
     selection: {
-        person: {
+        auth_person: {
             type: "auth_person",
-            keyRaw: "person(where: {name: {_ilike: $name}}, limit: 1)",
+            keyRaw: "auth_person(where: {name: {_ilike: $name}}, limit: 1)",
 
             fields: {
                 name: {

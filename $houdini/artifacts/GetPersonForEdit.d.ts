@@ -4,7 +4,7 @@ export type GetPersonForEdit = {
 };
 
 export type GetPersonForEdit$result = {
-    readonly person: ({
+    readonly auth_person: ({
         readonly name: string,
         readonly firstname: string | null,
         readonly lastname: string | null,
@@ -18,13 +18,10 @@ export type GetPersonForEdit$result = {
         readonly id: number,
         readonly created: string | null,
         readonly modified: string | null,
-        readonly roles: ({
-            readonly id: number,
-            readonly role: string,
-            readonly valid_from: string | null,
-            readonly valid_till: string | null
-        })[],
-        readonly bankaccount: string | null
+        readonly bankaccount: string | null,
+        readonly $fragments: {
+            RoleSelector: true
+        }
     })[]
 };
 

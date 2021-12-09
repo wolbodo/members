@@ -7,7 +7,6 @@
 </script>
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { session, page } from '$app/stores';
 	import logo from './logo.svg';
 
@@ -21,9 +20,10 @@
 
 <header>
 	<nav>
-		<section class="corner">
+		<section class="home">
 			<a href="/">
 				<img src={logo} alt="SvelteKit" />
+				<h1>Members</h1>
 			</a>
 		</section>
 
@@ -32,26 +32,24 @@
 				<input bind:value={_searchValue} use:focus placeholder="Search" />
 			</section>
 
-			<nav>
-				<ul>
-					<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
-					<li class:active={$page.path === '/all'}><a sveltekit:prefetch href="/all">All</a></li>
-					{#if $session.user.roles.includes('board')}
-						<li class:active={$page.path === '/create'}>
-							<a sveltekit:prefetch href="/create">Create</a>
-						</li>
-						<li class:active={$page.path === '/mail'}>
-							<a sveltekit:prefetch href="/mail">Mail</a>
-						</li>
-						<li class:active={$page.path === '/changes'}>
-							<a sveltekit:prefetch href="/changes">Changes</a>
-						</li>
-					{/if}
-					<li class:active={$page.path === '/logout'}>
-						<a sveltekit:prefetch href="/logout">Logout</a>
+			<ul>
+				<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
+				<li class:active={$page.path === '/all'}><a sveltekit:prefetch href="/all">All</a></li>
+				{#if $session.user.roles.includes('board')}
+					<li class:active={$page.path === '/create'}>
+						<a sveltekit:prefetch href="/create">Create</a>
 					</li>
-				</ul>
-			</nav>
+					<li class:active={$page.path === '/mail'}>
+						<a sveltekit:prefetch href="/mail">Mail</a>
+					</li>
+					<li class:active={$page.path === '/changes'}>
+						<a sveltekit:prefetch href="/changes">Changes</a>
+					</li>
+				{/if}
+				<li class:active={$page.path === '/logout'}>
+					<a sveltekit:prefetch href="/logout">Logout</a>
+				</li>
+			</ul>
 		{/if}
 
 		<section class="corner">
@@ -63,12 +61,31 @@
 <style>
 	header {
 		display: flex;
+		align-self: stretch;
+		justify-content: center;
 		margin-bottom: 0.5rem;
 		background: var(--primary-3);
 	}
+
 	nav {
-		max-width: 1024px;
-		margin: 0 auto;
+		width: 50rem;
+		max-width: 100%;
+		display: flex;
+		--background: rgba(255, 255, 255, 0.7);
+	}
+
+	nav a {
+		display: flex;
+		height: 100%;
+		align-items: center;
+		padding: 0 1em;
+		color: var(--heading-color);
+		font-weight: 700;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 10%;
+		text-decoration: none;
+		transition: color 0.2s linear;
 	}
 
 	input {
@@ -78,12 +95,18 @@
 		box-shadow: none;
 	}
 
-	.corner {
-		width: 3em;
-		height: 3em;
+	nav section {
+		height: 3rem;
 	}
 
-	.corner a {
+	nav .home h1 {
+		margin: 0 0.5rem;
+		text-transform: none;
+		color: white;
+		font-size: 1.5rem;
+	}
+
+	nav a {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -91,16 +114,10 @@
 		height: 100%;
 	}
 
-	.corner img {
+	nav img {
 		width: 2em;
 		height: 2em;
 		object-fit: contain;
-	}
-
-	nav {
-		display: flex;
-		justify-content: center;
-		--background: rgba(255, 255, 255, 0.7);
 	}
 
 	ul {
@@ -131,20 +148,6 @@
 		left: calc(50% - var(--size));
 		border: var(--size) solid transparent;
 		border-top: var(--size) solid var(--accent-color);
-	}
-
-	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 1em;
-		color: var(--heading-color);
-		font-weight: 700;
-		font-size: 0.8rem;
-		text-transform: uppercase;
-		letter-spacing: 10%;
-		text-decoration: none;
-		transition: color 0.2s linear;
 	}
 
 	a:hover {
