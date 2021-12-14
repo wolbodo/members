@@ -1,9 +1,9 @@
 export default {
     name: "GetPersonForEdit",
     kind: "HoudiniQuery",
-    hash: "62459e312a24361e4978a2e21f8ca6e30b0cb98c87da6233c569fb497e106edb",
+    hash: "0ef8f523f6d38098eb2ffb7300343e457cfeaa92afd8531c4f74e9f1375e4d5c",
 
-    raw: `query GetPersonForEdit($name: String, $isSelf: Boolean = false) {
+    raw: `query GetPersonForEdit($name: String, $isBoard: Boolean = false) {
   auth_person(where: {name: {_ilike: $name}}, limit: 1) {
     name
     firstname
@@ -19,7 +19,8 @@ export default {
     created
     modified
     ...RoleSelector
-    bankaccount @include(if: $isSelf)
+    bankaccount @include(if: $isBoard)
+    key_code @include(if: $isBoard)
   }
 }
 
@@ -136,6 +137,11 @@ fragment RoleSelector on auth_person {
                 bankaccount: {
                     type: "String",
                     keyRaw: "bankaccount"
+                },
+
+                key_code: {
+                    type: "String",
+                    keyRaw: "key_code"
                 }
             }
         }
@@ -144,7 +150,7 @@ fragment RoleSelector on auth_person {
     input: {
         fields: {
             name: "String",
-            isSelf: "Boolean"
+            isBoard: "Boolean"
         },
 
         types: {}

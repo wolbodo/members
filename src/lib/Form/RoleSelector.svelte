@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Select from 'svelte-select';
+	import { slide } from 'svelte/transition';
 	import { formatDate } from '$lib/util';
 
 	import {
@@ -55,11 +56,6 @@
 		}
 	`);
 
-	$: {
-		console.log('roles', roles, $data);
-	}
-
-	let newRole = '';
 	$: currentRoles = roles
 		? roles
 				.filter(({ valid_till }) => !valid_till)
@@ -86,48 +82,57 @@
 	}
 </script>
 
-{#if !readOnly}
-	<Select
-		items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
-		bind:value
-		on:select={handleSelect}
-		isCreatable
-	/>
-{/if}
+<section class="wide">
+	<label transition:slide>Roles</label>
+	{#if !readOnly}
+		<Select
+			items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
+			bind:value
+			on:select={handleSelect}
+			isCreatable
+		/>
+	{/if}
 
-{#if roles}
-	<ul class="roles">
-		{#each currentRoles as role}
-			<li>
-				<span>{role.role} since {formatDate(role.valid_from)}</span>
-
-				{#if !readOnly}
-					<button
-						type="button"
-						on:click={async () => {
-							await stopRole({ id: role.id });
-							await refetch();
-						}}>Stop</button
-					>
-				{/if}
-			</li>
-		{:else}
-			<li>No current roles</li>
-		{/each}
-		{#if pastRoles.length}
-			<li>Past roles:</li>
-			{#each pastRoles as { role, valid_from, valid_till }}
+	{#if roles}
+		<ul class="roles">
+			{#each currentRoles as role}
 				<li>
-					<span>{role}</span>
+					<span>{role.role} since {formatDate(role.valid_from)}</span>
 
-					<span>from {formatDate(valid_from)} until {formatDate(valid_till)}</span>
+					{#if !readOnly}
+						<button
+							type="button"
+							on:click={async () => {
+								await stopRole({ id: role.id });
+								await refetch();
+							}}>Stop</button
+						>
+					{/if}
 				</li>
+			{:else}
+				<li>No current roles</li>
 			{/each}
-		{/if}
-	</ul>
-{/if}
+			{#if pastRoles.length}
+				<li>Past roles:</li>
+				{#each pastRoles as { role, valid_from, valid_till }}
+					<li>
+						<span>{role}</span>
+
+						<span>from {formatDate(valid_from)} until {formatDate(valid_till)}</span>
+					</li>
+				{/each}
+			{/if}
+		</ul>
+	{/if}
+</section>
 
 <style>
+	section {
+		--margin: 0.5rem;
+	}
+	section :global(input) {
+		max-width: inherit;
+	}
 	.options {
 		margin: 0;
 		padding: 0.5rem;
@@ -137,6 +142,7 @@
 
 	.roles {
 		padding: 0;
+		margin: var(--margin);
 	}
 	.roles li {
 		list-style: none;
