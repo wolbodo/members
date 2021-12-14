@@ -5,7 +5,7 @@ export default new Environment(async function ({ text, variables = {} }, session
 	if (session.user) {
 		headers.Authorization = `Bearer ${session.user.token}`;
 	}
-	
+	console.log("Got role:", this.stuff?.currentRole || session.currentRole)
 	if (this.stuff?.currentRole || session.currentRole ) {
 		headers['X-Hasura-Role'] = this.stuff?.currentRole || session.currentRole
 	}

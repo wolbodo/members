@@ -1,9 +1,9 @@
 export default {
-    name: "EditPerson",
+    name: "EditSelf",
     kind: "HoudiniMutation",
-    hash: "cdd4267d26923dcb4d1d5858dc189c1937823d0d76cd0d932f00b017eecc7943",
+    hash: "650dd4836922a28cf51ff58f8f24713e8793da971c8164a4199c9a9422721c35",
 
-    raw: `mutation EditPerson($id: Int!, $data: auth_person_set_input!) {
+    raw: `mutation EditSelf($id: Int!, $data: auth_person_set_input!) {
   person: update_auth_person(where: {id: {_eq: $id}}, _set: $data) {
     returning {
       name
@@ -20,7 +20,6 @@ export default {
       created
       modified
       bankaccount
-      key_code
     }
   }
 }
@@ -107,11 +106,6 @@ export default {
                         bankaccount: {
                             type: "String",
                             keyRaw: "bankaccount"
-                        },
-
-                        key_code: {
-                            type: "String",
-                            keyRaw: "key_code"
                         }
                     }
                 }

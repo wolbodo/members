@@ -1,6 +1,6 @@
-<script lang='ts'>
-  import { session } from '$app/stores';
-	import List from '$lib/Person/List.svelte'
+<script lang="ts">
+	import { session } from '$app/stores';
+	import List from '$lib/List.svelte';
 </script>
 
 <svelte:head>
@@ -25,5 +25,4 @@
 	h1 {
 		width: 100%;
 	}
-
 </style>

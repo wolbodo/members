@@ -9,7 +9,6 @@
 <script lang="ts">
 	import { session, page } from '$app/stores';
 	import logo from './logo.svg';
-	import { tick } from 'svelte';
 
 	const focus = (node) => node.focus();
 	let searchOpen = false;
@@ -86,7 +85,9 @@
 						<a sveltekit:prefetch href="/changes">Changes</a>
 					</li>
 				{/if}
-				<li class:active={$page.path === '/self'}><a sveltekit:prefetch href="/self">Self</a></li>
+				<li class:active={$page.path === '/self'}>
+					<a sveltekit:prefetch href="/self">{$session.user.name}</a>
+				</li>
 				<li class:active={$page.path === '/logout'}>
 					<a sveltekit:prefetch href="/logout">Logout</a>
 				</li>

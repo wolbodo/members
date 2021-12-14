@@ -1,9 +1,9 @@
-export type EditPerson = {
-    readonly "input": EditPerson$input,
-    readonly "result": EditPerson$result
+export type EditSelf = {
+    readonly "input": EditSelf$input,
+    readonly "result": EditSelf$result
 };
 
-export type EditPerson$result = {
+export type EditSelf$result = {
     readonly person: {
         readonly returning: ({
             readonly name: string,
@@ -19,8 +19,7 @@ export type EditPerson$result = {
             readonly id: number,
             readonly created: string | null,
             readonly modified: string | null,
-            readonly bankaccount: string | null,
-            readonly key_code: string | null
+            readonly bankaccount: string | null
         })[]
     } | null
 };
@@ -44,7 +43,7 @@ type auth_person_set_input = {
     zipcode: string | null | undefined
 };
 
-export type EditPerson$input = {
+export type EditSelf$input = {
     id: number,
     data: auth_person_set_input
 };

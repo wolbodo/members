@@ -18,8 +18,6 @@
 </script>
 
 <script lang="ts">
-	import { slide } from 'svelte/transition';
-
 	import { query, mutation, graphql, EditPerson, GetPersonForEdit } from '$houdini';
 	import { datetime } from '$lib/format';
 	import { Input, RoleSelector } from '$lib/Form';
@@ -33,7 +31,6 @@
 		mutation EditPerson($id: Int!, $data: auth_person_set_input!) {
 			person: update_auth_person(where: { id: { _eq: $id } }, _set: $data) {
 				returning {
-					id
 					name
 					firstname
 					lastname
@@ -44,7 +41,12 @@
 					city
 					country
 					note
+					id
+					created
 					modified
+
+					bankaccount
+					key_code
 				}
 			}
 		}
@@ -104,11 +106,16 @@
 			</button>
 		{/if}
 
-		<Input name="name" value={person.name} class="wide" readOnly={!edit} />
+		<Input name="name" value={person.name} class="wide" readOnly={!edit} required />
 		<Input name="firstname" value={person.firstname} readOnly={!edit} />
 		<Input name="lastname" value={person.lastname} readOnly={!edit} />
-		<Input name="email" value={person.email} type="email" readOnly={!edit} />
+		<Input name="email" value={person.email} type="email" readOnly={!edit} required />
 		<Input name="phone" value={person.phone} type="phone" readOnly={!edit} />
+
+		<Input name="address" value={person.address} readOnly={!edit} />
+		<Input name="zipcode" value={person.zipcode} readOnly={!edit} />
+		<Input name="city" value={person.city} readOnly={!edit} />
+		<Input name="country" value={person.country} readOnly={!edit} />
 
 		<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
 		<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit} />
@@ -130,7 +137,7 @@
 		</section>
 
 		{#if edit}
-			<section class="submit" transition:slide>
+			<section class="submit">
 				{#if error}
 					{#each error as error}
 						<small>{error.message}</small>

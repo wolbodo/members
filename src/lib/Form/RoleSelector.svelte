@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Select from 'svelte-select';
-	import { slide } from 'svelte/transition';
 	import { formatDate } from '$lib/util';
 
 	import {
@@ -83,7 +82,7 @@
 </script>
 
 <section class="wide">
-	<label transition:slide>Roles</label>
+	<label>Roles</label>
 	{#if !readOnly}
 		<Select
 			items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
