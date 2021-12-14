@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
+	import Select from 'svelte-select';
 	import { formatDate } from '$lib/util';
 
 	import {
@@ -70,58 +70,30 @@
 				.filter(({ valid_till }) => valid_till)
 				.sort(({ valid_from: a }, { valid_from: b }) => b - a)
 		: [];
-	$: possibleRoles = $rolesData?.auth_person_role;
-	$: {
-		console.log(possibleRoles);
-	}
+	$: possibleRoles = $rolesData?.auth_person_role.filter(
+		({ role }) => !currentRoles.find((currentRole) => currentRole.role === role)
+	);
 	// $: possibleRoles = $rolesData?.auth_person_role.filter((opt) => !currentRoles
 	// 							.map(({ role }) => role)
 	// 							.includes(opt) && opt.match(newRole))
 
-	let submitting;
-	const submitForm = async (e) => {
-		submitting = true;
-		e.preventDefault();
-		e.stopPropagation();
-		console.log('form', personId, newRole);
-
-		await createRole({ personId, role: newRole.toLowerCase() });
-		newRole = '';
+	let value;
+	async function handleSelect(event) {
+		await createRole({ personId, role: event.detail.value.toLowerCase() });
+		value = undefined;
 
 		await refetch();
-		submitting = false;
-	};
+	}
 </script>
 
-<form on:submit={submitForm} disabled={submitting}>
-	{#if !readOnly}
-		<section>
-			<input
-				type="text"
-				bind:value={newRole}
-				placeholder="type to add a role"
-				disabled={submitting}
-			/>
-			{#if newRole}
-				<ul class="options">
-					{#each possibleRoles as option}
-						<li>
-							<button
-								type="button"
-								on:click={(e) => {
-									newRole = option.role;
-									submitForm(e);
-								}}
-							>
-								{option.role}
-							</button>
-						</li>
-					{/each}
-				</ul>
-			{/if}
-		</section>
-	{/if}
-</form>
+{#if !readOnly}
+	<Select
+		items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
+		bind:value
+		on:select={handleSelect}
+		isCreatable
+	/>
+{/if}
 
 {#if roles}
 	<ul class="roles">
