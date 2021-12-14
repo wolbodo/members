@@ -59,7 +59,7 @@
 		console.log('roles', roles, $data);
 	}
 
-	let newRoleName = '';
+	let newRole = '';
 	$: currentRoles = roles
 		? roles
 				.filter(({ valid_till }) => !valid_till)
@@ -76,35 +76,44 @@
 	}
 	// $: possibleRoles = $rolesData?.auth_person_role.filter((opt) => !currentRoles
 	// 							.map(({ role }) => role)
-	// 							.includes(opt) && opt.match(newRoleName))
+	// 							.includes(opt) && opt.match(newRole))
 
-	const submitForm = (e) => {
+	let submitting;
+	const submitForm = async (e) => {
+		submitting = true;
 		e.preventDefault();
 		e.stopPropagation();
-		console.log('Stopped form', newRoleName);
+		console.log('form', personId, newRole);
 
-		createRole(personId, newRoleName.toLowerCase());
-		newRoleName = '';
+		await createRole({ personId, role: newRole.toLowerCase() });
+		newRole = '';
+
+		await refetch();
+		submitting = false;
 	};
 </script>
 
-<form on:submit={submitForm}>
+<form on:submit={submitForm} disabled={submitting}>
 	{#if !readOnly}
 		<section>
-			<input type="text" bind:value={newRoleName} placeholder="type to add a role" />
-			{newRoleName}
-			{#if newRoleName}
+			<input
+				type="text"
+				bind:value={newRole}
+				placeholder="type to add a role"
+				disabled={submitting}
+			/>
+			{#if newRole}
 				<ul class="options">
 					{#each possibleRoles as option}
 						<li>
 							<button
 								type="button"
 								on:click={(e) => {
-									newRoleName = option;
+									newRole = option.role;
 									submitForm(e);
 								}}
 							>
-								{option}
+								{option.role}
 							</button>
 						</li>
 					{/each}
