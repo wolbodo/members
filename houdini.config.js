@@ -1,7 +1,3 @@
-import dotenv from 'dotenv'
-
-dotenv.config()
-
 /** @type {import('houdini').ConfigFile} */
 const defaultMarshall = {
 	unmarshal(val) {
@@ -11,7 +7,7 @@ const defaultMarshall = {
 		return val;
 	}
 }
-
+console.log("URL:", process.env.GRAPHQL_ENDPOINT)
 const config = {
 	schemaPath: './schema.graphql',
 	sourceGlob: 'src/**/*.svelte',
