@@ -8,13 +8,15 @@
 	export let format: (any) => string = (value) => value;
 	export let readOnly: boolean = false;
 
-	let _class;
+	let _class = null;
 	export { _class as class };
 
 	let changed = false;
 	$: if (value) {
 		changed = false;
 	}
+
+	let formattedValue;
 </script>
 
 <section class:changed class={_class}>

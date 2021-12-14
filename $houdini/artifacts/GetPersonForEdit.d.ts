@@ -19,6 +19,7 @@ export type GetPersonForEdit$result = {
         readonly created: string | null,
         readonly modified: string | null,
         readonly bankaccount: string | null,
+        readonly key_code: string | null,
         readonly $fragments: {
             RoleSelector: true
         }
@@ -27,5 +28,5 @@ export type GetPersonForEdit$result = {
 
 export type GetPersonForEdit$input = {
     name: string | null | undefined,
-    isSelf: boolean | null | undefined
+    isBoard: boolean | null | undefined
 };

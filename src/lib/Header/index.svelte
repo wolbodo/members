@@ -55,10 +55,6 @@
 							if (e.code == 'Escape') {
 								closeSearch();
 							}
-							console.log(e);
-						}}
-						on:blur={() => {
-							closeSearch();
 						}}
 					/>
 				{/if}
@@ -79,7 +75,6 @@
 
 			<ul>
 				<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
-				<li class:active={$page.path === '/all'}><a sveltekit:prefetch href="/all">All</a></li>
 				{#if $session.user.roles.includes('board')}
 					<li class:active={$page.path === '/create'}>
 						<a sveltekit:prefetch href="/create">Create</a>
@@ -91,6 +86,7 @@
 						<a sveltekit:prefetch href="/changes">Changes</a>
 					</li>
 				{/if}
+				<li class:active={$page.path === '/self'}><a sveltekit:prefetch href="/self">Self</a></li>
 				<li class:active={$page.path === '/logout'}>
 					<a sveltekit:prefetch href="/logout">Logout</a>
 				</li>
@@ -169,6 +165,11 @@
 		height: 3rem;
 	}
 
+	nav .home {
+		flex-grow: 1;
+		display: flex;
+	}
+
 	nav .home h1 {
 		margin: 0 0.5rem;
 		text-transform: none;
@@ -179,8 +180,6 @@
 	nav a {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		width: 100%;
 		height: 100%;
 	}
 	nav a:focus {

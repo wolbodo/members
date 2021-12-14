@@ -2,17 +2,16 @@
 	export function onLoad({ page, session }) {
 		return {
 			name: page.params.name,
-			isBoard: session.user.roles.includes('board')
+			isSelf: session.user?.name.toLowerCase() === page.params.name.toLowerCase()
 		};
 	}
 	export function GetPersonForEditVariables({ page, session }) {
 		const { params } = page;
-		const isBoard = session.user.roles.includes('board');
-		session.currentRole = isBoard ? 'board' : 'member';
+		session.currentRole = session.user.roles.includes('board') ? 'board' : 'member';
 
 		return {
 			name: params.name,
-			isBoard
+			isSelf: session.user?.name.toLowerCase() === params.name.toLowerCase()
 		};
 	}
 </script>
@@ -25,7 +24,6 @@
 	import { Input, RoleSelector } from '$lib/Form';
 
 	export let name;
-	export let isBoard = false;
 
 	let form, edit, error;
 
@@ -51,7 +49,7 @@
 	`);
 
 	const { data, refetch } = query<GetPersonForEdit>(graphql`
-		query GetPersonForEdit($name: String, $isBoard: Boolean = false) {
+		query GetPersonForEdit($name: String, $isSelf: Boolean = false) {
 			auth_person(where: { name: { _ilike: $name } }, limit: 1) {
 				name
 				firstname
@@ -67,9 +65,7 @@
 				created
 				modified
 				...RoleSelector
-
-				bankaccount @include(if: $isBoard)
-				key_code @include(if: $isBoard)
+				bankaccount @include(if: $isSelf)
 			}
 		}
 	`);
@@ -94,15 +90,17 @@
 			console.log('err', err);
 		}
 	};
+
+	$: {
+		console.log('person', person);
+	}
 </script>
 
 <content>
 	<form on:submit={submit} bind:this={form}>
-		{#if isBoard}
-			<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
-				{edit ? 'close' : 'mode_edit'}
-			</button>
-		{/if}
+		<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
+			{edit ? 'close' : 'mode_edit'}
+		</button>
 
 		<Input name="name" value={person.name} class="wide" readOnly={!edit} />
 		<Input name="firstname" value={person.firstname} readOnly={!edit} />
@@ -111,17 +109,21 @@
 		<Input name="phone" value={person.phone} type="phone" readOnly={!edit} />
 
 		<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
-		<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit} />
+		<Input name="phone2" value={person.phone} type="phone" readOnly={!edit} />
+		<Input name="phone3" value={person.bankaccount} type="text" readOnly={!edit} />
 
-		<Input name="password" type="password" readOnly={!edit} />
-		<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
+		<Input label="keycode" name="key_code" value={person.key} readOnly={!edit} />
 
 		<RoleSelector
 			personId={person.id}
 			roles={person.roles}
-			refetch={() => refetch({ name, isBoard })}
+			refetch={() => refetch({ name, isSelf })}
 			readOnly={!edit}
 		/>
+
+		<!-- <Input name="roles" value={person.roles} /> -->
+		<Input name="password" type="password" value={person.password} readOnly={!edit} />
+		<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
 
 		<section>
 			<b>#{person.id}</b>
@@ -140,6 +142,24 @@
 			</section>
 		{/if}
 	</form>
+
+	<!-- <Detail
+		on:save={(data) => goto('/')}
+		{person}
+		{permissions}
+		{role}
+		mutation={gql`
+      mutation updatePerson($id:Int!, $formdata:auth_person_set_input) {
+        person: update_auth_person_by_pk(pk_columns:{id:$id} _set:$formdata) {
+          ${permissions.edit.filter((p) => p != 'roles').join(' ')}
+        }
+      }
+    `}
+		variables={{
+			id: person.id
+		}}
+		result={({ person: _person }) => goto('/')}
+	/> -->
 </content>
 
 <style>
@@ -149,8 +169,6 @@
 
 		grid-column-start: 2;
 		justify-self: end;
-		width: 3rem;
-		height: 3rem;
 	}
 	button.edit {
 		background-color: var(--danger-3);
