@@ -1,17 +1,9 @@
 <script lang="ts" context="module">
-	export function onLoad({ page, session }) {
-		return {
-			name: page.params.name,
-			isSelf: session.user?.name.toLowerCase() === page.params.name.toLowerCase()
-		};
-	}
-	export function GetPersonForEditVariables({ page, session }) {
-		const { params } = page;
-		session.currentRole = session.user.roles.includes('board') ? 'board' : 'member';
+	export function GetSelfForEditVariables({ session }) {
+		session.currentRole = 'self';
 
 		return {
-			name: params.name,
-			isSelf: session.user?.name.toLowerCase() === params.name.toLowerCase()
+			id: session.user.id
 		};
 	}
 </script>
@@ -19,19 +11,18 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 
-	import { query, mutation, graphql, EditPerson, GetPersonForEdit } from '$houdini';
+	import { query, mutation, graphql, EditPerson, GetSelfForEdit } from '$houdini';
 	import { datetime } from '$lib/format';
-	import { Input, RoleSelector } from '$lib/Form';
+	import { Input } from '$lib/Form';
 
-	export let name;
+	export let id;
 
-	let form, edit, error;
+	let form, error;
 
 	const editPerson = mutation<EditPerson>(graphql`
-		mutation EditPerson($id: Int!, $data: auth_person_set_input!) {
+		mutation EditSelf($id: Int!, $data: auth_person_set_input!) {
 			person: update_auth_person(where: { id: { _eq: $id } }, _set: $data) {
 				returning {
-					id
 					name
 					firstname
 					lastname
@@ -42,15 +33,18 @@
 					city
 					country
 					note
+					id
+					created
 					modified
+					bankaccount
 				}
 			}
 		}
 	`);
 
-	const { data, refetch } = query<GetPersonForEdit>(graphql`
-		query GetPersonForEdit($name: String, $isSelf: Boolean = false) {
-			auth_person(where: { name: { _ilike: $name } }, limit: 1) {
+	const { data } = query<GetSelfForEdit>(graphql`
+		query GetSelfForEdit($id: Int!) {
+			auth_person_by_pk(id: $id) {
 				name
 				firstname
 				lastname
@@ -64,12 +58,11 @@
 				id
 				created
 				modified
-				...RoleSelector
-				bankaccount @include(if: $isSelf)
+				bankaccount
 			}
 		}
 	`);
-	$: [person] = $data.auth_person;
+	$: person = $data.auth_person_by_pk;
 
 	const submit = async (e) => {
 		e.preventDefault();
@@ -79,87 +72,44 @@
 		const data = Object.fromEntries(
 			Array.from(entries).filter(([name, value]) => person[name] !== value)
 		);
-		console.log('Should update person', formData, Array.from(entries), data);
 
 		try {
-			const result = await editPerson({ id: person.id, data });
-			console.log('Added', data, 'got', result);
-			edit = false;
+			await editPerson({ id: person.id, data });
 		} catch (err) {
 			error = err;
-			console.log('err', err);
 		}
 	};
-
-	$: {
-		console.log('person', person);
-	}
 </script>
 
 <content>
 	<form on:submit={submit} bind:this={form}>
-		<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
-			{edit ? 'close' : 'mode_edit'}
-		</button>
+		<Input name="name" value={person.name} class="wide" required />
+		<Input name="firstname" value={person.firstname} />
+		<Input name="lastname" value={person.lastname} />
+		<Input name="email" value={person.email} type="email" required />
+		<Input name="phone" value={person.phone} type="phone" />
 
-		<Input name="name" value={person.name} class="wide" readOnly={!edit} />
-		<Input name="firstname" value={person.firstname} readOnly={!edit} />
-		<Input name="lastname" value={person.lastname} readOnly={!edit} />
-		<Input name="email" value={person.email} type="email" readOnly={!edit} />
-		<Input name="phone" value={person.phone} type="phone" readOnly={!edit} />
-
-		<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
-		<Input name="phone2" value={person.phone} type="phone" readOnly={!edit} />
-		<Input name="phone3" value={person.bankaccount} type="text" readOnly={!edit} />
-
-		<Input label="keycode" name="key_code" value={person.key} readOnly={!edit} />
-
-		<RoleSelector
-			personId={person.id}
-			roles={person.roles}
-			refetch={() => refetch({ name, isSelf })}
-			readOnly={!edit}
-		/>
+		<Input name="bankaccount" value={person.bankaccount} />
 
 		<!-- <Input name="roles" value={person.roles} /> -->
-		<Input name="password" type="password" value={person.password} readOnly={!edit} />
-		<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
+		<Input name="password" type="password" value={person.password} />
+		<Input name="note" value={person.note} type="textarea" />
 
-		<section>
+		<section class="wide">
 			<b>#{person.id}</b>
 			<p>created:{datetime(person.created)}</p>
 			<p>modified:{datetime(person.modified)}</p>
 		</section>
 
-		{#if edit}
-			<section class="submit" transition:slide>
-				{#if error}
-					{#each error as error}
-						<small>{error.message}</small>
-					{/each}
-				{/if}
-				<button type="submit">Submit</button>
-			</section>
-		{/if}
+		<section class="submit" transition:slide>
+			{#if error}
+				{#each error as error}
+					<small>{error.message}</small>
+				{/each}
+			{/if}
+			<button type="submit">Submit</button>
+		</section>
 	</form>
-
-	<!-- <Detail
-		on:save={(data) => goto('/')}
-		{person}
-		{permissions}
-		{role}
-		mutation={gql`
-      mutation updatePerson($id:Int!, $formdata:auth_person_set_input) {
-        person: update_auth_person_by_pk(pk_columns:{id:$id} _set:$formdata) {
-          ${permissions.edit.filter((p) => p != 'roles').join(' ')}
-        }
-      }
-    `}
-		variables={{
-			id: person.id
-		}}
-		result={({ person: _person }) => goto('/')}
-	/> -->
 </content>
 
 <style>

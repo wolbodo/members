@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { slide } from 'svelte/transition';
-
 	export let name: string;
 	export let label: string = null;
 	export let type: string = 'text';
@@ -15,24 +13,15 @@
 	$: if (value) {
 		changed = false;
 	}
-
-	let formattedValue;
 </script>
 
 <section class:changed class={_class}>
 	{#if value || !readOnly}
-		<label transition:slide for={name}>{label || name}</label>
+		<label for={name}>{label || name}</label>
 		{#if type === 'textarea'}
-			<textarea
-				transition:slide
-				id={name}
-				{readOnly}
-				{...$$props}
-				on:change={() => (changed = true)}
-			/>
+			<textarea id={name} {readOnly} {...$$props} on:change={() => (changed = true)} />
 		{:else if typeof type === 'string'}
 			<input
-				transition:slide
 				class:changed
 				value={value ? format(value) : ''}
 				id={name}
