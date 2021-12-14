@@ -9,8 +9,6 @@
 </script>
 
 <script lang="ts">
-	import { slide } from 'svelte/transition';
-
 	import { query, mutation, graphql, EditPerson, GetSelfForEdit } from '$houdini';
 	import { datetime } from '$lib/format';
 	import { Input } from '$lib/Form';
@@ -89,6 +87,11 @@
 		<Input name="email" value={person.email} type="email" required />
 		<Input name="phone" value={person.phone} type="phone" />
 
+		<Input name="address" value={person.address} readOnly={!edit} />
+		<Input name="zipcode" value={person.zipcode} readOnly={!edit} />
+		<Input name="city" value={person.city} readOnly={!edit} />
+		<Input name="country" value={person.country} readOnly={!edit} />
+
 		<Input name="bankaccount" value={person.bankaccount} />
 
 		<!-- <Input name="roles" value={person.roles} /> -->
@@ -101,7 +104,7 @@
 			<p>modified:{datetime(person.modified)}</p>
 		</section>
 
-		<section class="submit" transition:slide>
+		<section class="submit">
 			{#if error}
 				{#each error as error}
 					<small>{error.message}</small>
