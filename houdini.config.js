@@ -7,7 +7,6 @@ const defaultMarshall = {
 		return val;
 	}
 }
-console.log("URL:", process.env.GRAPHQL_ENDPOINT)
 const config = {
 	schemaPath: './schema.graphql',
 	sourceGlob: 'src/**/*.svelte',
