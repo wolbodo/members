@@ -8,7 +8,7 @@
 		width: 100%;
 	}
 	table :global(th) {
-		background-color: var(--tertiary-color);
+		background-color: var(--pure-white);
 		position: sticky;
 		top: 0;
 		font-weight: bold;

@@ -12,7 +12,7 @@ const config = {
 	sourceGlob: 'src/**/*.svelte',
 	module: 'esm',
 	framework: 'kit',
-	apiUrl: process.env.GRAPHQL_ENDPOINT,
+	apiUrl: 'http://graphql.wolbodo/v1/graphql',
 
 	scalars: {
 		uuid: {
