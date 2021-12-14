@@ -87,10 +87,10 @@
 		<Input name="email" value={person.email} type="email" required />
 		<Input name="phone" value={person.phone} type="phone" />
 
-		<Input name="address" value={person.address} readOnly={!edit} />
-		<Input name="zipcode" value={person.zipcode} readOnly={!edit} />
-		<Input name="city" value={person.city} readOnly={!edit} />
-		<Input name="country" value={person.country} readOnly={!edit} />
+		<Input name="address" value={person.address} />
+		<Input name="zipcode" value={person.zipcode} />
+		<Input name="city" value={person.city} />
+		<Input name="country" value={person.country} />
 
 		<Input name="bankaccount" value={person.bankaccount} />
 
