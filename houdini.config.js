@@ -1,3 +1,7 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 /** @type {import('houdini').ConfigFile} */
 const defaultMarshall = {
 	unmarshal(val) {
@@ -13,7 +17,7 @@ const config = {
 	sourceGlob: 'src/**/*.svelte',
 	module: 'esm',
 	framework: 'kit',
-	apiUrl: import.meta.env.VITE_GRAPHQL_ENDPOINT,
+	apiUrl: process.env.GRAPHQL_ENDPOINT,
 
 	scalars: {
 		uuid: {
