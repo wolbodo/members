@@ -10,6 +10,7 @@ import { setCookie } from '$lib/cookies';
 import { dev } from '$app/env';
 
 // These are the only roles passed to the token, and in this order.
+const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || 'wolbodo.nl'
 const ALL_ROLES = ['member', 'board', 'admin', 'self']
 const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
@@ -61,7 +62,10 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 			return {
 				status: 200,
 				headers: {
-					'Set-Cookie': setCookie('token', user.token, { secure: !dev})
+					'Set-Cookie': setCookie('token', user.token, { 
+						secure: !dev,
+						Domain: COOKIE_DOMAIN
+					})
 				},
 				body: user
 			}
