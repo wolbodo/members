@@ -9,6 +9,7 @@
 <script lang="ts">
 	import { session, page } from '$app/stores';
 	import logo from './logo.svg';
+	import { tick } from 'svelte';
 
 	const focus = (node) => node.focus();
 	let searchOpen = false;
@@ -26,6 +27,11 @@
 			css: (t) => `width: ${t * o}px`
 		};
 	}
+	const closeSearch = () => {
+		console.log('close');
+		searchOpen = !searchOpen;
+		_searchValue = '';
+	};
 </script>
 
 <header>
@@ -40,9 +46,33 @@
 		{#if $session.user}
 			<section class="search" class:searchOpen>
 				{#if searchOpen}
-					<input transition:scale bind:value={_searchValue} use:focus placeholder="Search" />
+					<input
+						transition:scale
+						bind:value={_searchValue}
+						use:focus
+						placeholder="Search"
+						on:keydown={(e) => {
+							if (e.code == 'Escape') {
+								closeSearch();
+							}
+							console.log(e);
+						}}
+						on:blur={() => {
+							closeSearch();
+						}}
+					/>
 				{/if}
-				<button type="button" class="icon" on:click={() => (searchOpen = !searchOpen)}>
+				<button
+					type="button"
+					class="icon"
+					on:click={() => {
+						if (searchOpen) {
+							closeSearch();
+						} else {
+							searchOpen = true;
+						}
+					}}
+				>
 					{searchOpen ? 'close' : 'search'}
 				</button>
 			</section>

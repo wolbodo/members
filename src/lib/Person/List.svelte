@@ -99,3 +99,10 @@
 		{/if}
 	</tbody>
 </Table>
+
+<style>
+	td > a {
+		font-weight: 700;
+		color: var(--primary-2);
+	}
+</style>

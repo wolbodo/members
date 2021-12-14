@@ -44,7 +44,8 @@
     "luxon": "^1.27.0",
     "mjml": "^4.9.3",
     "nodemailer": "^6.6.1",
-    "proposal-temporal": "^0.8.0"
+    "proposal-temporal": "^0.8.0",
+    "svelte-select": "^4.4.6"
   },
   "type": "module"
 }
