@@ -11,7 +11,7 @@ export default new Environment(async function ({ text, variables = {} }, session
 	}
 
 	// send the request to the api
-	const result = await this.fetch('http://graphql.wolbodo/v1/graphql', {
+	const result = await this.fetch(import.meta.env.VITE_GRAPHQL_ENDPOINT, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
