@@ -49,7 +49,7 @@
 		}
 	}}
 >
-	<label for="name">Name</label>
+	<label for="name">Name or email</label>
 	<input id="name" name="name" placeholder="Use your nickname" />
 
 	<label for="password">Password</label>

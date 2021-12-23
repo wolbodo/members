@@ -22,7 +22,7 @@ export const post: RequestHandler<Locals, FormData> = async (request) => {
 
 	const { auth_person: [person] } = await client.request(gql`
 		query getPassword($name: String!) {
-			auth_person(where:{name:{_ilike:$name}}) {
+			auth_person(where:{_or: [{name:{_ilike:$name}}, {email:{_eq:$name}} ]}) {
 				email name id
 				password
 				roles(where:{valid_till:{_is_null:true}, valid_from:{_lte:"NOW()"}}) {
