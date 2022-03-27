@@ -713,12 +713,12 @@ input type for inserting object relation for remote table "auth.person"
 input auth_person_obj_rel_insert_input {
   data: auth_person_insert_input!
 
-  """on conflict condition"""
+  """upsert condition"""
   on_conflict: auth_person_on_conflict
 }
 
 """
-on conflict condition type for table "auth.person"
+on_conflict condition type for table "auth.person"
 """
 input auth_person_on_conflict {
   constraint: auth_person_constraint!
@@ -815,7 +815,7 @@ input type for inserting array relation for remote table "auth.person_role"
 input auth_person_role_arr_rel_insert_input {
   data: [auth_person_role_insert_input!]!
 
-  """on conflict condition"""
+  """upsert condition"""
   on_conflict: auth_person_role_on_conflict
 }
 
@@ -928,7 +928,7 @@ type auth_person_role_mutation_response {
 }
 
 """
-on conflict condition type for table "auth.person_role"
+on_conflict condition type for table "auth.person_role"
 """
 input auth_person_role_on_conflict {
   constraint: auth_person_role_constraint!
@@ -1452,7 +1452,7 @@ type mail_entries_mutation_response {
 }
 
 """
-on conflict condition type for table "mail.entries"
+on_conflict condition type for table "mail.entries"
 """
 input mail_entries_on_conflict {
   constraint: mail_entries_constraint!
@@ -1662,7 +1662,7 @@ type mutation_root {
     """the rows to be inserted"""
     objects: [auth_person_insert_input!]!
 
-    """on conflict condition"""
+    """upsert condition"""
     on_conflict: auth_person_on_conflict
   ): auth_person_mutation_response
 
@@ -1673,7 +1673,7 @@ type mutation_root {
     """the row to be inserted"""
     object: auth_person_insert_input!
 
-    """on conflict condition"""
+    """upsert condition"""
     on_conflict: auth_person_on_conflict
   ): auth_person
 
@@ -1684,7 +1684,7 @@ type mutation_root {
     """the rows to be inserted"""
     objects: [auth_person_role_insert_input!]!
 
-    """on conflict condition"""
+    """upsert condition"""
     on_conflict: auth_person_role_on_conflict
   ): auth_person_role_mutation_response
 
@@ -1695,7 +1695,7 @@ type mutation_root {
     """the row to be inserted"""
     object: auth_person_role_insert_input!
 
-    """on conflict condition"""
+    """upsert condition"""
     on_conflict: auth_person_role_on_conflict
   ): auth_person_role
 
@@ -1706,7 +1706,7 @@ type mutation_root {
     """the rows to be inserted"""
     objects: [mail_entries_insert_input!]!
 
-    """on conflict condition"""
+    """upsert condition"""
     on_conflict: mail_entries_on_conflict
   ): mail_entries_mutation_response
 
@@ -1717,7 +1717,7 @@ type mutation_root {
     """the row to be inserted"""
     object: mail_entries_insert_input!
 
-    """on conflict condition"""
+    """upsert condition"""
     on_conflict: mail_entries_on_conflict
   ): mail_entries
 

@@ -1,6 +1,6 @@
 export type EditSelf = {
     readonly "input": EditSelf$input,
-    readonly "result": EditSelf$result
+    readonly "result": EditSelf$result | undefined
 };
 
 export type EditSelf$result = {

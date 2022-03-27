@@ -53,6 +53,8 @@
 						on:keydown={(e) => {
 							if (e.code == 'Escape') {
 								closeSearch();
+							} else if (e.code == 'Enter') {
+								console.log('Should goto user or trigger search or whatever', $page);
 							}
 						}}
 					/>
@@ -73,22 +75,22 @@
 			</section>
 
 			<ul>
-				<li class:active={$page.path === '/'}><a sveltekit:prefetch href="/">Members</a></li>
+				<li class:active={$page.pathname === '/'}><a sveltekit:prefetch href="/">Members</a></li>
 				{#if $session.user.roles.includes('board')}
-					<li class:active={$page.path === '/create'}>
+					<li class:active={$page.pathname === '/create'}>
 						<a sveltekit:prefetch href="/create">Create</a>
 					</li>
-					<li class:active={$page.path === '/mail'}>
+					<li class:active={$page.pathname === '/mail'}>
 						<a sveltekit:prefetch href="/mail">Mail</a>
 					</li>
-					<li class:active={$page.path === '/changes'}>
+					<li class:active={$page.pathname === '/changes'}>
 						<a sveltekit:prefetch href="/changes">Changes</a>
 					</li>
 				{/if}
-				<li class:active={$page.path === '/self'}>
+				<li class:active={$page.pathname === '/self'}>
 					<a sveltekit:prefetch href="/self">{$session.user.name}</a>
 				</li>
-				<li class:active={$page.path === '/logout'}>
+				<li class:active={$page.pathname === '/logout'}>
 					<a sveltekit:prefetch href="/logout">Logout</a>
 				</li>
 			</ul>

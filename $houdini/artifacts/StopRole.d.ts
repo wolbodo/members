@@ -1,6 +1,6 @@
 export type StopRole = {
     readonly "input": StopRole$input,
-    readonly "result": StopRole$result
+    readonly "result": StopRole$result | undefined
 };
 
 export type StopRole$result = {

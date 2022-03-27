@@ -1,6 +1,6 @@
 export type AllRolesForOptions = {
     readonly "input": null,
-    readonly "result": AllRolesForOptions$result
+    readonly "result": AllRolesForOptions$result | undefined
 };
 
 export type AllRolesForOptions$result = {

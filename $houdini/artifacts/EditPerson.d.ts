@@ -1,6 +1,6 @@
 export type EditPerson = {
     readonly "input": EditPerson$input,
-    readonly "result": EditPerson$result
+    readonly "result": EditPerson$result | undefined
 };
 
 export type EditPerson$result = {

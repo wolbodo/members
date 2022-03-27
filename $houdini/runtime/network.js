@@ -31,7 +31,7 @@ export async function executeQuery(artifact, variables, sessionStore, cached) {
     const fetchCtx = {
         fetch: window.fetch.bind(window),
         session,
-        context: {},
+        stuff: {},
         page: {
             host: '',
             path: '',
@@ -61,7 +61,7 @@ export async function convertKitPayload(context, loader, page, session) {
     const result = await loader({
         page,
         session,
-        context,
+        stuff: {},
         fetch: context.fetch,
     });
     // if the response contains an error
@@ -94,7 +94,7 @@ export async function fetchQuery({ context, artifact, variables, session, cached
     if (cached && artifact.kind === 'HoudiniQuery') {
         // tick the garbage collector asynchronously
         setTimeout(() => {
-            cache.collectGarbage();
+            cache._internal_unstable.collectGarbage();
         }, 0);
         // this function is called as the first step in requesting data. If the policy prefers
         // cached data, we need to load data from the cache (if its available). If the policy
@@ -105,11 +105,14 @@ export async function fetchQuery({ context, artifact, variables, session, cached
             CachePolicy.CacheOnly,
             CachePolicy.CacheAndNetwork,
         ].includes(artifact.policy) &&
-            cache.internal.isDataAvailable(artifact.selection, variables)) {
-            console.log('using cached data');
+            cache._internal_unstable.isDataAvailable(artifact.selection, variables)) {
             return [
                 {
-                    data: cache.internal.getData(cache.internal.record(rootID), artifact.selection, variables),
+                    data: cache.read({
+                        parent: rootID,
+                        selection: artifact.selection,
+                        variables,
+                    }),
                     errors: [],
                 },
                 DataSource.Cache,
@@ -159,18 +162,36 @@ export class RequestContext {
     graphqlErrors(payload) {
         // if we have a list of errors
         if (payload.errors) {
-            console.log('registering graphql errors', payload.errors);
             return this.error(500, payload.errors.map(({ message }) => message).join('\n'));
         }
         return this.error(500, 'Encountered invalid response: ' + JSON.stringify(payload));
     }
     // This hook fires before executing any queries, it allows to redirect/error based on session state for example
     // It also allows to return custom props that should be returned from the corresponding load function.
-    async onLoadHook({ mode, onLoadFunction, }) {
+    async invokeLoadHook({ variant, mode, hookFn, data, }) {
         // call the onLoad function to match the framework
-        let result = mode === 'kit'
-            ? await onLoadFunction.call(this, this.context)
-            : await onLoadFunction.call(this, this.context.page, this.context.session);
+        let hookCall;
+        if (mode === 'kit') {
+            if (variant === 'before') {
+                hookCall = hookFn.call(this, this.context);
+            }
+            else {
+                hookCall = hookFn.call(this, {
+                    ...this.context,
+                    data,
+                });
+            }
+        }
+        else {
+            // sapper
+            if (variant === 'before') {
+                hookCall = hookFn.call(this, this.context.page, this.context.session);
+            }
+            else {
+                hookCall = hookFn.call(this, this.context.page, this.context.session, data);
+            }
+        }
+        let result = await hookCall;
         // If the returnValue is already set through this.error or this.redirect return early
         if (!this.continue) {
             return;

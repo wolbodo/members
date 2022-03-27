@@ -40,7 +40,11 @@ export declare type FetchContext = {
     };
     fetch: (info: RequestInfo, init?: RequestInit) => Promise<Response>;
     session: any;
-    context: Record<string, any>;
+    stuff: Record<string, any>;
+};
+export declare type BeforeLoadContext = FetchContext;
+export declare type AfterLoadContext = FetchContext & {
+    data: Record<string, any>;
 };
 export declare type KitLoadResponse = {
     status?: number;
@@ -81,17 +85,21 @@ export declare class RequestContext {
     graphqlErrors(payload: {
         errors?: GraphQLError[];
     }): void;
-    onLoadHook({ mode, onLoadFunction, }: {
+    invokeLoadHook({ variant, mode, hookFn, data, }: {
+        variant: 'before' | 'after';
         mode: 'kit' | 'sapper';
-        onLoadFunction: SapperLoad | KitLoad;
+        hookFn: KitBeforeLoad | KitAfterLoad | SapperBeforeLoad | SapperAfterLoad;
+        data: Record<string, any>;
     }): Promise<void>;
     computeInput({ config, mode, variableFunction, artifact, }: {
         mode: 'kit' | 'sapper';
-        variableFunction: SapperLoad | KitLoad;
+        variableFunction: SapperBeforeLoad | KitBeforeLoad;
         artifact: QueryArtifact | MutationArtifact | SubscriptionArtifact;
         config: Config;
     }): {};
 }
-declare type SapperLoad = (page: FetchContext['page'], session: FetchContext['session']) => Record<string, any>;
-declare type KitLoad = (ctx: FetchContext) => Record<string, any>;
+declare type SapperBeforeLoad = (page: FetchContext['page'], session: FetchContext['session']) => Record<string, any>;
+declare type SapperAfterLoad = (page: FetchContext['page'], session: FetchContext['session'], data: Record<string, any>) => Record<string, any>;
+declare type KitBeforeLoad = (ctx: BeforeLoadContext) => Record<string, any>;
+declare type KitAfterLoad = (ctx: AfterLoadContext) => Record<string, any>;
 export {};

@@ -1,6 +1,6 @@
 export type History = {
     readonly "input": null,
-    readonly "result": History$result
+    readonly "result": History$result | undefined
 };
 
 export type History$result = {

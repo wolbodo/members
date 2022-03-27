@@ -10,9 +10,9 @@ const MERCURE_JWT_SECRET = process.env['MERCURE_JWT_SECRET']
 const MERCURE_DOMAIN = process.env['MERCURE_DOMAIN']
 
 
-export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
+export const get: RequestHandler<Locals, FormData> = async ({ request }) => {
   // Check login
-	const { token } = getCookies(headers.cookie);
+	const { token } = getCookies(request.headers.cookie);
 
   try {
     const { name, roles } = await verifyToken(token)
@@ -25,7 +25,7 @@ export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
       }
     }, MERCURE_JWT_SECRET)
 
-    const [ref] = headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
+    const [ref] = request.headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
 
     return {
       status: 200,

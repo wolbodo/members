@@ -23,8 +23,13 @@ export function marshalInputs({ artifact, config, input, rootType = '@root', }) 
             return [fieldName, value];
         }
         // is the type something that requires marshaling
-        if ((_b = (_a = config.scalars) === null || _a === void 0 ? void 0 : _a[type]) === null || _b === void 0 ? void 0 : _b.marshal) {
-            return [fieldName, config.scalars[type].marshal(value)];
+        const marshalFn = (_b = (_a = config.scalars) === null || _a === void 0 ? void 0 : _a[type]) === null || _b === void 0 ? void 0 : _b.marshal;
+        if (marshalFn) {
+            // if we are looking at a list of scalars
+            if (Array.isArray(value)) {
+                return [fieldName, value.map(marshalFn)];
+            }
+            return [fieldName, marshalFn(value)];
         }
         // if the type doesn't require marshaling and isn't a referenced type
         if (isScalar(config, type) || !artifact.input.types[type]) {
@@ -63,7 +68,14 @@ export function unmarshalSelection(config, selection, data) {
         }
         // is the type something that requires marshaling
         if ((_b = (_a = config.scalars) === null || _a === void 0 ? void 0 : _a[type]) === null || _b === void 0 ? void 0 : _b.marshal) {
-            return [fieldName, config.scalars[type].unmarshal(value)];
+            const unmarshalFn = config.scalars[type].unmarshal;
+            if (!unmarshalFn) {
+                throw new Error(`scalar type ${type} is missing an \`unmarshal\` function. see https://github.com/AlecAivazis/houdini#%EF%B8%8Fcustom-scalars`);
+            }
+            if (Array.isArray(value)) {
+                return [fieldName, value.map(unmarshalFn)];
+            }
+            return [fieldName, unmarshalFn(value)];
         }
         // if the type doesn't require marshaling and isn't a referenced type
         // then the type is a scalar that doesn't require marshaling
