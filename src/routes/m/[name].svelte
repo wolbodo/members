@@ -89,7 +89,6 @@
 		const formData = new FormData(form);
 		const entries = formData.entries();
 		const data = Object.fromEntries(
-
 			Array.from(entries).filter(hasPropertyChanged)
 		);
 		console.log('Should update person', person, formData, Array.from(entries), data);

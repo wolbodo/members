@@ -30,7 +30,6 @@
 					zipcode
 					city
 					country
-					note
 					id
 					created
 					modified
@@ -62,14 +61,25 @@
 	`);
 	$: person = $data.auth_person_by_pk;
 
+	const hasPropertyChanged = ([name, value]): boolean =>	{
+		if (value === "") {
+			// If the property stays 'empty'
+			return !!person[name]
+		}
+		return person[name] !== value
+	}
+
+
 	const submit = async (e) => {
 		e.preventDefault();
 
 		const formData = new FormData(form);
 		const entries = formData.entries();
 		const data = Object.fromEntries(
-			Array.from(entries).filter(([name, value]) => person[name] !== value)
+			Array.from(entries).filter(hasPropertyChanged)
 		);
+		console.log('Should update person', person, formData, Array.from(entries), data);
+
 
 		try {
 			await editPerson({ id: person.id, data });
@@ -95,8 +105,8 @@
 		<Input name="bankaccount" value={person.bankaccount} />
 
 		<!-- <Input name="roles" value={person.roles} /> -->
-		<Input name="password" type="password" value={person.password} />
-		<Input name="note" value={person.note} type="textarea" />
+		<Input name="password" type="password" />
+		<Input name="note" value={person.note} type="textarea" readonly />
 
 		<section class="wide">
 			<b>#{person.id}</b>
