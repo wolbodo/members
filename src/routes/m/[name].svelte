@@ -1,12 +1,11 @@
 <script lang="ts" context="module">
-	export function onLoad({ page, session }) {
+	export function onLoad({ params, session }) {
 		return {
-			name: page.params.name,
+			name: params.name,
 			isBoard: session.user.roles.includes('board')
 		};
 	}
-	export function GetPersonForEditVariables({ page, session }) {
-		const { params } = page;
+	export function GetPersonForEditVariables({ params, session }) {
 		const isBoard = session.user.roles.includes('board');
 		session.currentRole = isBoard ? 'board' : 'member';
 

@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	export function load({ page, session }) {
+	export function load({ session }) {
 		session.currentRole = 'board';
 		console.log('Set', session);
 		return {};
