@@ -75,6 +75,13 @@
 		}
 	`);
 	$: [person] = $data.auth_person;
+	const hasPropertyChanged = ([name, value]): boolean =>	{
+		if (value === "") {
+			// If the property stays 'empty'
+			return !!person[name]
+		}
+		return person[name] !== value
+	}
 
 	const submit = async (e) => {
 		e.preventDefault();
@@ -82,9 +89,10 @@
 		const formData = new FormData(form);
 		const entries = formData.entries();
 		const data = Object.fromEntries(
-			Array.from(entries).filter(([name, value]) => person[name] !== value)
+
+			Array.from(entries).filter(hasPropertyChanged)
 		);
-		console.log('Should update person', formData, Array.from(entries), data);
+		console.log('Should update person', person, formData, Array.from(entries), data);
 
 		try {
 			const result = await editPerson({ id: person.id, data });
