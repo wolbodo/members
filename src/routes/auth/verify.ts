@@ -1,13 +1,10 @@
-import type { RequestHandler } from '@sveltejs/kit';
-
-import type { Locals } from '$lib/types';
 import { getCookies } from '$lib/cookies'
 import { verifyToken } from '$lib/jwt'
 
 // The verify endpoint is called when nginx wants to authenticate an [auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html)
 
 export async function get({ request }) {
-	const { token } = getCookies(request.headers.cookie);
+	const { token } = getCookies(request);
 
   try {
     const { name, email } = await verifyToken(token)

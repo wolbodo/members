@@ -1,14 +1,5 @@
+import { getCookies } from '$lib/cookies';
 import { verifyToken } from '$lib/jwt'
-
-const getCookies = ({ headers }) => {
-  const cookie = headers.get('cookie')
-  return Object.fromEntries(
-    cookie
-      ? cookie.split(";")
-              .map((c) => c.split("=").map((c2) => c2.trim()))
-      : []
-  )
-};
 
 /** @type {import('@sveltejs/kit').GetSession} */
 export async function getSession({request}) {

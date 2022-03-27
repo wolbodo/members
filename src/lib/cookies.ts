@@ -4,10 +4,15 @@ export const datetimeAfter = (seconds: number) => {
   return time;
 };
 
-export const getCookies = (cookie) =>
-  Object.fromEntries(
-    cookie ? cookie.split(';').map((c) => c.split('=').map((c2) => c2.trim())) : []
-  );
+export const getCookies = ({ headers }) => {
+  const cookie = headers.get('cookie')
+  return Object.fromEntries(
+    cookie
+      ? cookie.split(";")
+              .map((c) => c.split("=").map((c2) => c2.trim()))
+      : []
+  )
+};
 
 interface CookieAttributes {
   path?: string

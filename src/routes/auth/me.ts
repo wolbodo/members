@@ -1,13 +1,11 @@
 // Endpoint for getting a mercure token
 
-import type { RequestHandler } from '@sveltejs/kit';
-import type { Locals } from '$lib/types';
 import { getCookies } from '$lib/cookies';
 import { verifyToken } from '$lib/jwt';
 
 export async function get({ request }) {
   // Check login
-	const { token } = getCookies(request.headers.cookie);
+	const { token } = getCookies(request);
 
   try {
     const data = await verifyToken(token)
