@@ -1,7 +1,7 @@
 import preprocess from 'svelte-preprocess';
 import houdini from 'houdini-preprocess';
 import path from 'path';
-import node from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-auto';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -11,8 +11,7 @@ const config = {
 	
 	kit: {
 		// hydrate the <div id="svelte"> element in src/app.html
-		target: '#svelte',
-		adapter: node(),
+		adapter: adapter(),
 
         vite: {
 			server: {

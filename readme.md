@@ -6,7 +6,6 @@ npx hasura cli
 npx houdini generate
 npx hasura metadata apply
 
-
 Postgres + Postgraphile + svelte
 ## Running the backend:
 

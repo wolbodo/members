@@ -1,6 +1,6 @@
 export type GetSelfForEdit = {
     readonly "input": GetSelfForEdit$input,
-    readonly "result": GetSelfForEdit$result
+    readonly "result": GetSelfForEdit$result | undefined
 };
 
 export type GetSelfForEdit$result = {

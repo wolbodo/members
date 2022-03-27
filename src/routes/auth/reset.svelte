@@ -27,7 +27,7 @@
 >
   <label for='password'>Password</label>
   <input id='password' name='password' type='password' />
-  <input type='hidden' name='token' value={$page.query.get('token')} />
+  <input type='hidden' name='token' value={$page.url.searchParams.get('token')} />
 
   {#if error}
     <small>{error}</small>

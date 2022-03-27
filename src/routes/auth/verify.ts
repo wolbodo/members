@@ -6,8 +6,8 @@ import { verifyToken } from '$lib/jwt'
 
 // The verify endpoint is called when nginx wants to authenticate an [auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html)
 
-export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
-	const { token } = getCookies(headers.cookie);
+export const get: RequestHandler<Locals, FormData> = async ({ request }) => {
+	const { token } = getCookies(request.headers.cookie);
 
   try {
     const { name, email } = await verifyToken(token)

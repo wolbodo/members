@@ -5,13 +5,13 @@ import type { Locals } from '$lib/types';
 import { getCookies } from '$lib/cookies';
 import { verifyToken } from '$lib/jwt';
 
-export const get: RequestHandler<Locals, FormData> = async ({ headers }) => {
+export const get: RequestHandler<Locals, FormData> = async ({ request }) => {
   // Check login
-	const { token } = getCookies(headers.cookie);
+	const { token } = getCookies(request.headers.cookie);
 
   try {
     const data = await verifyToken(token)
-    const [ref] = headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
+    const [ref] = request.headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
     return {
       headers: ref
         ? {

@@ -163,7 +163,7 @@ CREATE INDEX person_role_person_id_idx ON auth.person_role USING btree (person_i
 CREATE TRIGGER hash_password BEFORE INSERT OR UPDATE OF password ON auth.person FOR EACH ROW EXECUTE FUNCTION auth.hash_password();
 CREATE TRIGGER log_history BEFORE UPDATE ON auth.person FOR EACH ROW EXECUTE FUNCTION auth.change_trigger();
 CREATE TRIGGER log_role_history BEFORE UPDATE ON auth.person_role FOR EACH ROW EXECUTE FUNCTION auth.role_change_trigger();
-CREATE OR UPDATE TRIGGER notify_password_change AFTER UPDATE OF password ON auth.person FOR EACH ROW EXECUTE FUNCTION mail.notify_password_change();
+CREATE TRIGGER notify_password_change AFTER UPDATE OF password ON auth.person FOR EACH ROW EXECUTE FUNCTION mail.notify_password_change();
 CREATE TRIGGER update_modified BEFORE UPDATE ON auth.person FOR EACH ROW EXECUTE FUNCTION auth.update_modified();
 ALTER TABLE ONLY auth.history
     ADD CONSTRAINT history_author_id_fkey FOREIGN KEY (author_id) REFERENCES auth.person(id);

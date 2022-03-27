@@ -7,10 +7,10 @@
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ page, session }) {
+	export async function load({ url, session }) {
 		if (
 			!session.user &&
-			!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(page.path)
+			!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(url.pathname)
 		) {
 			return {
 				status: 302,

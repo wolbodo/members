@@ -1,22 +1,21 @@
 import bcrypt from 'bcryptjs'
-import { gql, GraphQLClient } from 'graphql-request'
 
-import type { RequestHandler } from '@sveltejs/kit';
-
+import { client, gql } from '$lib/graphql-client'
 import { serverToken, createToken } from '$lib/jwt'
-import { GRAPHQL_ENDPOINT } from '$lib/config'
-import type { Locals } from '$lib/types';
 import { setCookie } from '$lib/cookies';
 import { dev } from '$app/env';
 
 // These are the only roles passed to the token, and in this order.
 const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || 'wolbodo.nl'
 const ALL_ROLES = ['member', 'board', 'admin', 'self']
-const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
-export const post: RequestHandler<Locals, FormData> = async (request) => {
-	const name = request.body.get('name')
-	const password = request.body.get('password')
+/** @type {import('./items').RequestHandler} */
+export async function post ({ request }) {
+	const data = await request.formData(); // or .json(), or .text(), etc
+	const name = data.get('name')
+	const password = data.get('password')	
+
+	console.log("Login from:", name)
 
 	client.setHeader('authorization', `Bearer ${serverToken('login')}`)
 

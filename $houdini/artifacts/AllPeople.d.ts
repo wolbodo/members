@@ -1,6 +1,6 @@
 export type AllPeople = {
     readonly "input": AllPeople$input,
-    readonly "result": AllPeople$result
+    readonly "result": AllPeople$result | undefined
 };
 
 export type AllPeople$result = {

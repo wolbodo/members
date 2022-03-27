@@ -1,6 +1,6 @@
 export type AllMail = {
     readonly "input": null,
-    readonly "result": AllMail$result
+    readonly "result": AllMail$result | undefined
 };
 
 export type AllMail$result = {

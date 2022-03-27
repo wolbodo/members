@@ -21,7 +21,8 @@
 	import { enhance } from '$lib/Form';
 
 	let error;
-	const redirect = $page.query.get('redirect');
+	
+	const redirect = $page.url.searchParams.get('redirect');
 </script>
 
 <h1>Log in</h1>
@@ -38,11 +39,12 @@
 			error = null;
 		},
 		result: async (res, form) => {
-			goto(redirect ? redirect : '/');
 			$session = {
 				...$session,
 				user: await res.json()
 			};
+			console.log("$session", $session)
+			goto(redirect ? redirect : '/');
 		},
 		error: async (res) => {
 			error = await res.text();

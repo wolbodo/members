@@ -1,6 +1,6 @@
 export type GetPersonForEdit = {
     readonly "input": GetPersonForEdit$input,
-    readonly "result": GetPersonForEdit$result
+    readonly "result": GetPersonForEdit$result | undefined
 };
 
 export type GetPersonForEdit$result = {
