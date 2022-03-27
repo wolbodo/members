@@ -9,7 +9,8 @@ export async function get({ request }) {
 
   try {
     const data = await verifyToken(token)
-    const [ref] = request.headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
+    const referer = request.headers.get('referer')
+    const [ref] = referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
     return {
       headers: ref
         ? {
