@@ -7,7 +7,7 @@ import { serverToken, verifyToken } from '$lib/jwt'
 
 const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
-export async function post(request) {
+export async function post({ request }) {
   const body = await request.formData()
 	const password = body.get('password')
   const resetToken = body.get('token')
