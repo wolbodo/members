@@ -125,11 +125,6 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@iarna/toml@^2.2.5":
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
-  integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
-
 "@lukeed/csprng@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@lukeed/csprng/-/csprng-1.0.1.tgz#625e93a0edb2c830e3c52ce2d67b9d53377c6a66"
@@ -171,44 +166,12 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sveltejs/adapter-auto@next":
-  version "1.0.0-next.33"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-auto/-/adapter-auto-1.0.0-next.33.tgz#bc0ecf5e2ae975b21f0e7619aaae981000535e58"
-  integrity sha512-FVEBSw5XIYCrqMPY2VGmaGyT4ZvbahcdQJ613O4lgAoafRdUy7ZaE8GoeDmCJxtTUsqhAQUFu7jx9IIhz+QrsQ==
-  dependencies:
-    "@sveltejs/adapter-cloudflare" "1.0.0-next.16"
-    "@sveltejs/adapter-netlify" "1.0.0-next.51"
-    "@sveltejs/adapter-vercel" "1.0.0-next.47"
-
-"@sveltejs/adapter-cloudflare@1.0.0-next.16":
-  version "1.0.0-next.16"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-cloudflare/-/adapter-cloudflare-1.0.0-next.16.tgz#e1e832e3050dd197dc9f8f62f7a3eb9fc0ee8b75"
-  integrity sha512-ripTRtOasAtxDJEIF3kwwji/9WHfX069i5LuRwGUzOi4/cbcGfgV1RFBVfo/8G6hr3ehqLeKCdloet1yTsp34A==
-  dependencies:
-    esbuild "^0.14.21"
-
-"@sveltejs/adapter-netlify@1.0.0-next.51":
-  version "1.0.0-next.51"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-netlify/-/adapter-netlify-1.0.0-next.51.tgz#ba10bba447bb2d1fdb64262cb3e4a34610982a8e"
-  integrity sha512-P7/cW/0z8zd8J6DOI2yxKZG0+HRMMuzfOf0yzFXX0vRwBePhKlZ/H4qhTOo2NrCmj3Len545o+ugj5gyMXl1+g==
-  dependencies:
-    "@iarna/toml" "^2.2.5"
-    esbuild "^0.14.21"
-    tiny-glob "^0.2.9"
-
 "@sveltejs/adapter-node@next":
   version "1.0.0-next.73"
   resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-1.0.0-next.73.tgz#5de0e8c088b8d74a12bd19a8b6710cf5a54452ca"
   integrity sha512-eidd7u1dPHIaBKMjRePrxazUt+Mm/JpnaiKLzZJBdamhBiiYIb+epkPLLqfG5Oo346/0HLKwFRAM/FXn3u3BHQ==
   dependencies:
     tiny-glob "^0.2.9"
-
-"@sveltejs/adapter-vercel@1.0.0-next.47":
-  version "1.0.0-next.47"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-vercel/-/adapter-vercel-1.0.0-next.47.tgz#892af109f0eb60dd7cd4884d0aacb484af852a12"
-  integrity sha512-VV3vP8KqL9XOc7xfQLVhXTM5jrTme+r1qJy98u5/dhAhkdjqrGDwAKo/s7MoB3rTYxLb2b8I4QxAaoz2Y2aIBg==
-  dependencies:
-    esbuild "^0.14.21"
 
 "@sveltejs/kit@next":
   version "1.0.0-next.303"
@@ -1067,7 +1030,7 @@ esbuild-windows-arm64@0.14.28:
   resolved "https://registry.yarnpkg.com/esbuild-windows-arm64/-/esbuild-windows-arm64-0.14.28.tgz#c527d52ec7d1f868259d0f74ecc4003e8475125d"
   integrity sha512-VhXGBTo6HELD8zyHXynV6+L2jWx0zkKnGx4TmEdSBK7UVFACtOyfUqpToG0EtnYyRZ0HESBhzPSVpP781ovmvA==
 
-esbuild@^0.14.14, esbuild@^0.14.21:
+esbuild@^0.14.14:
   version "0.14.28"
   resolved "https://registry.yarnpkg.com/esbuild/-/esbuild-0.14.28.tgz#7738635d2ea19e446bd319d83a1802545e6aebb8"
   integrity sha512-YLNprkCcMVKQ5sekmCKEQ3Obu/L7s6+iij38xNKyBeSmSsTWur4Ky/9zB3XIGT8SCJITG/bZwAR2l7YOAXch4Q==
@@ -3082,11 +3045,6 @@ svelte-hmr@^0.14.11:
   version "0.14.11"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.14.11.tgz#63d532dc9c2c849ab708592f034765fa2502e568"
   integrity sha512-R9CVfX6DXxW1Kn45Jtmx+yUe+sPhrbYSUp7TkzbW0jI5fVPn6lsNG9NEs5dFg5qRhFNAoVdRw5qQDLALNKhwbQ==
-
-svelte-kit-cookie-session@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/svelte-kit-cookie-session/-/svelte-kit-cookie-session-2.1.2.tgz#a1d6405345df136dcc69e06288ba49bdc63ee3c5"
-  integrity sha512-PfxIWDhiyYWu7iKlL0GHpmwDrdFh+rX/WmBzOuvctF25UqngIo9MCiegWBSBLE1RBwNs5UqaIeI8+vligmY07g==
 
 svelte-preprocess@^4.0.0, svelte-preprocess@^4.10.1:
   version "4.10.4"
