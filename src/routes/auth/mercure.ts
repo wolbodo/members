@@ -23,7 +23,8 @@ export async function get({ request }) {
       }
     }, MERCURE_JWT_SECRET)
 
-    const [ref] = request.headers.referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
+    const referer = request.headers.get('referer')
+    const [ref] = referer.match(/https:\/\/.*\.wolbodo\.nl/) || []
 
     return {
       status: 200,
