@@ -10,7 +10,7 @@ const MERCURE_JWT_SECRET = process.env['MERCURE_JWT_SECRET']
 const MERCURE_DOMAIN = process.env['MERCURE_DOMAIN']
 
 
-export const get: RequestHandler<Locals, FormData> = async ({ request }) => {
+export async function get({ request }) {
   // Check login
 	const { token } = getCookies(request.headers.cookie);
 
