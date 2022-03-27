@@ -5,7 +5,7 @@ import type { Locals } from '$lib/types';
 import { getCookies } from '$lib/cookies';
 import { verifyToken } from '$lib/jwt';
 
-export const get: RequestHandler<Locals, FormData> = async ({ request }) => {
+export async function get({ request }) {
   // Check login
 	const { token } = getCookies(request.headers.cookie);
 

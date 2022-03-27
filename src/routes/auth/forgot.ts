@@ -8,8 +8,9 @@ import { serverToken, createToken } from '$lib/jwt'
 
 const client = new GraphQLClient(GRAPHQL_ENDPOINT)
 
-export const post: RequestHandler<Locals, FormData> = async (request) => {
-	const email = request.body.get('email')
+export async function post({ request }) {
+  const body = await request.formData()
+	const email = body.get('email')
 
   if (!email) {
     return { status: 400 }
