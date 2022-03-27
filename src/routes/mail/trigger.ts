@@ -29,15 +29,14 @@ const transporter = nodemailer.createTransport({
   debug: true
 })
 
-export async function post({ body }) {
+export async function post({ request }) {
   const {
     event: {
       data: {
         new: { id },
       },
     },
-  } = body  
-
+  } = await request.json()  
   client.setHeader('authorization', `Bearer ${serverToken('mail')}`)
 
   const { mail } = await client.request(gql`
