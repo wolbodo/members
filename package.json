@@ -42,7 +42,7 @@
     "graphql-request": "^4.2.0",
     "jsdom": "^19",
     "jsonwebtoken": "^8.5.1",
-    "luxon": "^1.28.0",
+    "luxon": "^1.28.1",
     "mjml": "^4.9.3",
     "nodemailer": "^6.6.1",
     "proposal-temporal": "^0.8.0",
