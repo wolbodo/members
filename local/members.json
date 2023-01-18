@@ -1,0 +1,1977 @@
+[
+  {
+    "name": "Abina",
+    "firstname": "Abina",
+    "lastname": "Boesjes",
+    "bankaccount": "NL57INGB0796404496",
+    "address": "Ternatestraat 105",
+    "zipcode": "",
+    "city": "Delft",
+    "phone": "0621142667",
+    "email": "abinaboesjes@gmail.com",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "no",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Adam",
+    "firstname": "Adam",
+    "lastname": "Head",
+    "bankaccount": "NL97ABNA0439925436",
+    "address": "Harmenkokslaan 30",
+    "zipcode": "2611TR",
+    "city": "Delft",
+    "phone": "636184838",
+    "email": "gimmyhead_69@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Alex",
+    "firstname": "Alex",
+    "lastname": "Olieman",
+    "bankaccount": "NL40RABO0113378076",
+    "address": "Stille Putten 82",
+    "zipcode": "2612KV",
+    "city": "Delft",
+    "phone": "06-17370818",
+    "email": "alex.olieman@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Alvaro",
+    "firstname": "Alvaro Fernandes",
+    "lastname": "Mora",
+    "bankaccount": "ES5100730100540498-784114",
+    "address": "19",
+    "zipcode": "41018",
+    "city": "Seville, Spain",
+    "phone": "",
+    "email": "alvaro.fernandez.mora@gmail.com",
+    "note": "Contract: 2018 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Amber",
+    "firstname": "Amber",
+    "lastname": "Leeman",
+    "bankaccount": "NL39INGB0004399335",
+    "address": "CornelisTrompstraat 14",
+    "zipcode": "2628 RR",
+    "city": "Delft",
+    "phone": "06-42246147",
+    "email": "amberleeman@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Ana",
+    "firstname": "Ana",
+    "lastname": "Abazi",
+    "bankaccount": "NL63INGB0750062444",
+    "address": "Hugo De Grootstraat 222",
+    "zipcode": "2613 VA",
+    "city": "Delft",
+    "phone": "642508986",
+    "email": "ana_abazi@hotmail.com",
+    "note": "Contract: 2013 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Anna",
+    "firstname": "Anna (Ania)",
+    "lastname": "Wojcik",
+    "bankaccount": "NL51ABNA0432523030",
+    "address": "Burgemeester Meineszlaan 97a",
+    "zipcode": "3022 BD",
+    "city": "Rotterdam",
+    "phone": "625286841",
+    "email": "wolja@onet.eu",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Annabel",
+    "firstname": "Anna",
+    "lastname": "Hornberger",
+    "bankaccount": "NL33ABNA0606323007",
+    "address": "Ternatestraat 54",
+    "zipcode": "2612BH",
+    "city": "Delft",
+    "phone": "619787812",
+    "email": "annahornberger@gmx.de",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Annette",
+    "firstname": "Annette",
+    "lastname": "Voesenek",
+    "bankaccount": "NL74TRIO0198410751",
+    "address": "Dirklangenstraat 42",
+    "zipcode": "2611HX",
+    "city": "Delft",
+    "phone": "06-15585211",
+    "email": "annette.voesenek@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Arend",
+    "firstname": "Arend",
+    "lastname": "Moerman",
+    "bankaccount": "NL05RABO0337761434",
+    "address": "Rontgenweg 555",
+    "zipcode": "2624 WW",
+    "city": "Delft",
+    "phone": "617902789",
+    "email": "arendmoerman@gmail.com",
+    "note": "Contract: 2013 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Arjan",
+    "firstname": "Arjan Frederikus",
+    "lastname": "Vonk",
+    "bankaccount": "NL05RABO0363430059",
+    "address": "Korvezeestraat 165",
+    "zipcode": "2628 DH",
+    "city": "Delft",
+    "phone": "06-13204336",
+    "email": "arjan.vonk@outlook.com",
+    "note": "Contract: 2016 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Arjen",
+    "firstname": "Arjen",
+    "lastname": "Bosma",
+    "bankaccount": "NL58ABNA0841402736",
+    "address": "Oostblok 215",
+    "zipcode": "2612 KP",
+    "city": "Delft",
+    "phone": "06-13491983",
+    "email": "arjelte@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Bart",
+    "firstname": "Bart",
+    "lastname": "Alewijnse",
+    "bankaccount": "NL24SNSB0942653874",
+    "address": "Nieuwelaan 52",
+    "zipcode": "2611RS",
+    "city": "Delft",
+    "phone": "641705209",
+    "email": "scarfboy@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Berit",
+    "firstname": "Berit",
+    "lastname": "Soolsma",
+    "bankaccount": "NL61TRIO0254315674",
+    "address": "3e Helmersstraat 41",
+    "zipcode": "1052 BB",
+    "city": "Amsterdam",
+    "phone": "06-28922988",
+    "email": "kaliumhyperoxide@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Blaauw",
+    "firstname": "Jeroen",
+    "lastname": "Blaauw",
+    "bankaccount": "NL68RABO0310735033",
+    "address": "Rijswijkseplein 262",
+    "zipcode": "2516 LH",
+    "city": "Den Haag",
+    "phone": "638649688",
+    "email": "jblaauw89@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Bob",
+    "firstname": "Bob",
+    "lastname": "van Vliet",
+    "bankaccount": "NL84TRIO0197802672",
+    "address": "Jan Blankenstraat 40",
+    "zipcode": "2515PP",
+    "city": "Den Haag",
+    "phone": "628269126",
+    "email": "bob@sjokola.nl",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Bouke",
+    "firstname": "Olav",
+    "lastname": "van der Doorn",
+    "bankaccount": "NL14INGB0002795308",
+    "address": "Oost-IndiÃ?Â«plaats 2",
+    "zipcode": "2613BR",
+    "city": "Delft",
+    "phone": "619699854",
+    "email": "olav_ik@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Brian",
+    "firstname": "Brian",
+    "lastname": "Bel",
+    "bankaccount": "NL07INGB0008637647",
+    "address": "Poolster 26",
+    "zipcode": "2743LD",
+    "city": "Waddinxveen",
+    "phone": "06 3122 0906",
+    "email": "brian.bel47@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Brynja",
+    "firstname": "Brynja",
+    "lastname": "Kristinsdottir",
+    "bankaccount": "DE67100110012629201262",
+    "address": "Verwersdijk 102",
+    "zipcode": "2611 NK",
+    "city": "Delft",
+    "phone": "0644679810",
+    "email": "brynjakristins@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "BWB",
+    "firstname": "Benjamin",
+    "lastname": "W. Broersma",
+    "bankaccount": "NL51TRIO0390362913",
+    "address": "Peperstraat 34",
+    "zipcode": "2611CH",
+    "city": "DELFT",
+    "phone": "31629370888",
+    "email": "bwb@bwblabs.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Chris",
+    "firstname": "Christiaan",
+    "lastname": "Basting",
+    "bankaccount": "NL93RABO0308150503",
+    "address": "Meidoornlaan 64a",
+    "zipcode": "2612 TT",
+    "city": "Delft",
+    "phone": "06-28536810",
+    "email": "christiaan.basting@gmx.net",
+    "note": "Contract: 1994 | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Christien",
+    "firstname": "Christien",
+    "lastname": "Havranek (M.C)",
+    "bankaccount": "NL91RABO0391639021",
+    "address": "De Vlouw 1b",
+    "zipcode": "2611 EW",
+    "city": "Delft",
+    "phone": "06-48173963",
+    "email": "chriswortel100@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Christophe",
+    "firstname": "Christophe",
+    "lastname": "Ndayizeye",
+    "bankaccount": "NL13RABO0369471172",
+    "address": "Balthasar van der Polweg 936",
+    "zipcode": "2628ZJ",
+    "city": "Delft",
+    "phone": "06-42537651",
+    "email": "ndichrist75@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Claire",
+    "firstname": "Claire",
+    "lastname": "van der Loo",
+    "bankaccount": "NL29RABO0104119624",
+    "address": "Raamstraat 50",
+    "zipcode": "2613SE",
+    "city": "Delft",
+    "phone": "06-24762379",
+    "email": "cvdloo@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "ColaKai",
+    "firstname": "Kai",
+    "lastname": "van Hoof",
+    "bankaccount": "NL72INGB0669720771",
+    "address": "Brasserskade 45",
+    "zipcode": "2612 CA",
+    "city": "Delft",
+    "phone": "06-27293662",
+    "email": "kai@lafeberhof.nl",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Daniel",
+    "firstname": "Daniel",
+    "lastname": "Kazazaev",
+    "bankaccount": "NL68INGB0794349838",
+    "address": "Rontgenweg 225",
+    "zipcode": "2624 BD",
+    "city": "Delft",
+    "phone": "0639425347",
+    "email": "danielkazazaev@gmail.com",
+    "note": "Contract: 2019 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Dexter",
+    "firstname": "Alexander",
+    "lastname": "Esselink",
+    "bankaccount": "NL76KNAB0762737182",
+    "address": "Klopsteen 8",
+    "zipcode": "2496 SM",
+    "city": "Den Haag",
+    "phone": "623034351",
+    "email": "dexter@dexterlabs.nl",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Diede",
+    "firstname": "Diede",
+    "lastname": "Langras",
+    "bankaccount": "NL90TRIO0379656418",
+    "address": "Westeinde 309",
+    "zipcode": "2512HA",
+    "city": "Den Haag",
+    "phone": "",
+    "email": "dthe@live.nl",
+    "note": "Contract: 2018 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "DJ",
+    "firstname": "Dirk Jan",
+    "lastname": "Reeder",
+    "bankaccount": "NL80INGB0752317873",
+    "address": "Gashouderpad 21",
+    "zipcode": "2611 MS",
+    "city": "Delft",
+    "phone": "06-51257047",
+    "email": "deejee@gmx.net",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Emiel",
+    "firstname": "Emiel",
+    "lastname": "Vestegen",
+    "bankaccount": "NL24RABO0119102528",
+    "address": "Isaak Hoornbeekstraat 17",
+    "zipcode": "2613HE",
+    "city": "Delft",
+    "phone": "06-15094488",
+    "email": "mail@emielverstegen.nl",
+    "note": "Contract: 2006 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Erik",
+    "firstname": "Erik",
+    "lastname": "Roozen",
+    "bankaccount": "NL32INGB0003056108",
+    "address": "Burgemeester Hoffmanplein 41A",
+    "zipcode": "3071 XC",
+    "city": "Rotterdam",
+    "phone": "06-15619911",
+    "email": "E.Roozen@Gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Floor",
+    "firstname": "Floor",
+    "lastname": "Spaargaren",
+    "bankaccount": "NL36INGB0001757109",
+    "address": "Johan Buziaustraat 57",
+    "zipcode": "",
+    "city": "Wageningen",
+    "phone": "",
+    "email": "floorspaargaren@gmail.com",
+    "note": "Contract: 2017 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Florian",
+    "firstname": "Florian",
+    "lastname": "Bosman",
+    "bankaccount": "NL70ABNA0598257179",
+    "address": "echo_sk8@hotmail.com",
+    "zipcode": "2251 RZ",
+    "city": "Voorschoten",
+    "phone": "06-22003087",
+    "email": "florian.bderp@gmail.com",
+    "note": "Contract: 2016 | in_iedereen: y",
+    "key_code": "no",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Gilles",
+    "firstname": "Gilles",
+    "lastname": "Schuringa",
+    "bankaccount": "NL90TRIO0390996785",
+    "address": "Verwersdijk 104",
+    "zipcode": "2611NK",
+    "city": "Delft",
+    "phone": "31615408593",
+    "email": "gilluhs@msn.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Gwen",
+    "firstname": "Gwen",
+    "lastname": "Holscher",
+    "bankaccount": "NL52INGB0005322929",
+    "address": "Prof. Evertslaan 299",
+    "zipcode": "2628XW",
+    "city": "Delft",
+    "phone": "015-2570457",
+    "email": "gwen.holscher@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Helmer",
+    "firstname": "Helmer",
+    "lastname": "Pluijms",
+    "bankaccount": "NL17RABO0148268323",
+    "address": "Hugo de Grootstraat 222",
+    "zipcode": "",
+    "city": "Delft",
+    "phone": "06-25411474",
+    "email": "grogje@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Herman",
+    "firstname": "Herman",
+    "lastname": "Bergwerf",
+    "bankaccount": "NL11RABO0308818369",
+    "address": "Frank van Borselenstraat 4 II",
+    "zipcode": "2613 NL",
+    "city": "Delft",
+    "phone": "",
+    "email": "hermanbergwerf@gmail.com",
+    "note": "Contract: 2018 | in_iedereen: y",
+    "key_code": "no",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Ilonka",
+    "firstname": "Ilonka",
+    "lastname": "Marselis",
+    "bankaccount": "NL08TRIO0390908827",
+    "address": "Nieuwelaan 46",
+    "zipcode": "2611RS",
+    "city": "Delft",
+    "phone": "643290513",
+    "email": "ilonka@marselis.eu",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jahor",
+    "firstname": "Jahor",
+    "lastname": "Vinerski",
+    "bankaccount": "NL25INGB0794299202",
+    "address": "Eisenhowerlaan 148-53",
+    "zipcode": "2517 KP",
+    "city": "Delft",
+    "phone": "0640407717",
+    "email": "egorvinerski@mail.ru",
+    "note": "Contract: 2019 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "James",
+    "firstname": "James",
+    "lastname": "Lawrence",
+    "bankaccount": "NL56ABNA0618608516",
+    "address": "Seanredamstraat 27",
+    "zipcode": "2613 NS",
+    "city": "Delft",
+    "phone": "645518746",
+    "email": "jimbuzz007@gmail.com",
+    "note": "Contract: 2014 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jamie",
+    "firstname": "Jamie",
+    "lastname": "van den Berg",
+    "bankaccount": "NL55INGB0008377114",
+    "address": "Jacoba van Beierenlaan 67",
+    "zipcode": "2613jb",
+    "city": "Delft",
+    "phone": "06-13790222",
+    "email": "diepvriespizza@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jara",
+    "firstname": "Jara",
+    "lastname": "Schulz",
+    "bankaccount": "NL74TRIO0786722444",
+    "address": "Van Masseltlaan 517",
+    "zipcode": "2625 JG",
+    "city": "Delft",
+    "phone": "06-31366797",
+    "email": "jara_schulz@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jasper",
+    "firstname": "Jasper",
+    "lastname": "Ruoff",
+    "bankaccount": "NL13INGB0008899342",
+    "address": "Klopsteen 8",
+    "zipcode": "2496SM",
+    "city": "Den Haag",
+    "phone": "+31 6 34146525",
+    "email": "jruoff@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jeffrey",
+    "firstname": "Jeffrey",
+    "lastname": "Kohler",
+    "bankaccount": "NL95INGB0004314228",
+    "address": "Oostblok 96",
+    "zipcode": "2612 PE",
+    "city": "Delft",
+    "phone": "0624551581",
+    "email": "Smallrecordings@gmail.com",
+    "note": "Contract: 2019 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jelle",
+    "firstname": "Jelle",
+    "lastname": "Tjallema",
+    "bankaccount": "NL12ABNA0448617293",
+    "address": "Naderjda Mandelstamstraat 55",
+    "zipcode": "",
+    "city": "Delft",
+    "phone": "621199957",
+    "email": "jelle.tjallema@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jeroen",
+    "firstname": "Jeroen",
+    "lastname": "Manders",
+    "bankaccount": "NL39ASNB0709092091",
+    "address": "Julianalaan 38",
+    "zipcode": "2628BH",
+    "city": "Delft",
+    "phone": "06-2499 7721",
+    "email": "jeroehoen@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jip",
+    "firstname": "Jip",
+    "lastname": "Meijer",
+    "bankaccount": "NL95INGB0004478352",
+    "address": "Pauwhof 22",
+    "zipcode": "2289 BH",
+    "city": "Rijswijk",
+    "phone": "06-16100418",
+    "email": "jip@rekwerk.nl",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jorrit-Jan",
+    "firstname": "Jorrit Jan",
+    "lastname": "Serraris",
+    "bankaccount": "NL83RABO0143030396",
+    "address": "Hof 1",
+    "zipcode": "3958CH",
+    "city": "Amerongen",
+    "phone": "06-49115948",
+    "email": "jeejeejoepie@gmx.net",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Joshua",
+    "firstname": "Joshua",
+    "lastname": "Kiefer",
+    "bankaccount": "DE48120300001032318956",
+    "address": "Pootstraat 7",
+    "zipcode": "2613 PE",
+    "city": "Delft",
+    "phone": "619694017",
+    "email": "kieferjoshua@ymail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Judith",
+    "firstname": "Judith",
+    "lastname": "Haan",
+    "bankaccount": "NL74RABO0171726359",
+    "address": "Voorstraat 26",
+    "zipcode": "",
+    "city": "Delft",
+    "phone": "06-44268659",
+    "email": "judith.haan@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Junior",
+    "firstname": "Rogier",
+    "lastname": "van der Hee",
+    "bankaccount": "",
+    "address": "Doelenstraat 104",
+    "zipcode": "2611 NW",
+    "city": "Delft",
+    "phone": "06-29140582",
+    "email": "junior@vanderhee.net",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Jure",
+    "firstname": "Jure",
+    "lastname": "Vidmar",
+    "bankaccount": "NL34ABNA0828041903",
+    "address": "Michiel de Ruyterweg 70a",
+    "zipcode": "2628 BA",
+    "city": "Delft",
+    "phone": "+38640566625",
+    "email": "vidmarjur@gmail.com",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Karel",
+    "firstname": "Mike Hubertus Maria",
+    "lastname": "Bond",
+    "bankaccount": "NL93RABO0385630417",
+    "address": "Bagijnhof 13a",
+    "zipcode": "2613HL",
+    "city": "Delft",
+    "phone": "654356094",
+    "email": "hubertusmariabond@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Kirsten",
+    "firstname": "Kirsten",
+    "lastname": "van Lieden",
+    "bankaccount": "NL66INGB0004417279",
+    "address": "Jacob Catsstraat 44",
+    "zipcode": "2613 HC",
+    "city": "Delft",
+    "phone": "06-37327476",
+    "email": "kirsten_vanlienden@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Lego",
+    "firstname": "Tim",
+    "lastname": "Hummel",
+    "bankaccount": "DE52200411550621358100",
+    "address": "Nieuwelaan 52",
+    "zipcode": "2611 RS",
+    "city": "Delft",
+    "phone": "+49 15118496758",
+    "email": "tim.hummel@gmx.de",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Lennart",
+    "firstname": "Lennart",
+    "lastname": "van Gameren",
+    "bankaccount": "NL79RABO0161085563",
+    "address": "",
+    "zipcode": "",
+    "city": "Delfgauw",
+    "phone": "-",
+    "email": "lennart_gameren@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Leslie",
+    "firstname": "Leslie",
+    "lastname": "Eisinger",
+    "bankaccount": "NL69INGB0669617423",
+    "address": "Nieuwelaan 52",
+    "zipcode": "2611 EW",
+    "city": "Delft",
+    "phone": "06-20552775",
+    "email": "la-tje@gmx.net",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Lian",
+    "firstname": "Lian",
+    "lastname": "Moerenhout",
+    "bankaccount": "NL77INGB0005046417",
+    "address": "Bagijnhof 13a",
+    "zipcode": "2611AN",
+    "city": "Delft",
+    "phone": "06-40905690",
+    "email": "Lianmoerenhout@hotmail.com",
+    "note": "Contract: 2006 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Lotte",
+    "firstname": "Lotte",
+    "lastname": "Ophey",
+    "bankaccount": "NL34RABO0132904381",
+    "address": "van Bleyswijckstraat 6",
+    "zipcode": "2613 RS",
+    "city": "Delft",
+    "phone": "06-28279868",
+    "email": "oppietwo@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Maikel",
+    "firstname": "Maikel Gafaji",
+    "lastname": "Hussein",
+    "bankaccount": "NL89INGB0659373475",
+    "address": "Verwersdijk 104",
+    "zipcode": "2611 NK",
+    "city": "Delft",
+    "phone": "",
+    "email": "maikel.gafaji@gmail.com",
+    "note": "Contract: 2017 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Marien",
+    "firstname": "Marien",
+    "lastname": "Wolthuis",
+    "bankaccount": "NL58ABNA0541662066",
+    "address": "Zangmolenstraat 165 A1",
+    "zipcode": "3036 HK",
+    "city": "Rotterdam",
+    "phone": "",
+    "email": "marien@marienwolthuis.nl",
+    "note": "Contract: 2018 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Marinus",
+    "firstname": "Marinus",
+    "lastname": "Dalm",
+    "bankaccount": "NL72INGB0007656001",
+    "address": "Staalmeesterstraat 2 - 1",
+    "zipcode": "2613 MV",
+    "city": "Delft",
+    "phone": "650408668",
+    "email": "marinusdalm@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Marjanne",
+    "firstname": "Marjanne",
+    "lastname": "Zander",
+    "bankaccount": "",
+    "address": "???",
+    "zipcode": "???",
+    "city": "???",
+    "phone": "",
+    "email": "marjannezander@gmail.com",
+    "note": "Contract: ??? | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Marta",
+    "firstname": "Marta",
+    "lastname": "Kluba",
+    "bankaccount": "NL13RABO0162351631",
+    "address": "Isaak Hoornbeekstraat 17",
+    "zipcode": "2613HE",
+    "city": "Delft",
+    "phone": "+31 634 132 458",
+    "email": "flanelka6@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Marte",
+    "firstname": "Marte",
+    "lastname": "Fekkes",
+    "bankaccount": "NL96RABO0115970460",
+    "address": "Pootstraat 7",
+    "zipcode": "",
+    "city": "",
+    "phone": "06-36056627",
+    "email": "martefekkes@gmail.com",
+    "note": "Contract: 2013 | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Martin",
+    "firstname": "Martin",
+    "lastname": "Havranek",
+    "bankaccount": "NL90RBOS0449237516",
+    "address": "C. Trompstraat 14",
+    "zipcode": "2628 RR",
+    "city": "Delft",
+    "phone": "015-2628074",
+    "email": "havranek.m.c@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Maryse",
+    "firstname": "Maryse",
+    "lastname": "Karsten",
+    "bankaccount": "NL29TRIO0391168797",
+    "address": "Nieuwelaan 46",
+    "zipcode": "2611 RS",
+    "city": "Delft",
+    "phone": "06-11212485",
+    "email": "tcmkarsten@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Max",
+    "firstname": "Max",
+    "lastname": "Oomen",
+    "bankaccount": "NL71INGB0008672870",
+    "address": "Voorstraat 26",
+    "zipcode": "2611JR",
+    "city": "Delft",
+    "phone": "06-13507596",
+    "email": "maxiejazz@gmail.com",
+    "note": "Contract: 2006 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Micha",
+    "firstname": "Micha",
+    "lastname": "ten Hoope",
+    "bankaccount": "NL46ABNA0571797369",
+    "address": "Wijnroeienpad 19",
+    "zipcode": "2612 NE",
+    "city": "Delft",
+    "phone": "",
+    "email": "michatenhoope@gmail.com",
+    "note": "Contract: 2017 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Mike",
+    "firstname": "Mike",
+    "lastname": "de Laat",
+    "bankaccount": "NL25ASNB0707428696",
+    "address": "Anna Boogerd 46",
+    "zipcode": "2611 XB",
+    "city": "Delft",
+    "phone": "06-21247413",
+    "email": "studio2takes@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Milan",
+    "firstname": "Milan",
+    "lastname": "Seegers",
+    "bankaccount": "NL98INGB0008176714",
+    "address": "Nieuwelaan 52",
+    "zipcode": "2611 RS",
+    "city": "Delft",
+    "phone": "681139902",
+    "email": "seegers@gmx.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Mitchel",
+    "firstname": "Mitchel",
+    "lastname": "Petrus",
+    "bankaccount": "NL77INGB0008645505",
+    "address": "Parel 29",
+    "zipcode": "3641 XM",
+    "city": "Mijdrecht",
+    "phone": "0630048560",
+    "email": "mitchell.petrus@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Moniek",
+    "firstname": "Moniek",
+    "lastname": "van Adrichem",
+    "bankaccount": "NL55RABO0336274106",
+    "address": "Staalmeesterstraat 2-1",
+    "zipcode": "2613MV",
+    "city": "Delft",
+    "phone": "06-42931400",
+    "email": "moniekvanadrichem@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Naud",
+    "firstname": "Naud",
+    "lastname": "Megens",
+    "bankaccount": "NL42INGB0008370946",
+    "address": "Jacob Appels Alle 38",
+    "zipcode": "2770",
+    "city": "Kastrup",
+    "phone": "4550347834",
+    "email": "naudmegens@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Niek",
+    "firstname": "Niek",
+    "lastname": "???",
+    "bankaccount": "NL66RABO0326662081",
+    "address": "???",
+    "zipcode": "???",
+    "city": "???",
+    "phone": "",
+    "email": "sopkip@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Oscar",
+    "firstname": "Oscar",
+    "lastname": "Keur",
+    "bankaccount": "NL74ABNA0526127228",
+    "address": "Beukenplein 41",
+    "zipcode": "1092BB",
+    "city": "Amsterdam",
+    "phone": "-29306357",
+    "email": "o.e.keur@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Owkay",
+    "firstname": "Kay",
+    "lastname": "van Baarle",
+    "bankaccount": "NL30ABNA0535909888",
+    "address": "Nieuwe langendijk 42",
+    "zipcode": "2611 VK",
+    "city": "Delft",
+    "phone": "06-15852271",
+    "email": "kayvanbaarle@gmail.com",
+    "note": "Contract: 2016 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Pelin",
+    "firstname": "Cansu Pelin",
+    "lastname": "Isbilen",
+    "bankaccount": "",
+    "address": "Gumussuyu mah. Saray Arkasi sok. 45/1",
+    "zipcode": "34437",
+    "city": "Gumusssuyu/Istanbul",
+    "phone": "905359615428",
+    "email": "cnspln@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Pluto",
+    "firstname": "Niels",
+    "lastname": "van der Pas",
+    "bankaccount": "NL80INGB0007901073",
+    "address": "Van Saenredamstraat 37",
+    "zipcode": "2613NS",
+    "city": "Delft",
+    "phone": "06-22512903",
+    "email": "niels.pluto@gmail.com",
+    "note": "Contract: 2006 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Remy",
+    "firstname": "Remy",
+    "lastname": "van Rooijen",
+    "bankaccount": "NL26RABO0141328878",
+    "address": "Vlouw 1-b",
+    "zipcode": "2611 EW",
+    "city": "Delft",
+    "phone": "06-24935768",
+    "email": "dropremix@gmx.net",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Rense",
+    "firstname": "Rense",
+    "lastname": "Koolstra",
+    "bankaccount": "NL37ASNB0932394663",
+    "address": "Nigeriastraat 49",
+    "zipcode": "2622 GB",
+    "city": "Delft",
+    "phone": "",
+    "email": "rense.koolstra@gmail.com",
+    "note": "Contract: 2017 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Rienk",
+    "firstname": "Rienk Jelte",
+    "lastname": "Aalbers",
+    "bankaccount": "NL22INGB0008156257",
+    "address": "Prinsegracht 9a",
+    "zipcode": "2512EW",
+    "city": "Den Haag",
+    "phone": "06-30732055",
+    "email": "rienk_jelte@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Rob",
+    "firstname": "Rob",
+    "lastname": "de Jonge",
+    "bankaccount": "NL41INGB0004669638",
+    "address": "Meidoornlaan 46a",
+    "zipcode": "2612 TS",
+    "city": "Delft",
+    "phone": "015-2124881",
+    "email": "robdeechte@ziggo.nl",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Robin",
+    "firstname": "Robin",
+    "lastname": "Goud",
+    "bankaccount": "NL82INGB0751374512",
+    "address": "",
+    "zipcode": "",
+    "city": "",
+    "phone": "",
+    "email": "robingoud@hotmail.nl",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Roos",
+    "firstname": "Roos",
+    "lastname": "van Tongeren",
+    "bankaccount": "NL64KNAB0762737301",
+    "address": "De Vlouw 44",
+    "zipcode": "2611ez",
+    "city": "Delft",
+    "phone": "642031901",
+    "email": "roosvantongeren@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Rosa",
+    "firstname": "Rosa",
+    "lastname": "de Jong",
+    "bankaccount": "NL85TRIO0391145576",
+    "address": "Beukenplein 41",
+    "zipcode": "",
+    "city": "Amsterdam",
+    "phone": "06-18404215",
+    "email": "rosadejong2011@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Rowan",
+    "firstname": "Rowan",
+    "lastname": "Heijsteeg",
+    "bankaccount": "NL25TRIO0198076207",
+    "address": "Nieuwelaan 48",
+    "zipcode": "2611 RS",
+    "city": "Delft",
+    "phone": "",
+    "email": "rowan.heijsteeg@gmail.com",
+    "note": "Contract: 2018 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Ruben",
+    "firstname": "Ruben",
+    "lastname": "Dahmen",
+    "bankaccount": "NL12INGB0009313356",
+    "address": "platanenweg 18-1",
+    "zipcode": "1091KS",
+    "city": "Delft",
+    "phone": "614771349",
+    "email": "ruben_dahmen@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Ruud",
+    "firstname": "Ruud",
+    "lastname": "van Gool",
+    "bankaccount": "NL56RABO0103831339",
+    "address": "Hoogbraak 20",
+    "zipcode": "5111CT",
+    "city": "Baarle-Nassau",
+    "phone": "06-46098987",
+    "email": "r.v.gool@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Sandro",
+    "firstname": "Sandro",
+    "lastname": "Pugliese",
+    "bankaccount": "NL83ABNA0540385581",
+    "address": "Brabantse Turfmarkt 1",
+    "zipcode": "2611 CK",
+    "city": "Delft",
+    "phone": "616793095",
+    "email": "sandro.pugliese@email.it",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Sebastiaan",
+    "firstname": "Sebastiaan",
+    "lastname": "Fransooijs",
+    "bankaccount": "NL11INGB0008082056",
+    "address": "Delftsestraatweg 242",
+    "zipcode": "2645AE",
+    "city": "Delfgauw",
+    "phone": "06-23846163",
+    "email": "sfransooijs@msn.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Sissi",
+    "firstname": "Charlotte",
+    "lastname": "de Wit",
+    "bankaccount": "NL20INGB0008838494",
+    "address": "Nassaulaan 52",
+    "zipcode": "2628 GJ",
+    "city": "Delft",
+    "phone": "06-44061077",
+    "email": "dat_klopt_zeker@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Stefan",
+    "firstname": "Stefan",
+    "lastname": "Koster",
+    "bankaccount": "NL27INGB0000403830",
+    "address": "van Bleyswijckstraat 6",
+    "zipcode": "2613 RS",
+    "city": "Delft",
+    "phone": "06-12920020",
+    "email": "stefan@quorp.nl",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },  
+  {
+    "name": "Tamara",
+    "firstname": "Tamara",
+    "lastname": "Monster",
+    "bankaccount": "NL82RABO0395009448",
+    "address": "Pensionarisstraat 30",
+    "zipcode": "4204BH",
+    "city": "Gorinchem",
+    "phone": "640155915",
+    "email": "mezmire@hotmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Tessa",
+    "firstname": "Tessa",
+    "lastname": "Verbruggen",
+    "bankaccount": "NL67TRIO0786847506",
+    "address": "Oostblok 215",
+    "zipcode": "2612 KP",
+    "city": "Delft",
+    "phone": "06-28206304",
+    "email": "tessa.verbruggen@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Thatcher",
+    "firstname": "Thatcher",
+    "lastname": "Peskens",
+    "bankaccount": "NL69ABNA0403425131",
+    "address": "840 Hayes st, apt 9",
+    "zipcode": "94117",
+    "city": "San Francisco",
+    "phone": "14159679221",
+    "email": "thatcher@gmx.net",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Tim",
+    "firstname": "Tim",
+    "lastname": "Agema",
+    "bankaccount": "NL16INGB0006822615",
+    "address": "Zwetstraat 25",
+    "zipcode": "2515 VD",
+    "city": "Den Haag",
+    "phone": "06-44352907",
+    "email": "timagema@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Tobi",
+    "firstname": "Tobias",
+    "lastname": "Oberdorfer",
+    "bankaccount": "NL73ABNA0462635023",
+    "address": "Raam 55",
+    "zipcode": "2611 LS",
+    "city": "Delft",
+    "phone": "06-18253628",
+    "email": "das_heimatmensch@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Vivian",
+    "firstname": "Vivian",
+    "lastname": "Wendt",
+    "bankaccount": "NL79ABNA0526577703",
+    "address": "Nieuwelaan 50",
+    "zipcode": "2611 RS",
+    "city": "Delft",
+    "phone": "+49 17645645545",
+    "email": "viviwendt@gmx.de",
+    "note": "Contract: 2019 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Volkert",
+    "firstname": "Volkert",
+    "lastname": "van der Wijk",
+    "bankaccount": "NL66RABO0307116387",
+    "address": "Westerstraat 188",
+    "zipcode": "7522 DG",
+    "city": "Enschede",
+    "phone": "06-41246218",
+    "email": "Volkert_vdWijk@hotmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Wendy",
+    "firstname": "Moniek",
+    "lastname": "van Rousteijn",
+    "bankaccount": "NL87RABO035866394",
+    "address": "Dillenburgstraat 12",
+    "zipcode": "2628 GX",
+    "city": "Delft",
+    "phone": "",
+    "email": "hoedenplank@gmail.com",
+    "note": "Contract: 2018 | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Yanick",
+    "firstname": "Yanick",
+    "lastname": "van Langeraad",
+    "bankaccount": "NL16INGB0008462400",
+    "address": "Anna Boogerd 54",
+    "zipcode": "2611 XC",
+    "city": "Delft",
+    "phone": "681967967",
+    "email": "yvanlangeraad@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Youri",
+    "firstname": "Youri",
+    "lastname": "Arkesteijn",
+    "bankaccount": "NL39ABNA0542756277",
+    "address": "Herenpad 20",
+    "zipcode": "2628AG",
+    "city": "Delft",
+    "phone": "611231114",
+    "email": "youri.essa@gmail.com",
+    "note": "Contract:  | in_iedereen: y",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Yvo",
+    "firstname": "Yvo",
+    "lastname": "Pluymakers",
+    "bankaccount": "NL30ABNA0566734257",
+    "address": "cornelis trompstraat 14",
+    "zipcode": "2628RR",
+    "city": "Delft",
+    "phone": "06-45762839",
+    "email": "yvo.pluymakers@gmail.com",
+    "note": "Contract:  | in_iedereen: ",
+    "key_code": "yes",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Willem",
+    "firstname": "Willem",
+    "lastname": "Hengeveldq",
+    "bankaccount": "NL51INGB0002583248",
+    "address": "R.P. Geerligssingel 43",
+    "zipcode": "2642AV",
+    "city": "Pijnacker",
+    "phone": "",
+    "email": "itsme@xs4all.nl",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "no",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Koen",
+    "firstname": "Koen",
+    "lastname": "van den Buuse",
+    "bankaccount": "NL06INGB0008921002",
+    "address": "Lodewijk Tripstraat 3-2A",
+    "zipcode": "1052 ER",
+    "city": "Amsterdam",
+    "phone": "0623131873",
+    "email": "kvdbuuse@live.nl",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Rama",
+    "firstname": "Rama Arunanda",
+    "lastname": "Temmink",
+    "bankaccount": "NL68ABNA0508855322",
+    "address": "Verwersdijk 104",
+    "zipcode": "2611NK",
+    "city": "DELFT",
+    "phone": "0657766445",
+    "email": "rama.temmink@outlook.com",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Sjoerd",
+    "firstname": "Sjoerd Pieter Koen",
+    "lastname": "Verheij",
+    "bankaccount": "NL42ABNA0518172155",
+    "address": "Juffermansstraat 23",
+    "zipcode": "2341JJ",
+    "city": "Oegstgeest",
+    "phone": "0637451658",
+    "email": "sjoerdverheij@gmail.com",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Mat",
+    "firstname": "Mat",
+    "lastname": "Zwart",
+    "bankaccount": "NL32RABO0306595915",
+    "address": "Lange Groenedaal 35",
+    "zipcode": "2801LR",
+    "city": "Gouda",
+    "phone": "0629446251",
+    "email": "matzwart007@gmail.com",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": "",
+
+    "roles": {
+    "data": {
+      "role": "member"
+    }}
+  },
+  {
+    "name": "Pawel",
+    "firstname": "Pawel",
+    "lastname": "Konior",
+    "bankaccount": "NL42ABNA0876596855",
+    "address": "Verwersdijk 102",
+    "zipcode": "2611NK",
+    "city": "DELFT",
+    "phone": "06657550724",
+    "email": "pablo.konior@gmail.com",
+    "note": "Contract: 2020 | in_iedereen: y",
+    "key_code": ""
+  }
+]
