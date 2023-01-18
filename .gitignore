@@ -4,7 +4,13 @@ node_modules
 /.svelte-kit
 /package
 .env
-local
+.env.*
+!.env.example
+.vercel
+.output
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
 
 docker-compose.override.yml
 yarn-error.log

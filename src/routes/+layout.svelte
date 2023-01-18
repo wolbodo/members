@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang='ts'>  
 	import env from '../environment';
 	import { setEnvironment } from '$houdini';
 
