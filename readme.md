@@ -23,3 +23,4 @@ Postgres + Postgraphile + svelte
 - $: docker-compose up graphql
 
 And connect to http://localhost:8080/graphiql in the browser or http://localhost:8080/graphql
+
