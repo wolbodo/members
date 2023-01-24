@@ -1,267 +1,371 @@
-import { flattenList } from './stuff';
-export class ListManager {
-    constructor(rootID) {
-        // associate list names with the handler that wraps the list
-        this.lists = new Map();
-        this.rootID = rootID;
+import { rootID } from "./cache";
+import { flattenList } from "./stuff";
+class ListManager {
+  rootID;
+  cache;
+  constructor(cache, rootID2) {
+    this.rootID = rootID2;
+    this.cache = cache;
+  }
+  lists = /* @__PURE__ */ new Map();
+  listsByField = /* @__PURE__ */ new Map();
+  get(listName, id, allLists) {
+    const matches = this.lists.get(listName);
+    if (!matches || matches.size === 0) {
+      return null;
     }
-    get(listName, id) {
-        var _a;
-        return (_a = this.lists.get(listName)) === null || _a === void 0 ? void 0 : _a.get(id || this.rootID);
+    if (allLists) {
+      return new ListCollection(
+        Array.from(matches, ([key, value]) => [...value.lists]).flat()
+      );
     }
-    remove(listName, id) {
-        var _a;
-        (_a = this.lists.get(listName)) === null || _a === void 0 ? void 0 : _a.delete(id || this.rootID);
+    const head = [...matches.values()][0];
+    const { recordType } = head.lists[0];
+    const parentID = id ? this.cache._internal_unstable.id(recordType || "", id) : this.rootID;
+    if (matches?.size === 1) {
+      if (!id) {
+        return head;
+      }
+      return parentID === Array.from(matches.keys())[0] ? head : null;
     }
-    set(list) {
-        var _a;
-        // if we haven't seen this list before
-        if (!this.lists.has(list.name)) {
-            this.lists.set(list.name, new Map());
-        }
-        // set the list reference
-        (_a = this.lists
-            .get(list.name)) === null || _a === void 0 ? void 0 : _a.set(list.parentID || this.rootID, new List({ ...list, manager: this }));
+    if (!id) {
+      console.error(
+        `Found multiple instances of "${listName}". Please provide one of @parentID or @allLists directives to help identify which list you want modify. For more information, visit this guide: https://www.houdinigraphql.com/api/graphql#parentidvalue-string `
+      );
+      return null;
     }
-    removeIDFromAllLists(id) {
-        for (const fieldMap of this.lists.values()) {
-            for (const list of fieldMap.values()) {
-                list.removeID(id);
-            }
-        }
+    return this.lists.get(listName)?.get(parentID);
+  }
+  remove(listName, id) {
+    this.lists.get(listName)?.delete(id || this.rootID);
+  }
+  add(list) {
+    if (!this.lists.has(list.name)) {
+      this.lists.set(list.name, /* @__PURE__ */ new Map());
     }
+    const name = list.name;
+    const parentID = list.recordID || this.rootID;
+    if (this.lists.get(name)?.get(parentID)?.includes(list.key)) {
+      return;
+    }
+    if (!this.lists.has(name)) {
+      this.lists.set(name, /* @__PURE__ */ new Map());
+    }
+    if (!this.lists.get(name).has(parentID)) {
+      this.lists.get(name).set(parentID, new ListCollection([]));
+    }
+    if (!this.listsByField.has(parentID)) {
+      this.listsByField.set(parentID, /* @__PURE__ */ new Map());
+    }
+    if (!this.listsByField.get(parentID).has(list.key)) {
+      this.listsByField.get(parentID)?.set(list.key, []);
+    }
+    const handler = new List({ ...list, manager: this });
+    this.lists.get(list.name).get(parentID).lists.push(handler);
+    this.listsByField.get(parentID).get(list.key).push(handler);
+  }
+  removeIDFromAllLists(id) {
+    for (const fieldMap of this.lists.values()) {
+      for (const list of fieldMap.values()) {
+        list.removeID(id);
+      }
+    }
+  }
+  deleteField(parentID, field) {
+    if (!this.listsByField.get(parentID)?.has(field)) {
+      return;
+    }
+    for (const list of this.listsByField.get(parentID).get(field)) {
+      this.lists.get(list.name)?.get(list.recordID)?.deleteListWithKey(field);
+      if (this.lists.get(list.name)?.get(list.recordID)?.lists.length === 0) {
+        this.lists.get(list.name)?.delete(list.recordID);
+      }
+    }
+    this.listsByField.get(parentID).delete(field);
+  }
 }
-export class List {
-    constructor({ name, cache, recordID, key, listType, selection, when, filters, parentID, connection, manager, }) {
-        this.recordID = recordID;
-        this.key = key;
-        this.listType = listType;
-        this.cache = cache;
-        this.selection = selection;
-        this._when = when;
-        this.filters = filters;
-        this.name = name;
-        this.parentID = parentID;
-        this.connection = connection;
-        this.manager = manager;
+class List {
+  recordID;
+  recordType;
+  key;
+  type;
+  cache;
+  selection;
+  _when;
+  filters;
+  name;
+  connection;
+  manager;
+  abstract;
+  constructor({
+    name,
+    recordID,
+    recordType,
+    key,
+    listType,
+    selection,
+    when,
+    filters,
+    connection,
+    manager,
+    abstract
+  }) {
+    this.recordID = recordID || rootID;
+    this.recordType = recordType;
+    this.key = key;
+    this.type = listType;
+    this.cache = manager.cache;
+    this.selection = selection;
+    this._when = when;
+    this.filters = filters;
+    this.name = name;
+    this.connection = connection;
+    this.manager = manager;
+    this.abstract = abstract;
+  }
+  when(when) {
+    return this.manager.lists.get(this.name).get(this.recordID).when(when);
+  }
+  append(selection, data, variables = {}) {
+    return this.addToList(selection, data, variables, "last");
+  }
+  prepend(selection, data, variables = {}) {
+    return this.addToList(selection, data, variables, "first");
+  }
+  addToList(selection, data, variables = {}, where) {
+    const listType = this.listType(data);
+    const dataID = this.cache._internal_unstable.id(listType, data);
+    if (!this.validateWhen() || !dataID) {
+      return;
     }
-    // when applies a when condition to a new list pointing to the same spot
-    when(when) {
-        return new List({
-            cache: this.cache,
-            recordID: this.recordID,
-            key: this.key,
-            listType: this.listType,
-            selection: this.selection,
-            when,
-            filters: this.filters,
-            parentID: this.parentID,
-            name: this.name,
-            connection: this.connection,
-            manager: this.manager,
-        });
-    }
-    append(selection, data, variables = {}) {
-        return this.addToList(selection, data, variables, 'last');
-    }
-    prepend(selection, data, variables = {}) {
-        return this.addToList(selection, data, variables, 'first');
-    }
-    addToList(selection, data, variables = {}, where) {
-        // figure out the id of the type we are adding
-        const dataID = this.cache._internal_unstable.id(this.listType, data);
-        // if there are conditions for this operation
-        if (!this.validateWhen() || !dataID) {
-            return;
-        }
-        // we are going to implement the insert as a write with an update flag on a field
-        // that matches the key of the list. We'll have to embed the lists data and selection
-        // in the appropriate objects
-        let insertSelection = selection;
-        let insertData = data;
-        // if we are wrapping a connection, we have to embed the data under edges > node
-        if (this.connection) {
-            insertSelection = {
-                newEntry: {
-                    keyRaw: this.key,
-                    type: 'Connection',
+    let insertSelection = selection;
+    let insertData = data;
+    if (this.connection) {
+      insertSelection = {
+        fields: {
+          newEntry: {
+            keyRaw: this.key,
+            type: "Connection",
+            selection: {
+              fields: {
+                edges: {
+                  keyRaw: "edges",
+                  type: "ConnectionEdge",
+                  update: where === "first" ? "prepend" : "append",
+                  selection: {
                     fields: {
-                        edges: {
-                            keyRaw: 'edges',
-                            type: 'ConnectionEdge',
-                            update: (where === 'first' ? 'prepend' : 'append'),
-                            fields: {
-                                node: {
-                                    type: this.listType,
-                                    keyRaw: 'node',
-                                    fields: {
-                                        ...selection,
-                                        __typename: {
-                                            keyRaw: '__typename',
-                                            type: 'String',
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-            };
-            insertData = {
-                newEntry: {
-                    edges: [{ node: { ...data, __typename: this.listType } }],
-                },
-            };
-        }
-        else {
-            insertSelection = {
-                newEntries: {
-                    keyRaw: this.key,
-                    type: this.listType,
-                    update: (where === 'first' ? 'prepend' : 'append'),
-                    fields: {
-                        ...selection,
-                        __typename: {
-                            keyRaw: '__typename',
-                            type: 'String',
-                        },
-                    },
-                },
-            };
-            insertData = {
-                newEntries: [{ ...data, __typename: this.listType }],
-            };
-        }
-        // get the list of specs that are subscribing to the list
-        const subscribers = this.cache._internal_unstable.subscriptions.get(this.recordID, this.key);
-        // walk down the list fields relative to the new record
-        // and make sure all of the list's subscribers are listening
-        // to that object
-        this.cache._internal_unstable.subscriptions.addMany({
-            parent: dataID,
-            selection,
-            variables,
-            subscribers,
-        });
-        // update the cache with the data we just found
-        this.cache.write({
-            selection: insertSelection,
-            data: insertData,
-            variables,
-            parent: this.recordID,
-            applyUpdates: true,
-        });
-    }
-    removeID(id, variables = {}) {
-        var _a;
-        // if there are conditions for this operation
-        if (!this.validateWhen()) {
-            return;
-        }
-        // if we are removing from a connection, the id we are removing from
-        // has to be computed
-        let parentID = this.recordID;
-        let targetID = id;
-        let targetKey = this.key;
-        // if we are removing a record from a connection we have to walk through
-        // some embedded references first
-        if (this.connection) {
-            const { value: embeddedConnection } = this.cache._internal_unstable.storage.get(this.recordID, this.key);
-            if (!embeddedConnection) {
-                return;
-            }
-            const embeddedConnectionID = embeddedConnection;
-            // look at every embedded edge for the one with a node corresponding to the element
-            // we want to delete
-            const { value: edges } = this.cache._internal_unstable.storage.get(embeddedConnectionID, 'edges');
-            for (const edge of flattenList(edges) || []) {
-                if (!edge) {
-                    continue;
+                      node: {
+                        type: listType,
+                        keyRaw: "node",
+                        selection: {
+                          ...selection,
+                          fields: {
+                            ...selection.fields,
+                            __typename: {
+                              keyRaw: "__typename",
+                              type: "String"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
-                const edgeID = edge;
-                // look at the edge's node
-                const { value: nodeID } = this.cache._internal_unstable.storage.get(edgeID, 'node');
-                if (!nodeID) {
-                    continue;
+              }
+            }
+          }
+        }
+      };
+      insertData = {
+        newEntry: {
+          edges: [{ node: { ...data, __typename: listType } }]
+        }
+      };
+    } else {
+      insertSelection = {
+        fields: {
+          newEntries: {
+            keyRaw: this.key,
+            type: listType,
+            update: where === "first" ? "prepend" : "append",
+            selection: {
+              ...selection,
+              fields: {
+                ...selection.fields,
+                __typename: {
+                  keyRaw: "__typename",
+                  type: "String"
                 }
-                // if we found the node
-                if (nodeID === id) {
-                    targetID = edgeID;
-                }
+              }
             }
-            parentID = embeddedConnectionID;
-            targetKey = 'edges';
+          }
         }
-        // if the id is not contained in the list, dont notify anyone
-        const value = this.cache._internal_unstable.storage.get(parentID, targetKey)
-            .value;
-        if (!value || !value.includes(targetID)) {
-            return;
-        }
-        // get the list of specs that are subscribing to the list
-        const subscribers = this.cache._internal_unstable.subscriptions.get(this.recordID, this.key);
-        // disconnect record from any subscriptions associated with the list
-        this.cache._internal_unstable.subscriptions.remove(targetID, 
-        // if we are unsubscribing from a connection, the fields we care about
-        // are tucked away under edges
-        this.connection ? this.selection.edges.fields : this.selection, subscribers, variables);
-        // remove the target from the parent
-        this.cache._internal_unstable.storage.remove(parentID, targetKey, targetID);
-        // notify the subscribers about the change
-        for (const spec of subscribers) {
-            // trigger the update
-            spec.set(this.cache._internal_unstable.getSelection({
-                parent: spec.parentID || this.manager.rootID,
-                selection: spec.selection,
-                variables: ((_a = spec.variables) === null || _a === void 0 ? void 0 : _a.call(spec)) || {},
-            }));
-        }
-        // if we are removing from a connection, delete the embedded edge holding the record
-        if (this.connection) {
-            this.cache._internal_unstable.storage.delete(targetID);
-        }
-        // return true if we deleted something
-        return true;
+      };
+      insertData = {
+        newEntries: [{ ...data, __typename: listType }]
+      };
     }
-    remove(data, variables = {}) {
-        const targetID = this.cache._internal_unstable.id(this.listType, data);
-        if (!targetID) {
-            return;
-        }
-        // figure out the id of the type we are adding
-        return this.removeID(targetID, variables);
+    this.cache.write({
+      selection: insertSelection,
+      data: insertData,
+      variables,
+      parent: this.recordID,
+      applyUpdates: true
+    });
+  }
+  removeID(id, variables = {}) {
+    if (!this.validateWhen()) {
+      return;
     }
-    validateWhen() {
-        // if this when doesn't apply, we should look at others to see if we should update those behind the scenes
-        let ok = true;
-        // if there are conditions for this operation
-        if (this._when) {
-            // we only NEED there to be target filters for must's
-            const targets = this.filters;
-            // check must's first
-            if (this._when.must && targets) {
-                ok = Object.entries(this._when.must).reduce((prev, [key, value]) => Boolean(prev && targets[key] == value), ok);
-            }
-            // if there are no targets, nothing could be true that can we compare against
-            if (this._when.must_not) {
-                ok =
-                    !targets ||
-                        Object.entries(this._when.must_not).reduce((prev, [key, value]) => Boolean(prev && targets[key] != value), ok);
-            }
+    let parentID = this.recordID;
+    let targetID = id;
+    let targetKey = this.key;
+    if (this.connection) {
+      const { value: embeddedConnection } = this.cache._internal_unstable.storage.get(
+        this.recordID,
+        this.key
+      );
+      if (!embeddedConnection) {
+        return;
+      }
+      const embeddedConnectionID = embeddedConnection;
+      const { value: edges } = this.cache._internal_unstable.storage.get(
+        embeddedConnectionID,
+        "edges"
+      );
+      for (const edge of flattenList(edges) || []) {
+        if (!edge) {
+          continue;
         }
-        return ok;
-    }
-    toggleElement(selection, data, variables = {}, where) {
-        // if we dont have something to remove, then add it instead
-        if (!this.remove(data, variables)) {
-            this.addToList(selection, data, variables, where);
+        const edgeID = edge;
+        const { value: nodeID } = this.cache._internal_unstable.storage.get(edgeID, "node");
+        if (!nodeID) {
+          continue;
         }
-    }
-    // iterating over the list handler should be the same as iterating over
-    // the underlying linked list
-    *[Symbol.iterator]() {
-        for (let record of flattenList(this.cache._internal_unstable.storage.get(this.recordID, this.key).value)) {
-            yield record;
+        if (nodeID === id) {
+          targetID = edgeID;
         }
+      }
+      parentID = embeddedConnectionID;
+      targetKey = "edges";
     }
+    let value = this.cache._internal_unstable.storage.get(parentID, targetKey).value;
+    if (!value || !value.includes(targetID)) {
+      return;
+    }
+    const subscribers = this.cache._internal_unstable.subscriptions.get(this.recordID, this.key);
+    this.cache._internal_unstable.subscriptions.remove(
+      targetID,
+      this.connection ? this.selection.fields.edges.selection : this.selection,
+      subscribers,
+      variables
+    );
+    this.cache._internal_unstable.storage.remove(parentID, targetKey, targetID);
+    for (const spec of subscribers) {
+      spec.set(
+        this.cache._internal_unstable.getSelection({
+          parent: spec.parentID || this.manager.rootID,
+          selection: spec.selection,
+          variables: spec.variables?.() || {}
+        }).data
+      );
+    }
+    return true;
+  }
+  remove(data, variables = {}) {
+    const targetID = this.cache._internal_unstable.id(this.listType(data), data);
+    if (!targetID) {
+      return;
+    }
+    return this.removeID(targetID, variables);
+  }
+  listType(data) {
+    return data.__typename || this.type;
+  }
+  validateWhen(when) {
+    let filters = when || this._when;
+    let ok = true;
+    if (filters) {
+      const targets = this.filters;
+      if (filters.must && targets) {
+        ok = Object.entries(filters.must).reduce(
+          (prev, [key, value]) => Boolean(prev && targets[key] == value),
+          ok
+        );
+      }
+      if (filters.must_not) {
+        ok = !targets || Object.entries(filters.must_not).reduce(
+          (prev, [key, value]) => Boolean(prev && targets[key] != value),
+          ok
+        );
+      }
+    }
+    return ok;
+  }
+  toggleElement(selection, data, variables = {}, where) {
+    if (!this.remove(data, variables)) {
+      this.addToList(selection, data, variables, where);
+    }
+  }
+  *[Symbol.iterator]() {
+    let entries = [];
+    let value = this.cache._internal_unstable.storage.get(this.recordID, this.key).value;
+    if (!this.connection) {
+      entries = flattenList(value);
+    } else {
+      entries = this.cache._internal_unstable.storage.get(value, "edges").value;
+    }
+    for (let record of entries) {
+      yield record;
+    }
+  }
 }
+class ListCollection {
+  lists = [];
+  constructor(lists) {
+    this.lists = lists;
+  }
+  append(...args) {
+    this.lists.forEach((list) => list.append(...args));
+  }
+  prepend(...args) {
+    this.lists.forEach((list) => list.prepend(...args));
+  }
+  addToList(...args) {
+    this.lists.forEach((list) => list.addToList(...args));
+  }
+  removeID(...args) {
+    this.lists.forEach((list) => list.removeID(...args));
+  }
+  remove(...args) {
+    this.lists.forEach((list) => list.remove(...args));
+  }
+  toggleElement(...args) {
+    this.lists.forEach((list) => list.toggleElement(...args));
+  }
+  when(when) {
+    return new ListCollection(
+      this.lists.filter((list) => {
+        return list.validateWhen(when);
+      })
+    );
+  }
+  includes(key) {
+    return !!this.lists.find((list) => list.key === key);
+  }
+  deleteListWithKey(key) {
+    return this.lists = this.lists.filter((list) => list.key !== key);
+  }
+  *[Symbol.iterator]() {
+    for (let list of this.lists) {
+      for (const entry of list) {
+        yield entry;
+      }
+    }
+  }
+}
+export {
+  List,
+  ListCollection,
+  ListManager
+};

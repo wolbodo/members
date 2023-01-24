@@ -25,39 +25,74 @@ export default {
     rootType: "query_root",
 
     selection: {
-        history: {
-            type: "auth_history",
-            keyRaw: "history(order_by: {timestamp: desc})",
+        fields: {
+            history: {
+                type: "auth_history",
+                keyRaw: "history(order_by: {timestamp: desc})",
 
-            fields: {
-                timestamp: {
-                    type: "timestamp",
-                    keyRaw: "timestamp"
-                },
-
-                new_values: {
-                    type: "jsonb",
-                    keyRaw: "new_values"
-                },
-
-                old_values: {
-                    type: "jsonb",
-                    keyRaw: "old_values"
-                },
-
-                role: {
-                    type: "String",
-                    keyRaw: "role"
-                },
-
-                author: {
-                    type: "auth_person",
-                    keyRaw: "author",
-
+                selection: {
                     fields: {
-                        name: {
+                        timestamp: {
+                            type: "timestamp",
+                            keyRaw: "timestamp",
+                            nullable: true
+                        },
+
+                        new_values: {
+                            type: "jsonb",
+                            keyRaw: "new_values",
+                            nullable: true
+                        },
+
+                        old_values: {
+                            type: "jsonb",
+                            keyRaw: "old_values",
+                            nullable: true
+                        },
+
+                        role: {
                             type: "String",
-                            keyRaw: "name"
+                            keyRaw: "role",
+                            nullable: true
+                        },
+
+                        author: {
+                            type: "auth_person",
+                            keyRaw: "author",
+                            nullable: true,
+
+                            selection: {
+                                fields: {
+                                    name: {
+                                        type: "String",
+                                        keyRaw: "name"
+                                    },
+
+                                    id: {
+                                        type: "Int",
+                                        keyRaw: "id"
+                                    }
+                                }
+                            }
+                        },
+
+                        person: {
+                            type: "auth_person",
+                            keyRaw: "person",
+
+                            selection: {
+                                fields: {
+                                    name: {
+                                        type: "String",
+                                        keyRaw: "name"
+                                    },
+
+                                    id: {
+                                        type: "Int",
+                                        keyRaw: "id"
+                                    }
+                                }
+                            }
                         },
 
                         id: {
@@ -65,32 +100,13 @@ export default {
                             keyRaw: "id"
                         }
                     }
-                },
-
-                person: {
-                    type: "auth_person",
-                    keyRaw: "person",
-
-                    fields: {
-                        name: {
-                            type: "String",
-                            keyRaw: "name"
-                        },
-
-                        id: {
-                            type: "Int",
-                            keyRaw: "id"
-                        }
-                    }
-                },
-
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
                 }
             }
         }
     },
 
-    policy: "NetworkOnly"
+    policy: "CacheOrNetwork",
+    partial: false
 };
+
+"HoudiniHash=68c2e31270e911e4046c671286cd4e160da129facbe514ad6348ac758e8d7b6e";

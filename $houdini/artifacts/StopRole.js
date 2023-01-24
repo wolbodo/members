@@ -16,14 +16,19 @@ export default {
     rootType: "mutation_root",
 
     selection: {
-        update_auth_person_role_by_pk: {
-            type: "auth_person_role",
-            keyRaw: "update_auth_person_role_by_pk(pk_columns: {id: $id}, _set: {valid_till: \"NOW()\"})",
+        fields: {
+            update_auth_person_role_by_pk: {
+                type: "auth_person_role",
+                keyRaw: "update_auth_person_role_by_pk(_set: {valid_till: \"NOW()\"}, pk_columns: {id: $id})",
+                nullable: true,
 
-            fields: {
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
+                selection: {
+                    fields: {
+                        id: {
+                            type: "Int",
+                            keyRaw: "id"
+                        }
+                    }
                 }
             }
         }
@@ -37,3 +42,5 @@ export default {
         types: {}
     }
 };
+
+"HoudiniHash=04fd18560e63b51cf6f169c420bf8f254210c33b23ac392cbcd8f880dbd32122";

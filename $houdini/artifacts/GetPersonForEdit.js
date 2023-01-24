@@ -37,111 +37,132 @@ fragment RoleSelector on auth_person {
     rootType: "query_root",
 
     selection: {
-        auth_person: {
-            type: "auth_person",
-            keyRaw: "auth_person(where: {name: {_ilike: $name}}, limit: 1)",
+        fields: {
+            auth_person: {
+                type: "auth_person",
+                keyRaw: "auth_person(limit: 1, where: {name: {_ilike: $name}})",
 
-            fields: {
-                name: {
-                    type: "String",
-                    keyRaw: "name"
-                },
-
-                firstname: {
-                    type: "String",
-                    keyRaw: "firstname"
-                },
-
-                lastname: {
-                    type: "String",
-                    keyRaw: "lastname"
-                },
-
-                email: {
-                    type: "String",
-                    keyRaw: "email"
-                },
-
-                phone: {
-                    type: "String",
-                    keyRaw: "phone"
-                },
-
-                address: {
-                    type: "String",
-                    keyRaw: "address"
-                },
-
-                zipcode: {
-                    type: "String",
-                    keyRaw: "zipcode"
-                },
-
-                city: {
-                    type: "String",
-                    keyRaw: "city"
-                },
-
-                country: {
-                    type: "String",
-                    keyRaw: "country"
-                },
-
-                note: {
-                    type: "String",
-                    keyRaw: "note"
-                },
-
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
-                },
-
-                created: {
-                    type: "timestamptz",
-                    keyRaw: "created"
-                },
-
-                modified: {
-                    type: "timestamptz",
-                    keyRaw: "modified"
-                },
-
-                roles: {
-                    type: "auth_person_role",
-                    keyRaw: "roles",
-
+                selection: {
                     fields: {
+                        roles: {
+                            type: "auth_person_role",
+                            keyRaw: "roles",
+
+                            selection: {
+                                fields: {
+                                    id: {
+                                        type: "Int",
+                                        keyRaw: "id"
+                                    },
+
+                                    role: {
+                                        type: "String",
+                                        keyRaw: "role"
+                                    },
+
+                                    valid_from: {
+                                        type: "timestamptz",
+                                        keyRaw: "valid_from",
+                                        nullable: true
+                                    },
+
+                                    valid_till: {
+                                        type: "timestamptz",
+                                        keyRaw: "valid_till",
+                                        nullable: true
+                                    }
+                                }
+                            }
+                        },
+
+                        name: {
+                            type: "String",
+                            keyRaw: "name"
+                        },
+
+                        firstname: {
+                            type: "String",
+                            keyRaw: "firstname",
+                            nullable: true
+                        },
+
+                        lastname: {
+                            type: "String",
+                            keyRaw: "lastname",
+                            nullable: true
+                        },
+
+                        email: {
+                            type: "String",
+                            keyRaw: "email",
+                            nullable: true
+                        },
+
+                        phone: {
+                            type: "String",
+                            keyRaw: "phone",
+                            nullable: true
+                        },
+
+                        address: {
+                            type: "String",
+                            keyRaw: "address",
+                            nullable: true
+                        },
+
+                        zipcode: {
+                            type: "String",
+                            keyRaw: "zipcode",
+                            nullable: true
+                        },
+
+                        city: {
+                            type: "String",
+                            keyRaw: "city",
+                            nullable: true
+                        },
+
+                        country: {
+                            type: "String",
+                            keyRaw: "country",
+                            nullable: true
+                        },
+
+                        note: {
+                            type: "String",
+                            keyRaw: "note",
+                            nullable: true
+                        },
+
                         id: {
                             type: "Int",
                             keyRaw: "id"
                         },
 
-                        role: {
+                        created: {
+                            type: "timestamptz",
+                            keyRaw: "created",
+                            nullable: true
+                        },
+
+                        modified: {
+                            type: "timestamptz",
+                            keyRaw: "modified",
+                            nullable: true
+                        },
+
+                        bankaccount: {
                             type: "String",
-                            keyRaw: "role"
+                            keyRaw: "bankaccount",
+                            nullable: true
                         },
 
-                        valid_from: {
-                            type: "timestamptz",
-                            keyRaw: "valid_from"
-                        },
-
-                        valid_till: {
-                            type: "timestamptz",
-                            keyRaw: "valid_till"
+                        key_code: {
+                            type: "String",
+                            keyRaw: "key_code",
+                            nullable: true
                         }
                     }
-                },
-
-                bankaccount: {
-                    type: "String",
-                    keyRaw: "bankaccount"
-                },
-
-                key_code: {
-                    type: "String",
-                    keyRaw: "key_code"
                 }
             }
         }
@@ -156,5 +177,8 @@ fragment RoleSelector on auth_person {
         types: {}
     },
 
-    policy: "NetworkOnly"
+    policy: "CacheOrNetwork",
+    partial: false
 };
+
+"HoudiniHash=da2b53068fadd8878fb23700501f2abc7b6f6aa5de0e7013956776244dd2c222";

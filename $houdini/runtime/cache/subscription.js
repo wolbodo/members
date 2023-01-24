@@ -1,217 +1,205 @@
-import { evaluateKey, flattenList } from './stuff';
-// manage the subscriptions
-export class InMemorySubscriptions {
-    constructor(cache) {
-        this.subscribers = {};
-        this.referenceCounts = {};
-        this.keyVersions = {};
-        this.cache = cache;
+import { getFieldsForType } from "../lib/selection";
+import { evaluateKey, flattenList } from "./stuff";
+class InMemorySubscriptions {
+  cache;
+  constructor(cache) {
+    this.cache = cache;
+  }
+  subscribers = {};
+  referenceCounts = {};
+  keyVersions = {};
+  add({
+    parent,
+    spec,
+    selection,
+    variables,
+    parentType
+  }) {
+    const __typename = this.cache._internal_unstable.storage.get(parent, "__typename").value;
+    let targetSelection = getFieldsForType(selection, __typename);
+    for (const fieldSelection of Object.values(targetSelection || {})) {
+      const { keyRaw, selection: innerSelection, type } = fieldSelection;
+      const key = evaluateKey(keyRaw, variables);
+      this.addFieldSubscription({
+        id: parent,
+        key,
+        field: fieldSelection,
+        spec,
+        parentType: parentType || spec.rootType,
+        variables
+      });
+      if (innerSelection) {
+        const { value: linkedRecord } = this.cache._internal_unstable.storage.get(
+          parent,
+          key
+        );
+        let children = !Array.isArray(linkedRecord) ? [linkedRecord] : flattenList(linkedRecord) || [];
+        for (const child of children) {
+          if (!child) {
+            continue;
+          }
+          this.add({
+            parent: child,
+            spec,
+            selection: innerSelection,
+            variables,
+            parentType: type
+          });
+        }
+      }
     }
-    add({ parent, spec, selection, variables, }) {
-        for (const { keyRaw, fields, list, filters } of Object.values(selection)) {
-            const key = evaluateKey(keyRaw, variables);
-            // add the subscriber to the field
-            this.addFieldSubscription(parent, key, spec);
-            // if the field points to a link, we need to subscribe to any fields of that
-            // linked record
-            if (fields) {
-                // if the link points to a record then we just have to add it to the one
-                const { value: linkedRecord } = this.cache._internal_unstable.storage.get(parent, key);
-                let children = !Array.isArray(linkedRecord)
-                    ? [linkedRecord]
-                    : flattenList(linkedRecord);
-                // if this field is marked as a list, register it. this will overwrite existing list handlers
-                // so that they can get up to date filters
-                if (list && fields) {
-                    this.cache._internal_unstable.lists.set({
-                        name: list.name,
-                        connection: list.connection,
-                        parentID: spec.parentID,
-                        cache: this.cache,
-                        recordID: parent,
-                        listType: list.type,
-                        key,
-                        selection: fields,
-                        filters: Object.entries(filters || {}).reduce((acc, [key, { kind, value }]) => {
-                            return {
-                                ...acc,
-                                [key]: kind !== 'Variable' ? value : variables[value],
-                            };
-                        }, {}),
-                    });
-                }
-                // if we're not related to anything, we're done
-                if (!children || !fields) {
-                    continue;
-                }
-                // add the subscriber to every child
-                for (const child of children) {
-                    // avoid null children
-                    if (!child) {
-                        continue;
-                    }
-                    // make sure the children update this subscription
-                    this.add({
-                        parent: child,
-                        spec,
-                        selection: fields,
-                        variables,
-                    });
-                }
-            }
-        }
+  }
+  addFieldSubscription({
+    id,
+    key,
+    field,
+    spec,
+    parentType,
+    variables
+  }) {
+    if (!this.subscribers[id]) {
+      this.subscribers[id] = {};
     }
-    addFieldSubscription(id, field, spec) {
-        // if we haven't seen the id or field before, create a list we can add to
-        if (!this.subscribers[id]) {
-            this.subscribers[id] = {};
-        }
-        if (!this.subscribers[id][field]) {
-            this.subscribers[id][field] = [];
-        }
-        // if this is the first time we've seen the raw key
-        if (!this.keyVersions[field]) {
-            this.keyVersions[field] = new Set();
-        }
-        // add this version of the key if we need to
-        this.keyVersions[field].add(field);
-        if (!this.subscribers[id][field].map(({ set }) => set).includes(spec.set)) {
-            this.subscribers[id][field].push(spec);
-        }
-        // if this is the first time we've seen this field
-        if (!this.referenceCounts[id]) {
-            this.referenceCounts[id] = {};
-        }
-        if (!this.referenceCounts[id][field]) {
-            this.referenceCounts[id][field] = new Map();
-        }
-        const counts = this.referenceCounts[id][field];
-        // we're going to increment the current value by one
-        counts.set(spec.set, (counts.get(spec.set) || 0) + 1);
-        // reset the lifetime for the field
-        this.cache._internal_unstable.lifetimes.resetLifetime(id, field);
+    if (!this.subscribers[id][key]) {
+      this.subscribers[id][key] = [];
     }
-    // this is different from add because of the treatment of lists
-    addMany({ parent, selection, variables, subscribers, }) {
-        // look at every field in the selection and add the subscribers
-        for (const { keyRaw, fields } of Object.values(selection)) {
-            const key = evaluateKey(keyRaw, variables);
-            // add the subscriber to the
-            for (const spec of subscribers) {
-                this.addFieldSubscription(parent, key, spec);
-            }
-            // if there are fields under this
-            if (fields) {
-                const { value: link } = this.cache._internal_unstable.storage.get(parent, key);
-                // figure out who else needs subscribers
-                const children = !Array.isArray(link)
-                    ? [link]
-                    : flattenList(link);
-                for (const linkedRecord of children) {
-                    // avoid null records
-                    if (!linkedRecord) {
-                        continue;
-                    }
-                    // insert the subscriber
-                    this.addMany({
-                        parent: linkedRecord,
-                        selection: fields,
-                        variables,
-                        subscribers,
-                    });
-                }
-            }
-        }
+    if (!this.keyVersions[key]) {
+      this.keyVersions[key] = /* @__PURE__ */ new Set();
     }
-    get(id, field) {
-        var _a;
-        return ((_a = this.subscribers[id]) === null || _a === void 0 ? void 0 : _a[field]) || [];
+    this.keyVersions[key].add(key);
+    if (!this.subscribers[id][key].map(({ set }) => set).includes(spec.set)) {
+      this.subscribers[id][key].push(spec);
     }
-    remove(id, fields, targets, variables, visited = []) {
-        visited.push(id);
-        // walk down to every record we know about
-        const linkedIDs = [];
-        // look at the fields for ones corresponding to links
-        for (const selection of Object.values(fields)) {
-            const key = evaluateKey(selection.keyRaw, variables);
-            // remove the subscribers for the field
-            this.removeSubscribers(id, key, targets);
-            // if this field is marked as a list remove it from the cache
-            if (selection.list) {
-                this.cache._internal_unstable.lists.remove(selection.list.name, id);
-            }
-            // if there is no subselection it doesn't point to a link, move on
-            if (!selection.fields) {
-                continue;
-            }
-            const { value: previousValue } = this.cache._internal_unstable.storage.get(id, key);
-            // if its not a list, wrap it as one so we can dry things up
-            const links = !Array.isArray(previousValue)
-                ? [previousValue]
-                : flattenList(previousValue);
-            for (const link of links) {
-                if (link !== null) {
-                    linkedIDs.push([link, selection.fields]);
-                }
-            }
-        }
-        for (const [linkedRecordID, linkFields] of linkedIDs) {
-            this.remove(linkedRecordID, linkFields, targets, visited);
-        }
+    if (!this.referenceCounts[id]) {
+      this.referenceCounts[id] = {};
     }
-    removeSubscribers(id, fieldName, specs) {
-        var _a, _b;
-        // build up a list of the sets we actually need to remove after
-        // checking reference counts
-        let targets = [];
-        for (const spec of specs) {
-            // if we dont know this field/set combo, there's nothing to do (probably a bug somewhere)
-            if (!((_b = (_a = this.referenceCounts[id]) === null || _a === void 0 ? void 0 : _a[fieldName]) === null || _b === void 0 ? void 0 : _b.has(spec.set))) {
-                continue;
-            }
-            const counts = this.referenceCounts[id][fieldName];
-            const newVal = (counts.get(spec.set) || 0) - 1;
-            // decrement the reference of every field
-            counts.set(spec.set, newVal);
-            // if that was the last reference we knew of
-            if (newVal <= 0) {
-                targets.push(spec.set);
-                // remove the reference to the set function
-                counts.delete(spec.set);
-            }
-        }
-        // we do need to remove the set from the list
-        if (this.subscribers[id]) {
-            this.subscribers[id][fieldName] = this.get(id, fieldName).filter(({ set }) => !targets.includes(set));
-        }
+    if (!this.referenceCounts[id][key]) {
+      this.referenceCounts[id][key] = /* @__PURE__ */ new Map();
     }
-    removeAllSubscribers(id, targets, visited = []) {
-        visited.push(id);
-        // every field that currently being subscribed to needs to be cleaned up
-        for (const field of Object.keys(this.subscribers[id] || [])) {
-            // grab the current set of subscribers
-            const subscribers = targets || this.subscribers[id][field];
-            // delete the subscriber for the field
-            this.removeSubscribers(id, field, subscribers);
-            // look up the value for the field so we can remove any subscribers that existed because of a
-            // subscriber to this record
-            const { value, kind } = this.cache._internal_unstable.storage.get(id, field);
-            // if the field is a scalar, there's nothing more to do
-            if (kind === 'scalar') {
-                continue;
-            }
-            // if the value is a single link , wrap it in a list. otherwise, flatten the link list
-            const nextTargets = Array.isArray(value)
-                ? flattenList(value)
-                : [value];
-            for (const id of nextTargets) {
-                // if we have already visited this id, move on
-                if (visited.includes(id)) {
-                    continue;
-                }
-                // keep walking down
-                this.removeAllSubscribers(id, subscribers, visited);
-            }
-        }
+    const counts = this.referenceCounts[id][key];
+    counts.set(spec.set, (counts.get(spec.set) || 0) + 1);
+    this.cache._internal_unstable.lifetimes.resetLifetime(id, key);
+    const { selection, list, filters } = field;
+    if (selection && list) {
+      this.cache._internal_unstable.lists.add({
+        name: list.name,
+        connection: list.connection,
+        recordID: id,
+        recordType: this.cache._internal_unstable.storage.get(id, "__typename")?.value || parentType,
+        listType: list.type,
+        key,
+        selection,
+        filters: Object.entries(filters || {}).reduce((acc, [key2, { kind, value }]) => {
+          return {
+            ...acc,
+            [key2]: kind !== "Variable" ? value : variables[value]
+          };
+        }, {})
+      });
     }
+  }
+  addMany({
+    parent,
+    selection,
+    variables,
+    subscribers,
+    parentType
+  }) {
+    let targetSelection = getFieldsForType(selection, parentType);
+    for (const fieldSelection of Object.values(targetSelection)) {
+      const { type: linkedType, keyRaw, selection: innerSelection } = fieldSelection;
+      const key = evaluateKey(keyRaw, variables);
+      for (const spec of subscribers) {
+        this.addFieldSubscription({
+          id: parent,
+          key,
+          field: fieldSelection,
+          spec,
+          parentType,
+          variables
+        });
+      }
+      if (innerSelection) {
+        const { value: link } = this.cache._internal_unstable.storage.get(parent, key);
+        const children = !Array.isArray(link) ? [link] : flattenList(link);
+        for (const linkedRecord of children) {
+          if (!linkedRecord) {
+            continue;
+          }
+          this.addMany({
+            parent: linkedRecord,
+            selection: innerSelection,
+            variables,
+            subscribers,
+            parentType: linkedType
+          });
+        }
+      }
+    }
+  }
+  get(id, field) {
+    return this.subscribers[id]?.[field] || [];
+  }
+  remove(id, selection, targets, variables, visited = []) {
+    visited.push(id);
+    const linkedIDs = [];
+    for (const fieldSelection of Object.values(selection.fields || {})) {
+      const key = evaluateKey(fieldSelection.keyRaw, variables);
+      this.removeSubscribers(id, key, targets);
+      if (!fieldSelection.selection?.fields) {
+        continue;
+      }
+      const { value: previousValue } = this.cache._internal_unstable.storage.get(id, key);
+      const links = !Array.isArray(previousValue) ? [previousValue] : flattenList(previousValue);
+      for (const link of links) {
+        if (link !== null) {
+          linkedIDs.push([link, fieldSelection.selection || {}]);
+        }
+      }
+    }
+    for (const [linkedRecordID, linkFields] of linkedIDs) {
+      this.remove(linkedRecordID, linkFields, targets, visited);
+    }
+  }
+  removeSubscribers(id, fieldName, specs) {
+    let targets = [];
+    for (const spec of specs) {
+      if (!this.referenceCounts[id]?.[fieldName]?.has(spec.set)) {
+        continue;
+      }
+      const counts = this.referenceCounts[id][fieldName];
+      const newVal = (counts.get(spec.set) || 0) - 1;
+      counts.set(spec.set, newVal);
+      if (newVal <= 0) {
+        targets.push(spec.set);
+        counts.delete(spec.set);
+      }
+    }
+    if (this.subscribers[id]) {
+      this.subscribers[id][fieldName] = this.get(id, fieldName).filter(
+        ({ set }) => !targets.includes(set)
+      );
+    }
+  }
+  removeAllSubscribers(id, targets, visited = []) {
+    visited.push(id);
+    for (const field of Object.keys(this.subscribers[id] || [])) {
+      const subscribers = targets || this.subscribers[id][field];
+      this.removeSubscribers(id, field, subscribers);
+      const { value, kind } = this.cache._internal_unstable.storage.get(id, field);
+      if (kind === "scalar") {
+        continue;
+      }
+      const nextTargets = Array.isArray(value) ? flattenList(value) : [value];
+      for (const id2 of nextTargets) {
+        if (visited.includes(id2)) {
+          continue;
+        }
+        this.removeAllSubscribers(id2, subscribers, visited);
+      }
+    }
+  }
 }
+export {
+  InMemorySubscriptions
+};

@@ -1,8 +1,8 @@
 <script context="module" lang='ts'>  
-	import env from '../environment';
-	import { setEnvironment } from '$houdini';
+	// import env from '../environment';
+	// import { setEnvironment } from '$houdini';
 
-	setEnvironment(env);
+	// setEnvironment(env);
 
 	/**
 	 * @type {import('@sveltejs/kit').Load}
@@ -12,7 +12,7 @@
 			!session.user &&
 			!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(url.pathname)
 		) {
-			return {
+		return {
 				status: 302,
 				redirect: '/login'
 			};

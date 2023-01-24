@@ -14,19 +14,24 @@ export default {
     rootType: "mutation_root",
 
     selection: {
-        person: {
-            type: "auth_person",
-            keyRaw: "person(object: $person)",
+        fields: {
+            person: {
+                type: "auth_person",
+                keyRaw: "person(object: $person)",
+                nullable: true,
 
-            fields: {
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
-                },
+                selection: {
+                    fields: {
+                        id: {
+                            type: "Int",
+                            keyRaw: "id"
+                        },
 
-                name: {
-                    type: "String",
-                    keyRaw: "name"
+                        name: {
+                            type: "String",
+                            keyRaw: "name"
+                        }
+                    }
                 }
             }
         }
@@ -234,3 +239,5 @@ export default {
         }
     }
 };
+
+"HoudiniHash=5c613fa57dd031857ec7fc9d5c37f8c6cb47a44a247824c510498a22661fb0db";

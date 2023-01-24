@@ -1,14 +1,21 @@
-export * from './network';
-export * from './types';
-export * from './proxy';
-export { query, routeQuery, componentQuery } from './query';
-export { mutation } from './mutation';
-export { fragment } from './fragment';
-export { subscription } from './subscription';
-export { paginatedQuery, paginatedFragment } from './pagination';
-// this template tag gets removed by the preprocessor so it should never be invoked.
-// this function needs to return the same value as what the preprocessor leaves behind for type consistency
-export function graphql(str) {
-    // if this is executed, the preprocessor is not enabled
-    throw new Error("Looks like you don't have the preprocessor enabled.");
+import _cache from "./cache";
+import { Cache } from "./public";
+export * from "./lib";
+function graphql(str) {
+  if (globalThis?.process?.env?.HOUDINI_PLUGIN) {
+    return str;
+  }
+  throw new Error(`\u26A0\uFE0F graphql template was invoked at runtime. This should never happen and usually means that your project isn't properly configured.
+
+Please make sure you have the appropriate plugin/preprocessor enabled. For more information, visit this link: https://houdinigraphql.com/guides/setting-up-your-project
+`);
 }
+const cache = new Cache(_cache);
+function getCache() {
+  return _cache;
+}
+export {
+  cache,
+  getCache,
+  graphql
+};

@@ -1,15 +1,21 @@
-import { GraphQLValue } from '../types';
+import type { GraphQLValue } from '../lib/types';
 export declare class InMemoryStorage {
     private data;
     private idCount;
+    private rank;
     constructor();
     get layerCount(): number;
+    get nextRank(): number;
     createLayer(optimistic?: boolean): Layer;
     insert(id: string, field: string, location: OperationLocation, target: string): void;
     remove(id: string, field: string, target: string): void;
     delete(id: string): void;
     deleteField(id: string, field: string): void;
     getLayer(id: number): Layer;
+    replaceID(replacement: {
+        from: string;
+        to: string;
+    }): void;
     get(id: string, field: string): {
         value: GraphQLField;
         kind: 'link' | 'scalar' | 'unknown';
@@ -32,8 +38,13 @@ export declare class Layer {
     getOperations(id: string, field: string): Operation[] | undefined;
     writeField(id: string, field: string, value: GraphQLField): LayerID;
     writeLink(id: string, field: string, value: null | string | LinkedList): LayerID;
+    isDisplayLayer(displayLayers: number[]): boolean;
     clear(): void;
-    applyDeletes(): void;
+    replaceID({ from, to }: {
+        from: string;
+        to: string;
+    }): void;
+    removeUndefinedFields(): void;
     delete(id: string): void;
     deleteField(id: string, field: string): void;
     insert(id: string, field: string, where: OperationLocation, target: string): void;
@@ -41,38 +52,39 @@ export declare class Layer {
     writeLayer(layer: Layer): void;
     private addFieldOperation;
 }
-declare type GraphQLField = GraphQLValue | LinkedList;
-declare type EntityMap<_Value> = {
+type GraphQLField = GraphQLValue | LinkedList;
+type EntityMap<_Value> = {
     [id: string]: {
         [field: string]: _Value;
     };
 };
-declare type EntityFieldMap = EntityMap<GraphQLField>;
-declare type LinkMap = EntityMap<string | null | LinkedList>;
-declare type OperationMap = {
+type EntityFieldMap = EntityMap<GraphQLField>;
+type LinkMap = EntityMap<string | null | LinkedList>;
+type OperationMap = {
     [id: string]: {
         deleted?: boolean;
+        undoDeletesInList?: string[];
         fields: {
             [field: string]: ListOperation[];
         };
     };
 };
-declare type LinkedList<_Result = string> = (_Result | null | LinkedList<_Result>)[];
-declare type InsertOperation = {
+type LinkedList<_Result = string> = (_Result | null | LinkedList<_Result>)[];
+type InsertOperation = {
     kind: OperationKind.insert;
     location: OperationLocation;
     id: string;
 };
-declare type RemoveOperation = {
+type RemoveOperation = {
     kind: OperationKind.remove;
     id: string;
 };
-declare type DeleteOperation = {
+type DeleteOperation = {
     kind: OperationKind.delete;
     target: string;
 };
-declare type ListOperation = InsertOperation | RemoveOperation;
-declare type Operation = ListOperation | DeleteOperation;
+type ListOperation = InsertOperation | RemoveOperation;
+type Operation = ListOperation | DeleteOperation;
 export declare enum OperationLocation {
     start = "start",
     end = "end"
@@ -82,5 +94,5 @@ export declare enum OperationKind {
     insert = "insert",
     remove = "remove"
 }
-export declare type LayerID = number;
+export type LayerID = number;
 export {};
