@@ -14,23 +14,30 @@ export default {
     rootType: "query_root",
 
     selection: {
-        auth_person_role: {
-            type: "auth_person_role",
-            keyRaw: "auth_person_role(distinct_on: role)",
+        fields: {
+            auth_person_role: {
+                type: "auth_person_role",
+                keyRaw: "auth_person_role(distinct_on: role)",
 
-            fields: {
-                role: {
-                    type: "String",
-                    keyRaw: "role"
-                },
+                selection: {
+                    fields: {
+                        role: {
+                            type: "String",
+                            keyRaw: "role"
+                        },
 
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
+                        id: {
+                            type: "Int",
+                            keyRaw: "id"
+                        }
+                    }
                 }
             }
         }
     },
 
-    policy: "NetworkOnly"
+    policy: "CacheOrNetwork",
+    partial: false
 };
+
+"HoudiniHash=8f1257b8e2e2ba5c170be930ec76f8cd1f88c098ebbad544468298c240d9bfad";

@@ -21,55 +21,67 @@ export default {
     rootType: "query_root",
 
     selection: {
-        mails: {
-            type: "mail_entries",
-            keyRaw: "mails(order_by: {created: desc}, limit: 100)",
+        fields: {
+            mails: {
+                type: "mail_entries",
+                keyRaw: "mails(limit: 100, order_by: {created: desc})",
 
-            fields: {
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
-                },
-
-                status: {
-                    type: "status",
-                    keyRaw: "status"
-                },
-
-                person: {
-                    type: "auth_person",
-                    keyRaw: "person",
-
+                selection: {
                     fields: {
-                        name: {
-                            type: "String",
-                            keyRaw: "name"
-                        },
-
-                        email: {
-                            type: "String",
-                            keyRaw: "email"
-                        },
-
                         id: {
                             type: "Int",
                             keyRaw: "id"
+                        },
+
+                        status: {
+                            type: "status",
+                            keyRaw: "status",
+                            nullable: true
+                        },
+
+                        person: {
+                            type: "auth_person",
+                            keyRaw: "person",
+
+                            selection: {
+                                fields: {
+                                    name: {
+                                        type: "String",
+                                        keyRaw: "name"
+                                    },
+
+                                    email: {
+                                        type: "String",
+                                        keyRaw: "email",
+                                        nullable: true
+                                    },
+
+                                    id: {
+                                        type: "Int",
+                                        keyRaw: "id"
+                                    }
+                                }
+                            }
+                        },
+
+                        template: {
+                            type: "String",
+                            keyRaw: "template"
+                        },
+
+                        created: {
+                            type: "timestamptz",
+                            keyRaw: "created",
+                            nullable: true
                         }
                     }
-                },
-
-                template: {
-                    type: "String",
-                    keyRaw: "template"
-                },
-
-                created: {
-                    type: "timestamptz",
-                    keyRaw: "created"
                 }
             }
         }
     },
 
-    policy: "NetworkOnly"
+    policy: "CacheOrNetwork",
+    partial: false
 };
+
+"HoudiniHash=2abc96f17911dbe9ba3eed501f0912f60ea6cd37e6763b526e8ab062478de5b5";

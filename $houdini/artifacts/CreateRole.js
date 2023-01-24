@@ -13,14 +13,19 @@ export default {
     rootType: "mutation_root",
 
     selection: {
-        insert_auth_person_role_one: {
-            type: "auth_person_role",
-            keyRaw: "insert_auth_person_role_one(object: {person_id: $personId, role: $role})",
+        fields: {
+            insert_auth_person_role_one: {
+                type: "auth_person_role",
+                keyRaw: "insert_auth_person_role_one(object: {person_id: $personId, role: $role})",
+                nullable: true,
 
-            fields: {
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
+                selection: {
+                    fields: {
+                        id: {
+                            type: "Int",
+                            keyRaw: "id"
+                        }
+                    }
                 }
             }
         }
@@ -35,3 +40,5 @@ export default {
         types: {}
     }
 };
+
+"HoudiniHash=ac8708760013e6a94523872fdb03b06b2939f8505b6651d6b5978b433a875fe1";

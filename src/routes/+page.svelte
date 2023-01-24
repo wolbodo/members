@@ -1,12 +1,14 @@
 <script lang="ts">
-	import List from '$lib/List.svelte';
+	// import List from '$lib/List.svelte';
 </script>
 
 <svelte:head>
 	<title>Home</title>
 </svelte:head>
 
-<List
+<h1>HI</h1>
+
+<!-- <List
 	where={{
 		roles: {
 			_or: [{ valid_till: { _gte: 'NOW()' } }, { valid_till: { _is_null: true } }],
@@ -14,7 +16,7 @@
 			role: { _eq: 'member' }
 		}
 	}}
-/>
+/> -->
 
 <style>
 	h1 {

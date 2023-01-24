@@ -2,6 +2,7 @@
 node_modules
 /build
 /.svelte-kit
+.pnpm-store/
 /package
 .env
 .env.*
@@ -14,3 +15,5 @@ vite.config.ts.timestamp-*
 
 docker-compose.override.yml
 yarn-error.log
+
+$houdini

@@ -1,4 +1,4 @@
-/** @type {import('houdini').ConfigFile} */
+/// <references types="houdini-svelte">
 const defaultMarshall = {
 	unmarshal(val) {
 		return val;
@@ -6,14 +6,17 @@ const defaultMarshall = {
 	marshal(val) {
 		return val;
 	}
-}
-const config = {
-	schemaPath: './schema.graphql',
-	sourceGlob: 'src/**/*.svelte',
-	module: 'esm',
-	framework: 'kit',
-	apiUrl: 'http://graphql.wolbodo/v1/graphql',
+};
 
+/** @type {import('houdini').ConfigFile} */
+const config = {
+	apiUrl: 'http://graphql/v1/graphql',
+	schemaPollHeaders: {
+		'x-hasura-admin-secret': 'secret'
+	},
+	plugins: {
+		'houdini-svelte': {}
+	},
 	scalars: {
 		uuid: {
 			type: 'string',
@@ -40,7 +43,6 @@ const config = {
 			...defaultMarshall
 		}
 	}
-}
+};
 
-
-export default config
+export default config;

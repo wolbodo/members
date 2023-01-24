@@ -26,79 +26,96 @@ export default {
     rootType: "query_root",
 
     selection: {
-        auth_person_by_pk: {
-            type: "auth_person",
-            keyRaw: "auth_person_by_pk(id: $id)",
+        fields: {
+            auth_person_by_pk: {
+                type: "auth_person",
+                keyRaw: "auth_person_by_pk(id: $id)",
+                nullable: true,
 
-            fields: {
-                name: {
-                    type: "String",
-                    keyRaw: "name"
-                },
+                selection: {
+                    fields: {
+                        name: {
+                            type: "String",
+                            keyRaw: "name"
+                        },
 
-                firstname: {
-                    type: "String",
-                    keyRaw: "firstname"
-                },
+                        firstname: {
+                            type: "String",
+                            keyRaw: "firstname",
+                            nullable: true
+                        },
 
-                lastname: {
-                    type: "String",
-                    keyRaw: "lastname"
-                },
+                        lastname: {
+                            type: "String",
+                            keyRaw: "lastname",
+                            nullable: true
+                        },
 
-                email: {
-                    type: "String",
-                    keyRaw: "email"
-                },
+                        email: {
+                            type: "String",
+                            keyRaw: "email",
+                            nullable: true
+                        },
 
-                phone: {
-                    type: "String",
-                    keyRaw: "phone"
-                },
+                        phone: {
+                            type: "String",
+                            keyRaw: "phone",
+                            nullable: true
+                        },
 
-                address: {
-                    type: "String",
-                    keyRaw: "address"
-                },
+                        address: {
+                            type: "String",
+                            keyRaw: "address",
+                            nullable: true
+                        },
 
-                zipcode: {
-                    type: "String",
-                    keyRaw: "zipcode"
-                },
+                        zipcode: {
+                            type: "String",
+                            keyRaw: "zipcode",
+                            nullable: true
+                        },
 
-                city: {
-                    type: "String",
-                    keyRaw: "city"
-                },
+                        city: {
+                            type: "String",
+                            keyRaw: "city",
+                            nullable: true
+                        },
 
-                country: {
-                    type: "String",
-                    keyRaw: "country"
-                },
+                        country: {
+                            type: "String",
+                            keyRaw: "country",
+                            nullable: true
+                        },
 
-                note: {
-                    type: "String",
-                    keyRaw: "note"
-                },
+                        note: {
+                            type: "String",
+                            keyRaw: "note",
+                            nullable: true
+                        },
 
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
-                },
+                        id: {
+                            type: "Int",
+                            keyRaw: "id"
+                        },
 
-                created: {
-                    type: "timestamptz",
-                    keyRaw: "created"
-                },
+                        created: {
+                            type: "timestamptz",
+                            keyRaw: "created",
+                            nullable: true
+                        },
 
-                modified: {
-                    type: "timestamptz",
-                    keyRaw: "modified"
-                },
+                        modified: {
+                            type: "timestamptz",
+                            keyRaw: "modified",
+                            nullable: true
+                        },
 
-                bankaccount: {
-                    type: "String",
-                    keyRaw: "bankaccount"
+                        bankaccount: {
+                            type: "String",
+                            keyRaw: "bankaccount",
+                            nullable: true
+                        }
+                    }
                 }
             }
         }
@@ -112,5 +129,8 @@ export default {
         types: {}
     },
 
-    policy: "NetworkOnly"
+    policy: "CacheOrNetwork",
+    partial: false
 };
+
+"HoudiniHash=d81bbdab05881b62f866c51ca9611948ec510c911fc95ab87da1941381adaa3f";

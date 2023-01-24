@@ -24,54 +24,71 @@ export default {
     rootType: "query_root",
 
     selection: {
-        people: {
-            type: "auth_person",
-            keyRaw: "people(order_by: {name: asc}, where: $where)",
+        fields: {
+            people: {
+                type: "auth_person",
+                keyRaw: "people(order_by: {name: asc}, where: $where)",
 
-            fields: {
-                name: {
-                    type: "String",
-                    keyRaw: "name"
-                },
-
-                email: {
-                    type: "String",
-                    keyRaw: "email"
-                },
-
-                phone: {
-                    type: "String",
-                    keyRaw: "phone"
-                },
-
-                address: {
-                    type: "String",
-                    keyRaw: "address"
-                },
-
-                city: {
-                    type: "String",
-                    keyRaw: "city"
-                },
-
-                firstname: {
-                    type: "String",
-                    keyRaw: "firstname"
-                },
-
-                lastname: {
-                    type: "String",
-                    keyRaw: "lastname"
-                },
-
-                roles: {
-                    type: "auth_person_role",
-                    keyRaw: "roles(where: {valid_till: {_is_null: true}, valid_from: {_lte: \"NOW()\"}})",
-
+                selection: {
                     fields: {
-                        role: {
+                        name: {
                             type: "String",
-                            keyRaw: "role"
+                            keyRaw: "name"
+                        },
+
+                        email: {
+                            type: "String",
+                            keyRaw: "email",
+                            nullable: true
+                        },
+
+                        phone: {
+                            type: "String",
+                            keyRaw: "phone",
+                            nullable: true
+                        },
+
+                        address: {
+                            type: "String",
+                            keyRaw: "address",
+                            nullable: true
+                        },
+
+                        city: {
+                            type: "String",
+                            keyRaw: "city",
+                            nullable: true
+                        },
+
+                        firstname: {
+                            type: "String",
+                            keyRaw: "firstname",
+                            nullable: true
+                        },
+
+                        lastname: {
+                            type: "String",
+                            keyRaw: "lastname",
+                            nullable: true
+                        },
+
+                        roles: {
+                            type: "auth_person_role",
+                            keyRaw: "roles(where: {valid_till: {_is_null: true}, valid_from: {_lte: \"NOW()\"}})",
+
+                            selection: {
+                                fields: {
+                                    role: {
+                                        type: "String",
+                                        keyRaw: "role"
+                                    },
+
+                                    id: {
+                                        type: "Int",
+                                        keyRaw: "id"
+                                    }
+                                }
+                            }
                         },
 
                         id: {
@@ -79,11 +96,6 @@ export default {
                             keyRaw: "id"
                         }
                     }
-                },
-
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
                 }
             }
         }
@@ -223,5 +235,8 @@ export default {
         }
     },
 
-    policy: "NetworkOnly"
+    policy: "CacheOrNetwork",
+    partial: false
 };
+
+"HoudiniHash=debaee50c18351a056cec3248f4f8c8d97bdf5f573133520854b83399aaffbd6";

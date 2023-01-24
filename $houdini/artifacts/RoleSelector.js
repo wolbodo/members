@@ -16,31 +16,39 @@ export default {
     rootType: "auth_person",
 
     selection: {
-        roles: {
-            type: "auth_person_role",
-            keyRaw: "roles",
+        fields: {
+            roles: {
+                type: "auth_person_role",
+                keyRaw: "roles",
 
-            fields: {
-                id: {
-                    type: "Int",
-                    keyRaw: "id"
-                },
+                selection: {
+                    fields: {
+                        id: {
+                            type: "Int",
+                            keyRaw: "id"
+                        },
 
-                role: {
-                    type: "String",
-                    keyRaw: "role"
-                },
+                        role: {
+                            type: "String",
+                            keyRaw: "role"
+                        },
 
-                valid_from: {
-                    type: "timestamptz",
-                    keyRaw: "valid_from"
-                },
+                        valid_from: {
+                            type: "timestamptz",
+                            keyRaw: "valid_from",
+                            nullable: true
+                        },
 
-                valid_till: {
-                    type: "timestamptz",
-                    keyRaw: "valid_till"
+                        valid_till: {
+                            type: "timestamptz",
+                            keyRaw: "valid_till",
+                            nullable: true
+                        }
+                    }
                 }
             }
         }
     }
 };
+
+"HoudiniHash=1efea0e076a2d854654763cfa709e263218ae951a3bb37cb2f72efd6e3667927";
