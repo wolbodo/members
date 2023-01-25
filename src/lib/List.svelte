@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<!-- <script context="module" lang="ts">
 	// This is the function for the AllItems query.
 	// Query variable functions must be named <QueryName>Variables.
 	export function AllPeopleVariables({ props }): AllPeople$input {
@@ -6,37 +6,41 @@
 			where: props.where
 		};
 	}
-</script>
+</script> -->
 
 <script lang="ts">
-	import { query, graphql, AllPeople } from '$houdini';
+	// import { query, graphql, AllPeople } from '$houdini';
+	import type { AllPeople$result } from '$houdini';
 	import { goto } from '$app/navigation';
 
 	import Table from '$lib/Table.svelte';
 	import { searchValue, filterFields } from '$lib/Header/index.svelte';
 
-	// load the items
-	const { data, loading } = query<AllPeople>(graphql`
-		query AllPeople($where: auth_person_bool_exp = {}) {
-			people: auth_person(order_by: { name: asc }, where: $where) {
-				name
-				email
-				phone
-				address
-				city
-				firstname
-				lastname
-				roles(where: { valid_till: { _is_null: true }, valid_from: { _lte: "NOW()" } }) {
-					role
-				}
-			}
-		}
-	`);
+	export let people: AllPeople$result['people'] = []
+	export let fetching: boolean = true;
+
+	// // load the items
+	// const { data, loading } = query<AllPeople>(graphql`
+	// 	query AllPeople($where: auth_person_bool_exp = {}) {
+	// 		people: auth_person(order_by: { name: asc }, where: $where) {
+	// 			name
+	// 			email
+	// 			phone
+	// 			address
+	// 			city
+	// 			firstname
+	// 			lastname
+	// 			roles(where: { valid_till: { _is_null: true }, valid_from: { _lte: "NOW()" } }) {
+	// 				role
+	// 			}
+	// 		}
+	// 	}
+	// `);
 
 	type Column = {
 		label: string;
-		href?: (object) => string;
-		format: (object) => string;
+		href?: (data: any) => string;
+		format: (data: any) => string;
 	};
 	const columns: Column[] = [
 		{ label: 'Name', format: ({ name }) => name, href: ({ name }) => `m/${name.toLowerCase()}` },
@@ -66,10 +70,10 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#if $loading}
+		{#if fetching}
 			<tr class="ssc-line" />
 		{:else}
-			{#each $data.people.filter( (person) => filterFields($searchValue, person.name, person.firstname, person.lastname, person.email) ) as person}
+			{#each people.filter( (person) => filterFields($searchValue, person.name, person.firstname, person.lastname, person.email) ) as person}
 				<tr
 					on:click={(e) => {
 						e.stopPropagation();
@@ -82,7 +86,7 @@
 					{#each columns as { href, format }}
 						<td>
 							{#if href}
-								<a sveltekit:prefetch href={href(person)}>
+								<a  href={href(person)}>
 									{format(person) ?? ''}
 								</a>
 							{:else}

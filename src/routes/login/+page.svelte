@@ -1,4 +1,4 @@
-<script context="module">
+<!-- <script context="module">
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
@@ -12,15 +12,17 @@
 
 		return {};
 	}
-</script>
+</script> -->
 
 <script lang="ts">
-	import { goto } from '$app/navigation';
+  import type { ActionData } from './$types';
 
-	import { session, page } from '$app/stores';
-	import { enhance } from '$lib/Form';
+  export let form: ActionData;
 
-	let error;
+	import {  page } from '$app/stores';
+	// import { enhance } from '$lib/Form';
+
+	// let error;
 	
 	const redirect = $page.url.searchParams.get('redirect');
 </script>
@@ -31,35 +33,14 @@
 	<p>After logging in you will be redirected to <a href={redirect}>{redirect}</a></p>
 {/if}
 
-<form
-	action="/auth/login"
-	method="post"
-	use:enhance={{
-		pending: () => {
-			error = null;
-		},
-		result: async (res, form) => {
-			$session = {
-				...$session,
-				user: await res.json()
-			};
-			console.log("$session", $session)
-			goto(redirect ? redirect : '/');
-		},
-		error: async (res) => {
-			error = await res.text();
-		}
-	}}
->
+<form method="post" action="?/login">
 	<label for="name">Name or email</label>
-	<input id="name" name="name" placeholder="Use your nickname" />
+	<input id="name" name="name" placeholder="Use your nickname" value={form?.name ?? ''}/>
 
 	<label for="password">Password</label>
 	<input id="password" name="password" type="password" />
 
-	{#if error}
-		<small>{error}</small>
-	{/if}
+	{#if form?.incorrect}<p class="error">Invalid credentials!</p>{/if}
 
 	<p><a href="/auth/forgot">Reset your password</a></p>
 

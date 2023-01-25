@@ -7,25 +7,25 @@
 </script>
 
 <script lang="ts">
-	import { session, page } from '$app/stores';
+	// import { session, page } from '$app/stores';
 	import logo from './logo.svg';
 
-	const focus = (node) => node.focus();
+	// const focus = (node) => node.focus();
 	let searchOpen = false;
 	let _searchValue = '';
 
 	$: {
-		$searchValue = new RegExp(_searchValue, 'i');
+		// $searchValue = new RegExp(_searchValue, 'i');
 	}
 
-	function scale(node, { delay = 0, duration = 400 }) {
-		const o = parseFloat(getComputedStyle(node).width);
-		return {
-			delay,
-			duration,
-			css: (t) => `width: ${t * o}px`
-		};
-	}
+	// function scale(node, { delay = 0, duration = 400 }) {
+	// 	const o = parseFloat(getComputedStyle(node).width);
+	// 	return {
+	// 		delay,
+	// 		duration,
+	// 		css: (t) => `width: ${t * o}px`
+	// 	};
+	// }
 	const closeSearch = () => {
 		console.log('close');
 		searchOpen = !searchOpen;
@@ -42,7 +42,7 @@
 			</a>
 		</section>
 
-		{#if $session.user}
+		<!-- {#if $session.user}
 			<section class="search" class:searchOpen>
 				{#if searchOpen}
 					<input
@@ -94,7 +94,7 @@
 					<a sveltekit:prefetch href="/logout">Logout</a>
 				</li>
 			</ul>
-		{/if}
+		{/if} -->
 	</nav>
 </header>
 
