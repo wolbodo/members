@@ -1,0 +1,11 @@
+query GetPassword($name: String!) {
+	auth_person(where: { _or: [{ name: { _ilike: $name } }, { email: { _eq: $name } }] }) {
+		email
+		name
+		id
+		password
+		roles(where: { valid_till: { _is_null: true }, valid_from: { _lte: "NOW()" } }) {
+			role
+		}
+	}
+}

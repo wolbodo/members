@@ -7,19 +7,19 @@
 	/**
 	 * @type {import('@sveltejs/kit').Load}
 	 */
-	export async function load({ url, session }) {
-		if (
-			!session.user &&
-			!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(url.pathname)
-		) {
-		return {
-				status: 302,
-				redirect: '/login'
-			};
-		}
+	// export async function load({ url, session }) {
+	// 	if (
+	// 		!session.user &&
+	// 		!['/login', '/logout', '/auth/forgot', '/auth/reset'].includes(url.pathname)
+	// 	) {
+	// 	return {
+	// 			status: 302,
+	// 			redirect: '/login'
+	// 		};
+	// 	}
 
-		return {};
-	}
+	// 	return {};
+	// }
 </script>
 
 <script lang="ts">

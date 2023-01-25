@@ -6,6 +6,7 @@
  export { default as CreateRole} from './CreateRole'
  export { default as EditPerson} from './EditPerson'
  export { default as EditSelf} from './EditSelf'
+ export { default as GetPassword} from './GetPassword'
  export { default as GetPersonForEdit} from './GetPersonForEdit'
  export { default as GetSelfForEdit} from './GetSelfForEdit'
  export { default as History} from './History'

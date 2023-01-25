@@ -5,6 +5,7 @@ export * from "./artifacts/CreatePerson";
 export * from "./artifacts/CreateRole";
 export * from "./artifacts/EditPerson";
 export * from "./artifacts/EditSelf";
+export * from "./artifacts/GetPassword";
 export * from "./artifacts/GetPersonForEdit";
 export * from "./artifacts/GetSelfForEdit";
 export * from "./artifacts/History";

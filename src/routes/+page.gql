@@ -1,0 +1,14 @@
+query AllPeople($where: auth_person_bool_exp = {}) {
+	people: auth_person(order_by: { name: asc }, where: $where) {
+		name
+		email
+		phone
+		address
+		city
+		firstname
+		lastname
+		roles(where: { valid_till: { _is_null: true }, valid_from: { _lte: "NOW()" } }) {
+			role
+		}
+	}
+}

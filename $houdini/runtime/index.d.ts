@@ -1,3 +1,5 @@
+import { GetPasswordStore } from "../plugins/houdini-svelte/stores/GetPassword";
+import { AllPeopleStore } from "../plugins/houdini-svelte/stores/AllPeople";
 import { GetSelfForEditStore } from "../plugins/houdini-svelte/stores/GetSelfForEdit";
 import { EditSelfStore } from "../plugins/houdini-svelte/stores/EditSelf";
 import { AllMailStore } from "../plugins/houdini-svelte/stores/AllMail";
@@ -5,7 +7,6 @@ import { GetPersonForEditStore } from "../plugins/houdini-svelte/stores/GetPerso
 import { EditPersonStore } from "../plugins/houdini-svelte/stores/EditPerson";
 import { CreatePersonStore } from "../plugins/houdini-svelte/stores/CreatePerson";
 import { HistoryStore } from "../plugins/houdini-svelte/stores/History";
-import { AllPeopleStore } from "../plugins/houdini-svelte/stores/AllPeople";
 import { CreateRoleStore } from "../plugins/houdini-svelte/stores/CreateRole";
 import { StopRoleStore } from "../plugins/houdini-svelte/stores/StopRole";
 import { RoleSelectorStore } from "../plugins/houdini-svelte/stores/RoleSelector";
@@ -14,6 +15,14 @@ import { Cache as InternalCache } from "./cache/cache";
 import type { CacheTypeDef } from "./generated";
 import { Cache } from "./public";
 export * from "./lib";
+
+export function graphql(
+    str: "query GetPassword($name: String!) {\n\tauth_person(where: { _or: [{ name: { _ilike: $name } }, { email: { _eq: $name } }] }) {\n\t\temail\n\t\tname\n\t\tid\n\t\tpassword\n\t\troles(where: { valid_till: { _is_null: true }, valid_from: { _lte: \"NOW()\" } }) {\n\t\t\trole\n\t\t}\n\t}\n}\n"
+): GetPasswordStore;
+
+export function graphql(
+    str: "query AllPeople($where: auth_person_bool_exp = {}) {\n\tpeople: auth_person(order_by: { name: asc }, where: $where) {\n\t\tname\n\t\temail\n\t\tphone\n\t\taddress\n\t\tcity\n\t\tfirstname\n\t\tlastname\n\t\troles(where: { valid_till: { _is_null: true }, valid_from: { _lte: \"NOW()\" } }) {\n\t\t\trole\n\t\t}\n\t}\n}\n"
+): AllPeopleStore;
 
 export function graphql(
     str: "\n\t\tquery GetSelfForEdit($id: Int!) {\n\t\t\tauth_person_by_pk(id: $id) {\n\t\t\t\tname\n\t\t\t\tfirstname\n\t\t\t\tlastname\n\t\t\t\temail\n\t\t\t\tphone\n\t\t\t\taddress\n\t\t\t\tzipcode\n\t\t\t\tcity\n\t\t\t\tcountry\n\t\t\t\tnote\n\t\t\t\tid\n\t\t\t\tcreated\n\t\t\t\tmodified\n\t\t\t\tbankaccount\n\t\t\t}\n\t\t}\n\t"
@@ -42,10 +51,6 @@ export function graphql(
 export function graphql(
     str: "\n\t\tquery History {\n\t\t\thistory: auth_history(order_by: { timestamp: desc }) {\n\t\t\t\ttimestamp\n\t\t\t\tnew_values\n\t\t\t\told_values\n\t\t\t\trole\n\t\t\t\tauthor {\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t\tperson {\n\t\t\t\t\tname\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"
 ): HistoryStore;
-
-export function graphql(
-    str: "\n\t\tquery AllPeople($where: auth_person_bool_exp = {}) {\n\t\t\tpeople: auth_person(order_by: { name: asc }, where: $where) {\n\t\t\t\tname\n\t\t\t\temail\n\t\t\t\tphone\n\t\t\t\taddress\n\t\t\t\tcity\n\t\t\t\tfirstname\n\t\t\t\tlastname\n\t\t\t\troles(where: { valid_till: { _is_null: true }, valid_from: { _lte: \"NOW()\" } }) {\n\t\t\t\t\trole\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t"
-): AllPeopleStore;
 
 export function graphql(
     str: "\n\t\tmutation CreateRole($personId: Int!, $role: String!) {\n\t\t\tinsert_auth_person_role_one(object: { person_id: $personId, role: $role }) {\n\t\t\t\tid\n\t\t\t}\n\t\t}\n\t"
