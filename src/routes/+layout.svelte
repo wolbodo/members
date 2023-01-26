@@ -25,9 +25,15 @@
 <script lang="ts">
 	import Header from '$lib/Header/index.svelte';
 	import '../app.css';
+
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+	$: ({ __houdini__session__: { user }} = data)
+
 </script>
 
-<Header />
+<Header {user} />
 
 <main>
 	<slot />
