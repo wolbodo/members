@@ -4,7 +4,6 @@ import bcrypt from 'bcryptjs';
 import { GetPasswordStore } from '$houdini';
 
 import { serverToken, createToken } from '$lib/jwt';
-import { login } from '$lib/auth';
 import type { Actions } from './$types';
 
 // These are the only roles passed to the token, and in this order.

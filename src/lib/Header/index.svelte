@@ -7,31 +7,36 @@
 </script>
 
 <script lang="ts">
-	// import { session, page } from '$app/stores';
+	import { page } from '$app/stores';
 	import logo from './logo.svg';
+	import { path } from 'houdini';
 
-	// const focus = (node) => node.focus();
+	export let user
+	
+	const focus = (node) => node.focus();
+
 	let searchOpen = false;
 	let _searchValue = '';
 
 	$: {
-		// $searchValue = new RegExp(_searchValue, 'i');
+		$searchValue = new RegExp(_searchValue, 'i')
 	}
 
-	// function scale(node, { delay = 0, duration = 400 }) {
-	// 	const o = parseFloat(getComputedStyle(node).width);
-	// 	return {
-	// 		delay,
-	// 		duration,
-	// 		css: (t) => `width: ${t * o}px`
-	// 	};
-	// }
+	function scale(node, { delay = 0, duration = 400 }) {
+		const o = parseFloat(getComputedStyle(node).width);
+		return {
+			delay,
+			duration,
+			css: (t) => `width: ${t * o}px`
+		};
+	}
 	const closeSearch = () => {
 		console.log('close');
 		searchOpen = !searchOpen;
 		_searchValue = '';
 	};
 </script>
+
 
 <header>
 	<nav>
@@ -42,7 +47,7 @@
 			</a>
 		</section>
 
-		<!-- {#if $session.user}
+		{#if user}
 			<section class="search" class:searchOpen>
 				{#if searchOpen}
 					<input
@@ -75,26 +80,26 @@
 			</section>
 
 			<ul>
-				<li class:active={$page.pathname === '/'}><a sveltekit:prefetch href="/">Members</a></li>
-				{#if $session.user.roles.includes('board')}
-					<li class:active={$page.pathname === '/create'}>
-						<a sveltekit:prefetch href="/create">Create</a>
+				<li class:active={$page.url.pathname === '/'}><a href="/">Members</a></li>
+				{#if user.roles.includes('board')}
+					<li class:active={$page.url.pathname === '/create'}>
+						<a href="/create">Create</a>
 					</li>
-					<li class:active={$page.pathname === '/mail'}>
-						<a sveltekit:prefetch href="/mail">Mail</a>
+					<li class:active={$page.url.pathname === '/mail'}>
+						<a href="/mail">Mail</a>
 					</li>
-					<li class:active={$page.pathname === '/changes'}>
-						<a sveltekit:prefetch href="/changes">Changes</a>
+					<li class:active={$page.url.pathname === '/changes'}>
+						<a href="/changes">Changes</a>
 					</li>
 				{/if}
-				<li class:active={$page.pathname === '/self'}>
-					<a sveltekit:prefetch href="/self">{$session.user.name}</a>
+				<li class:active={$page.url.pathname === '/self'}>
+					<a href="/self">{user.name}</a>
 				</li>
-				<li class:active={$page.pathname === '/logout'}>
-					<a sveltekit:prefetch href="/logout">Logout</a>
+				<li class:active={$page.url.pathname === '/logout'}>
+					<a href="/logout">Logout</a>
 				</li>
 			</ul>
-		{/if} -->
+		{/if}
 	</nav>
 </header>
 

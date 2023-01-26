@@ -14,7 +14,7 @@ const authenticateUser = async (event: RequestEvent) => {
 				token
 			};
 		} catch (e) {
-			return {};
+			return null;
 		}
 	}
 };
