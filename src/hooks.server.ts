@@ -22,11 +22,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	// get the user information however you want
 	const user = await authenticateUser(event);
 
-	if (!event.url.pathname.startsWith('/login') && !user) {
+	if (!event.url.pathname.startsWith('/auth') && !user) {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/login'
+				Location: '/auth'
 			}
 		});
 	}

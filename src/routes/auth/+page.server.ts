@@ -67,4 +67,9 @@ export const actions = {
 
 		return fail(400, { name, incorrect: true });
 	}
+	// logout: async (event) => {
+	// 	event.cookies.delete('token');
+
+	// 	throw redirect(302, '/');
+	// }
 } satisfies Actions;

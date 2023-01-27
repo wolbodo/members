@@ -1,12 +1,10 @@
 <script lang="ts">
 	import type { PageData } from './$houdini'
-
 	import List from '$lib/List.svelte';
 
-    /* @type { import('./$houdini').PageData } */
-    export let data: PageData
-    
-    $: ({ AllPeople } = data)
+	export let data: PageData
+	
+	$: ({ AllPeople } = data)
 </script>
 
 <svelte:head>
