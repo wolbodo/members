@@ -7,7 +7,7 @@ specifiers:
   '@fontsource/rubik': ^4.5.14
   '@lukeed/uuid': ^2.0.0
   '@sveltejs/adapter-node': ^1.1.4
-  '@sveltejs/kit': ^1.2.9
+  '@sveltejs/kit': ^1.3.1
   '@types/bcryptjs': ^2.4.2
   '@types/cookie': ^0.5.1
   '@typescript-eslint/eslint-plugin': ^5.49.0
@@ -36,7 +36,7 @@ specifiers:
   svelte-check: ^3.0.3
   svelte-preprocess: ^4.10.7
   svelte-select: ^4.4.7
-  tslib: ^2.4.1
+  tslib: ^2.5.0
   typescript: ^4.9.4
   vite: ^4.0.4
 
@@ -60,8 +60,8 @@ dependencies:
   svelte-select: 4.4.7
 
 devDependencies:
-  '@sveltejs/adapter-node': 1.1.4_@sveltejs+kit@1.2.9
-  '@sveltejs/kit': 1.2.9_svelte@3.55.1+vite@4.0.4
+  '@sveltejs/adapter-node': 1.1.4_@sveltejs+kit@1.3.1
+  '@sveltejs/kit': 1.3.1_svelte@3.55.1+vite@4.0.4
   '@types/bcryptjs': 2.4.2
   '@types/cookie': 0.5.1
   '@typescript-eslint/eslint-plugin': 5.49.0_iu322prlnwsygkcra5kbpy22si
@@ -78,7 +78,7 @@ devDependencies:
   svelte: 3.55.1
   svelte-check: 3.0.3_svelte@3.55.1
   svelte-preprocess: 4.10.7_atrrhq7vg4ekua4nnyrpuardle
-  tslib: 2.4.1
+  tslib: 2.5.0
   typescript: 4.9.4
   vite: 4.0.4
 
@@ -349,25 +349,25 @@ packages:
     resolution: {integrity: sha512-EvMK3kkeAgKkk8qAeT4PjpyAYyu72pIlJm+SXJ5vR/xhCX2yj2xoq3+YS38rPmPcCAnrAVONoQ3ezLxVm6jhBA==}
     dev: false
 
-  /@graphql-tools/merge/8.3.15_graphql@15.8.0:
-    resolution: {integrity: sha512-hYYOlsqkUlL6oOo7zzuk6hIv7xQzy+x21sgK84d5FWaiWYkLYh9As8myuDd9SD5xovWWQ9m/iRhIOVDEMSyEKA==}
+  /@graphql-tools/merge/8.3.16_graphql@15.8.0:
+    resolution: {integrity: sha512-In0kcOZcPIpYOKaqdrJ3thdLPE7TutFnL9tbrHUy2zCinR2O/blpRC48jPckcs0HHrUQ0pGT4HqvzMkZUeEBAw==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@graphql-tools/utils': 9.1.4_graphql@15.8.0
       graphql: 15.8.0
-      tslib: 2.4.1
+      tslib: 2.5.0
     dev: true
 
-  /@graphql-tools/schema/9.0.13_graphql@15.8.0:
-    resolution: {integrity: sha512-guRA3fwAtv+M1Kh930P4ydH9aKJTWscIkhVFcWpj/cnjYYxj88jkEJ15ZNiJX/2breNY+sbVgmlgLKb6aXi/Jg==}
+  /@graphql-tools/schema/9.0.14_graphql@15.8.0:
+    resolution: {integrity: sha512-U6k+HY3Git+dsOEhq+dtWQwYg2CAgue8qBvnBXoKu5eEeH284wymMUoNm0e4IycOgMCJANVhClGEBIkLRu3FQQ==}
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
-      '@graphql-tools/merge': 8.3.15_graphql@15.8.0
+      '@graphql-tools/merge': 8.3.16_graphql@15.8.0
       '@graphql-tools/utils': 9.1.4_graphql@15.8.0
       graphql: 15.8.0
-      tslib: 2.4.1
+      tslib: 2.5.0
       value-or-promise: 1.0.12
     dev: true
 
@@ -377,7 +377,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 15.8.0
-      tslib: 2.4.1
+      tslib: 2.5.0
     dev: true
 
   /@humanwhocodes/config-array/0.11.8:
@@ -463,7 +463,7 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: true
 
-  /@rollup/plugin-commonjs/24.0.1_rollup@3.10.1:
+  /@rollup/plugin-commonjs/24.0.1_rollup@3.11.0:
     resolution: {integrity: sha512-15LsiWRZk4eOGqvrJyu3z3DaBu5BhXIMeWnijSRvd8irrrg9SHpQ1pH+BUK4H6Z9wL9yOxZJMTLU+Au86XHxow==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -472,16 +472,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@3.10.1
+      '@rollup/pluginutils': 5.0.2_rollup@3.11.0
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
       magic-string: 0.27.0
-      rollup: 3.10.1
+      rollup: 3.11.0
     dev: true
 
-  /@rollup/plugin-json/6.0.0_rollup@3.10.1:
+  /@rollup/plugin-json/6.0.0_rollup@3.11.0:
     resolution: {integrity: sha512-i/4C5Jrdr1XUarRhVu27EEwjt4GObltD7c+MkCIpO2QIbojw8MUs+CCTqOphQi3Qtg1FLmYt+l+6YeoIf51J7w==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -490,11 +490,11 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@3.10.1
-      rollup: 3.10.1
+      '@rollup/pluginutils': 5.0.2_rollup@3.11.0
+      rollup: 3.11.0
     dev: true
 
-  /@rollup/plugin-node-resolve/15.0.1_rollup@3.10.1:
+  /@rollup/plugin-node-resolve/15.0.1_rollup@3.11.0:
     resolution: {integrity: sha512-ReY88T7JhJjeRVbfCyNj+NXAG3IIsVMsX9b5/9jC98dRP8/yxlZdz7mHZbHk5zHr24wZZICS5AcXsFZAXYUQEg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -503,16 +503,16 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.0.2_rollup@3.10.1
+      '@rollup/pluginutils': 5.0.2_rollup@3.11.0
       '@types/resolve': 1.20.2
       deepmerge: 4.2.2
       is-builtin-module: 3.2.0
       is-module: 1.0.0
       resolve: 1.22.1
-      rollup: 3.10.1
+      rollup: 3.11.0
     dev: true
 
-  /@rollup/pluginutils/5.0.2_rollup@3.10.1:
+  /@rollup/pluginutils/5.0.2_rollup@3.11.0:
     resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -524,23 +524,23 @@ packages:
       '@types/estree': 1.0.0
       estree-walker: 2.0.2
       picomatch: 2.3.1
-      rollup: 3.10.1
+      rollup: 3.11.0
     dev: true
 
-  /@sveltejs/adapter-node/1.1.4_@sveltejs+kit@1.2.9:
+  /@sveltejs/adapter-node/1.1.4_@sveltejs+kit@1.3.1:
     resolution: {integrity: sha512-3iEBqi1fXLXP9YIbVuz2LXajoebRJCmAFEQbN40DlxAnA7G+InxUgnqFun3q9gBMz2Qvd99K51g/HxWetXRe8Q==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@rollup/plugin-commonjs': 24.0.1_rollup@3.10.1
-      '@rollup/plugin-json': 6.0.0_rollup@3.10.1
-      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.10.1
-      '@sveltejs/kit': 1.2.9_svelte@3.55.1+vite@4.0.4
-      rollup: 3.10.1
+      '@rollup/plugin-commonjs': 24.0.1_rollup@3.11.0
+      '@rollup/plugin-json': 6.0.0_rollup@3.11.0
+      '@rollup/plugin-node-resolve': 15.0.1_rollup@3.11.0
+      '@sveltejs/kit': 1.3.1_svelte@3.55.1+vite@4.0.4
+      rollup: 3.11.0
     dev: true
 
-  /@sveltejs/kit/1.2.9_svelte@3.55.1+vite@4.0.4:
-    resolution: {integrity: sha512-zHuYwMgCJpmgYoQ1EOIgNFNkBTKqErHH+fqZVfNmEw2hICoKZHIjqm8/fetRUtF71dqXq0TmPS/HuCCBHXQiZw==}
+  /@sveltejs/kit/1.3.1_svelte@3.55.1+vite@4.0.4:
+    resolution: {integrity: sha512-IjZDhByOlWiyJRsa2SQhSYsMqJu62UGMVdSP0hFWIiKOxqHjmixZwIVUBljG2YSMmb0JP3hA9/oaCdstGWRu/Q==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -889,7 +889,7 @@ packages:
     resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
     dependencies:
-      tslib: 2.4.1
+      tslib: 2.5.0
     dev: true
 
   /asynckit/0.4.0:
@@ -1030,7 +1030,7 @@ packages:
       htmlparser2: 6.1.0
       parse5: 6.0.1
       parse5-htmlparser2-tree-adapter: 6.0.1
-      tslib: 2.4.1
+      tslib: 2.5.0
     dev: false
 
   /chokidar/3.5.3:
@@ -1964,7 +1964,7 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     dependencies:
       '@kitql/helper': 0.5.0
-      '@sveltejs/kit': 1.2.9_svelte@3.55.1+vite@4.0.4
+      '@sveltejs/kit': 1.3.1_svelte@3.55.1+vite@4.0.4
       ast-types: 0.16.1
       estree-walker: 3.0.3
       graphql: 15.8.0
@@ -1987,7 +1987,7 @@ packages:
     hasBin: true
     dependencies:
       '@babel/parser': 7.20.13
-      '@graphql-tools/schema': 9.0.13_graphql@15.8.0
+      '@graphql-tools/schema': 9.0.14_graphql@15.8.0
       '@kitql/helper': 0.5.0
       '@types/estree': 1.0.0
       '@types/fs-extra': 9.0.13
@@ -3322,7 +3322,7 @@ packages:
       ast-types: 0.16.1
       esprima: 4.0.1
       source-map: 0.6.1
-      tslib: 2.4.1
+      tslib: 2.5.0
     dev: true
 
   /regenerator-runtime/0.13.11:
@@ -3390,8 +3390,8 @@ packages:
       glob: 7.2.3
     dev: true
 
-  /rollup/3.10.1:
-    resolution: {integrity: sha512-3Er+yel3bZbZX1g2kjVM+FW+RUWDxbG87fcqFM5/9HbPCTpbVp6JOLn7jlxnNlbu7s/N/uDA4EV/91E2gWnxzw==}
+  /rollup/3.11.0:
+    resolution: {integrity: sha512-+uWPPkpWQ2H3Qi7sNBcRfhhHJyUNgBYhG4wKe5wuGRj2m55kpo+0p5jubKNBjQODyPe6tSBE3tNpdDwEisQvAQ==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
     optionalDependencies:
@@ -3821,8 +3821,8 @@ packages:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: true
 
-  /tslib/2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
+  /tslib/2.5.0:
+    resolution: {integrity: sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg==}
 
   /tsutils/3.21.0_typescript@4.9.4:
     resolution: {integrity: sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==}
@@ -3978,7 +3978,7 @@ packages:
       esbuild: 0.16.17
       postcss: 8.4.21
       resolve: 1.22.1
-      rollup: 3.10.1
+      rollup: 3.11.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

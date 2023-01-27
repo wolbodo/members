@@ -96,7 +96,9 @@
 					<a href="/self">{user.name}</a>
 				</li>
 				<li class:active={$page.url.pathname === '/logout'}>
-					<a href="/logout">Logout</a>
+					<form action='/auth?/logout' method="post">
+						<button>Logout</button>
+					</form>
 				</li>
 			</ul>
 		{/if}
