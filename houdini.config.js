@@ -10,7 +10,7 @@ const defaultMarshall = {
 
 /** @type {import('houdini').ConfigFile} */
 const config = {
-	apiUrl: 'http://graphql/v1/graphql',
+	apiUrl: 'http://graphql.wolbodo/v1/graphql',
 	schemaPollHeaders: {
 		'x-hasura-admin-secret': 'secret'
 	},

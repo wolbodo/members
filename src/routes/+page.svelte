@@ -22,9 +22,9 @@
 			role: { _eq: 'member' }
 		}
 	}} -->
-
+<!-- 
 <style>
 	h1 {
 		width: 100%;
 	}
-</style>
+</style> -->
