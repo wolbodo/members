@@ -1,12 +1,12 @@
 <script lang="ts">
 	export let name: string;
-	export let label: string = null;
+	export let label: string | null = null;
 	export let type: string = 'text';
-	export let value: any = null;
-	export let format: (any) => string = (value) => value;
+	export let value: unknown = null;
+	export let format: (value: unknown) => string = (value) => value as string;
 	export let readOnly: boolean = false;
 
-	let _class = null;
+	let _class: string | null = null;
 	export { _class as class };
 
 	let changed = false;

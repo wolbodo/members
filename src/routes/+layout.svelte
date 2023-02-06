@@ -1,4 +1,4 @@
-<script context="module" lang='ts'>  
+<script context="module" lang="ts">
 	// import env from '../environment';
 	// import { setEnvironment } from '$houdini';
 
@@ -29,8 +29,9 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({ __houdini__session__: { user }} = data)
-
+	$: ({
+		__houdini__session__: { user }
+	} = data);
 </script>
 
 <Header {user} />

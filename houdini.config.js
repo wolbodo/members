@@ -10,9 +10,12 @@ const defaultMarshall = {
 
 /** @type {import('houdini').ConfigFile} */
 const config = {
-	apiUrl: 'http://graphql.wolbodo/v1/graphql',
-	schemaPollHeaders: {
-		'x-hasura-admin-secret': 'secret'
+	watchSchema: {
+		url: 'http://graphql.wolbodo/v1/graphql',
+		headers: {
+			'x-hasura-admin-secret': 'secret'
+		},
+		interval: 20000
 	},
 	plugins: {
 		'houdini-svelte': {}

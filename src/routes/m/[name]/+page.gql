@@ -1,0 +1,21 @@
+query GetPersonForEdit($name: String, $isBoard: Boolean = false) {
+	auth_person(where: { name: { _ilike: $name } }, limit: 1) {
+		name
+		firstname
+		lastname
+		email
+		phone
+		address
+		zipcode
+		city
+		country
+		note
+		id
+		created
+		modified
+		...RoleSelector
+
+		bankaccount @include(if: $isBoard)
+		key_code @include(if: $isBoard)
+	}
+}

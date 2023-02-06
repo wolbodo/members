@@ -26,7 +26,6 @@ export const actions = {
 
 		const token = serverToken('login');
 		const store = new GetPasswordStore();
-		console.log('fetching');
 		const {
 			data: {
 				auth_person: [person]
@@ -66,10 +65,10 @@ export const actions = {
 		}
 
 		return fail(400, { name, incorrect: true });
-	}
-	// logout: async (event) => {
-	// 	event.cookies.delete('token');
+	},
+	logout: async (event) => {
+		event.cookies.delete('token', { secure: false });
 
-	// 	throw redirect(302, '/');
-	// }
+		throw redirect(302, '/');
+	}
 } satisfies Actions;
