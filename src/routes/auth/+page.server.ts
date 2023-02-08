@@ -18,6 +18,8 @@ type User = {
 	token: string;
 };
 
+const tokenCookieOptions = { secure: false, path: '/' };
+
 export const actions = {
 	login: async (event) => {
 		const data = await event.request.formData();
@@ -59,7 +61,7 @@ export const actions = {
 					}
 				);
 
-				event.cookies.set('token', user.token, { secure: false });
+				event.cookies.set('token', user.token, tokenCookieOptions);
 				throw redirect(302, '/');
 			}
 		}
@@ -67,7 +69,7 @@ export const actions = {
 		return fail(400, { name, incorrect: true });
 	},
 	logout: async (event) => {
-		event.cookies.delete('token', { secure: false });
+		event.cookies.delete('token', tokenCookieOptions);
 
 		throw redirect(302, '/');
 	}
