@@ -1,6 +1,5 @@
 import { setSession } from '$houdini';
-import { type Handle, type RequestEvent, redirect } from '@sveltejs/kit';
-
+import type { Handle, RequestEvent } from '@sveltejs/kit';
 import { verifyToken } from '$lib/jwt';
 
 const authenticateUser = async (event: RequestEvent) => {
@@ -9,6 +8,7 @@ const authenticateUser = async (event: RequestEvent) => {
 	if (token) {
 		try {
 			const user = await verifyToken(token);
+
 			return {
 				...user,
 				token
@@ -31,8 +31,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		});
 	}
 
-	// set the session information for this event
-	setSession(event, { user });
+	if (user) {
+		// set the session information for this event
+		setSession(event, { user });
+		event.locals.user = user;
+	}
 
 	// pass the event onto the default handle
 	return await resolve(event);
