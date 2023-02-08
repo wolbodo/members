@@ -1,6 +1,7 @@
 import { graphql, PersonForEditStore } from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import type { PageServerLoad } from './$types';
 
 const mutation = graphql(`
 	mutation EditPerson($id: Int!, $data: auth_person_set_input!) {
@@ -30,20 +31,42 @@ const queryPerson = new PersonForEditStore();
 
 export const actions: Actions = {
 	edit: async (event) => {
-		const { id: userId, ...data } = Object.fromEntries((await event.request.formData()).entries());
-		console.log(data);
-
-		const person = await queryPerson.fetch({
+		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
 				name: event.params.name,
 				isBoard: event.locals.user.roles.includes('board')
 			}
 		});
-		console.log(person);
 
-		const respo = await mutation.mutate({ id: parseInt(userId as string), data }, { event });
-		console.log('REspons', respo);
-		return respo;
+		if (!queryData) {
+			throw fail(500);
+		}
+
+		const {
+			auth_person: [person]
+		} = queryData;
+
+		const formData = await event.request.formData();
+
+		const { id: userId, ...dirtyData } = Object.fromEntries(
+			Array.from(formData.entries()).filter(([key, value]) => {
+				if (key === 'password' && value === '') return false;
+				if (key === 'id') return true;
+
+				if (person[key as keyof typeof person] !== value) return true;
+			})
+		);
+
+		return await mutation.mutate({ id: parseInt(userId as string), data: dirtyData }, { event });
 	}
+};
+
+export const load: PageServerLoad = async (event) => {
+	return {
+		variables: {
+			name: event.params.name,
+			isBoard: event.locals.user.roles.includes('board')
+		}
+	};
 };

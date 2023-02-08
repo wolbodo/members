@@ -22,8 +22,8 @@ specifiers:
   graphql: ^15.8.0
   graphql-request: ^4.3.0
   hasura-cli: ^2.17.1
-  houdini: 1.0.0-next.19
-  houdini-svelte: 1.0.0-next.19
+  houdini: 1.0.0-next.22
+  houdini-svelte: 1.0.0-next.22
   jsdom: ^19.0.0
   jsonwebtoken: ^8.5.1
   luxon: ^1.28.1
@@ -71,8 +71,8 @@ devDependencies:
   eslint-plugin-svelte3: 4.0.0_4omm2ewoudhgnmf7aocafatnc4
   graphql: 15.8.0
   hasura-cli: 2.17.1
-  houdini: 1.0.0-next.19
-  houdini-svelte: 1.0.0-next.19
+  houdini: 1.0.0-next.22
+  houdini-svelte: 1.0.0-next.22
   prettier: 2.8.4
   prettier-plugin-svelte: 2.9.0_jrsxveqmsx2uadbqiuq74wlc4u
   svelte: 3.55.1
@@ -1968,15 +1968,15 @@ packages:
     hasBin: true
     dev: false
 
-  /houdini-svelte/1.0.0-next.19:
-    resolution: {integrity: sha512-QU9PIZmSKVoLUe9ImWa+BEjjc5GBeNIEkweq6ynRlioeX636nasi9r8AbvsOCx7wiVFyiPP/Nrv4ctQmrugung==}
+  /houdini-svelte/1.0.0-next.22:
+    resolution: {integrity: sha512-CLPGD2MxnIHc0FAP+yfXBdgSROcQZlawwX77vYayZwHym1TiICDFm5lwLozhiJsClaS9fIIJgNb2AgO9jTEGaQ==}
     dependencies:
       '@kitql/helper': 0.5.0
       '@sveltejs/kit': 1.5.0_svelte@3.55.1+vite@4.1.1
       ast-types: 0.16.1
       estree-walker: 3.0.3
       graphql: 15.8.0
-      houdini: 1.0.0-next.19
+      houdini: 1.0.0-next.22
       recast: 0.23.1
       rollup: 3.14.0
       svelte: 3.55.1
@@ -1991,8 +1991,8 @@ packages:
       - terser
     dev: true
 
-  /houdini/1.0.0-next.19:
-    resolution: {integrity: sha512-PL4weJlvWnMR2jI0P2O8MHWRYViwZhPaB2ANSwAoTV9uE8OP+Y4tMwhzW6p6SQIu4YAuyxaVlpF6QudW5qzPNQ==}
+  /houdini/1.0.0-next.22:
+    resolution: {integrity: sha512-AQwcZQzk2cmA7t5Y7EPsqkVHdD5mfoao31hoFs4M/kAzIdFDIjdxMFBW1gBXAD+rBIpw/HF6Y8n2y6Aa5U8XsQ==}
     hasBin: true
     dependencies:
       '@babel/parser': 7.20.15
