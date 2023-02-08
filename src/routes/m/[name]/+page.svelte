@@ -16,20 +16,16 @@
 	}
 </script> -->
 <script lang="ts">
-	// import { query, mutation, graphql, EditPerson, GetPersonForEdit } from '$houdini';
-
+	import { query, mutation, graphql, EditPerson } from '$houdini';
 	import type { PageData } from './$houdini';
-
-	export let data: PageData;
-
-	$: ({ GetPersonForEdit } = data);
-
 	import { datetime } from '$lib/format';
 	import { Input, RoleSelector } from '$lib/Form';
 
+	export let data: PageData;
 	export let name;
 	export let isBoard = false;
 
+	$: ({ GetPersonForEdit } = data);
 	let edit: boolean;
 	// let form, edit, error;
 
@@ -67,8 +63,6 @@
 </script>
 
 <content>
-	<button on:click={() => console.log('Clicked')}>Button</button>
-
 	{#if !$GetPersonForEdit.data}
 		<p>Loading....</p>
 	{:else}

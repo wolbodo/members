@@ -14,6 +14,17 @@ type JWTSignOptions = {
 	mutatePayload?: string;
 };
 
+type ParsedToken = {
+	email: string;
+	name: string;
+	id: string;
+	roles: string[];
+	iat: number;
+	exp: number;
+	iss: string;
+	sub: string;
+};
+
 export function createToken(
 	token: unknown,
 	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: JWTSignOptions
@@ -28,11 +39,11 @@ export function createToken(
 	});
 }
 
-export function parseToken(token: string): JSON {
+export function parseToken(token: string): ParsedToken {
 	return jwt.decode(token);
 }
 
-export async function verifyToken(token: string): Promise<JSON> {
+export async function verifyToken(token: string): Promise<ParsedToken> {
 	const SECRET = process.env['AUTH_JWT_SECRET_KEY'];
 
 	return await jwt.verify(token, SECRET);

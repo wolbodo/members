@@ -9,17 +9,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import logo from './logo.svg';
-	import { path } from 'houdini';
 
-	export let user
-	
+	export let user;
+
 	const focus = (node) => node.focus();
 
 	let searchOpen = false;
 	let _searchValue = '';
 
 	$: {
-		$searchValue = new RegExp(_searchValue, 'i')
+		$searchValue = new RegExp(_searchValue, 'i');
 	}
 
 	function scale(node, { delay = 0, duration = 400 }) {
@@ -36,7 +35,6 @@
 		_searchValue = '';
 	};
 </script>
-
 
 <header>
 	<nav>
@@ -96,7 +94,7 @@
 					<a href="/self">{user.name}</a>
 				</li>
 				<li class:active={$page.url.pathname === '/logout'}>
-					<form action='/auth?/logout' method="post">
+					<form action="/auth?/logout" method="post">
 						<button>Logout</button>
 					</form>
 				</li>

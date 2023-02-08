@@ -4,9 +4,12 @@ import type { Actions } from './$types';
 
 export const actions: Actions = {
 	edit: async (event) => {
-		const data = (await event.request.formData()) as auth_person_set_input;
+		const { user } = event.locals;
 
-		console.log(data);
+		const data = Object.fromEntries(
+			(await event.request.formData()).entries()
+		) as auth_person_set_input;
+		console.log(user);
 
 		const mutation = graphql(`
 			mutation EditPerson2($id: Int!, $data: auth_person_set_input!) {
@@ -32,6 +35,8 @@ export const actions: Actions = {
 				}
 			}
 		`);
-		return await mutation.mutate({ id: 0, data }, event);
+		const respo = await mutation.mutate({ id: parseInt(user.id), data }, { event });
+		console.log('REspons', respo);
+		return respo;
 	}
 };

@@ -4,7 +4,17 @@
 // for information about these interfaces
 declare namespace App {
 	interface Locals {
-		userid: string;
+		user: {
+			email: string;
+			name: string;
+			id: string;
+			roles: string[];
+			iat: number;
+			exp: number;
+			iss: string;
+			sub: string;
+			token: string;
+		};
 	}
 
 	// interface Platform {}
