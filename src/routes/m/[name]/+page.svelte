@@ -24,13 +24,13 @@
 	export let data: PageData;
 	export let name;
 
-	$: ({ GetPersonForEdit, user } = data);
+	$: ({ PersonForEdit, user } = data);
 	$: isBoard = user?.roles.includes('board');
 
 	let edit: boolean;
 	// let form, edit, error;
 
-	// const { data, refetch } = query<GetPersonForEdit>(graphql`
+	// const { data, refetch } = query<PersonForEdit>(graphql`
 
 	// `);
 	// $: [person] = $data.auth_person;
@@ -64,10 +64,10 @@
 </script>
 
 <content>
-	{#if !$GetPersonForEdit.data}
+	{#if !$PersonForEdit.data}
 		<p>Loading....</p>
 	{:else}
-		{@const person = $GetPersonForEdit.data.auth_person[0]}
+		{@const person = $PersonForEdit.data.auth_person[0]}
 		<form action="?/edit" method="POST">
 			{#if isBoard}
 				<button
@@ -108,6 +108,8 @@
 			/> -->
 
 			<section>
+				<Input name="id" value={person.id} type="hidden" readOnly />
+
 				<b>#{person.id}</b>
 				<p>created:{datetime(person.created)}</p>
 				<p>modified:{datetime(person.modified)}</p>

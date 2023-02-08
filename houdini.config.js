@@ -10,6 +10,8 @@ const defaultMarshall = {
 
 /** @type {import('houdini').ConfigFile} */
 const config = {
+	logLevel: 'full',
+
 	watchSchema: {
 		url: 'http://graphql.wolbodo/v1/graphql',
 		headers: {

@@ -17,7 +17,10 @@
 
 <section class:changed class={_class}>
 	{#if value || !readOnly}
-		<label for={name}>{label || name}</label>
+		{#if type !== 'hidden'}
+			<label for={name}>{label || name}</label>
+		{/if}
+
 		{#if type === 'textarea'}
 			<textarea id={name} {readOnly} {...$$props} on:change={() => (changed = true)} />
 		{:else if typeof type === 'string'}
