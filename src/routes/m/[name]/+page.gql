@@ -1,4 +1,4 @@
-query GetPersonForEdit($name: String, $isBoard: Boolean = false) {
+query PersonForEdit($name: String, $isBoard: Boolean = false) {
 	auth_person(where: { name: { _ilike: $name } }, limit: 1) {
 		name
 		firstname
