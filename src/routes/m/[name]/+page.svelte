@@ -16,13 +16,11 @@
 	}
 </script> -->
 <script lang="ts">
-	import { query, mutation, graphql, EditPerson } from '$houdini';
 	import type { PageData } from './$houdini';
 	import { datetime } from '$lib/format';
 	import { Input, RoleSelector } from '$lib/Form';
 
 	export let data: PageData;
-	export let name;
 
 	$: ({ PersonForEdit, user } = data);
 	$: isBoard = user?.roles.includes('board');
