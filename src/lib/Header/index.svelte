@@ -1,7 +1,7 @@
-<script context="module">
+<script context="module" lang="ts">
 	import { writable } from 'svelte/store';
 
-	export const filterFields = (search, ...fields) =>
+	export const filterFields = (search: string, ...fields: string[]) =>
 		fields.some((field) => field && field.match(search));
 	export const searchValue = writable(new RegExp('', 'i'));
 </script>
@@ -9,10 +9,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import logo from './logo.svg';
+	import type { PageData } from '../../routes/$types';
 
-	export let user;
+	export let user: PageData['user'];
 
-	const focus = (node) => node.focus();
+	const focus = (node: HTMLElement) => node.focus();
 
 	let searchOpen = false;
 	let _searchValue = '';
@@ -21,12 +22,12 @@
 		$searchValue = new RegExp(_searchValue, 'i');
 	}
 
-	function scale(node, { delay = 0, duration = 400 }) {
+	function scale(node: HTMLElement, { delay = 0, duration = 400 }) {
 		const o = parseFloat(getComputedStyle(node).width);
 		return {
 			delay,
 			duration,
-			css: (t) => `width: ${t * o}px`
+			css: (t: number) => `width: ${t * o}px`
 		};
 	}
 	const closeSearch = () => {
@@ -79,6 +80,7 @@
 
 			<ul>
 				<li class:active={$page.url.pathname === '/'}><a href="/">Members</a></li>
+
 				{#if user.roles.includes('board')}
 					<li class:active={$page.url.pathname === '/create'}>
 						<a href="/create">Create</a>
@@ -90,9 +92,11 @@
 						<a href="/changes">Changes</a>
 					</li>
 				{/if}
+
 				<li class:active={$page.url.pathname === '/self'}>
 					<a href="/self">{user.name}</a>
 				</li>
+
 				<li class:active={$page.url.pathname === '/logout'}>
 					<form action="/auth?/logout" method="post">
 						<button>Logout</button>
@@ -119,7 +123,8 @@
 		--background: rgba(255, 255, 255, 0.7);
 	}
 
-	nav a {
+	nav a,
+	nav li button {
 		display: flex;
 		height: 100%;
 		align-items: center;
@@ -128,9 +133,16 @@
 		font-weight: 700;
 		font-size: 0.8rem;
 		text-transform: uppercase;
-		letter-spacing: 10%;
+		letter-spacing: 1.8px;
 		text-decoration: none;
 		transition: color 0.2s linear;
+	}
+	nav li form {
+		height: 100%;
+	}
+	nav li button {
+		margin: 0;
+		background: none;
 	}
 
 	.search {

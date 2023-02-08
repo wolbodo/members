@@ -23,9 +23,10 @@
 
 	export let data: PageData;
 	export let name;
-	export let isBoard = false;
 
-	$: ({ GetPersonForEdit } = data);
+	$: ({ GetPersonForEdit, user } = data);
+	$: isBoard = user?.roles.includes('board');
+
 	let edit: boolean;
 	// let form, edit, error;
 
@@ -68,19 +69,19 @@
 	{:else}
 		{@const person = $GetPersonForEdit.data.auth_person[0]}
 		<form action="?/edit" method="POST">
-			<!-- {#if isBoard} -->
-			<button
-				type="button"
-				class:edit
-				class="icon"
-				on:click={(e) => {
-					console.log('edit', edit);
-					edit = !edit;
-				}}
-			>
-				{edit ? 'close' : 'mode_edit'}
-			</button>
-			<!-- {/if} -->
+			{#if isBoard}
+				<button
+					type="button"
+					class:edit
+					class="icon"
+					on:click={(e) => {
+						console.log('edit', edit);
+						edit = !edit;
+					}}
+				>
+					{edit ? 'close' : 'mode_edit'}
+				</button>
+			{/if}
 
 			<Input name="name" value={person.name} class="wide" readOnly={!edit} required />
 			<Input name="firstname" value={person.firstname} readOnly={!edit} />

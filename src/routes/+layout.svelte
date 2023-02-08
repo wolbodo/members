@@ -29,9 +29,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-	$: ({
-		__houdini__session__: { user }
-	} = data);
+	$: ({ user } = data);
 </script>
 
 <Header {user} />
