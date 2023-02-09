@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
 	import { writable } from 'svelte/store';
 
-	export const filterFields = (search: string, ...fields: string[]) =>
+	export const filterFields = (search: RegExp, ...fields: (string | undefined)[]) =>
 		fields.some((field) => field && field.match(search));
 	export const searchValue = writable(new RegExp('', 'i'));
 </script>

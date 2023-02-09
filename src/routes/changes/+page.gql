@@ -1,0 +1,14 @@
+query History {
+	history: auth_history(order_by: { timestamp: desc }) {
+		timestamp
+		new_values
+		old_values
+		role
+		author {
+			name
+		}
+		person {
+			name
+		}
+	}
+}
