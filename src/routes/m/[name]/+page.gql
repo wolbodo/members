@@ -1,4 +1,5 @@
-query PersonForEdit($name: String, $isBoard: Boolean = false) {
+query PersonForEdit($name: String, $isBoard: Boolean = false, $isSelf: Boolean = false)
+@cache(policy: NetworkOnly) {
 	auth_person(where: { name: { _ilike: $name } }, limit: 1) {
 		name
 		firstname
@@ -13,9 +14,11 @@ query PersonForEdit($name: String, $isBoard: Boolean = false) {
 		id
 		created
 		modified
-		...RoleSelector
+
+		...PersonRoles
 
 		bankaccount @include(if: $isBoard)
+		bankaccount @include(if: $isSelf)
 		key_code @include(if: $isBoard)
 	}
 }

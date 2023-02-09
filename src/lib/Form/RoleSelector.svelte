@@ -4,32 +4,30 @@
 
 	import {
 		graphql,
-		query,
-		mutation,
 		fragment,
-		RoleSelector,
-		StopRole,
-		CreateRole,
-		AllRolesForOptions
+		type PersonRoles,
+		type PersonRoles$data,
+		PersonForEditStore
 	} from '$houdini';
 
-	export let roles;
-	export let personId: number;
-	export let refetch;
+	export let person: PersonRoles;
 	export let readOnly: boolean = false;
-	export let options = [];
+	export let refetch: () => void;
+	// export let options = [];
 
-	const { data: rolesData } = query<AllRolesForOptions>(graphql`
-		query AllRolesForOptions {
-			auth_person_role(distinct_on: role) {
+	$: allRoles = graphql(`
+		query AllRoles {
+			roles: auth_person_role(distinct_on: role) {
 				role
+				id
 			}
 		}
 	`);
 
-	const data = fragment<RoleSelector>(
+	$: data = fragment(
+		person,
 		graphql`
-			fragment RoleSelector on auth_person {
+			fragment PersonRoles on auth_person {
 				roles {
 					id
 					role
@@ -37,23 +35,28 @@
 					valid_till
 				}
 			}
-		`,
-		roles
+		`
 	);
-	const stopRole = mutation<StopRole>(graphql`
+
+	$: if (!readOnly) {
+		allRoles.fetch();
+	}
+
+	const stopRole = graphql(`
 		mutation StopRole($id: Int!) {
 			update_auth_person_role_by_pk(pk_columns: { id: $id }, _set: { valid_till: "NOW()" }) {
 				id
 			}
 		}
 	`);
-	const createRole = mutation<CreateRole>(graphql`
+	const createRole = graphql(`
 		mutation CreateRole($personId: Int!, $role: String!) {
 			insert_auth_person_role_one(object: { person_id: $personId, role: $role }) {
 				id
 			}
 		}
 	`);
+	$: ({ roles } = $data || ({} as PersonRoles$data));
 
 	$: currentRoles = roles
 		? roles
@@ -65,17 +68,19 @@
 				.filter(({ valid_till }) => valid_till)
 				.sort(({ valid_from: a }, { valid_from: b }) => b - a)
 		: [];
-	$: possibleRoles = $rolesData?.auth_person_role.filter(
+	$: possibleRoles = $allRoles.data?.roles.filter(
 		({ role }) => !currentRoles.find((currentRole) => currentRole.role === role)
 	);
-	// $: possibleRoles = $rolesData?.auth_person_role.filter((opt) => !currentRoles
-	// 							.map(({ role }) => role)
-	// 							.includes(opt) && opt.match(newRole))
 
-	let value;
+	let roleSelect: string;
 	async function handleSelect(event) {
-		await createRole({ personId, role: event.detail.value.toLowerCase() });
-		value = undefined;
+		const role = event.detail.value.toLowerCase();
+
+		// Check for duplicates
+		if (!currentRoles.some((currentRole) => role === currentRole.role)) {
+			await createRole.mutate({ personId: person.id, role });
+		}
+		roleSelect = '';
 
 		await refetch();
 	}
@@ -83,10 +88,11 @@
 
 <section class="wide">
 	<label>Roles</label>
+
 	{#if !readOnly}
 		<Select
 			items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
-			bind:value
+			bind:value={roleSelect}
 			on:select={handleSelect}
 			isCreatable
 		/>
@@ -102,7 +108,7 @@
 						<button
 							type="button"
 							on:click={async () => {
-								await stopRole({ id: role.id });
+								await stopRole.mutate({ id: role.id });
 								await refetch();
 							}}>Stop</button
 						>
@@ -111,6 +117,7 @@
 			{:else}
 				<li>No current roles</li>
 			{/each}
+
 			{#if pastRoles.length}
 				<li>Past roles:</li>
 				{#each pastRoles as { role, valid_from, valid_till }}
