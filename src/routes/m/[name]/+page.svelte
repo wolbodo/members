@@ -1,20 +1,3 @@
-<!-- <script lang="ts" context="module">
-	export function onLoad({ params, session }) {
-		return {
-			name: params.name,
-			isBoard: session.user.roles.includes('board')
-		};
-	}
-	export function GetPersonForEditVariables({ params, session }) {
-		const isBoard = session.user.roles.includes('board');
-		session.currentRole = isBoard ? 'board' : 'member';
-
-		return {
-			name: params.name,
-			isBoard
-		};
-	}
-</script> -->
 <script lang="ts">
 	import type { PageData } from './$houdini';
 	import { datetime } from '$lib/format';
@@ -24,41 +7,9 @@
 
 	$: ({ PersonForEdit, user } = data);
 	$: isBoard = user?.roles.includes('board');
+	$: isSelf = parseInt(user.id) === $PersonForEdit.data?.auth_person[0].id;
 
 	let edit: boolean;
-	// let form, edit, error;
-
-	// const { data, refetch } = query<PersonForEdit>(graphql`
-
-	// `);
-	// $: [person] = $data.auth_person;
-	// const hasPropertyChanged = ([name, value]): boolean =>	{
-	// 	if (value === "") {
-	// 		// If the property stays 'empty'
-	// 		return !!person[name]
-	// 	}
-	// 	return person[name] !== value
-	// }
-
-	// const submit = async (e) => {
-	// 	e.preventDefault();
-
-	// 	const formData = new FormData(form);
-	// 	const entries = formData.entries();
-	// 	const data = Object.fromEntries(
-	// 		Array.from(entries).filter(hasPropertyChanged)
-	// 	);
-	// 	console.log('Should update person', person, formData, Array.from(entries), data);
-
-	// 	try {
-	// 		const result = await editPerson({ id: person.id, data });
-	// 		console.log('Added', data, 'got', result);
-	// 		edit = false;
-	// 	} catch (err) {
-	// 		error = err;
-	// 		console.log('err', err);
-	// 	}
-	// };
 </script>
 
 <content>
@@ -66,17 +17,10 @@
 		<p>Loading....</p>
 	{:else}
 		{@const person = $PersonForEdit.data.auth_person[0]}
+
 		<form action="?/edit" method="POST">
-			{#if isBoard}
-				<button
-					type="button"
-					class:edit
-					class="icon"
-					on:click={(e) => {
-						console.log('edit', edit);
-						edit = !edit;
-					}}
-				>
+			{#if isBoard || isSelf}
+				<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
 					{edit ? 'close' : 'mode_edit'}
 				</button>
 			{/if}
@@ -93,17 +37,13 @@
 			<Input name="country" value={person.country} readOnly={!edit} />
 
 			<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
-			<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit} />
+			<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit && isBoard} />
 
 			<Input name="password" type="password" readOnly={!edit} />
-			<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
+			<Input name="note" value={person.note} type="textarea" readOnly={!edit && isBoard} />
 
-			<!-- <RoleSelector
-				personId={person.id}
-				roles={person.roles}
-				refetch={() => refetch({ name, isBoard })}
-				readOnly={!edit}
-			/> -->
+			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readOnly={!edit} /> -->
+			<RoleSelector {person} readOnly={!edit} refetch={() => PersonForEdit.fetch()} />
 
 			<section>
 				<Input name="id" value={person.id} type="hidden" readOnly />

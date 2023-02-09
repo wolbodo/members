@@ -93,8 +93,8 @@
 					</li>
 				{/if}
 
-				<li class:active={$page.url.pathname === '/self'}>
-					<a href="/self">{user.name}</a>
+				<li class:active={$page.url.pathname === `/m/${user.name}`}>
+					<a href="/m/{user.name}">{user.name}</a>
 				</li>
 
 				<li class:active={$page.url.pathname === '/logout'}>
