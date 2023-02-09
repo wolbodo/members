@@ -32,7 +32,7 @@
 				</button>
 			{/if}
 
-			<Input name="name" value={person.name} class="wide" readOnly={!edit} required />
+			<Input name="name" value={person.name} class="wide" readOnly={!edit || !isBoard} required />
 			<Input name="firstname" value={person.firstname} readOnly={!edit} />
 			<Input name="lastname" value={person.lastname} readOnly={!edit} />
 			<Input name="email" value={person.email} type="email" readOnly={!edit} required />
@@ -54,7 +54,7 @@
 			{/if}
 
 			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readOnly={!edit} /> -->
-			<RoleSelector {person} readOnly={!edit} refetch={() => PersonForEdit.fetch()} />
+			<RoleSelector {person} readOnly={!edit || !isBoard} refetch={() => PersonForEdit.fetch()} />
 
 			<section>
 				<Input name="id" value={person.id} type="hidden" readOnly />
