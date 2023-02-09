@@ -66,7 +66,8 @@ export const load: PageServerLoad = async (event) => {
 	return {
 		variables: {
 			name: event.params.name,
-			isBoard: event.locals.user.roles.includes('board')
+			isBoard: event.locals.user.roles.includes('board'),
+			isSelf: event.params.name === event.locals.user.name
 		}
 	};
 };

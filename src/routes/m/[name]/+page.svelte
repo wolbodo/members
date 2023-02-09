@@ -37,10 +37,14 @@
 			<Input name="country" value={person.country} readOnly={!edit} />
 
 			<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
-			<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit && isBoard} />
+			{#if isBoard}
+				<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit} />
+			{/if}
 
 			<Input name="password" type="password" readOnly={!edit} />
-			<Input name="note" value={person.note} type="textarea" readOnly={!edit && isBoard} />
+			{#if isBoard}
+				<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
+			{/if}
 
 			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readOnly={!edit} /> -->
 			<RoleSelector {person} readOnly={!edit} refetch={() => PersonForEdit.fetch()} />
