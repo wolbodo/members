@@ -82,9 +82,6 @@
 				<li class:active={$page.url.pathname === '/'}><a href="/">Members</a></li>
 
 				{#if user.roles.includes('board')}
-					<li class:active={$page.url.pathname === '/create'}>
-						<a href="/create">Create</a>
-					</li>
 					<li class:active={$page.url.pathname === '/mail'}>
 						<a href="/mail">Mail</a>
 					</li>

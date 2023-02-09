@@ -13,9 +13,16 @@
 </script>
 
 <content>
-	{#if !$PersonForEdit.data}
-		<p>Loading....</p>
-	{:else}
+	{#if $PersonForEdit.fetching}
+		<p>Loading...</p>
+	{:else if $PersonForEdit.errors}
+		<h2>Error</h2>
+		<ul>
+			{#each $PersonForEdit.errors as error}
+				<li>{error.message}</li>
+			{/each}
+		</ul>
+	{:else if $PersonForEdit.data}
 		{@const person = $PersonForEdit.data.auth_person[0]}
 
 		<form action="?/edit" method="POST">
@@ -68,6 +75,8 @@
 				</section>
 			{/if}
 		</form>
+	{:else}
+		<p>No data</p>
 	{/if}
 </content>
 
