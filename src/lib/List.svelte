@@ -1,13 +1,3 @@
-<!-- <script context="module" lang="ts">
-	// This is the function for the AllItems query.
-	// Query variable functions must be named <QueryName>Variables.
-	export function AllPeopleVariables({ props }): AllPeople$input {
-		return {
-			where: props.where
-		};
-	}
-</script> -->
-
 <script lang="ts">
 	// import { query, graphql, AllPeople } from '$houdini';
 	import type { AllPeople$result } from '$houdini';
@@ -16,26 +6,8 @@
 	import Table from '$lib/Table.svelte';
 	import { searchValue, filterFields } from '$lib/Header/index.svelte';
 
-	export let people: AllPeople$result['people'] = []
+	export let people: AllPeople$result['people'] = [];
 	export let fetching: boolean = true;
-
-	// // load the items
-	// const { data, loading } = query<AllPeople>(graphql`
-	// 	query AllPeople($where: auth_person_bool_exp = {}) {
-	// 		people: auth_person(order_by: { name: asc }, where: $where) {
-	// 			name
-	// 			email
-	// 			phone
-	// 			address
-	// 			city
-	// 			firstname
-	// 			lastname
-	// 			roles(where: { valid_till: { _is_null: true }, valid_from: { _lte: "NOW()" } }) {
-	// 				role
-	// 			}
-	// 		}
-	// 	}
-	// `);
 
 	type Column = {
 		label: string;
@@ -86,7 +58,7 @@
 					{#each columns as { href, format }}
 						<td>
 							{#if href}
-								<a  href={href(person)}>
+								<a href={href(person)}>
 									{format(person) ?? ''}
 								</a>
 							{:else}
