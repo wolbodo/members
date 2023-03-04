@@ -1,0 +1,12 @@
+query AllMail {
+	mails: mail_entries(order_by: { created: desc }, limit: 100) {
+		id
+		status
+		person {
+			name
+			email
+		}
+		template
+		created
+	}
+}
