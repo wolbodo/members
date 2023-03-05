@@ -1,10 +1,14 @@
 <script lang="ts">
 	import type { PageData } from './$houdini';
 	import List from '$lib/List.svelte';
+	import Toggle from '$lib/Toggle.svelte';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
 	export let user: PageData['user'];
 
+	$: showAllPeople = $page.url.searchParams.has('all');
 	$: ({ AllPeople, user } = data);
 </script>
 
@@ -12,21 +16,21 @@
 	<title>Home</title>
 </svelte:head>
 
-{#if user.roles.includes('board')}
-	<section>
+<section>
+	{#if user.roles.includes('board')}
 		<a class="button" href="/m/new">Create</a>
-	</section>
-{/if}
+	{/if}
 
+	<Toggle
+		checked={showAllPeople}
+		on:change={(e) => {
+			if (e.target && e.target instanceof HTMLInputElement)
+				goto(`?${e.target.checked ? 'all' : ''}`);
+		}}>{showAllPeople ? 'Show only members' : 'Show all people'}</Toggle
+	>
+</section>
 <List people={$AllPeople.data?.people} fetching={$AllPeople.fetching} />
 
-<!-- where={{
-		roles: {
-			_or: [{ valid_till: { _gte: 'NOW()' } }, { valid_till: { _is_null: true } }],
-			valid_from: { _lte: 'NOW()' },
-			role: { _eq: 'member' }
-		}
-	}} -->
 <style>
 	section a {
 		display: inline-block;
