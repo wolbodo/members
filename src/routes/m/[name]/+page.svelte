@@ -44,11 +44,13 @@
 			<Input name="country" value={person.country} readOnly={!edit} />
 
 			<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
+
 			{#if isBoard}
 				<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit} />
 			{/if}
 
 			<Input name="password" type="password" readOnly={!edit} />
+
 			{#if isBoard}
 				<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
 			{/if}

@@ -14,7 +14,7 @@
 
 {#if user.roles.includes('board')}
 	<section>
-		<a class="button" href="/create">Create</a>
+		<a class="button" href="/m/new">Create</a>
 	</section>
 {/if}
 
