@@ -26,7 +26,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/auth'
+				Location: '/auth/login'
 			}
 		});
 	}

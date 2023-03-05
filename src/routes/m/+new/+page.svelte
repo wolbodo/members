@@ -8,6 +8,7 @@
 
 <script lang="ts">
 	import type { ActionData } from './$types';
+	import { enhance } from '$app/forms';
 	import { Input } from '$lib/Form';
 
 	export let form: ActionData;
@@ -24,7 +25,7 @@
 		<!-- this message is ephemeral; it exists because the page was rendered in       response to a form submission. it will vanish if the user reloads -->
 		<p>Successfully created user, {form?.data?.person?.name}</p>
 	{:else}
-		<form method="POST">
+		<form method="POST" use:enhance>
 			<Input name="name" value={form?.variables?.person.name || ''} class="wide" required />
 			<Input name="firstname" value={form?.variables?.person.firstname || ''} />
 			<Input name="lastname" value={form?.variables?.person.lastname || ''} />

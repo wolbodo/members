@@ -1,4 +1,4 @@
-import type { Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 import { graphql, type auth_person_insert_input } from '$houdini';
 
 const createPerson = graphql(`
@@ -14,6 +14,12 @@ export const actions: Actions = {
 	default: async (event) => {
 		const data = await event.request.formData();
 		const person: auth_person_insert_input = Object.fromEntries(data.entries());
-		return await createPerson.mutate({ person }, { event });
+
+		const result = await createPerson.mutate({ person }, { event });
+
+		if (result.data) {
+			throw redirect(302, `/m/${result.data.person?.name}`);
+		}
+		return result;
 	}
 };
