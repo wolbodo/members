@@ -13,17 +13,16 @@
 		return {};
 	}
 </script> -->
-
 <script lang="ts">
-  import type { ActionData } from './$types';
+	import type { ActionData } from '../$types';
 
-  export let form: ActionData;
+	export let form: ActionData;
 
-	import {  page } from '$app/stores';
+	import { page } from '$app/stores';
 	// import { enhance } from '$lib/Form';
 
 	// let error;
-	
+
 	const redirect = $page.url.searchParams.get('redirect');
 </script>
 
@@ -33,9 +32,9 @@
 	<p>After logging in you will be redirected to <a href={redirect}>{redirect}</a></p>
 {/if}
 
-<form method="post" action="?/login">
+<form method="post" action="/auth?/login">
 	<label for="name">Name or email</label>
-	<input id="name" name="name" placeholder="Use your nickname" value={form?.name ?? ''}/>
+	<input id="name" name="name" placeholder="Use your nickname" value={form?.name ?? ''} />
 
 	<label for="password">Password</label>
 	<input id="password" name="password" type="password" />
