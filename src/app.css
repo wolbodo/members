@@ -3,15 +3,17 @@
 @import '@fontsource/rubik';
 @import '@fontsource/material-icons-outlined';
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
 	box-sizing: border-box;
 }
 * {
 	margin: 0;
 }
 :root {
-	--font: "Rubik", 'Open Sans', 'Helvetica Neue', sans-serif;
-	--font-heading: "Righteous";
+	--font: 'Rubik', 'Open Sans', 'Helvetica Neue', sans-serif;
+	--font-heading: 'Righteous';
 	--font-mono: 'Fira Mono', monospace;
 
 	/* Danger */
@@ -45,7 +47,7 @@
 	--white: #e8ebf0;
 	--pure-white: #f9fbff;
 
-	--primary-color: var(--info-3);
+	--primary-color: var(--primary-3);
 	--accent-color: var(--danger-3);
 	--text-color: var(--neutral-1);
 	--column-width: 42rem;
@@ -54,7 +56,8 @@
 	font-family: var(--font);
 }
 
-html, body {
+html,
+body {
 	height: 100%;
 }
 body {
@@ -62,22 +65,28 @@ body {
 	-webkit-font-smoothing: antialiased;
 	min-height: 100vh;
 	background-color: var(--primary-color);
-	background: linear-gradient(
-		180deg,
-		var(--neutral-5) 20%,
-		var(--primary-5) 90%
-	);
+	background: linear-gradient(180deg, var(--neutral-5) 20%, var(--primary-5) 90%);
 }
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
 	display: block;
 	max-width: 100%;
 }
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	overflow-wrap: break-word;
 }
-  
+
 .icon {
-	font-family: "Material Icons Outlined";
+	font-family: 'Material Icons Outlined';
 	text-transform: none;
 }
 
@@ -106,7 +115,12 @@ body::before {
 	overflow: auto;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	font-family: var(--font-heading);
 }
 
@@ -150,41 +164,39 @@ pre {
 	color: var(--text-color);
 }
 
-
 input,
 select,
 textarea {
-  font-family: inherit;
-  font-size: inherit;
-  font: inherit;
-  max-width: 400px;
-  width: 100%;
-  padding: .5rem;
-  margin: .5rem;
-  box-sizing: border-box;
-  border: 1px solid var(--info-5);
-  box-shadow: 0 0 0 4px var(--neutral-4);
-  border-radius: 4px;
-  transition: all 150ms ease;
-  background: var(--pure-white);
+	font-family: inherit;
+	font-size: inherit;
+	font: inherit;
+	max-width: 400px;
+	width: 100%;
+	padding: 0.5rem;
+	margin: 0.5rem;
+	box-sizing: border-box;
+	border: 1px solid var(--info-5);
+	box-shadow: 0 0 0 4px var(--neutral-4);
+	border-radius: 4px;
+	transition: all 150ms ease;
+	background: var(--pure-white);
 }
 
 select {
-  height: 45px;
+	height: 45px;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  outline: none;
-  border-color: var(--info-5);
+	outline: none;
+	border-color: var(--info-5);
 }
 
 input:disabled,
 select:disabled,
-textarea:disabled
- {
-  color: #ccc;
+textarea:disabled {
+	color: #ccc;
 }
 
 input[readonly],
@@ -193,54 +205,53 @@ textarea[readonly] {
 	box-shadow: none;
 }
 
-
-button,a.button {
-  color: #fff;
-  background-color: var(--primary-3);
-  border: none;
-  text-transform: uppercase;
-  letter-spacing: 1.8px;
-  outline: none;
-  border-radius: 4px;
-  display: block;
-  margin-top: 12px;
-  line-height: 1.8;
-  font-size: 12px;
-  padding: 10px 18px;
-  transition: all 150ms ease;
-  cursor: pointer;
+button,
+a.button {
+	color: #fff;
+	background-color: var(--primary-3);
+	border: none;
+	text-transform: uppercase;
+	letter-spacing: 1.8px;
+	outline: none;
+	border-radius: 4px;
+	display: block;
+	margin-top: 12px;
+	line-height: 1.8;
+	font-size: 12px;
+	padding: 10px 18px;
+	transition: all 150ms ease;
+	cursor: pointer;
 }
-button:disabled,a.button:disabled {
-  background-color: var(--neutral-4);
+button:disabled,
+a.button:disabled {
+	background-color: var(--neutral-4);
 }
 button:focus:not(:disabled),
 a.button:focus:not(:disabled) {
-  box-shadow: 0 0 0 4px var(--info-3);
+	box-shadow: 0 0 0 4px var(--info-3);
 }
 
 button:hover:not(:disabled),
 a.button:hover:not(:disabled) {
-  background-color: var(--info-4);
+	background-color: var(--info-4);
 }
 
-button.danger,a.button.danger {
+button.danger,
+a.button.danger {
 	background-color: var(--danger-3);
 }
 
-
-
-
 label {
-  display: block;
-  color: var(--text-color);
-  font-weight: bold;
-  margin-top: 20px;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  font-size: 12px;
-  letter-spacing: 1.9px;
-  line-height: 2;
-	margin: .5rem;
+	display: block;
+	color: var(--text-color);
+	font-weight: bold;
+	margin-top: 20px;
+	margin-bottom: 4px;
+	text-transform: uppercase;
+	font-size: 12px;
+	letter-spacing: 1.9px;
+	line-height: 2;
+	margin: 0.5rem;
 	margin-bottom: 0;
 }
 label + input {
@@ -249,12 +260,11 @@ label + input {
 
 /* used for errors */
 small {
-  display: block;
-  font-size: 12px;
-  color: var(--accent-color);
-  margin-top: 10px;
+	display: block;
+	font-size: 12px;
+	color: var(--accent-color);
+	margin-top: 10px;
 }
-
 
 button:focus:not(:focus-visible) {
 	outline: none;
@@ -265,4 +275,3 @@ button:focus:not(:focus-visible) {
 		font-size: 2.4rem;
 	}
 }
-
