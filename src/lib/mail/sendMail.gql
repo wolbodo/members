@@ -1,0 +1,5 @@
+mutation SendMail($template: String!, $personId: Int!, $data: jsonb = {}) {
+	insert_mail_entries_one(object: { data: $data, template: $template, person_id: $personId }) {
+		id
+	}
+}

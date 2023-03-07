@@ -1,7 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
-import { GetPasswordStore } from '$houdini';
+import { GetPasswordStore, PersonByEmailStore } from '$houdini';
+import { send } from '$lib/mail';
 
 import { serverToken, createToken } from '$lib/jwt';
 import type { Actions } from './$types';
@@ -28,15 +29,18 @@ export const actions = {
 
 		const token = serverToken('login');
 		const store = new GetPasswordStore();
-		const {
-			data: {
-				auth_person: [person]
-			}
-		} = await store.fetch({
+		const result = await store.fetch({
 			event,
 			variables: { name },
 			metadata: { token }
 		});
+
+		if (!result.data) {
+			return fail(400, { name, incorrect: true });
+		}
+		const {
+			auth_person: [person]
+		} = result.data;
 
 		if (person && person.password && person.roles.length) {
 			const ok = await bcrypt.compare(password, person.password);
@@ -72,5 +76,39 @@ export const actions = {
 		event.cookies.delete('token', tokenCookieOptions);
 
 		throw redirect(302, '/');
+	},
+	forgot: async (event) => {
+		const data = await event.request.formData();
+		const email = data.get('email');
+
+		if (!email) {
+			throw fail(400);
+		}
+		const store = new PersonByEmailStore();
+
+		const result = await store.fetch({
+			event,
+			variables: { email },
+			metadata: { token: serverToken('password-forgot') }
+		});
+		if (!result.data?.person[0]) {
+			console.log(`Reset failed: email address '${email}' unknown`);
+			return;
+		}
+		const {
+			person: [person]
+		} = result.data;
+		const token = createToken(
+			{
+				id: person.id
+			},
+			{
+				subject: 'password-reset',
+				expiresIn: '30 minutes'
+			}
+		);
+
+		console.log(`Reset mail: to ${person.name}(${email})`);
+		send(person.id, 'password-reset', { token });
 	}
 } satisfies Actions;

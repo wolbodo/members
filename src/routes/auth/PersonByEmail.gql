@@ -1,0 +1,6 @@
+query PersonByEmail($email: String!) {
+	person: auth_person(where: { email: { _ilike: $email } }) {
+		id
+		name
+	}
+}
