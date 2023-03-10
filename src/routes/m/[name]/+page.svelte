@@ -2,6 +2,7 @@
 	import type { PageData } from './$houdini';
 	import { datetime } from '$lib/format';
 	import { Input, RoleSelector } from '$lib/Form';
+	import { enhance } from '$app/forms';
 
 	export let data: PageData;
 
@@ -25,7 +26,7 @@
 	{:else if $PersonForEdit.data}
 		{@const person = $PersonForEdit.data.auth_person[0]}
 
-		<form action="?/edit" method="POST">
+		<form action="?/edit" method="POST" use:enhance>
 			{#if isBoard || isSelf}
 				<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
 					{edit ? 'close' : 'mode_edit'}

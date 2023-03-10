@@ -16,6 +16,7 @@ const ALL_MEMBERS: auth_person_bool_exp = {
 const ALL_PEOPLE: auth_person_bool_exp = {};
 
 export const _AllPeopleVariables: AllPeopleVariables = (event) => {
+	console.log('Query vars');
 	const queryAllPeople = event.url.searchParams.has('all');
 	// make sure we recognize the value
 	// if (!['active', 'completed'].includes(event.url.searchParams)) {

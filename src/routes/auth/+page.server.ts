@@ -27,6 +27,7 @@ export const actions = {
 		const name = data.get('name');
 		const password = data.get('password');
 
+		console.log('Fetching', name, password);
 		const token = serverToken('login');
 		const store = new GetPasswordStore();
 		const result = await store.fetch({
@@ -34,6 +35,7 @@ export const actions = {
 			variables: { name },
 			metadata: { token }
 		});
+		console.log(result);
 
 		if (!result.data) {
 			return fail(400, { name, incorrect: true });
@@ -42,6 +44,7 @@ export const actions = {
 			auth_person: [person]
 		} = result.data;
 
+		console.log('person', person);
 		if (person && person.password && person.roles.length) {
 			const ok = await bcrypt.compare(password, person.password);
 

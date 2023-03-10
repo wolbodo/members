@@ -1,6 +1,9 @@
 import { setSession } from '$houdini';
 import type { Handle, RequestEvent } from '@sveltejs/kit';
 import { verifyToken } from '$lib/jwt';
+import { worker as serverWorker } from './mocks/server';
+
+serverWorker?.listen();
 
 const authenticateUser = async (event: RequestEvent) => {
 	const token = event.cookies.get('token');
