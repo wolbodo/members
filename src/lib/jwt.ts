@@ -1,3 +1,4 @@
+import { AUTH_JWT_SECRET_KEY as SECRET } from '$env/static/private';
 import jwt from 'jsonwebtoken';
 
 type JWTSignOptions = {
@@ -29,8 +30,6 @@ export function createToken(
 	token: unknown,
 	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: JWTSignOptions
 ): string {
-	const SECRET = process.env['AUTH_JWT_SECRET_KEY'];
-
 	return jwt.sign(token, SECRET, {
 		subject,
 		expiresIn,
@@ -44,8 +43,6 @@ export function parseToken(token: string): ParsedToken {
 }
 
 export async function verifyToken(token: string): Promise<ParsedToken> {
-	const SECRET = process.env['AUTH_JWT_SECRET_KEY'];
-
 	return await jwt.verify(token, SECRET);
 }
 
