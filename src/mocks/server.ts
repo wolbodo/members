@@ -1,10 +1,11 @@
 import { setupServer, type SetupServer } from 'msw/node';
 import { handlers } from './handlers';
-import { browser, dev } from '$app/environment';
-import { env } from '$env/dynamic/public'
+import { browser } from '$app/environment';
+import { PUBLIC_MOCKED } from '$env/static/public'
 
 let worker: SetupServer | null;
-if (!browser && dev && !env.PUBLIC_DOCKER) {
+
+if (!browser && PUBLIC_MOCKED === 'true') {
 	worker = setupServer(...handlers);
 } else {
 	worker = null;
