@@ -1,4 +1,4 @@
-import { graphql, PersonForEditStore } from '$houdini';
+import { graphql, PersonForEditStore, query } from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
@@ -46,9 +46,14 @@ export const actions: Actions = {
 		const {
 			auth_person: [person]
 		} = queryData;
-
+		console.log(person)
 		const formData = await event.request.formData();
+		console.log(Array.from(formData.entries()), Array.from(formData.entries()).filter(([key, value]) => {
+			if (key === 'password' && value === '') return false;
+			if (key === 'id') return true;
 
+			if (person[key as keyof typeof person] !== value) return true;
+		}))
 		const { id: userId, ...dirtyData } = Object.fromEntries(
 			Array.from(formData.entries()).filter(([key, value]) => {
 				if (key === 'password' && value === '') return false;
@@ -57,6 +62,7 @@ export const actions: Actions = {
 				if (person[key as keyof typeof person] !== value) return true;
 			})
 		);
+		console.log(userId, dirtyData)
 
 		return await mutation.mutate({ id: parseInt(userId as string), data: dirtyData }, { event });
 	}

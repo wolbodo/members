@@ -4,7 +4,7 @@
 	export let type: string = 'text';
 	export let value: unknown = null;
 	export let format: (value: unknown) => string = (value) => value as string;
-	export let readOnly: boolean = false;
+	export let readonly: boolean = false;
 
 	let _class: string | null = null;
 	export { _class as class };
@@ -16,19 +16,19 @@
 </script>
 
 <section class:changed class={_class}>
-	{#if value || !readOnly}
+	{#if !readonly || value}
 		{#if type !== 'hidden'}
 			<label for={name}>{label || name}</label>
 		{/if}
 
 		{#if type === 'textarea'}
-			<textarea id={name} {readOnly} {...$$props} on:change={() => (changed = true)} />
+			<textarea id={name} readOnly={readonly} {...$$props} on:change={() => (changed = true)} />
 		{:else if typeof type === 'string'}
 			<input
 				class:changed
 				value={value ? format(value) : ''}
 				id={name}
-				{readOnly}
+				readOnly={readonly}
 				{...$$props}
 				on:change={() => (changed = true)}
 			/>
