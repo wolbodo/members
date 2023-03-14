@@ -7,11 +7,10 @@
 		fragment,
 		type PersonRoles,
 		type PersonRoles$data,
-		PersonForEditStore
 	} from '$houdini';
 
 	export let person: PersonRoles;
-	export let readOnly: boolean = false;
+	export let readonly: boolean = false;
 	export let refetch: () => void;
 	// export let options = [];
 
@@ -38,7 +37,7 @@
 		`
 	);
 
-	$: if (!readOnly) {
+	$: if (!readonly) {
 		allRoles.fetch();
 	}
 
@@ -89,7 +88,7 @@
 <section class="wide">
 	<label>Roles</label>
 
-	{#if !readOnly}
+	{#if !readonly}
 		<Select
 			items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
 			bind:value={roleSelect}
@@ -104,7 +103,7 @@
 				<li>
 					<span>{role.role} since {formatDate(role.valid_from)}</span>
 
-					{#if !readOnly}
+					{#if !readonly}
 						<button
 							type="button"
 							on:click={async () => {

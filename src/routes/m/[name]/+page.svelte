@@ -33,34 +33,34 @@
 				</button>
 			{/if}
 
-			<Input name="name" value={person.name} class="wide" readOnly={!edit || !isBoard} required />
-			<Input name="firstname" value={person.firstname} readOnly={!edit} />
-			<Input name="lastname" value={person.lastname} readOnly={!edit} />
-			<Input name="email" value={person.email} type="email" readOnly={!edit} required />
-			<Input name="phone" value={person.phone} type="phone" readOnly={!edit} />
+			<Input name="name" value={person.name} class="wide" readonly={!edit || !isBoard} required />
+			<Input name="firstname" value={person.firstname} readonly={!edit} />
+			<Input name="lastname" value={person.lastname} readonly={!edit} />
+			<Input name="email" value={person.email} type="email" readonly={!edit} required />
+			<Input name="phone" value={person.phone} type="phone" readonly={!edit} />
 
-			<Input name="address" value={person.address} readOnly={!edit} />
-			<Input name="zipcode" value={person.zipcode} readOnly={!edit} />
-			<Input name="city" value={person.city} readOnly={!edit} />
-			<Input name="country" value={person.country} readOnly={!edit} />
+			<Input name="address" value={person.address} readonly={!edit} />
+			<Input name="zipcode" value={person.zipcode} readonly={!edit} />
+			<Input name="city" value={person.city} readonly={!edit} />
+			<Input name="country" value={person.country} readonly={!edit} />
 
-			<Input name="bankaccount" value={person.bankaccount} readOnly={!edit} />
-
-			{#if isBoard}
-				<Input label="keycode" name="key_code" value={person.key_code} readOnly={!edit} />
-			{/if}
-
-			<Input name="password" type="password" readOnly={!edit} />
+			<Input name="bankaccount" value={person.bankaccount} readonly={!edit} />
 
 			{#if isBoard}
-				<Input name="note" value={person.note} type="textarea" readOnly={!edit} />
+				<Input label="keycode" name="key_code" value={person.key_code} readonly={!edit} />
 			{/if}
 
-			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readOnly={!edit} /> -->
-			<RoleSelector {person} readOnly={!edit || !isBoard} refetch={() => PersonForEdit.fetch()} />
+			<Input name="password" type="password" readonly={!edit} />
+
+			{#if isBoard}
+				<Input name="note" value={person.note} type="textarea" readonly={!edit} />
+			{/if}
+
+			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readonly={!edit} /> -->
+			<RoleSelector {person} readonly={!edit || !isBoard} refetch={() => PersonForEdit.fetch()} />
 
 			<section>
-				<Input name="id" value={person.id} type="hidden" readOnly />
+				<Input name="id" value={person.id} type="hidden" readonly />
 
 				<b>#{person.id}</b>
 				<p>created:{datetime(person.created)}</p>
@@ -95,10 +95,6 @@
 	}
 	button.edit {
 		background-color: var(--danger-3);
-	}
-	pre {
-		height: 10rem;
-		overflow: auto;
 	}
 	form {
 		display: grid;

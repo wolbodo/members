@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+		"build": "vite build",
+		"preview": "vite preview",
+		"test": "playwright test",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test:unit": "vitest",
+		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@playwright/test": "^1.31.2",
     "@sveltejs/adapter-node": "^1.2.1",
     "@sveltejs/kit": "^1.10.0",
     "@types/bcryptjs": "^2.4.2",
@@ -34,6 +37,7 @@
     "svelte-preprocess": "^4.10.7",
     "tslib": "^2.5.0",
     "typescript": "^4.9.5",
+    "vitest": "^0.29.2",
     "vite": "^4.1.4"
   },
   "dependencies": {

@@ -1,12 +1,11 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import houdini from 'houdini/vite';
 
-const config: UserConfig = {
-	server: {
-		host: '0.0.0.0'
-	},
-	plugins: [houdini(), sveltekit()]
-};
+export default defineConfig({
+	plugins: [houdini(), sveltekit()],
+	test: {
+		include: ['src/**/*.{test,spec}.{js,ts}']
+	}
+});
 
-export default config;
