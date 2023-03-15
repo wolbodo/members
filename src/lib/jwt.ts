@@ -1,20 +1,6 @@
 import { AUTH_JWT_SECRET_KEY as SECRET } from '$env/static/private';
 import jwt from 'jsonwebtoken';
 
-type JWTSignOptions = {
-	algorithm?: 'HS256' | 'RS256';
-	expiresIn?: string; // zeit/ms
-	notBefore?: string; // zeit/ms
-	audience?: string;
-	issuer?: string;
-	jwtid?: string;
-	subject: string;
-	noTimestamp?: string;
-	header?: string;
-	keyid?: string;
-	mutatePayload?: string;
-};
-
 type ParsedToken = {
 	email: string;
 	name: string;
@@ -26,9 +12,12 @@ type ParsedToken = {
 	sub: string;
 };
 
+type SignPayload = { id: string, name?: string, roles?: string[] }
+type SignOptions = Parameters<typeof jwt.sign>[2]
+
 export function createToken(
-	token: unknown,
-	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: JWTSignOptions
+	token: SignPayload,
+	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: SignOptions
 ): string {
 	return jwt.sign(token, SECRET, {
 		subject,
@@ -39,11 +28,11 @@ export function createToken(
 }
 
 export function parseToken(token: string): ParsedToken {
-	return jwt.decode(token);
+	return jwt.decode(token) as ParsedToken;
 }
 
 export async function verifyToken(token: string): Promise<ParsedToken> {
-	return await jwt.verify(token, SECRET);
+	return await jwt.verify(token, SECRET) as ParsedToken;
 }
 
 export function serverToken(username: string, id = -1, role = 'server'): string {
