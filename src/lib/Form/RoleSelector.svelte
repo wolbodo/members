@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Select from 'svelte-select';
-	import { formatDate } from '$lib/util';
+	import { formatDate } from '$lib/format';
 
 	import {
 		graphql,
