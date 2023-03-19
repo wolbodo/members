@@ -22,15 +22,17 @@
 		{/if}
 
 		{#if type === 'textarea'}
-			<textarea id={name} readOnly={readonly} {...$$props} on:change={() => (changed = true)} />
+			<textarea {...$$restProps} {name} id={name} {readonly} on:change={() => (changed = true)} />
 		{:else if typeof type === 'string'}
 			<input
+				id={name}
+				{name}
+				{type}
+				{readonly}
 				class:changed
 				value={value ? format(value) : ''}
-				id={name}
-				readOnly={readonly}
-				{...$$props}
 				on:change={() => (changed = true)}
+				{...$$restProps}
 			/>
 		{/if}
 	{/if}

@@ -1,4 +1,4 @@
-import { PersonByIdStore, EditPersonStore } from '$houdini';
+import { PersonByIdStore, EditPersonStore, type EditPerson$input } from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
@@ -23,14 +23,8 @@ export const actions: Actions = {
 		const {
 			auth_person: [person]
 		} = queryData;
-		console.log(person)
-		const formData = await event.request.formData();
-		console.log(Array.from(formData.entries()), Array.from(formData.entries()).filter(([key, value]) => {
-			if (key === 'password' && value === '') return false;
-			if (key === 'id') return true;
 
-			if (person[key as keyof typeof person] !== value) return true;
-		}))
+		const formData = await event.request.formData();
 		const { id: userId, ...dirtyData } = Object.fromEntries(
 			Array.from(formData.entries()).filter(([key, value]) => {
 				if (key === 'password' && value === '') return false;
@@ -38,12 +32,18 @@ export const actions: Actions = {
 
 				if (person[key as keyof typeof person] !== value) return true;
 			})
-		);
+		) as EditPerson$input;
 		console.log(userId, dirtyData)
 
 		const editPerson = new EditPersonStore()
 
-		return await editPerson.mutate({ id: parseInt(userId as string), data: dirtyData }, { event });
+		return await editPerson.mutate({
+			id: event.params.id,
+			data: dirtyData as EditPerson$input['data']
+		}, {
+			event,
+			metadata: { isBoard: true }
+		});
 	}
 };
 

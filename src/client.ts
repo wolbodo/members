@@ -10,9 +10,9 @@ export default new HoudiniClient({
 		};
 
 		// set hasura role
-		if (variables?.isBoard) {
+		if (variables?.isBoard || metadata?.isBoard) {
 			headers['X-Hasura-Role'] = 'board';
-		} else if (variables?.isSelf) {
+		} else if (variables?.isSelf || metadata?.isSelf) {
 			headers['X-Hasura-Role'] = 'self';
 		}
 
