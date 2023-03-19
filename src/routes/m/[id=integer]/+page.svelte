@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from './$houdini';
+	import type { PageData, ActionData } from './$types';
 	import { datetime } from '$lib/format';
 	import { Input, RoleSelector } from '$lib/Form';
 	import { enhance } from '$app/forms';
@@ -26,7 +26,17 @@
 	{:else if $PersonById.data}
 		{@const person = $PersonById.data.auth_person[0]}
 
-		<form action="?/edit" method="POST" use:enhance>
+		<form
+			action="?/edit"
+			method="POST"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					update();
+
+					if (result.type === 'success') edit = false;
+				};
+			}}
+		>
 			{#if isBoard || isSelf}
 				<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
 					{edit ? 'close' : 'mode_edit'}

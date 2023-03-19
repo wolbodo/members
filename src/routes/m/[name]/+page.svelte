@@ -26,7 +26,17 @@
 	{:else if $PersonByName.data}
 		{@const person = $PersonByName.data.auth_person[0]}
 
-		<form action="?/edit" method="POST" use:enhance>
+		<form
+			action="?/edit"
+			method="POST"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					update();
+
+					if (result.type === 'success') edit = false;
+				};
+			}}
+		>
 			{#if isBoard || isSelf}
 				<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
 					{edit ? 'close' : 'mode_edit'}

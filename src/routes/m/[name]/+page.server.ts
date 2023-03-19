@@ -21,15 +21,9 @@ export const actions: Actions = {
 		const {
 			auth_person: [person]
 		} = queryData;
-		console.log(person)
+
 		const formData = await event.request.formData();
 
-		console.log(Array.from(formData.entries()), Array.from(formData.entries()).filter(([key, value]) => {
-			if (key === 'password' && value === '') return false;
-			if (key === 'id') return true;
-
-			if (person[key as keyof typeof person] !== value) return true;
-		}))
 		const { id: userId, ...dirtyData } = Object.fromEntries(
 			Array.from(formData.entries()).filter(([key, value]) => {
 				if (key === 'password' && value === '') return false;
@@ -41,7 +35,13 @@ export const actions: Actions = {
 		console.log(userId, dirtyData)
 
 		const editPerson = new EditPersonStore()
-		return await editPerson.mutate({ id: parseInt(userId as string), data: dirtyData }, { event });
+		return await editPerson.mutate({
+			id: parseInt(userId as string),
+			data: dirtyData
+		}, {
+			event,
+			metadata: { isBoard: true }
+		});
 	}
 };
 
