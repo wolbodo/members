@@ -1,15 +1,17 @@
-import { PersonByNameStore, EditPersonStore } from '$houdini';
+import { PersonByIdStore, EditPersonStore } from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
-const queryPerson = new PersonByNameStore();
+
+
+const queryPerson = new PersonByIdStore();
 
 export const actions: Actions = {
 	edit: async (event) => {
 		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
-				name: event.params.name,
+				id: event.params.id,
 				isBoard: event.locals.user.roles.includes('board')
 			}
 		});
@@ -23,7 +25,6 @@ export const actions: Actions = {
 		} = queryData;
 		console.log(person)
 		const formData = await event.request.formData();
-
 		console.log(Array.from(formData.entries()), Array.from(formData.entries()).filter(([key, value]) => {
 			if (key === 'password' && value === '') return false;
 			if (key === 'id') return true;
@@ -41,6 +42,7 @@ export const actions: Actions = {
 		console.log(userId, dirtyData)
 
 		const editPerson = new EditPersonStore()
+
 		return await editPerson.mutate({ id: parseInt(userId as string), data: dirtyData }, { event });
 	}
 };

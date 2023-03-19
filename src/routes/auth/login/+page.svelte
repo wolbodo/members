@@ -1,27 +1,9 @@
-<!-- <script context="module">
-	/**
-	 * @type {import('@sveltejs/kit').Load}
-	 */
-	export async function load({ session }) {
-		if (session.user) {
-			return {
-				status: 302,
-				redirect: '/'
-			};
-		}
-
-		return {};
-	}
-</script> -->
 <script lang="ts">
 	import type { ActionData } from '../$types';
 
 	export let form: ActionData;
 
 	import { page } from '$app/stores';
-	// import { enhance } from '$lib/Form';
-
-	// let error;
 
 	const redirect = $page.url.searchParams.get('redirect');
 </script>
@@ -41,7 +23,7 @@
 
 	{#if form?.incorrect}<p class="error">Invalid credentials!</p>{/if}
 
-	<p><a href="/auth/forgot">Reset your password</a></p>
+	<p><a href="/auth/forgot">Forgot your password?</a></p>
 
 	<button type="submit">Submit</button>
 </form>

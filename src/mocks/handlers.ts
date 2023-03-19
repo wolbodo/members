@@ -5,7 +5,7 @@ import * as fixtures from './fixtures';
 
 const backend = graphql.link('http://graphql.wolbodo/v1/graphql');
 import bcrypt, { hash } from 'bcryptjs';
-import type { AllPeople$result, CreateRole$result, GetPassword$result, PersonForEdit$result } from '$houdini';
+import type { AllPeople$result, CreateRole$result, GetPassword$result, PersonByName$result } from '$houdini';
 
 export const cors = (host = '*') => context.set('Access-Control-Allow-Origin', '*');
 
@@ -25,7 +25,7 @@ export const handlers: RequestHandler[] = [
 					pick('name', 'email', 'phone', 'address', 'city', 'firstname', 'lastname', 'roles')
 				) as AllPeople$result['people']
 		}
-		return res( cors(), ctx.data(data))
+		return res(cors(), ctx.data(data))
 	}),
 	backend.query('GetPassword', (req, res, ctx) => {
 		const nameOrEmail = req.variables.name.toLowerCase();
@@ -54,7 +54,7 @@ export const handlers: RequestHandler[] = [
 	// backend.query('History', (req, res, ctx) => {
 	// 	throw new Error('not implemented History');
 	// }),
-	backend.query('PersonForEdit', (req, res, ctx) => {
+	backend.query('PersonByName', (req, res, ctx) => {
 		const { name, isBoard, isSelf } = req.variables;
 		const person = fixtures.people.find((person) => ilike(person.name, name));
 
@@ -65,8 +65,8 @@ export const handlers: RequestHandler[] = [
 		const omitFields = omit(
 			...(isBoard ? [] : isSelf ? ['key_code'] : ['key_code', 'bankaccount'])
 		);
-		const data: PersonForEdit$result = {
-			auth_person: [omitFields(person) as PersonForEdit$result['auth_person'][0]]
+		const data: PersonByName$result = {
+			auth_person: [omitFields(person) as PersonByName$result['auth_person'][0]]
 		};
 		return res(cors(), ctx.data(data));
 	}),

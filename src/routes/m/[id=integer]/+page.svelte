@@ -6,25 +6,25 @@
 
 	export let data: PageData;
 
-	$: ({ PersonByName, user } = data);
+	$: ({ PersonById, user } = data);
 	$: isBoard = user?.roles.includes('board');
-	$: isSelf = parseInt(user.id) === $PersonByName.data?.auth_person[0].id;
+	$: isSelf = parseInt(user.id) === $PersonById.data?.auth_person[0].id;
 
 	let edit: boolean;
 </script>
 
 <content>
-	{#if $PersonByName.fetching}
+	{#if $PersonById.fetching}
 		<p>Loading...</p>
-	{:else if $PersonByName.errors}
+	{:else if $PersonById.errors}
 		<h2>Error</h2>
 		<ul>
-			{#each $PersonByName.errors as error}
+			{#each $PersonById.errors as error}
 				<li>{error.message}</li>
 			{/each}
 		</ul>
-	{:else if $PersonByName.data}
-		{@const person = $PersonByName.data.auth_person[0]}
+	{:else if $PersonById.data}
+		{@const person = $PersonById.data.auth_person[0]}
 
 		<form action="?/edit" method="POST" use:enhance>
 			{#if isBoard || isSelf}
@@ -57,7 +57,7 @@
 			{/if}
 
 			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readonly={!edit} /> -->
-			<RoleSelector {person} readonly={!edit || !isBoard} refetch={() => PersonByName.fetch()} />
+			<RoleSelector {person} readonly={!edit || !isBoard} refetch={() => PersonById.fetch()} />
 
 			<section>
 				<Input name="id" value={person.id} type="hidden" readonly />
