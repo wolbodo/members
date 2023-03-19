@@ -1,0 +1,23 @@
+
+	mutation EditPerson($id: Int!, $data: auth_person_set_input!) {
+		person: update_auth_person(where: { id: { _eq: $id } }, _set: $data) {
+			returning {
+				name
+				firstname
+				lastname
+				email
+				phone
+				address
+				zipcode
+				city
+				country
+				note
+				id
+				created
+				modified
+
+				bankaccount
+				key_code
+			}
+		}
+	}

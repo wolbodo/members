@@ -1,4 +1,4 @@
-import { load_PersonForEdit } from '$houdini';
-import type { PageLoad, PersonForEditVariables } from './$houdini';
+import { load_PersonByName } from '$houdini';
+import type { PageLoad, PersonByNameVariables } from './$houdini';
 
-export const _PersonForEditVariables: PersonForEditVariables = (event) => event.data.variables;
+export const _PersonByNameVariables: PersonByNameVariables = (event) => event.data.variables;

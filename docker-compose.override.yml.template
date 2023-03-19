@@ -14,7 +14,7 @@ services:
     volumes:
       - .:/app/src
     environment:
-      VITE_GRAPHQL_ENDPOINT: http://graphql.wolbodo/v1/graphql
+      PUBLIC_GRAPHQL_ENDPOINT: http://graphql.wolbodo/v1/graphql
     command: |
       sh -c "
         cd /app/src

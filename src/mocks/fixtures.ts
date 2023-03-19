@@ -1,4 +1,4 @@
-import type { AllRoles$result, PersonForEdit$result, AllPeople$result, PersonRoles$data } from '$houdini';
+import type { AllRoles$result, PersonByName$result, AllPeople$result, PersonRoles$data } from '$houdini';
 import { faker } from '@faker-js/faker';
 
 import { pick, omit } from './util';
@@ -7,13 +7,13 @@ export const roles = ['member', 'board', 'admin'];
 
 faker.seed(42)
 
-type Person = Omit<PersonForEdit$result['auth_person'][number] & AllPeople$result['people'][number], '$fragments'>;
+type Person = Omit<PersonByName$result['auth_person'][number] & AllPeople$result['people'][number], '$fragments'>;
 type Role = PersonRoles$data['roles'][number]
 
 let personid = 0;
 let roleid = 0;
 
-const maybe = <T>(value: T): T|null => faker.datatype.boolean() ? value : null
+const maybe = <T>(value: T): T | null => faker.datatype.boolean() ? value : null
 
 export const fakeRole = (role: string): Role => ({
 	id: roleid++,

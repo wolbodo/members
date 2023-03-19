@@ -1,8 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
-import { GetPasswordStore, PersonByEmailStore } from '$houdini';
-import { send } from '$lib/mail';
+import { GetPasswordStore } from '$houdini';
 
 import { serverToken, createToken } from '$lib/jwt';
 import type { Actions } from './$types';
@@ -10,14 +9,6 @@ import type { Actions } from './$types';
 // These are the only roles passed to the token, and in this order.
 const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || 'wolbodo.nl';
 const ALL_ROLES = ['member', 'board', 'admin', 'self'] as const;
-
-type User = {
-	email: string;
-	name: string;
-	id: number;
-	roles: (typeof ALL_ROLES)[number];
-	token: string;
-};
 
 const tokenCookieOptions = { secure: false, path: '/' };
 
@@ -27,7 +18,6 @@ export const actions = {
 		const name = data.get('name');
 		const password = data.get('password');
 
-		console.log('Fetching', name, password);
 		const token = serverToken('login');
 		const store = new GetPasswordStore();
 		const result = await store.fetch({
@@ -80,38 +70,4 @@ export const actions = {
 
 		throw redirect(302, '/');
 	},
-	forgot: async (event) => {
-		const data = await event.request.formData();
-		const email = data.get('email');
-
-		if (!email) {
-			throw fail(400);
-		}
-		const store = new PersonByEmailStore();
-
-		const result = await store.fetch({
-			event,
-			variables: { email },
-			metadata: { token: serverToken('password-forgot') }
-		});
-		if (!result.data?.person[0]) {
-			console.log(`Reset failed: email address '${email}' unknown`);
-			return;
-		}
-		const {
-			person: [person]
-		} = result.data;
-		const token = createToken(
-			{
-				id: person.id
-			},
-			{
-				subject: 'password-reset',
-				expiresIn: '30 minutes'
-			}
-		);
-
-		console.log(`Reset mail: to ${person.name}(${email})`);
-		send(person.id, 'password-reset', { token });
-	}
 } satisfies Actions;

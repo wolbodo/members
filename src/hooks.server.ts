@@ -25,16 +25,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 	// get the user information however you want
 	const user = await authenticateUser(event);
 
-	if (!event.url.pathname.startsWith('/auth') && !user) {
-		return new Response(null, {
-			status: 302,
-			headers: {
-				Location: '/auth/login'
-			}
-		});
-	}
+	if (!user) {
+		if (event.route.id !== '/mail/trigger' &&
+			!event.route.id?.startsWith('/auth')
+		) {
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: '/auth/login'
+				}
+			});
+		}
 
-	if (user) {
+	} else {
 		// set the session information for this event
 		setSession(event, { user });
 		event.locals.user = user;
