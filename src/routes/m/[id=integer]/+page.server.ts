@@ -33,7 +33,6 @@ export const actions: Actions = {
 				if (person[key as keyof typeof person] !== value) return true;
 			})
 		) as EditPerson$input;
-		console.log(userId, dirtyData)
 
 		const editPerson = new EditPersonStore()
 

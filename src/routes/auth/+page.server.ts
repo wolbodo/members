@@ -6,7 +6,6 @@ import { options as tokenCookieOptions } from './cookieOptions'
 
 export const actions = {
 	logout: async (event) => {
-		console.log("llogout")
 		event.cookies.delete('token', tokenCookieOptions);
 
 		throw redirect(302, '/');
