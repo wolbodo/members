@@ -1,9 +1,8 @@
 import { HoudiniClient } from '$houdini';
-
-const url = 'http://graphql.wolbodo/v1/graphql';
+import { env } from '$env/dynamic/public'
 
 export default new HoudiniClient({
-	url,
+	url: env.PUBLIC_GRAPHQL_ENDPOINT,
 	fetchParams({ session, metadata, variables }) {
 		const headers: HeadersInit = {
 			Authorization: `Bearer ${session?.user ? session?.user.token : metadata?.token}`
