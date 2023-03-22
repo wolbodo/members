@@ -1,11 +1,3 @@
-<script lang="ts" context="module">
-	export function load({ session }) {
-		session.currentRole = 'board';
-		console.log('Set', session);
-		return {};
-	}
-</script>
-
 <script lang="ts">
 	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
