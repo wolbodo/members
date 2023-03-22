@@ -23,7 +23,6 @@ services:
       PORT: 80
       VIRTUAL_HOST: members.wolbodo.nl
       CERT_NAME: wildcard
-      AUTH_JWT_SECRET_KEY: $HASURA_SECRET_KEY
 
   db:
     image: postgres:13-alpine
@@ -55,4 +54,3 @@ services:
       VIRTUAL_HOST: graphql.wolbodo.nl
       CERT_NAME: wildcard
       HASURA_GRAPHQL_DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB
-      HASURA_GRAPHQL_JWT_SECRET: '{"type":"HS256","key":"changemechangemechangemechangeme","claims_map":{"x-hasura-allowed-roles": {"path":"$.roles"},"x-hasura-default-role": {"path":"$.roles[0]"}, "x-hasura-user-id": {"path":"$.id"}}}'
