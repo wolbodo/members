@@ -10,9 +10,9 @@ jobs:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v2
       - name: Install dependencies
-        run: yarn install --pure-lockfile
+        run: pnpm i
       - name: Build application
-        run: yarn run build
+        run: pnpm run build
       - name: 'Upload build'
         uses: actions/upload-artifact@v2
         with:
