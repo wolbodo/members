@@ -9,4 +9,4 @@ COPY pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile --prod
 
-COPY build /app
+COPY build /usr/src/app
