@@ -1,10 +1,10 @@
 <script>
 	import Template from './Template.svelte';
-	import { PUBLIC_URL } from '$env/static/public';
+	import { env } from '$env/dynamic/public';
 	export let person;
 	export let data;
 
-	$: resetLink = `${PUBLIC_URL}/auth/reset?token=${data.token}`;
+	$: resetLink = `${env.PUBLIC_URL}/auth/reset?token=${data.token}`;
 </script>
 
 <Template subject="Reset your password">
