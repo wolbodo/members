@@ -3,7 +3,7 @@ import { fail } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken'
 
 import { verifyToken } from '$lib/jwt';
-import { MERCURE_JWT_SECRET, MERCURE_DOMAIN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 
 import type { RequestHandler } from './$types'
 
@@ -20,7 +20,7 @@ export const GET = (async (event) => {
         payload: { name, isBoard },
         subscribe: ["*"],
       }
-    }, MERCURE_JWT_SECRET)
+    }, env.MERCURE_JWT_SECRET)
 
     const headers = new Headers()
 
@@ -35,7 +35,7 @@ export const GET = (async (event) => {
       'mercureAuthorization',
       mercureToken,
       {
-        Domain: MERCURE_DOMAIN,
+        Domain: env.MERCURE_DOMAIN,
         SameSite: 'None'
       }
     );
