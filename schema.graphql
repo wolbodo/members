@@ -113,6 +113,17 @@ type auth_history_aggregate {
   nodes: [auth_history!]!
 }
 
+input auth_history_aggregate_bool_exp {
+  count: auth_history_aggregate_bool_exp_count
+}
+
+input auth_history_aggregate_bool_exp_count {
+  arguments: [auth_history_select_column!]
+  distinct: Boolean
+  filter: auth_history_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "auth.history"
 """
@@ -399,6 +410,28 @@ input auth_history_stddev_samp_order_by {
   person_id: order_by
 }
 
+"""
+Streaming cursor of the table "auth_history"
+"""
+input auth_history_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: auth_history_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input auth_history_stream_cursor_value_input {
+  author_id: Int
+  id: Int
+  new_values: jsonb
+  old_values: jsonb
+  person_id: Int
+  role: String
+  timestamp: timestamp
+}
+
 """aggregate sum on columns"""
 type auth_history_sum_fields {
   author_id: Int
@@ -413,6 +446,38 @@ input auth_history_sum_order_by {
   author_id: order_by
   id: order_by
   person_id: order_by
+}
+
+input auth_history_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: auth_history_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: auth_history_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+  """
+  _delete_elem: auth_history_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: auth_history_delete_key_input
+
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: auth_history_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: auth_history_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: auth_history_set_input
+
+  """filter the rows which have to be updated"""
+  where: auth_history_bool_exp!
 }
 
 """aggregate var_pop on columns"""
@@ -602,6 +667,7 @@ input auth_person_bool_exp {
   email: String_comparison_exp
   firstname: String_comparison_exp
   history: auth_history_bool_exp
+  history_aggregate: auth_history_aggregate_bool_exp
   id: Int_comparison_exp
   key_code: String_comparison_exp
   lastname: String_comparison_exp
@@ -611,6 +677,7 @@ input auth_person_bool_exp {
   password: String_comparison_exp
   phone: String_comparison_exp
   roles: auth_person_role_bool_exp
+  roles_aggregate: auth_person_role_aggregate_bool_exp
   zipcode: String_comparison_exp
 }
 
@@ -618,10 +685,14 @@ input auth_person_bool_exp {
 unique or primary key constraints on table "auth.person"
 """
 enum auth_person_constraint {
-  """unique or primary key constraint"""
+  """
+  unique or primary key constraint on columns "email"
+  """
   person_email_key
 
-  """unique or primary key constraint"""
+  """
+  unique or primary key constraint on columns "id"
+  """
   person_pkey
 }
 
@@ -748,7 +819,7 @@ input auth_person_order_by {
   zipcode: order_by
 }
 
-"""primary key columns input for table: auth_person"""
+"""primary key columns input for table: auth.person"""
 input auth_person_pk_columns_input {
   id: Int!
 }
@@ -773,6 +844,17 @@ aggregated selection of "auth.person_role"
 type auth_person_role_aggregate {
   aggregate: auth_person_role_aggregate_fields
   nodes: [auth_person_role!]!
+}
+
+input auth_person_role_aggregate_bool_exp {
+  count: auth_person_role_aggregate_bool_exp_count
+}
+
+input auth_person_role_aggregate_bool_exp_count {
+  arguments: [auth_person_role_select_column!]
+  distinct: Boolean
+  filter: auth_person_role_bool_exp
+  predicate: Int_comparison_exp!
 }
 
 """
@@ -852,7 +934,9 @@ input auth_person_role_bool_exp {
 unique or primary key constraints on table "auth.person_role"
 """
 enum auth_person_role_constraint {
-  """unique or primary key constraint"""
+  """
+  unique or primary key constraint on columns "id"
+  """
   person_role_pkey
 }
 
@@ -946,7 +1030,7 @@ input auth_person_role_order_by {
   valid_till: order_by
 }
 
-"""primary key columns input for table: auth_person_role"""
+"""primary key columns input for table: auth.person_role"""
 input auth_person_role_pk_columns_input {
   id: Int!
 }
@@ -1024,6 +1108,26 @@ input auth_person_role_stddev_samp_order_by {
   person_id: order_by
 }
 
+"""
+Streaming cursor of the table "auth_person_role"
+"""
+input auth_person_role_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: auth_person_role_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input auth_person_role_stream_cursor_value_input {
+  id: Int
+  person_id: Int
+  role: String
+  valid_from: timestamptz
+  valid_till: timestamptz
+}
+
 """aggregate sum on columns"""
 type auth_person_role_sum_fields {
   id: Int
@@ -1056,6 +1160,17 @@ enum auth_person_role_update_column {
 
   """column name"""
   valid_till
+}
+
+input auth_person_role_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: auth_person_role_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: auth_person_role_set_input
+
+  """filter the rows which have to be updated"""
+  where: auth_person_role_bool_exp!
 }
 
 """aggregate var_pop on columns"""
@@ -1190,6 +1305,37 @@ type auth_person_stddev_samp_fields {
   id: Float
 }
 
+"""
+Streaming cursor of the table "auth_person"
+"""
+input auth_person_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: auth_person_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input auth_person_stream_cursor_value_input {
+  address: String
+  bankaccount: String
+  city: String
+  country: String
+  created: timestamptz
+  email: String
+  firstname: String
+  id: Int
+  key_code: String
+  lastname: String
+  modified: timestamptz
+  name: String
+  note: String
+  password: String
+  phone: String
+  zipcode: String
+}
+
 """aggregate sum on columns"""
 type auth_person_sum_fields {
   id: Int
@@ -1248,6 +1394,17 @@ enum auth_person_update_column {
   zipcode
 }
 
+input auth_person_updates {
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: auth_person_inc_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: auth_person_set_input
+
+  """filter the rows which have to be updated"""
+  where: auth_person_bool_exp!
+}
+
 """aggregate var_pop on columns"""
 type auth_person_var_pop_fields {
   id: Float
@@ -1263,12 +1420,27 @@ type auth_person_variance_fields {
   id: Float
 }
 
+"""ordering argument of a cursor"""
+enum cursor_ordering {
+  """ascending ordering of the cursor"""
+  ASC
+
+  """descending ordering of the cursor"""
+  DESC
+}
+
 scalar jsonb
+
+input jsonb_cast_exp {
+  String: String_comparison_exp
+}
 
 """
 Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'.
 """
 input jsonb_comparison_exp {
+  _cast: jsonb_cast_exp
+
   """is the column contained in the given json value"""
   _contained_in: jsonb
 
@@ -1374,7 +1546,9 @@ input mail_entries_bool_exp {
 unique or primary key constraints on table "mail.entries"
 """
 enum mail_entries_constraint {
-  """unique or primary key constraint"""
+  """
+  unique or primary key constraint on columns "id"
+  """
   entries_pkey
 }
 
@@ -1429,6 +1603,7 @@ type mail_entries_max_fields {
   created: timestamptz
   id: Int
   person_id: Int
+  status: status
   template: String
 }
 
@@ -1437,6 +1612,7 @@ type mail_entries_min_fields {
   created: timestamptz
   id: Int
   person_id: Int
+  status: status
   template: String
 }
 
@@ -1472,7 +1648,7 @@ input mail_entries_order_by {
   template: order_by
 }
 
-"""primary key columns input for table: mail_entries"""
+"""primary key columns input for table: mail.entries"""
 input mail_entries_pk_columns_input {
   id: Int!
 }
@@ -1540,6 +1716,28 @@ type mail_entries_stddev_samp_fields {
   person_id: Float
 }
 
+"""
+Streaming cursor of the table "mail_entries"
+"""
+input mail_entries_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: mail_entries_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input mail_entries_stream_cursor_value_input {
+  created: timestamptz
+  data: jsonb
+  id: Int
+  message_info: jsonb
+  person_id: Int
+  status: status
+  template: String
+}
+
 """aggregate sum on columns"""
 type mail_entries_sum_fields {
   id: Int
@@ -1570,6 +1768,38 @@ enum mail_entries_update_column {
 
   """column name"""
   template
+}
+
+input mail_entries_updates {
+  """append existing jsonb value of filtered columns with new jsonb value"""
+  _append: mail_entries_append_input
+
+  """
+  delete the field or element with specified path (for JSON arrays, negative integers count from the end)
+  """
+  _delete_at_path: mail_entries_delete_at_path_input
+
+  """
+  delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array
+  """
+  _delete_elem: mail_entries_delete_elem_input
+
+  """
+  delete key/value pair or string element. key/value pairs are matched based on their key value
+  """
+  _delete_key: mail_entries_delete_key_input
+
+  """increments the numeric columns with given value of the filtered values"""
+  _inc: mail_entries_inc_input
+
+  """prepend existing jsonb value of filtered columns with new jsonb value"""
+  _prepend: mail_entries_prepend_input
+
+  """sets the columns of the filtered rows to the given values"""
+  _set: mail_entries_set_input
+
+  """filter the rows which have to be updated"""
+  where: mail_entries_bool_exp!
 }
 
 """aggregate var_pop on columns"""
@@ -1757,6 +1987,14 @@ type mutation_root {
   ): auth_history_mutation_response
 
   """
+  update multiples rows of table: "auth.history"
+  """
+  update_auth_history_many(
+    """updates to execute, in order"""
+    updates: [auth_history_updates!]!
+  ): [auth_history_mutation_response]
+
+  """
   update data of the table: "auth.person"
   """
   update_auth_person(
@@ -1783,6 +2021,14 @@ type mutation_root {
   ): auth_person
 
   """
+  update multiples rows of table: "auth.person"
+  """
+  update_auth_person_many(
+    """updates to execute, in order"""
+    updates: [auth_person_updates!]!
+  ): [auth_person_mutation_response]
+
+  """
   update data of the table: "auth.person_role"
   """
   update_auth_person_role(
@@ -1807,6 +2053,14 @@ type mutation_root {
     _set: auth_person_role_set_input
     pk_columns: auth_person_role_pk_columns_input!
   ): auth_person_role
+
+  """
+  update multiples rows of table: "auth.person_role"
+  """
+  update_auth_person_role_many(
+    """updates to execute, in order"""
+    updates: [auth_person_role_updates!]!
+  ): [auth_person_role_mutation_response]
 
   """
   update data of the table: "mail.entries"
@@ -1875,6 +2129,14 @@ type mutation_root {
     _set: mail_entries_set_input
     pk_columns: mail_entries_pk_columns_input!
   ): mail_entries
+
+  """
+  update multiples rows of table: "mail.entries"
+  """
+  update_mail_entries_many(
+    """updates to execute, in order"""
+    updates: [mail_entries_updates!]!
+  ): [mail_entries_mutation_response]
 }
 
 """column ordering options"""
@@ -2130,6 +2392,20 @@ type subscription_root {
   ): auth_history_aggregate!
 
   """
+  fetch data from the table in a streaming manner: "auth.history"
+  """
+  auth_history_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [auth_history_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: auth_history_bool_exp
+  ): [auth_history!]!
+
+  """
   fetch data from the table: "auth.person"
   """
   auth_person(
@@ -2218,6 +2494,34 @@ type subscription_root {
   auth_person_role_by_pk(id: Int!): auth_person_role
 
   """
+  fetch data from the table in a streaming manner: "auth.person_role"
+  """
+  auth_person_role_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [auth_person_role_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: auth_person_role_bool_exp
+  ): [auth_person_role!]!
+
+  """
+  fetch data from the table in a streaming manner: "auth.person"
+  """
+  auth_person_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [auth_person_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: auth_person_bool_exp
+  ): [auth_person!]!
+
+  """
   fetch data from the table: "mail.entries"
   """
   mail_entries(
@@ -2259,6 +2563,20 @@ type subscription_root {
 
   """fetch data from the table: "mail.entries" using primary key columns"""
   mail_entries_by_pk(id: Int!): mail_entries
+
+  """
+  fetch data from the table in a streaming manner: "mail.entries"
+  """
+  mail_entries_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [mail_entries_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: mail_entries_bool_exp
+  ): [mail_entries!]!
 }
 
 scalar timestamp

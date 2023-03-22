@@ -36,7 +36,7 @@ services:
       - members-db:/var/lib/postgresql/data
 
   graphql:
-    image: hasura/graphql-engine:v2.3.1
+    image: hasura/graphql-engine:v2.21.0
     restart: unless-stopped
     networks: [external, default]
     depends_on:
