@@ -1,5 +1,5 @@
 import { setSession } from '$houdini';
-import type { Handle, RequestEvent } from '@sveltejs/kit';
+import type { Handle, RequestEvent, HandleFetch } from '@sveltejs/kit';
 import { verifyToken } from '$lib/jwt';
 import { worker as serverWorker } from './mocks/server';
 
@@ -46,3 +46,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	// pass the event onto the default handle
 	return await resolve(event);
 };
+
+
+export const handleFetch = (async ({ request, fetch }) => {
+	let fetchResult;
+	try {
+		fetchResult = await fetch(request);
+	} catch (error) {
+		// Log info from event and request here.
+		console.error('error in fetch', error)
+
+		throw error
+	}
+
+	return fetchResult;
+}) satisfies HandleFetch;
