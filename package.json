@@ -56,6 +56,7 @@
     "@fontsource/rubik": "^4.5.14",
     "@lukeed/uuid": "^2.0.0",
     "bcryptjs": "^2.4.3",
+    "canvas": "^2.11.0",
     "cookie": "^0.4.2",
     "dotenv": "^16.0.3",
     "dotenv-expand": "^10.0.0",

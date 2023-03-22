@@ -32,7 +32,6 @@ export const actions: Actions = {
 				if (person[key as keyof typeof person] !== value) return true;
 			})
 		);
-		console.log(userId, dirtyData)
 
 		const editPerson = new EditPersonStore()
 		return await editPerson.mutate({

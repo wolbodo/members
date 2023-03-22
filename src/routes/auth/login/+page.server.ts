@@ -25,7 +25,6 @@ export const actions = {
       variables: { name },
       metadata: { token }
     });
-    console.log(result);
 
     if (!result.data) {
       return fail(400, { name, incorrect: true });
@@ -34,7 +33,6 @@ export const actions = {
       auth_person: [person]
     } = result.data;
 
-    console.log('person', person);
     if (person && person.password && person.roles.length) {
       const ok = await bcrypt.compare(password, person.password);
 
