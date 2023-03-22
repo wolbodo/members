@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import mjml from 'mjml'
-import { JSDOM } from 'jsdom'
+import { Window } from 'happy-dom'
 import { graphql } from '$houdini'
 import { error, json } from '@sveltejs/kit'
 
@@ -56,6 +56,8 @@ const updateMail = graphql(`
 
 const REHead = new RegExp('<!-- HEAD_svelte-irnrro_START -->(?<subject>.+)<!-- HEAD_svelte-irnrro_END -->')
 
+const window = new Window();
+
 export const POST = (async (event) => {
   const {
     event: {
@@ -98,7 +100,8 @@ export const POST = (async (event) => {
     console.log("Errors in mjml rendering:", output.errors)
   }
 
-  const text = new JSDOM(output.html).window.document.body.textContent
+  window.document.body.innerHTML = output.html
+  const text = window.document.body.textContent
 
   const mailOptions = {
     from: '"Wolbodo" <it@wolbodo.nl>', // sender address
