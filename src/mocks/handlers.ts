@@ -1,9 +1,10 @@
-import { graphql, context, type RequestHandler, type ResponseComposition, type GraphQLContext } from 'msw';
+import { graphql, context, type RequestHandler } from 'msw';
+import { env } from '$env/dynamic/public'
 
 import { pick, ilike, omit } from './util';
 import * as fixtures from './fixtures';
 
-const backend = graphql.link('http://graphql.wolbodo/v1/graphql');
+const backend = graphql.link(env.PUBLIC_GRAPHQL_ENDPOINT);
 import bcrypt, { hash } from 'bcryptjs';
 import type { AllPeople$result, CreateRole$result, GetPassword$result, PersonByName$result } from '$houdini';
 
