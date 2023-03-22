@@ -13,7 +13,7 @@ specifiers:
   '@testing-library/svelte': ^3.2.2
   '@types/bcryptjs': ^2.4.2
   '@types/cookie': ^0.5.1
-  '@types/jsdom': ^21.1.0
+  '@types/jsdom': ^21.1.1
   '@types/jsonwebtoken': ^9.0.1
   '@types/luxon': ^3.2.0
   '@types/mjml': ^4.7.0
@@ -30,7 +30,7 @@ specifiers:
   eslint-config-prettier: ^8.8.0
   eslint-plugin-svelte3: ^4.0.0
   graphql: ^15.8.0
-  hasura-cli: ^2.3.1
+  hasura-cli: ^2.20.1
   houdini: 1.0.0-next.22
   houdini-svelte: 1.0.0-next.22
   jsdom: ^19.0.0
@@ -40,7 +40,7 @@ specifiers:
   msw: ^1.2.0
   nodemailer: ^6.9.1
   prettier: ^2.8.6
-  prettier-plugin-svelte: ^2.9.0
+  prettier-plugin-svelte: ^2.10.0
   proposal-temporal: ^0.8.0
   svelte: ^3.57.0
   svelte-check: ^3.1.4
@@ -76,7 +76,7 @@ devDependencies:
   '@testing-library/svelte': 3.2.2_svelte@3.57.0
   '@types/bcryptjs': 2.4.2
   '@types/cookie': 0.5.1
-  '@types/jsdom': 21.1.0
+  '@types/jsdom': 21.1.1
   '@types/jsonwebtoken': 9.0.1
   '@types/luxon': 3.2.0
   '@types/mjml': 4.7.0
@@ -89,13 +89,13 @@ devDependencies:
   eslint-config-prettier: 8.8.0_eslint@8.36.0
   eslint-plugin-svelte3: 4.0.0_wzem237sbvnwe7n34ytc5phasy
   graphql: 15.8.0
-  hasura-cli: 2.3.1
+  hasura-cli: 2.20.1
   houdini: 1.0.0-next.22
   houdini-svelte: 1.0.0-next.22
   jsdom: 19.0.0
   msw: 1.2.0_typescript@4.9.5
   prettier: 2.8.6
-  prettier-plugin-svelte: 2.9.0_bzjcbf5vweu43cmyrxgltnmf74
+  prettier-plugin-svelte: 2.10.0_bzjcbf5vweu43cmyrxgltnmf74
   svelte: 3.57.0
   svelte-check: 3.1.4_svelte@3.57.0
   svelte-preprocess: 4.10.7_wkdgp32a7s6524odeddpfzb52q
@@ -788,8 +788,8 @@ packages:
     resolution: {integrity: sha512-qC4bCqYGy1y/NP7dDVr7KJarn+PbX1nSpwA7JXdu0HxT3QYjO8MJ+cntENtHFVy2dRAyBV23OZ6MxsW1AM1L8g==}
     dev: true
 
-  /@types/jsdom/21.1.0:
-    resolution: {integrity: sha512-leWreJOdnuIxq9Y70tBVm/bvTuh31DSlF/r4l7Cfi4uhVQqLHD0Q4v301GMisEMwwbMgF7ZKxuZ+Jbd4NcdmRw==}
+  /@types/jsdom/21.1.1:
+    resolution: {integrity: sha512-cZFuoVLtzKP3gmq9eNosUL1R50U+USkbLtUQ1bYVgl/lKp0FZM7Cq4aIHAL8oIvQ17uSHi7jXPtfDOdjPwBE7A==}
     dependencies:
       '@types/node': 18.15.5
       '@types/tough-cookie': 4.0.2
@@ -2445,8 +2445,8 @@ packages:
     dependencies:
       function-bind: 1.1.1
 
-  /hasura-cli/2.3.1:
-    resolution: {integrity: sha512-4zPJa+orvI1i4Pp3htFa7rd6AckZEBOxOHdAkymnOT2q7oqnNZT8Pk2gcdBhsDoLMr2zCpeUp4Z30gHflxMdtA==}
+  /hasura-cli/2.20.1:
+    resolution: {integrity: sha512-lBwHs9r4N9NLozT057/TYFGZUmDRbkJKBkkSEbq0l0FAH65bts+WDzRC00opgEahp/txwRWdMStTlmcpmJX/PA==}
     engines: {node: '>=8'}
     hasBin: true
     requiresBuild: true
@@ -2644,7 +2644,7 @@ packages:
     engines: {node: '>=12.0.0'}
     dependencies:
       ansi-escapes: 4.3.2
-      chalk: 4.1.2
+      chalk: 4.1.1
       cli-cursor: 3.1.0
       cli-width: 3.0.0
       external-editor: 3.1.0
@@ -3115,7 +3115,7 @@ packages:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
     dependencies:
-      chalk: 4.1.2
+      chalk: 4.1.1
       is-unicode-supported: 0.1.0
     dev: true
 
@@ -3865,7 +3865,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       bl: 4.1.0
-      chalk: 4.1.2
+      chalk: 4.1.1
       cli-cursor: 3.1.0
       cli-spinners: 2.7.0
       is-interactive: 1.0.0
@@ -4018,8 +4018,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-svelte/2.9.0_bzjcbf5vweu43cmyrxgltnmf74:
-    resolution: {integrity: sha512-3doBi5NO4IVgaNPtwewvrgPpqAcvNv0NwJNflr76PIGgi9nf1oguQV1Hpdm9TI2ALIQVn/9iIwLpBO5UcD2Jiw==}
+  /prettier-plugin-svelte/2.10.0_bzjcbf5vweu43cmyrxgltnmf74:
+    resolution: {integrity: sha512-GXMY6t86thctyCvQq+jqElO+MKdB09BkL3hexyGP3Oi8XLKRFaJP1ud/xlWCZ9ZIa2BxHka32zhHfcuU+XsRQg==}
     peerDependencies:
       prettier: ^1.16.4 || ^2.0.0
       svelte: ^3.2.0
