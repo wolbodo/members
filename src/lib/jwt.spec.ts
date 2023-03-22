@@ -1,7 +1,7 @@
 import { vi, describe, it, vitest, expect } from 'vitest'
 import { createToken, parseToken, serverToken, verifyToken } from './jwt'
 
-vi.mock('$env/static/private', () => ({
+vi.mock('$env/dynamic/private', () => ({
   AUTH_JWT_SECRET_KEY: 'test'
 }))
 

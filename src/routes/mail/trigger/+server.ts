@@ -7,7 +7,7 @@ import { error, json } from '@sveltejs/kit'
 import type { RequestHandler } from './$types'
 import { serverToken } from '$lib/jwt'
 
-import { EMAIL_HOST, EMAIL_PORT, EMAIL_USER, EMAIL_PASS, EMAIL_SECURE } from '$env/static/private'
+import { env } from '$env/dynamic/private'
 
 import templates from '$lib/mail/templates'
 
@@ -17,14 +17,14 @@ const transporter = nodemailer.createTransport({
   // newline: 'unix',
   // path: '/usr/sbin/sendmail',
   // args: ['-S', 'wlbd.nl']
-  host: EMAIL_HOST,
-  port: EMAIL_PORT,
+  host: env.EMAIL_HOST,
+  port: env.EMAIL_PORT,
   auth: {
     type: 'login',
-    user: EMAIL_USER,
-    pass: EMAIL_PASS,
+    user: env.EMAIL_USER,
+    pass: env.EMAIL_PASS,
   },
-  secure: EMAIL_SECURE === 'true' || [465].includes(parseInt(EMAIL_PORT)), // true for 465, false for other ports
+  secure: env.EMAIL_SECURE === 'true' || [465].includes(parseInt(env.EMAIL_PORT)), // true for 465, false for other ports
   tls: {
     rejectUnauthorized: false
   },
