@@ -19,7 +19,7 @@ export function createToken(
 	token: SignPayload,
 	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: SignOptions
 ): string {
-	return jwt.sign(token, env.AUTH_JWT_SECRET_KEY, {
+	return jwt.sign(token, env.HASURA_SECRET_KEY, {
 		subject,
 		expiresIn,
 		issuer,
@@ -32,7 +32,7 @@ export function parseToken(token: string): ParsedToken {
 }
 
 export async function verifyToken(token: string): Promise<ParsedToken> {
-	return await jwt.verify(token, env.AUTH_JWT_SECRET_KEY) as ParsedToken;
+	return await jwt.verify(token, env.HASURA_SECRET_KEY) as ParsedToken;
 }
 
 export function serverToken(username: string, id = -1, role = 'server'): string {

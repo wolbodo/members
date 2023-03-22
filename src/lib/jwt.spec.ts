@@ -2,7 +2,7 @@ import { vi, describe, it, vitest, expect } from 'vitest'
 import { createToken, parseToken, serverToken, verifyToken } from './jwt'
 
 vi.mock('$env/dynamic/private', () => ({
-  AUTH_JWT_SECRET_KEY: 'test'
+  HASURA_SECRET_KEY: 'test'
 }))
 
 const wait = (time: number) => new Promise(resolve => setTimeout(resolve, time))
