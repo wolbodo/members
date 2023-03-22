@@ -17,3 +17,4 @@ docker-compose.override.yml
 yarn-error.log
 
 $houdini
+coverage
