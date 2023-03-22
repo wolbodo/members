@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
+
 	import type { ActionData } from '../$types';
 
 	export let form: ActionData;
-
-	import { page } from '$app/stores';
 
 	const redirect = $page.url.searchParams.get('redirect');
 </script>
@@ -14,7 +15,7 @@
 	<p>After logging in you will be redirected to <a href={redirect}>{redirect}</a></p>
 {/if}
 
-<form method="post" action="/auth?/login">
+<form method="post" use:enhance>
 	<label for="name">Name or email</label>
 	<input id="name" name="name" placeholder="Use your nickname" value={form?.name ?? ''} />
 
