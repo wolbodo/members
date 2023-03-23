@@ -31,14 +31,10 @@ export const GET = (async (event) => {
       headers.set('Access-Control-Allow-Origin', origin);
       headers.set('Access-Control-Allow-Credentials', 'true');
     }
-    event.request.headers.set(
-      'mercureAuthorization',
-      mercureToken,
-      {
-        Domain: env.MERCURE_DOMAIN,
-        SameSite: 'None'
-      }
-    );
+    event.cookies.set('mercureAuthorization', mercureToken, {
+      domain: env.MERCURE_DOMAIN,
+      sameSite: 'none'
+    });
 
     return new Response(null, { headers });
   } catch (e) {
