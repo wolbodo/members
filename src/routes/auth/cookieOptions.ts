@@ -1,3 +1,5 @@
-const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || 'wolbodo.nl'
+import type { CookieSerializeOptions } from "cookie";
 
-export const options = { secure: false, path: '/' };
+const domain = process.env.COOKIE_DOMAIN || 'wolbodo.nl'
+
+export const options: CookieSerializeOptions = { secure: false, path: '/', domain };
