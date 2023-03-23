@@ -1,5 +1,5 @@
 // Endpoint for getting a mercure token
-import { fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken'
 
 import { verifyToken } from '$lib/jwt';
@@ -10,6 +10,10 @@ import type { RequestHandler } from './$types'
 export const GET = (async (event) => {
   // Check login
   const token = event.cookies.get('token');
+
+  if (!token) {
+    throw error(401, 'invalid token')
+  }
 
   try {
     const { name, roles } = await verifyToken(token)
@@ -39,6 +43,6 @@ export const GET = (async (event) => {
     return new Response(null, { headers });
   } catch (e) {
     console.error("Error verifying token", e)
-    return fail(401)
+    throw error(401, 'invalid token')
   }
 }) satisfies RequestHandler

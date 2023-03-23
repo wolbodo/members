@@ -1,4 +1,4 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 import { graphql } from '$houdini';
 
@@ -17,19 +17,19 @@ mutation changePassword($id:Int!, $password:String!){
 export const actions = {
   default: async (event) => {
     const data = await event.request.formData();
-    const password = data.get('password')
-    const resetToken = data.get('token')
+    const password = data.get('password') as string
+    const resetToken = data.get('token') as string
 
     if (!(password && resetToken)) {
-      return fail(400);
+      throw error(400);
     }
     const { sub, id } = await verifyToken(resetToken)
 
-    if (sub !== 'password-reset') return fail(400)
+    if (sub !== 'password-reset') throw error(400)
 
     changePassword.mutate({ id: parseInt(id), password }, {
       event,
-      metadata: { token: serverToken('password-reset', id) }
+      metadata: { token: serverToken('password-reset', parseInt(id)) }
     })
 
     throw redirect(302, '/')

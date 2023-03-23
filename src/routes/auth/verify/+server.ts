@@ -1,5 +1,5 @@
 import { verifyToken } from '$lib/jwt'
-import { fail } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types'
 
@@ -7,6 +7,9 @@ import type { RequestHandler } from './$types'
 
 export const GET = (async (event) => {
   const token = event.cookies.get('token');
+
+  if (!token)
+    throw error(401)
 
   try {
     const { name, email } = await verifyToken(token)
@@ -20,6 +23,6 @@ export const GET = (async (event) => {
     })
   } catch (e) {
     console.error("Error verifying token", e)
-    return fail(401)
+    throw error(401)
   }
 }) satisfies RequestHandler
