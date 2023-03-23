@@ -38,6 +38,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 
 	} else {
+		if (event.route.id === '/auth/login') {
+			// The user is logged in, don't allow the login page
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: '/'
+				}
+			});
+		}
 		// set the session information for this event
 		setSession(event, { user });
 		event.locals.user = user;

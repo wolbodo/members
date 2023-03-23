@@ -58,7 +58,7 @@ export const actions = {
 
         // Redirect to what the redirect param states if it's from the wolbodo domain.
         const location = data.has('redirect') && new URL(data.get('redirect') as string).host.endsWith('wolbodo.nl')
-          ? redirect : '/'
+          ? data.get('redirect') : '/'
 
         event.cookies.set('token', user.token, tokenCookieOptions);
         throw redirect(302, location);
