@@ -36,6 +36,7 @@ export const GET = (async (event) => {
       headers.set('Access-Control-Allow-Credentials', 'true');
     }
     event.cookies.set('mercureAuthorization', mercureToken, {
+      path: '/',
       domain: env.MERCURE_DOMAIN,
       sameSite: 'none'
     });
