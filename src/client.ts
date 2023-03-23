@@ -5,7 +5,7 @@ export default new HoudiniClient({
 	url: env.PUBLIC_GRAPHQL_ENDPOINT,
 	fetchParams({ session, metadata, variables }) {
 		const headers: HeadersInit = {
-			Authorization: `Bearer ${session?.user ? session?.user.token : metadata?.token}`
+			Authorization: `Bearer ${metadata?.token || session?.user.token}`
 		};
 
 		// set hasura role
