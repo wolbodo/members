@@ -15,8 +15,8 @@ const ALL_ROLES = ['member', 'board', 'admin', 'self'] as const;
 export const actions = {
   default: async (event) => {
     const data = await event.request.formData();
-    const name = data.get('name');
-    const password = data.get('password');
+    const name = data.get('name') as string;
+    const password = data.get('password') as string;
 
     const token = serverToken('login');
     const store = new GetPasswordStore();
@@ -56,8 +56,12 @@ export const actions = {
           }
         );
 
+        // Redirect to what the redirect param states if it's from the wolbodo domain.
+        const location = data.has('redirect') && new URL(data.get('redirect') as string).host.endsWith('wolbodo.nl')
+          ? redirect : '/'
+
         event.cookies.set('token', user.token, tokenCookieOptions);
-        throw redirect(302, '/');
+        throw redirect(302, location);
       }
     }
 

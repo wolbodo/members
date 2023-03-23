@@ -95,9 +95,7 @@
 				</li>
 
 				<li class:active={$page.url.pathname === '/logout'}>
-					<form action="/auth?/logout" method="post">
-						<button>Logout</button>
-					</form>
+					<a href="/auth/logout">Logout</a>
 				</li>
 			</ul>
 		{/if}
@@ -133,9 +131,6 @@
 		letter-spacing: 1.8px;
 		text-decoration: none;
 		transition: color 0.2s linear;
-	}
-	nav li form {
-		height: 100%;
 	}
 	nav li button {
 		margin: 0;

@@ -11,11 +11,12 @@
 
 <h1>Log in</h1>
 
-{#if redirect}
-	<p>After logging in you will be redirected to <a href={redirect}>{redirect}</a></p>
-{/if}
-
 <form method="post" use:enhance>
+	{#if redirect}
+		<p>After logging in you will be redirected to <a href={redirect}>{redirect}</a></p>
+		<input type="hidden" name="redirect" value={redirect} />
+	{/if}
+
 	<label for="name">Name or email</label>
 	<input id="name" name="name" placeholder="Use your nickname" value={form?.name ?? ''} />
 
