@@ -3,30 +3,11 @@ import { json, error } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types'
 
+const omit = (object: Record<string, unknown>, keys: string[]) => Object.fromEntries(Object.entries(object).filter(([key, value]) => !keys.includes(key)))
+
 export const GET = (async (event) => {
-  const token = event.cookies.get('token');
-
-  if (!token)
+  if (!event.locals.user)
     throw error(401)
 
-  try {
-    const data = await verifyToken(token)
-    const referer = event.request.headers.get('referer')
-    const [cors] = referer?.match(/https:\/\/.*\.wolbodo\.nl/) || []
-
-    if (cors) {
-      return json(data, {
-        headers: {
-          'Access-Control-Allow-Origin': cors,
-          'Access-Control-Allow-Credentials': "true",
-        }
-      })
-    }
-    return json(data)
-
-  } catch (e) {
-    console.error("Error verifying token", e)
-    throw error(401)
-  }
-
+  return json(omit(event.locals.user, ['token']))
 }) satisfies RequestHandler

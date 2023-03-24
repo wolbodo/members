@@ -53,7 +53,21 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	// pass the event onto the default handle
-	return await resolve(event);
+	const response = await resolve(event);
+
+
+	// Include cors for allowed hosts
+	const originHeader = event.request.headers.get('origin')
+	if (originHeader) {
+		const referer = new URL(originHeader)
+
+		if (/^https?:\/\/localhost:\d+|^https:\/\/.*\.wolbodo\.nl/.test(referer.origin)) {
+			response.headers.append('Access-Control-Allow-Origin', referer.origin)
+			response.headers.append('Access-Control-Allow-Credentials', 'true')
+		}
+	}
+
+	return response
 };
 
 
