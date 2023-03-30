@@ -13,7 +13,6 @@ export const GET = (async (event) => {
 
   try {
     const { name, email } = await verifyToken(token)
-    console.log("Verify:", name)
     return new Response(null, {
       status: 200,
       headers: {
