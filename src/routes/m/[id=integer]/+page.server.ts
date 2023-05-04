@@ -3,16 +3,18 @@ import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
 
-
 const queryPerson = new PersonByIdStore();
 
 export const actions: Actions = {
 	edit: async (event) => {
+		const isBoard = event.locals.user.roles.includes('board');
+		const isSelf = event.params.name === event.locals.user.name;
 		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
 				id: event.params.id,
-				isBoard: event.locals.user.roles.includes('board')
+				isBoard,
+				isSelf
 			}
 		});
 
@@ -34,15 +36,18 @@ export const actions: Actions = {
 			})
 		) as EditPerson$input;
 
-		const editPerson = new EditPersonStore()
+		const editPerson = new EditPersonStore();
 
-		return await editPerson.mutate({
-			id: event.params.id,
-			data: dirtyData as EditPerson$input['data']
-		}, {
-			event,
-			metadata: { isBoard: true }
-		});
+		return await editPerson.mutate(
+			{
+				id: event.params.id,
+				data: dirtyData as EditPerson$input['data']
+			},
+			{
+				event,
+				metadata: { isBoard, isSelf }
+			}
+		);
 	}
 };
 

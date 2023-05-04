@@ -6,11 +6,13 @@ const queryPerson = new PersonByNameStore();
 
 export const actions: Actions = {
 	edit: async (event) => {
+		const isBoard = event.locals.user.roles.includes('board');
+		const isSelf = event.params.name === event.locals.user.name;
 		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
 				name: event.params.name,
-				isBoard: event.locals.user.roles.includes('board')
+				isBoard
 			}
 		});
 
@@ -43,7 +45,7 @@ export const actions: Actions = {
 			},
 			{
 				event,
-				metadata: { isBoard: true }
+				metadata: { isBoard, isSelf }
 			}
 		);
 	}
