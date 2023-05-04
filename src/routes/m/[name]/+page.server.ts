@@ -33,14 +33,19 @@ export const actions: Actions = {
 			})
 		);
 
-		const editPerson = new EditPersonStore()
-		return await editPerson.mutate({
-			id: parseInt(userId as string),
-			data: dirtyData
-		}, {
-			event,
-			metadata: { isBoard: true }
-		});
+		console.log('Updating', dirtyData);
+
+		const editPerson = new EditPersonStore();
+		return await editPerson.mutate(
+			{
+				id: parseInt(userId as string),
+				data: dirtyData
+			},
+			{
+				event,
+				metadata: { isBoard: true }
+			}
+		);
 	}
 };
 
