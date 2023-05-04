@@ -21,7 +21,7 @@ services:
     environment:
       PUBLIC_GRAPHQL_ENDPOINT: https://graphql.wolbodo.nl/v1/graphql
       PORT: 80
-      VIRTUAL_HOST: members.wolbodo.nl
+      VIRTUAL_HOST: members.wolbodo.nl, member.wolbodo.nl, people.wolbodo.nl, mensen.wolbodo.nl, menschen.wolbodo.nl, leden.wolbodo.nl
       CERT_NAME: wildcard
 
   db:
