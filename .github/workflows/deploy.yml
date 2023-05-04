@@ -3,15 +3,15 @@ on:
   push:
     branches:
       - main
-jobs:  
-  build:    
+jobs:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - uses: actions/setup-node@v3
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.30.0
+          version: 8.4.0
       - name: Install dependencies
         run: pnpm i
       - name: Build application
@@ -28,26 +28,22 @@ jobs:
     needs: build
     environment: Release
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-        
+
       - name: Download build
         uses: actions/download-artifact@v3
         with:
           name: build
           path: build
-      -
-        name: Login to DockerHub
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: .
