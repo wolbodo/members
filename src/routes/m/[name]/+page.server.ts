@@ -7,7 +7,8 @@ const queryPerson = new PersonByNameStore();
 export const actions: Actions = {
 	edit: async (event) => {
 		const isBoard = event.locals.user.roles.includes('board');
-		const isSelf = event.params.name === event.locals.user.name;
+		const isSelf =
+			event.params.name.toLocaleLowerCase() === event.locals.user.name.toLocaleLowerCase();
 		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
