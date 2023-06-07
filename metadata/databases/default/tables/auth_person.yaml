@@ -2,143 +2,142 @@ table:
   name: person
   schema: auth
 array_relationships:
-- name: history
-  using:
-    foreign_key_constraint_on:
-      column: person_id
-      table:
-        name: history
-        schema: auth
-- name: roles
-  using:
-    foreign_key_constraint_on:
-      column: person_id
-      table:
-        name: person_role
-        schema: auth
+  - name: history
+    using:
+      foreign_key_constraint_on:
+        column: person_id
+        table:
+          name: history
+          schema: auth
+  - name: roles
+    using:
+      foreign_key_constraint_on:
+        column: person_id
+        table:
+          name: person_role
+          schema: auth
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - address
-    - bankaccount
-    - city
-    - country
-    - email
-    - firstname
-    - key_code
-    - lastname
-    - name
-    - note
-    - password
-    - phone
-    - zipcode
-  role: board
+  - role: board
+    permission:
+      check: {}
+      columns:
+        - address
+        - bankaccount
+        - city
+        - country
+        - email
+        - firstname
+        - key_code
+        - lastname
+        - name
+        - note
+        - password
+        - phone
+        - zipcode
 select_permissions:
-- permission:
-    columns:
-    - id
-    - key_code
-    - note
-    - created
-    - modified
-    - address
-    - bankaccount
-    - city
-    - country
-    - email
-    - firstname
-    - lastname
-    - name
-    - password
-    - phone
-    - zipcode
-    filter: {}
-  role: board
-- permission:
-    columns:
-    - address
-    - city
-    - country
-    - created
-    - email
-    - firstname
-    - id
-    - lastname
-    - modified
-    - name
-    - note
-    - phone
-    - zipcode
-    filter: {}
-  role: member
-- permission:
-    columns:
-    - address
-    - bankaccount
-    - city
-    - country
-    - created
-    - email
-    - firstname
-    - id
-    - lastname
-    - modified
-    - name
-    - note
-    - password
-    - phone
-    - zipcode
-    filter:
-      id:
-        _eq: X-Hasura-User-Id
-  role: self
-- permission:
-    columns:
-    - email
-    - id
-    - name
-    - password
-    filter: {}
-  role: server
+  - role: board
+    permission:
+      columns:
+        - id
+        - key_code
+        - note
+        - created
+        - modified
+        - address
+        - bankaccount
+        - city
+        - country
+        - email
+        - firstname
+        - lastname
+        - name
+        - password
+        - phone
+        - zipcode
+      filter: {}
+  - role: member
+    permission:
+      columns:
+        - address
+        - city
+        - country
+        - created
+        - email
+        - firstname
+        - id
+        - lastname
+        - modified
+        - name
+        - note
+        - phone
+        - zipcode
+      filter: {}
+  - role: self
+    permission:
+      columns:
+        - address
+        - bankaccount
+        - city
+        - country
+        - created
+        - email
+        - firstname
+        - id
+        - lastname
+        - modified
+        - name
+        - note
+        - password
+        - phone
+        - zipcode
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+  - role: server
+    permission:
+      columns:
+        - email
+        - id
+        - name
+        - password
+      filter: {}
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - address
-    - bankaccount
-    - city
-    - country
-    - email
-    - firstname
-    - key_code
-    - lastname
-    - name
-    - note
-    - password
-    - phone
-    - zipcode
-    filter: {}
-  role: board
-- permission:
-    check: null
-    columns:
-    - address
-    - bankaccount
-    - city
-    - country
-    - email
-    - password
-    - phone
-    - zipcode
-    filter:
-      id:
-        _eq: X-Hasura-User-Id
-  role: self
-- permission:
-    check: null
-    columns:
-    - password
-    filter: {}
-  role: server
+  - role: board
+    permission:
+      columns:
+        - address
+        - bankaccount
+        - city
+        - country
+        - email
+        - firstname
+        - key_code
+        - lastname
+        - name
+        - note
+        - password
+        - phone
+        - zipcode
+      filter: {}
+      check: null
+  - role: self
+    permission:
+      columns:
+        - address
+        - bankaccount
+        - city
+        - country
+        - email
+        - password
+        - phone
+        - zipcode
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
+  - role: server
+    permission:
+      columns:
+        - password
+      filter: {}
+      check: null
