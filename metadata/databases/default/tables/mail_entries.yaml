@@ -2,57 +2,56 @@ table:
   name: entries
   schema: mail
 object_relationships:
-- name: person
-  using:
-    foreign_key_constraint_on: person_id
+  - name: person
+    using:
+      foreign_key_constraint_on: person_id
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - data
-    - person_id
-    - template
-  role: server
+  - role: server
+    permission:
+      check: {}
+      columns:
+        - data
+        - person_id
+        - template
 select_permissions:
-- permission:
-    columns:
-    - created
-    - data
-    - id
-    - message_info
-    - person_id
-    - status
-    - template
-    filter: {}
-  role: board
-- permission:
-    columns:
-    - id
-    - status
-    - person_id
-    - template
-    - data
-    - created
-    - message_info
-    filter: {}
-  role: server
+  - role: board
+    permission:
+      columns:
+        - created
+        - data
+        - id
+        - message_info
+        - person_id
+        - status
+        - template
+      filter: {}
+  - role: server
+    permission:
+      columns:
+        - id
+        - status
+        - person_id
+        - template
+        - data
+        - created
+        - message_info
+      filter: {}
 update_permissions:
-- permission:
-    check: null
-    columns:
-    - message_info
-    - status
-    filter: {}
-  role: server
+  - role: server
+    permission:
+      columns:
+        - message_info
+        - status
+      filter: {}
+      check: null
 event_triggers:
-- definition:
-    enable_manual: false
-    insert:
-      columns: "*"
-  name: mail-trigger
-  retry_conf:
-    interval_sec: 10
-    num_retries: 0
-    timeout_sec: 60
-  webhook: http://app/mail/trigger
+  - name: mail-trigger
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 0
+      timeout_sec: 60
+    webhook: http://app/mail/trigger

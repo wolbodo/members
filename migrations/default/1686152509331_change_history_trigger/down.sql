@@ -1,0 +1,6 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- CREATE OR REPLACE TRIGGER log_history
+--   AFTER INSERT OR UPDATE
+--   ON auth.person
+--   FOR EACH ROW EXECUTE FUNCTION auth.change_trigger();

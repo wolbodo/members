@@ -25,7 +25,7 @@ services:
       CERT_NAME: wildcard
 
   db:
-    image: postgres:13-alpine
+    image: postgres:15-alpine
     restart: unless-stopped
     command: postgres
     environment:
