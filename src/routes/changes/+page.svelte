@@ -9,12 +9,16 @@
 
 	$: ({ History } = data);
 
+	const hiddenFields = ['password'];
+
 	const changes = (
 		old_value: object | null,
 		new_value: object | null
 	): (string | [string, unknown])[] => {
 		if (!old_value) {
-			return Object.entries(new_value ?? {}).filter(([, value]) => Boolean(value));
+			return Object.entries(new_value ?? {})
+				.filter(([, value]) => Boolean(value))
+				.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value]);
 		}
 
 		return Object.entries(old_value)
@@ -25,6 +29,7 @@
 
 				return [key, `${value} -> ${new_value?.[key]}`];
 			})
+			.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value])
 			.filter(Boolean) as (string | [string, unknown])[];
 	};
 </script>
