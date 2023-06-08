@@ -8,6 +8,25 @@
 	export let data: PageData;
 
 	$: ({ History } = data);
+
+	const changes = (
+		old_value: object | null,
+		new_value: object | null
+	): (string | [string, unknown])[] => {
+		if (!old_value) {
+			return Object.entries(new_value ?? {}).filter(([, value]) => Boolean(value));
+		}
+
+		return Object.entries(old_value)
+			.map(([key, value]) => {
+				if (value === new_value?.[key]) {
+					return null;
+				}
+
+				return [key, `${value} -> ${new_value?.[key]}`];
+			})
+			.filter(Boolean) as (string | [string, unknown])[];
+	};
 </script>
 
 <h1>Changes</h1>
@@ -37,19 +56,13 @@
 				<td>{person.name}</td>
 				<td>{role}</td>
 				<td>
-					{#if old_values}
-						{#each Object.entries(old_values) as [key, value]}
-							<section>
-								{#if key === 'password'}
-									password
-								{:else if value || new_values[key]}
-									<b>{key}</b>: {value} -> {new_values[key]}
-								{/if}
-							</section>
-						{/each}
-					{:else}
-						<section>Created: {JSON.stringify(new_values)}</section>
-					{/if}
+					{#each changes(old_values, new_values) as change}
+						{#if typeof change === 'string'}
+							<section>{change}</section>
+						{:else}
+							<section><b>{change[0]}</b>: {change[1]}</section>
+						{/if}
+					{/each}
 				</td>
 			</tr>
 		{/each}
