@@ -13,7 +13,9 @@ const createPerson = graphql(`
 export const actions: Actions = {
 	default: async (event) => {
 		const data = await event.request.formData();
-		const person: auth_person_insert_input = Object.fromEntries(data.entries());
+		const person: auth_person_insert_input = Object.fromEntries(
+			Array.from(data.entries()).filter(([, value]) => Boolean(value))
+		);
 
 		const result = await createPerson.mutate({ person }, { event });
 
