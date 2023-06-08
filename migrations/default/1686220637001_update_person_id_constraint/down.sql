@@ -1,0 +1,10 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- ALTER TABLE ONLY auth.history
+--     ALTER COLUMN person_id DROP NOT NULL,
+--     DROP CONSTRAINT history_person_id_fkey;
+--
+-- ALTER TABLE ONLY auth.history
+--     ADD CONSTRAINT history_person_id_fkey
+--       FOREIGN KEY (person_id) REFERENCES auth.person(id)
+--       ON DELETE SET NULL;

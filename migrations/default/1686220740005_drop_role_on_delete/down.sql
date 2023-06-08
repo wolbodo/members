@@ -1,0 +1,7 @@
+-- Could not auto-generate a down migration.
+-- Please write an appropriate down migration for the SQL below:
+-- ALTER TABLE ONLY auth.person_role
+--     DROP CONSTRAINT person_role_person_id_fkey,
+--     ADD CONSTRAINT person_role_person_id_fkey
+--       FOREIGN KEY (person_id) REFERENCES auth.person(id)
+--       ON DELETE CASCADE;
