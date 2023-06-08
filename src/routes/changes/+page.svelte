@@ -37,15 +37,19 @@
 				<td>{person.name}</td>
 				<td>{role}</td>
 				<td>
-					{#each Object.entries(old_values) as [key, value]}
-						<section>
-							{#if key === 'password'}
-								password
-							{:else if value || new_values[key]}
-								<b>{key}</b>: {value} -> {new_values[key]}
-							{/if}
-						</section>
-					{/each}
+					{#if old_values}
+						{#each Object.entries(old_values) as [key, value]}
+							<section>
+								{#if key === 'password'}
+									password
+								{:else if value || new_values[key]}
+									<b>{key}</b>: {value} -> {new_values[key]}
+								{/if}
+							</section>
+						{/each}
+					{:else}
+						<section>Created: {JSON.stringify(new_values)}</section>
+					{/if}
 				</td>
 			</tr>
 		{/each}
