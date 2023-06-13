@@ -54,7 +54,9 @@
 			<tr><td colspan="5">Loading</td></tr>
 		{/each}
 	{:else if $History.data}
-		{#each $History.data.history.filter( ({ author, person, role }) => filterFields($searchValue, author?.name, person?.name, role) ) as { timestamp, new_values, old_values, role, author, person }}
+		{#each $History.data.history
+			.filter((v) => Boolean(v))
+			.filter( ({ author, person, role }) => filterFields($searchValue, author?.name, person?.name, role) ) as { timestamp, new_values, old_values, role, author, person }}
 			<tr>
 				<td>{datetime(timestamp)}</td>
 				<td>{author?.name ?? ''}</td>
