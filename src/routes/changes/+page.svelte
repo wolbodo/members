@@ -60,7 +60,7 @@
 			<tr>
 				<td>{datetime(timestamp)}</td>
 				<td>{author?.name ?? ''}</td>
-				<td>{person.name}</td>
+				<td>{person?.name}</td>
 				<td>{role}</td>
 				<td>
 					{#each changes(old_values, new_values) as change}
