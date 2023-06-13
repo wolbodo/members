@@ -16,7 +16,7 @@
 </script>
 
 <section class:changed class={_class}>
-	{#if !readonly || value}
+	{#if !readonly || value || 'checked' in $$restProps}
 		{#if type !== 'hidden'}
 			<label for={name}>{label || name}</label>
 		{/if}
