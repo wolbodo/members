@@ -17,6 +17,8 @@ mutation EditPerson($id: Int!, $data: auth_person_set_input!, $isBoard: Boolean 
 
 			bankaccount
 			key_code @include(if: $isBoard)
+			allow_door
+			allow_register
 		}
 	}
 }

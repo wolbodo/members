@@ -15,6 +15,9 @@ query PersonByName($name: String, $isBoard: Boolean = false, $isSelf: Boolean = 
 		created
 		modified
 
+		allow_door
+		allow_register
+
 		...PersonRoles
 
 		bankaccount @include(if: $isBoard)
