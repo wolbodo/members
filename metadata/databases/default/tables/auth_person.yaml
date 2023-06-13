@@ -22,6 +22,8 @@ insert_permissions:
       check: {}
       columns:
         - address
+        - allow_door
+        - allow_register
         - bankaccount
         - city
         - country
@@ -38,19 +40,21 @@ select_permissions:
   - role: board
     permission:
       columns:
-        - id
-        - key_code
-        - note
-        - created
-        - modified
         - address
+        - allow_door
+        - allow_register
         - bankaccount
         - city
         - country
+        - created
         - email
         - firstname
+        - id
+        - key_code
         - lastname
+        - modified
         - name
+        - note
         - password
         - phone
         - zipcode
@@ -59,6 +63,8 @@ select_permissions:
     permission:
       columns:
         - address
+        - allow_door
+        - allow_register
         - city
         - country
         - created
@@ -76,6 +82,8 @@ select_permissions:
     permission:
       columns:
         - address
+        - allow_door
+        - allow_register
         - bankaccount
         - city
         - country
@@ -96,8 +104,11 @@ select_permissions:
   - role: server
     permission:
       columns:
+        - allow_door
+        - allow_register
         - email
         - id
+        - key_code
         - name
         - password
       filter: {}
@@ -106,6 +117,8 @@ update_permissions:
     permission:
       columns:
         - address
+        - allow_door
+        - allow_register
         - bankaccount
         - city
         - country
