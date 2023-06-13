@@ -14,6 +14,21 @@ directive @cached(
 ) on QUERY
 
 """
+Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+"""
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+"""
 Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
 """
 input Int_comparison_exp {
@@ -99,8 +114,8 @@ type auth_history {
   ): jsonb
 
   """An object relationship"""
-  person: auth_person!
-  person_id: Int!
+  person: auth_person
+  person_id: Int
   role: String
   timestamp: timestamp
 }
@@ -533,6 +548,8 @@ columns and relationships of "auth.person"
 """
 type auth_person {
   address: String
+  allow_door: Boolean!
+  allow_register: Boolean!
   bankaccount: String
   city: String
   country: String
@@ -660,6 +677,8 @@ input auth_person_bool_exp {
   _not: auth_person_bool_exp
   _or: [auth_person_bool_exp!]
   address: String_comparison_exp
+  allow_door: Boolean_comparison_exp
+  allow_register: Boolean_comparison_exp
   bankaccount: String_comparison_exp
   city: String_comparison_exp
   country: String_comparison_exp
@@ -708,6 +727,8 @@ input type for inserting data into table "auth.person"
 """
 input auth_person_insert_input {
   address: String
+  allow_door: Boolean
+  allow_register: Boolean
   bankaccount: String
   city: String
   country: String
@@ -800,6 +821,8 @@ input auth_person_on_conflict {
 """Ordering options when selecting data from "auth.person"."""
 input auth_person_order_by {
   address: order_by
+  allow_door: order_by
+  allow_register: order_by
   bankaccount: order_by
   city: order_by
   country: order_by
@@ -1223,6 +1246,12 @@ enum auth_person_select_column {
   address
 
   """column name"""
+  allow_door
+
+  """column name"""
+  allow_register
+
+  """column name"""
   bankaccount
 
   """column name"""
@@ -1273,6 +1302,8 @@ input type for updating data in table "auth.person"
 """
 input auth_person_set_input {
   address: String
+  allow_door: Boolean
+  allow_register: Boolean
   bankaccount: String
   city: String
   country: String
@@ -1319,6 +1350,8 @@ input auth_person_stream_cursor_input {
 """Initial value of the column from where the streaming should start"""
 input auth_person_stream_cursor_value_input {
   address: String
+  allow_door: Boolean
+  allow_register: Boolean
   bankaccount: String
   city: String
   country: String
@@ -1347,6 +1380,12 @@ update columns of table "auth.person"
 enum auth_person_update_column {
   """column name"""
   address
+
+  """column name"""
+  allow_door
+
+  """column name"""
+  allow_register
 
   """column name"""
   bankaccount

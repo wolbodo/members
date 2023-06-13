@@ -31,6 +31,18 @@
 
 			<Input name="bankaccount" value={form?.variables?.person.bankaccount || ''} />
 			<Input label="keycode" name="key_code" value={form?.variables?.person.key_code || ''} />
+			<Input
+				type="checkbox"
+				label="allow register"
+				name="allow_register"
+				value={form?.variables?.person.allow_register || false}
+			/>
+			<Input
+				type="checkbox"
+				label="allow door"
+				name="allow_door"
+				value={form?.variables?.person.allow_door || false}
+			/>
 
 			<Input name="password" value={form?.variables?.person.password || ''} type="password" />
 			<Input name="note" value={form?.variables?.person.note || ''} type="textarea" />

@@ -59,6 +59,20 @@
 			{#if isBoard}
 				<Input label="keycode" name="key_code" value={person.key_code} readonly={!edit} />
 			{/if}
+			<Input
+				type="checkbox"
+				label="allow register"
+				name="allow_register"
+				value={person.allow_register || false}
+				readonly={!edit}
+			/>
+			<Input
+				type="checkbox"
+				label="allow door"
+				name="allow_door"
+				value={person.allow_door || false}
+				readonly={!edit}
+			/>
 
 			<Input name="password" type="password" readonly={!edit} />
 
