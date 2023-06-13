@@ -35,13 +35,13 @@
 				type="checkbox"
 				label="allow register"
 				name="allow_register"
-				value={form?.variables?.person.allow_register || false}
+				checked={form?.variables?.person.allow_register}
 			/>
 			<Input
 				type="checkbox"
 				label="allow door"
 				name="allow_door"
-				value={form?.variables?.person.allow_door || false}
+				checked={form?.variables?.person.allow_door}
 			/>
 
 			<Input name="password" value={form?.variables?.person.password || ''} type="password" />

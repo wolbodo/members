@@ -64,14 +64,14 @@
 				type="checkbox"
 				label="allow register"
 				name="allow_register"
-				value={person.allow_register || false}
+				checked={person.allow_register}
 				readonly={!edit}
 			/>
 			<Input
 				type="checkbox"
 				label="allow door"
 				name="allow_door"
-				value={person.allow_door || false}
+				checked={person.allow_door}
 				readonly={!edit}
 			/>
 
