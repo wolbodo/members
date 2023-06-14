@@ -96,6 +96,170 @@ input String_comparison_exp {
   _similar: String
 }
 
+"""Storing application secrets"""
+type auth_application {
+  name: String!
+  role: String!
+  secret: uuid!
+}
+
+"""
+aggregated selection of "auth.application"
+"""
+type auth_application_aggregate {
+  aggregate: auth_application_aggregate_fields
+  nodes: [auth_application!]!
+}
+
+"""
+aggregate fields of "auth.application"
+"""
+type auth_application_aggregate_fields {
+  count(columns: [auth_application_select_column!], distinct: Boolean): Int!
+  max: auth_application_max_fields
+  min: auth_application_min_fields
+}
+
+"""
+Boolean expression to filter rows from the table "auth.application". All fields are combined with a logical 'AND'.
+"""
+input auth_application_bool_exp {
+  _and: [auth_application_bool_exp!]
+  _not: auth_application_bool_exp
+  _or: [auth_application_bool_exp!]
+  name: String_comparison_exp
+  role: String_comparison_exp
+  secret: uuid_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "auth.application"
+"""
+enum auth_application_constraint {
+  """
+  unique or primary key constraint on columns "name"
+  """
+  applications_pkey
+}
+
+"""
+input type for inserting data into table "auth.application"
+"""
+input auth_application_insert_input {
+  name: String
+  role: String
+  secret: uuid
+}
+
+"""aggregate max on columns"""
+type auth_application_max_fields {
+  name: String
+  role: String
+  secret: uuid
+}
+
+"""aggregate min on columns"""
+type auth_application_min_fields {
+  name: String
+  role: String
+  secret: uuid
+}
+
+"""
+response of any mutation on the table "auth.application"
+"""
+type auth_application_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [auth_application!]!
+}
+
+"""
+on_conflict condition type for table "auth.application"
+"""
+input auth_application_on_conflict {
+  constraint: auth_application_constraint!
+  update_columns: [auth_application_update_column!]! = []
+  where: auth_application_bool_exp
+}
+
+"""Ordering options when selecting data from "auth.application"."""
+input auth_application_order_by {
+  name: order_by
+  role: order_by
+  secret: order_by
+}
+
+"""primary key columns input for table: auth.application"""
+input auth_application_pk_columns_input {
+  name: String!
+}
+
+"""
+select columns of table "auth.application"
+"""
+enum auth_application_select_column {
+  """column name"""
+  name
+
+  """column name"""
+  role
+
+  """column name"""
+  secret
+}
+
+"""
+input type for updating data in table "auth.application"
+"""
+input auth_application_set_input {
+  name: String
+  role: String
+  secret: uuid
+}
+
+"""
+Streaming cursor of the table "auth_application"
+"""
+input auth_application_stream_cursor_input {
+  """Stream column input with initial value"""
+  initial_value: auth_application_stream_cursor_value_input!
+
+  """cursor ordering"""
+  ordering: cursor_ordering
+}
+
+"""Initial value of the column from where the streaming should start"""
+input auth_application_stream_cursor_value_input {
+  name: String
+  role: String
+  secret: uuid
+}
+
+"""
+update columns of table "auth.application"
+"""
+enum auth_application_update_column {
+  """column name"""
+  name
+
+  """column name"""
+  role
+
+  """column name"""
+  secret
+}
+
+input auth_application_updates {
+  """sets the columns of the filtered rows to the given values"""
+  _set: auth_application_set_input
+
+  """filter the rows which have to be updated"""
+  where: auth_application_bool_exp!
+}
+
 """
 columns and relationships of "auth.history"
 """
@@ -1862,6 +2026,19 @@ type mail_entries_variance_fields {
 """mutation root"""
 type mutation_root {
   """
+  delete data from the table: "auth.application"
+  """
+  delete_auth_application(
+    """filter the rows which have to be deleted"""
+    where: auth_application_bool_exp!
+  ): auth_application_mutation_response
+
+  """
+  delete single row from the table: "auth.application"
+  """
+  delete_auth_application_by_pk(name: String!): auth_application
+
+  """
   delete data from the table: "auth.history"
   """
   delete_auth_history(
@@ -1907,6 +2084,28 @@ type mutation_root {
   delete single row from the table: "mail.entries"
   """
   delete_mail_entries_by_pk(id: Int!): mail_entries
+
+  """
+  insert data into the table: "auth.application"
+  """
+  insert_auth_application(
+    """the rows to be inserted"""
+    objects: [auth_application_insert_input!]!
+
+    """upsert condition"""
+    on_conflict: auth_application_on_conflict
+  ): auth_application_mutation_response
+
+  """
+  insert a single row into the table: "auth.application"
+  """
+  insert_auth_application_one(
+    """the row to be inserted"""
+    object: auth_application_insert_input!
+
+    """upsert condition"""
+    on_conflict: auth_application_on_conflict
+  ): auth_application
 
   """
   insert data into the table: "auth.history"
@@ -1989,6 +2188,34 @@ type mutation_root {
     """upsert condition"""
     on_conflict: mail_entries_on_conflict
   ): mail_entries
+
+  """
+  update data of the table: "auth.application"
+  """
+  update_auth_application(
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_application_set_input
+
+    """filter the rows which have to be updated"""
+    where: auth_application_bool_exp!
+  ): auth_application_mutation_response
+
+  """
+  update single row of the table: "auth.application"
+  """
+  update_auth_application_by_pk(
+    """sets the columns of the filtered rows to the given values"""
+    _set: auth_application_set_input
+    pk_columns: auth_application_pk_columns_input!
+  ): auth_application
+
+  """
+  update multiples rows of table: "auth.application"
+  """
+  update_auth_application_many(
+    """updates to execute, in order"""
+    updates: [auth_application_updates!]!
+  ): [auth_application_mutation_response]
 
   """
   update data of the table: "auth.history"
@@ -2201,6 +2428,51 @@ enum order_by {
 
 type query_root {
   """
+  fetch data from the table: "auth.application"
+  """
+  auth_application(
+    """distinct select on columns"""
+    distinct_on: [auth_application_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_application_order_by!]
+
+    """filter the rows returned"""
+    where: auth_application_bool_exp
+  ): [auth_application!]!
+
+  """
+  fetch aggregated fields from the table: "auth.application"
+  """
+  auth_application_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_application_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_application_order_by!]
+
+    """filter the rows returned"""
+    where: auth_application_bool_exp
+  ): auth_application_aggregate!
+
+  """
+  fetch data from the table: "auth.application" using primary key columns
+  """
+  auth_application_by_pk(name: String!): auth_application
+
+  """
   fetch data from the table: "auth.history"
   """
   auth_history(
@@ -2390,6 +2662,65 @@ input status_comparison_exp {
 }
 
 type subscription_root {
+  """
+  fetch data from the table: "auth.application"
+  """
+  auth_application(
+    """distinct select on columns"""
+    distinct_on: [auth_application_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_application_order_by!]
+
+    """filter the rows returned"""
+    where: auth_application_bool_exp
+  ): [auth_application!]!
+
+  """
+  fetch aggregated fields from the table: "auth.application"
+  """
+  auth_application_aggregate(
+    """distinct select on columns"""
+    distinct_on: [auth_application_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [auth_application_order_by!]
+
+    """filter the rows returned"""
+    where: auth_application_bool_exp
+  ): auth_application_aggregate!
+
+  """
+  fetch data from the table: "auth.application" using primary key columns
+  """
+  auth_application_by_pk(name: String!): auth_application
+
+  """
+  fetch data from the table in a streaming manner: "auth.application"
+  """
+  auth_application_stream(
+    """maximum number of rows returned in a single batch"""
+    batch_size: Int!
+
+    """cursor to stream the results returned by the query"""
+    cursor: [auth_application_stream_cursor_input]!
+
+    """filter the rows returned"""
+    where: auth_application_bool_exp
+  ): [auth_application!]!
+
   """
   fetch data from the table: "auth.history"
   """
@@ -2650,4 +2981,21 @@ input timestamptz_comparison_exp {
   _lte: timestamptz
   _neq: timestamptz
   _nin: [timestamptz!]
+}
+
+scalar uuid
+
+"""
+Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'.
+"""
+input uuid_comparison_exp {
+  _eq: uuid
+  _gt: uuid
+  _gte: uuid
+  _in: [uuid!]
+  _is_null: Boolean
+  _lt: uuid
+  _lte: uuid
+  _neq: uuid
+  _nin: [uuid!]
 }

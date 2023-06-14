@@ -78,6 +78,18 @@ select_permissions:
         - phone
         - zipcode
       filter: {}
+  - role: register
+    permission:
+      columns:
+        - id
+        - key_code
+        - name
+      filter:
+        _and:
+          - allow_register:
+              _eq: true
+          - key_code:
+              _is_null: false
   - role: self
     permission:
       columns:
