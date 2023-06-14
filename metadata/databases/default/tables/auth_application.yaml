@@ -1,0 +1,11 @@
+table:
+  name: application
+  schema: auth
+select_permissions:
+  - role: server
+    permission:
+      columns:
+        - name
+        - secret
+        - role
+      filter: {}
