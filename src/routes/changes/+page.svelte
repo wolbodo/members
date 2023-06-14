@@ -51,7 +51,7 @@
 		<tr><td colspan="5">Loading</td></tr>
 	{:else if $History.errors}
 		{#each $History.errors as error}
-			<tr><td colspan="5">Loading</td></tr>
+			<tr><td colspan="5">{JSON.stringify(error)}</td></tr>
 		{/each}
 	{:else if $History.data}
 		{#each $History.data.history
