@@ -51,7 +51,7 @@
 						e.stopPropagation();
 
 						if (!e.target.hasAttribute('href')) {
-							goto(`/m/${person.name.toLowerCase()}`);
+							goto(`/m/${person.id}`);
 						}
 					}}
 				>

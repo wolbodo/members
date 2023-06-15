@@ -2,6 +2,7 @@
 	import type { ActionData } from './$types';
 	import { enhance } from '$app/forms';
 	import { Input } from '$lib/Form';
+	import Toggle from '$lib/Toggle.svelte';
 
 	export let form: ActionData;
 </script>
@@ -31,18 +32,12 @@
 
 			<Input name="bankaccount" value={form?.variables?.person.bankaccount || ''} />
 			<Input label="keycode" name="key_code" value={form?.variables?.person.key_code || ''} />
-			<Input
-				type="checkbox"
-				label="allow register"
-				name="allow_register"
-				checked={form?.variables?.person.allow_register}
-			/>
-			<Input
-				type="checkbox"
-				label="allow door"
-				name="allow_door"
-				checked={form?.variables?.person.allow_door}
-			/>
+			<Toggle name="allow_register" checked={Boolean(form?.variables?.person.allow_register)}
+				>allow register</Toggle
+			>
+			<Toggle name="allow_door" checked={Boolean(form?.variables?.person.allow_door)}
+				>allow door</Toggle
+			>
 
 			<Input name="password" value={form?.variables?.person.password || ''} type="password" />
 			<Input name="note" value={form?.variables?.person.note || ''} type="textarea" />

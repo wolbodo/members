@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import { datetime } from '$lib/format';
+	import Toggle from '$lib/Toggle.svelte';
 	import { Input, RoleSelector } from '$lib/Form';
 	import { enhance } from '$app/forms';
 
@@ -59,20 +60,12 @@
 			{#if isBoard}
 				<Input label="keycode" name="key_code" value={person.key_code} readonly={!edit} />
 			{/if}
-			<Input
-				type="checkbox"
-				label="allow register"
-				name="allow_register"
-				checked={person.allow_register}
-				readonly={!edit}
-			/>
-			<Input
-				type="checkbox"
-				label="allow door"
-				name="allow_door"
-				checked={person.allow_door}
-				readonly={!edit}
-			/>
+			<Toggle name="allow_register" checked={Boolean(person.allow_register)} disabled={!edit}
+				>allow register</Toggle
+			>
+			<Toggle name="allow_door" checked={Boolean(person.allow_door)} disabled={!edit}
+				>allow door</Toggle
+			>
 
 			<Input name="password" type="password" readonly={!edit} />
 
