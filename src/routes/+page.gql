@@ -1,5 +1,6 @@
 query AllPeople($where: auth_person_bool_exp = {}) {
 	people: auth_person(order_by: { name: asc }, where: $where) {
+		id
 		name
 		email
 		phone

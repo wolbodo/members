@@ -1,8 +1,19 @@
-import { PersonByNameStore, EditPersonStore } from '$houdini';
+import {
+	PersonByNameStore,
+	EditPersonStore,
+	type auth_person_set_input,
+	type PersonByName$result
+} from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
 const queryPerson = new PersonByNameStore();
+
+type FilterProperties<T, TFieldType> = {
+	[K in keyof T as T[K] extends TFieldType ? K : never]: T[K];
+};
+
+type BooleanKey = keyof FilterProperties<auth_person_set_input, boolean | null | undefined>;
 
 export const actions: Actions = {
 	edit: async (event) => {
@@ -34,7 +45,16 @@ export const actions: Actions = {
 
 				if (person[key as keyof typeof person] !== value) return true;
 			})
-		);
+		) as auth_person_set_input;
+
+		// Fix all boolean keys
+
+		for (let [key, value] of Object.entries(person)) {
+			if (typeof value === 'boolean') {
+				const booleanKey = key as BooleanKey;
+				dirtyData[booleanKey] = booleanKey in dirtyData;
+			}
+		}
 
 		console.log('Updating', dirtyData);
 
