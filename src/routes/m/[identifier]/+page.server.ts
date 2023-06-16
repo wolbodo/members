@@ -1,14 +1,13 @@
 import {
-	PersonByIdStore,
+	PersonStore,
 	EditPersonStore,
-	type EditPerson$input,
-	type auth_person_set_input
+	type auth_person_set_input,
+	type Person$result
 } from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
-
-const queryPerson = new PersonByIdStore();
+const queryPerson = new PersonStore();
 
 type FilterProperties<T, TFieldType> = {
 	[K in keyof T as T[K] extends TFieldType ? K : never]: T[K];
@@ -19,13 +18,13 @@ type BooleanKey = keyof FilterProperties<auth_person_set_input, boolean | null |
 export const actions: Actions = {
 	edit: async (event) => {
 		const isBoard = event.locals.user.roles.includes('board');
-		const isSelf = event.params.name === event.locals.user.name;
+		const isSelf =
+			event.params.name.toLocaleLowerCase() === event.locals.user.name.toLocaleLowerCase();
 		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
-				id: event.params.id,
-				isBoard,
-				isSelf
+				name: event.params.name,
+				isBoard
 			}
 		});
 
@@ -60,11 +59,10 @@ export const actions: Actions = {
 		console.log('Updating', dirtyData);
 
 		const editPerson = new EditPersonStore();
-
 		return await editPerson.mutate(
 			{
-				id: event.params.id,
-				data: dirtyData as EditPerson$input['data']
+				id: parseInt(userId as string),
+				data: dirtyData
 			},
 			{
 				event,
@@ -77,7 +75,6 @@ export const actions: Actions = {
 export const load: PageServerLoad = async (event) => {
 	return {
 		variables: {
-			name: event.params.name,
 			isBoard: event.locals.user.roles.includes('board'),
 			isSelf: event.params.name === event.locals.user.name
 		}

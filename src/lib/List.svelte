@@ -9,13 +9,17 @@
 	export let people: AllPeople$result['people'] = [];
 	export let fetching: boolean = true;
 
+	type Person = AllPeople$result['people'][number];
 	type Column = {
 		label: string;
-		href?: (data: any) => string;
+		link?: (data: any) => string;
 		format: (data: any) => string;
 	};
+	const link = ({ id, name, roles }: Person): string =>
+		roles.find(({ role }) => role === 'member') ? `m/${name.toLowerCase()}` : `m/${id}`;
+
 	const columns: Column[] = [
-		{ label: 'Name', format: ({ name }) => name, href: ({ name }) => `m/${name.toLowerCase()}` },
+		{ label: 'Name', format: ({ name }) => name, link },
 		{ label: 'Email', format: ({ email }) => email },
 		{ label: 'Phone', format: ({ phone }) => phone },
 		{
@@ -50,15 +54,15 @@
 					on:click={(e) => {
 						e.stopPropagation();
 
-						if (!e.target.hasAttribute('href')) {
-							goto(`/m/${person.id}`);
+						if (!e.target?.hasAttribute('href')) {
+							goto(link(person));
 						}
 					}}
 				>
-					{#each columns as { href, format }}
+					{#each columns as { link, format }}
 						<td>
-							{#if href}
-								<a href={href(person)}>
+							{#if link}
+								<a href={link(person)}>
 									{format(person) ?? ''}
 								</a>
 							{:else}

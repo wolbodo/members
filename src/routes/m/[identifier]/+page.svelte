@@ -1,31 +1,31 @@
 <script lang="ts">
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$houdini';
 	import { datetime } from '$lib/format';
-	import Toggle from '$lib/Toggle.svelte';
 	import { Input, RoleSelector } from '$lib/Form';
 	import { enhance } from '$app/forms';
+	import Toggle from '$lib/Toggle.svelte';
 
 	export let data: PageData;
 
-	$: ({ PersonById, user } = data);
+	$: ({ Person, user } = data);
 	$: isBoard = user?.roles.includes('board');
-	$: isSelf = parseInt(user.id) === $PersonById.data?.auth_person[0].id;
+	$: isSelf = parseInt(user.id) === $Person.data?.auth_person[0]?.id;
 
 	let edit: boolean;
 </script>
 
 <content>
-	{#if $PersonById.fetching}
+	{#if $Person.fetching}
 		<p>Loading...</p>
-	{:else if $PersonById.errors}
+	{:else if $Person.errors}
 		<h2>Error</h2>
 		<ul>
-			{#each $PersonById.errors as error}
+			{#each $Person.errors as error}
 				<li>{error.message}</li>
 			{/each}
 		</ul>
-	{:else if $PersonById.data}
-		{@const person = $PersonById.data.auth_person[0]}
+	{:else if $Person.data?.auth_person?.length}
+		{@const person = $Person.data.auth_person[0]}
 
 		<form
 			action="?/edit"
@@ -60,13 +60,15 @@
 			{#if isBoard}
 				<Input label="keycode" name="key_code" value={person.key_code} readonly={!edit} />
 			{/if}
-			<Toggle name="allow_register" checked={Boolean(person.allow_register)} disabled={!edit}
-				>allow register</Toggle
-			>
-			<Toggle name="allow_door" checked={Boolean(person.allow_door)} disabled={!edit}
-				>allow door</Toggle
-			>
 
+			<section>
+				<Toggle name="allow_register" checked={Boolean(person.allow_register)} readonly={!edit}
+					>allow register</Toggle
+				>
+				<Toggle name="allow_door" checked={Boolean(person.allow_door)} readonly={!edit}
+					>allow door</Toggle
+				>
+			</section>
 			<Input name="password" type="password" readonly={!edit} />
 
 			{#if isBoard}
@@ -74,7 +76,7 @@
 			{/if}
 
 			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readonly={!edit} /> -->
-			<RoleSelector {person} readonly={!edit || !isBoard} refetch={() => PersonById.fetch()} />
+			<RoleSelector {person} readonly={!edit || !isBoard} refetch={() => Person.fetch()} />
 
 			<section>
 				<Input name="id" value={person.id} type="hidden" readonly />
@@ -87,16 +89,16 @@
 			{#if edit}
 				<section class="submit">
 					<!-- {#if error}
-						{#each error as error}
-							<small>{error.message}</small>
-						{/each}
-					{/if} -->
+							{#each error as error}
+								<small>{error.message}</small>
+							{/each}
+						{/if} -->
 					<button type="submit">Submit</button>
 				</section>
 			{/if}
 		</form>
 	{:else}
-		<p>No data</p>
+		<h2>Person not found</h2>
 	{/if}
 </content>
 
