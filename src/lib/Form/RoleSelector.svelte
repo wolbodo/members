@@ -2,12 +2,7 @@
 	import Select from 'svelte-select';
 	import { formatDate } from '$lib/format';
 
-	import {
-		graphql,
-		fragment,
-		type PersonRoles,
-		type PersonRoles$data,
-	} from '$houdini';
+	import { graphql, fragment, type PersonRoles, type PersonRoles$data } from '$houdini';
 
 	export let person: PersonRoles;
 	export let readonly: boolean = false;
@@ -77,7 +72,7 @@
 
 		// Check for duplicates
 		if (!currentRoles.some((currentRole) => role === currentRole.role)) {
-			await createRole.mutate({ personId: person.id, role });
+			await createRole.mutate({ personId: person.id, role }, { metadata: { isBoard: true } });
 		}
 		roleSelect = '';
 
@@ -107,7 +102,7 @@
 						<button
 							type="button"
 							on:click={async () => {
-								await stopRole.mutate({ id: role.id });
+								await stopRole.mutate({ id: role.id }, { metadata: { isBoard: true } });
 								await refetch();
 							}}>Stop</button
 						>
