@@ -17,10 +17,10 @@ export const actions: Actions = {
 			Array.from(data.entries()).filter(([, value]) => Boolean(value))
 		);
 
-		const result = await createPerson.mutate({ person }, { event });
+		const result = await createPerson.mutate({ person }, { event, metadata: { isBoard: true } });
 
 		if (result.data) {
-			throw redirect(302, `/m/${result.data.person?.name}`);
+			throw redirect(302, `/m/${result.data.person?.id}`);
 		}
 		return result;
 	}
