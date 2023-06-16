@@ -7,6 +7,7 @@ import {
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
+import { where } from './where';
 const queryPerson = new PersonStore();
 
 type FilterProperties<T, TFieldType> = {
@@ -19,17 +20,17 @@ export const actions: Actions = {
 	edit: async (event) => {
 		const isBoard = event.locals.user.roles.includes('board');
 		const isSelf =
-			event.params.name.toLocaleLowerCase() === event.locals.user.name.toLocaleLowerCase();
+			event.params.identifier.toLocaleLowerCase() === event.locals.user.name.toLocaleLowerCase();
 		const { data: queryData } = await queryPerson.fetch({
 			event,
 			variables: {
-				name: event.params.name,
+				where: where(event.params.identifier),
 				isBoard
 			}
 		});
 
 		if (!queryData) {
-			throw fail(500);
+			throw fail(400);
 		}
 
 		const {
@@ -76,7 +77,7 @@ export const load: PageServerLoad = async (event) => {
 	return {
 		variables: {
 			isBoard: event.locals.user.roles.includes('board'),
-			isSelf: event.params.name === event.locals.user.name
+			isSelf: event.params.identifier === event.locals.user.name
 		}
 	};
 };
