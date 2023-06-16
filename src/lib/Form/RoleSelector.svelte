@@ -9,6 +9,8 @@
 	export let refetch: () => void;
 	// export let options = [];
 
+	let newRole = '';
+
 	$: allRoles = graphql(`
 		query AllRoles {
 			roles: auth_person_role(distinct_on: role) {
@@ -66,7 +68,13 @@
 		({ role }) => !currentRoles.find((currentRole) => currentRole.role === role)
 	);
 
-	let roleSelect: string;
+	let filterText = '';
+	let value: string = '';
+	let items: { value: string; label: string; created: boolean }[] = [];
+	$: if (possibleRoles) {
+		items = possibleRoles.map(({ role }) => ({ value: role, label: role }));
+	}
+
 	async function handleSelect(event) {
 		const role = event.detail.value.toLowerCase();
 
@@ -74,9 +82,16 @@
 		if (!currentRoles.some((currentRole) => role === currentRole.role)) {
 			await createRole.mutate({ personId: person.id, role }, { metadata: { isBoard: true } });
 		}
-		roleSelect = '';
+		value = '';
 
 		await refetch();
+	}
+
+	function handleFilter(e) {
+		if (e.detail.length === 0 && filterText.length > 0) {
+			const prev = items.filter((i) => !i.created);
+			items = [...prev, { value: filterText, label: filterText, created: true }];
+		}
 	}
 </script>
 
@@ -84,12 +99,12 @@
 	<label>Roles</label>
 
 	{#if !readonly}
-		<Select
-			items={possibleRoles?.map(({ role }) => ({ value: role, label: role }))}
-			bind:value={roleSelect}
-			on:select={handleSelect}
-			isCreatable
-		/>
+		<Select {items} bind:value on:select={handleSelect} on:filter={handleFilter} bind:filterText>
+			<div slot="item" let:item>
+				{item.created ? 'Add new: ' : ''}
+				{item.label}
+			</div>
+		</Select>
 	{/if}
 
 	{#if roles}
