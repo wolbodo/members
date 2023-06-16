@@ -20,6 +20,13 @@ query Person($where: auth_person_bool_exp!, $isBoard: Boolean = false, $isSelf: 
 
 		...PersonRoles
 
+		roles {
+			id
+			role
+			valid_from
+			valid_till
+		}
+
 		bankaccount @include(if: $isBoard)
 		bankaccount @include(if: $isSelf)
 		key_code @include(if: $isBoard)
