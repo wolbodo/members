@@ -1,6 +1,6 @@
-query PersonByName($name: String, $isBoard: Boolean = false, $isSelf: Boolean = false)
+query Person($where: auth_person_bool_exp!, $isBoard: Boolean = false, $isSelf: Boolean = false)
 @cache(policy: NetworkOnly) {
-	auth_person(where: { name: { _ilike: $name } }, limit: 1) {
+	auth_person(where: $where, limit: 1) {
 		name
 		firstname
 		lastname
