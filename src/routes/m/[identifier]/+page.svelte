@@ -62,10 +62,10 @@
 			{/if}
 
 			<section>
-				<Toggle name="allow_register" checked={Boolean(person.allow_register)} readonly={!edit}
+				<Toggle name="allow_register" checked={Boolean(person.allow_register)} disabled={!edit}
 					>allow register</Toggle
 				>
-				<Toggle name="allow_door" checked={Boolean(person.allow_door)} readonly={!edit}
+				<Toggle name="allow_door" checked={Boolean(person.allow_door)} disabled={!edit}
 					>allow door</Toggle
 				>
 			</section>
