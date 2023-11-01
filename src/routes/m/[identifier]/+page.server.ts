@@ -1,9 +1,4 @@
-import {
-	PersonStore,
-	EditPersonStore,
-	type auth_person_set_input,
-	type Person$result
-} from '$houdini';
+import { PersonStore, EditPersonStore, type auth_person_set_input } from '$houdini';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { PageServerLoad } from './$types';
@@ -40,17 +35,19 @@ export const actions: Actions = {
 		const formData = await event.request.formData();
 
 		const { id: userId, ...dirtyData } = Object.fromEntries(
-			Array.from(formData.entries()).filter(([key, value]) => {
-				if (key === 'password' && value === '') return false;
-				if (key === 'id') return true;
+			Array.from(formData.entries())
+				.filter(([key, value]) => {
+					if (key === 'password' && value === '') return false;
+					if (key === 'id') return true;
 
-				if (person[key as keyof typeof person] !== value) return true;
-			})
+					if (person[key as keyof typeof person] !== value) return true;
+				})
+				.map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
 		) as auth_person_set_input;
 
 		// Fix all boolean keys
 
-		for (let [key, value] of Object.entries(person)) {
+		for (const [key, value] of Object.entries(person)) {
 			if (typeof value === 'boolean') {
 				const booleanKey = key as BooleanKey;
 				dirtyData[booleanKey] = booleanKey in dirtyData;
