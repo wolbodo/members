@@ -2,7 +2,8 @@ version: '3.4'
 
 networks:
   external:
-    name: proxy_default
+    external: true
+    name: public
 
 volumes:
   members-db:
