@@ -58,6 +58,6 @@ jobs:
       - name: Copy environment
         run: cp ~/config/members.env .env
       - name: Pull dependencies
-        run: docker-compose pull -q
+        run: docker compose pull -q
       - name: Deploy services
-        run: docker-compose up -d
+        run: docker compose up -d
