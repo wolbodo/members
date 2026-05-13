@@ -1,45 +1,37 @@
 import { fail } from '@sveltejs/kit';
+import { ilike } from 'drizzle-orm';
 
-import { PersonByEmailStore } from '$houdini';
+import { db } from '$lib/server/db';
+import { person } from '$lib/server/schema';
 import { send } from '$lib/mail';
-
-import { serverToken, createToken } from '$lib/jwt';
+import { createToken } from '$lib/jwt';
 import type { Actions } from './$types';
 
 export const actions = {
 	default: async (event) => {
 		const data = await event.request.formData();
-		const email = data.get('email');
+		const email = data.get('email') as string;
 
-		if (!email) {
-			throw fail(400);
-		}
-		const store = new PersonByEmailStore();
+		if (!email) return fail(400);
 
-		const result = await store.fetch({
-			event,
-			variables: { email },
-			metadata: { token: serverToken('password-forgot') }
-		});
-		if (!result.data?.person[0]) {
+		const [found] = await db
+			.select({ id: person.id, name: person.name })
+			.from(person)
+			.where(ilike(person.email, email))
+			.limit(1);
+
+		if (!found) {
 			console.log(`Reset failed: email address '${email}' unknown`);
-			return;
+			return { success: true };
 		}
-		const {
-			person: [person]
-		} = result.data;
+
 		const token = createToken(
-			{
-				id: person.id.toString()
-			},
-			{
-				subject: 'password-reset',
-				expiresIn: '30 minutes'
-			}
+			{ id: found.id.toString() },
+			{ subject: 'password-reset', expiresIn: '30 minutes' }
 		);
 
-		console.log(`Reset mail: to ${person.name}(${email})`);
-		send(event, person.id, 'password-reset', { token });
+		console.log(`Reset mail: to ${found.name}(${email})`);
+		send(event, found.id, 'password-reset', { token });
 		return { success: true };
 	}
 } satisfies Actions;

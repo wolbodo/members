@@ -1,45 +1,38 @@
 <script lang="ts">
-	import type { PageData } from './$houdini';
-	import { datetime } from '$lib/format';
-	import { Input, RoleSelector } from '$lib/Form';
 	import { enhance } from '$app/forms';
+	import { Input, RoleSelector } from '$lib/Form';
 	import Toggle from '$lib/Toggle.svelte';
+	import { datetime } from '$lib/format';
+	import type { PageServerData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageServerData;
+	}
 
-	$: ({ Person, user } = data);
-	$: isBoard = user?.roles.includes('board');
-	$: isSelf = parseInt(user.id) === $Person.data?.auth_person[0]?.id;
+	let { data }: Props = $props();
 
-	let edit: boolean;
+	const person = $derived(data.person);
+	const isBoard = $derived(data.isBoard);
+	const isSelf = $derived(data.isSelf);
+
+	let edit = $state(false);
 </script>
 
 <content>
-	{#if $Person.fetching}
-		<p>Loading...</p>
-	{:else if $Person.errors}
-		<h2>Error</h2>
-		<ul>
-			{#each $Person.errors as error}
-				<li>{error.message}</li>
-			{/each}
-		</ul>
-	{:else if $Person.data?.auth_person?.length}
-		{@const person = $Person.data.auth_person[0]}
-
+	{#if !person}
+		<h2>Person not found</h2>
+	{:else}
 		<form
 			action="?/edit"
 			method="POST"
-			use:enhance={() => {
-				return async ({ result, update }) => {
-					update();
-
+			use:enhance={() =>
+				async ({ result, update }) => {
+					await update();
 					if (result.type === 'success') edit = false;
-				};
-			}}
+				}}
 		>
 			{#if isBoard || isSelf}
-				<button type="button" class:edit class="icon" on:click={() => (edit = !edit)}>
+				<button type="button" class:edit class="icon" onclick={() => (edit = !edit)}>
 					{edit ? 'close' : 'mode_edit'}
 				</button>
 			{/if}
@@ -55,7 +48,9 @@
 			<Input name="city" value={person.city} readonly={!edit} />
 			<Input name="country" value={person.country} readonly={!edit} />
 
-			<Input name="bankaccount" value={person.bankaccount} readonly={!edit} />
+			{#if isBoard || isSelf}
+				<Input name="bankaccount" value={person.bankaccount} readonly={!edit} />
+			{/if}
 
 			{#if isBoard}
 				<Input label="keycode" name="key_code" value={person.key_code} readonly={!edit} />
@@ -69,36 +64,28 @@
 					>allow door</Toggle
 				>
 			</section>
+
 			<Input name="password" type="password" readonly={!edit} />
 
 			{#if isBoard}
 				<Input name="note" value={person.note} type="textarea" readonly={!edit} />
 			{/if}
 
-			<!-- <RoleSelector {person} refetch={() => refetch({ name, isBoard })} readonly={!edit} /> -->
-			<RoleSelector {person} readonly={!edit || !isBoard} refetch={() => Person.fetch()} />
+			<RoleSelector personId={person.id} roles={data.roles} readonly={!edit || !isBoard} />
 
 			<section>
 				<Input name="id" value={person.id} type="hidden" readonly />
-
 				<b>#{person.id}</b>
-				<p>created:{datetime(person.created)}</p>
-				<p>modified:{datetime(person.modified)}</p>
+				<p>created: {datetime(String(person.created))}</p>
+				<p>modified: {datetime(String(person.modified))}</p>
 			</section>
 
 			{#if edit}
 				<section class="submit">
-					<!-- {#if error}
-							{#each error as error}
-								<small>{error.message}</small>
-							{/each}
-						{/if} -->
 					<button type="submit">Submit</button>
 				</section>
 			{/if}
 		</form>
-	{:else}
-		<h2>Person not found</h2>
 	{/if}
 </content>
 
@@ -106,7 +93,6 @@
 	button.icon {
 		font-size: 1.5rem;
 		padding: 0 0.5rem;
-
 		grid-column-start: 2;
 		justify-self: end;
 		width: 3rem;
@@ -117,14 +103,12 @@
 	}
 	form {
 		display: grid;
-
 		grid-template-columns: 1fr 1fr;
 		grid-gap: 0.5rem 1rem;
 	}
 	form :global(.wide) {
 		grid-column: span 2;
 	}
-
 	.submit {
 		display: grid;
 		grid-template-areas: 'error submit';

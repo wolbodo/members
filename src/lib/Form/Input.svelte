@@ -1,29 +1,48 @@
 <script lang="ts">
-	export let name: string;
-	export let label: string | null = null;
-	export let type: string = 'text';
-	export let value: unknown = null;
-	export let format: (value: unknown) => string = (value) => value as string;
-	export let readonly: boolean = false;
-
-	let _class: string | null = null;
-	export { _class as class };
-
-	let changed = false;
-	$: if (value) {
-		changed = false;
+	interface Props {
+		name: string;
+		label?: string | null;
+		type?: string;
+		value?: unknown;
+		format?: (value: unknown) => string;
+		readonly?: boolean;
+		class?: string | null;
+		[key: string]: unknown;
 	}
+
+	let {
+		name,
+		label = null,
+		type = 'text',
+		value = null,
+		format = (v) => v as string,
+		readonly = false,
+		class: className = null,
+		...rest
+	}: Props = $props();
+
+	let changed = $state(false);
+
+	$effect(() => {
+		if (value) changed = false;
+	});
 </script>
 
-<section class:changed class={_class}>
-	{#if !readonly || value || 'checked' in $$restProps}
+<section class:changed class={className}>
+	{#if !readonly || value || 'checked' in rest}
 		{#if type !== 'hidden'}
 			<label for={name}>{label || name}</label>
 		{/if}
 
 		{#if type === 'textarea'}
-			<textarea {...$$restProps} {name} id={name} {readonly} on:change={() => (changed = true)} />
-		{:else if typeof type === 'string'}
+			<textarea
+				{...rest}
+				{name}
+				id={name}
+				{readonly}
+				onchange={() => (changed = true)}
+			></textarea>
+		{:else}
 			<input
 				id={name}
 				{name}
@@ -31,8 +50,8 @@
 				{readonly}
 				class:changed
 				value={value ? format(value) : ''}
-				on:change={() => (changed = true)}
-				{...$$restProps}
+				onchange={() => (changed = true)}
+				{...rest}
 			/>
 		{/if}
 	{/if}
@@ -47,7 +66,6 @@
 		background: var(--white);
 		border-color: var(--neutral-4);
 	}
-
 	input:focus,
 	section:hover input,
 	.changed input {
@@ -59,10 +77,9 @@
 		background: var(--pure-white);
 		box-shadow: 0 0 5px 1px var(--primary-color);
 	}
-
-	input[readOnly],
-	input[readOnly]:hover,
-	section:hover input[readOnly] {
+	input[readonly],
+	input[readonly]:hover,
+	section:hover input[readonly] {
 		color: black;
 		background: initial;
 		padding: initial;
@@ -70,7 +87,6 @@
 		border: none;
 		padding-left: 1em;
 	}
-
 	.changed label {
 		color: var(--primary-color);
 	}

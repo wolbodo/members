@@ -1,80 +1,133 @@
-import { PersonStore, EditPersonStore, type auth_person_set_input } from '$houdini';
 import { fail } from '@sveltejs/kit';
-import type { Actions } from './$types';
-import type { PageServerLoad } from './$types';
+import { eq, and, isNull, lte } from 'drizzle-orm';
+
+import { db } from '$lib/server/db';
+import { person, personRole } from '$lib/server/schema';
+import type { Actions, PageServerLoad } from './$types';
 import { where } from './where';
-const queryPerson = new PersonStore();
 
-type FilterProperties<T, TFieldType> = {
-	[K in keyof T as T[K] extends TFieldType ? K : never]: T[K];
+export const load: PageServerLoad = async (event) => {
+	const isBoard = event.locals.user!.roles.includes('board');
+	const isSelf =
+		event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
+
+	const [found] = await db
+		.select({
+			id: person.id,
+			name: person.name,
+			firstname: person.firstname,
+			lastname: person.lastname,
+			email: person.email,
+			phone: person.phone,
+			address: person.address,
+			zipcode: person.zipcode,
+			city: person.city,
+			country: person.country,
+			bankaccount: isBoard || isSelf ? person.bankaccount : undefined,
+			key_code: isBoard ? person.key_code : undefined,
+			allow_register: person.allow_register,
+			allow_door: person.allow_door,
+			note: isBoard ? person.note : undefined,
+			created: person.created,
+			modified: person.modified
+		})
+		.from(person)
+		.where(where(event.params.identifier))
+		.limit(1);
+
+	if (!found) return { person: null, roles: [], isBoard, isSelf };
+
+	const roles = await db
+		.select({
+			id: personRole.id,
+			role: personRole.role,
+			valid_from: personRole.valid_from,
+			valid_till: personRole.valid_till
+		})
+		.from(personRole)
+		.where(eq(personRole.person_id, found.id));
+
+	return { person: found, roles, isBoard, isSelf };
 };
-
-type BooleanKey = keyof FilterProperties<auth_person_set_input, boolean | null | undefined>;
 
 export const actions: Actions = {
 	edit: async (event) => {
-		const isBoard = event.locals.user.roles.includes('board');
+		const isBoard = event.locals.user!.roles.includes('board');
 		const isSelf =
-			event.params.identifier.toLocaleLowerCase() === event.locals.user.name.toLocaleLowerCase();
-		const { data: queryData } = await queryPerson.fetch({
-			event,
-			variables: {
-				where: where(event.params.identifier),
-				isBoard
-			}
-		});
+			event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
 
-		if (!queryData) {
-			throw fail(400);
-		}
+		if (!isBoard && !isSelf) return fail(403);
 
-		const {
-			auth_person: [person]
-		} = queryData;
+		const [existing] = await db
+			.select()
+			.from(person)
+			.where(where(event.params.identifier))
+			.limit(1);
+
+		if (!existing) return fail(404);
 
 		const formData = await event.request.formData();
+		const raw = Object.fromEntries(formData.entries()) as Record<string, string>;
+		const { id: _id, ...fields } = raw;
 
-		const { id: userId, ...dirtyData } = Object.fromEntries(
-			Array.from(formData.entries())
-				.filter(([key, value]) => {
-					if (key === 'password' && value === '') return false;
-					if (key === 'id') return true;
+		const updates: Partial<typeof person.$inferInsert> = {};
 
-					if (person[key as keyof typeof person] !== value) return true;
-				})
-				.map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
-		) as auth_person_set_input;
-
-		// Fix all boolean keys
-
-		for (const [key, value] of Object.entries(person)) {
-			if (typeof value === 'boolean') {
-				const booleanKey = key as BooleanKey;
-				dirtyData[booleanKey] = booleanKey in dirtyData;
+		for (const [key, value] of Object.entries(fields)) {
+			const col = key as keyof typeof existing;
+			if (key === 'password' && !value) continue;
+			if (typeof existing[col] === 'boolean') {
+				(updates as Record<string, unknown>)[key] = key in fields && value === 'on';
+			} else if (value !== String(existing[col])) {
+				(updates as Record<string, unknown>)[key] = typeof value === 'string' ? value.trim() : value;
 			}
 		}
 
-		console.log('Updating', dirtyData);
+		if (!Object.keys(updates).length) return { success: true };
 
-		const editPerson = new EditPersonStore();
-		return await editPerson.mutate(
-			{
-				id: parseInt(userId as string),
-				data: dirtyData
-			},
-			{
-				event,
-				metadata: { isBoard, isSelf }
-			}
-		);
+		await db.update(person).set(updates).where(eq(person.id, existing.id));
+		return { success: true };
+	},
+
+	addRole: async (event) => {
+		const isBoard = event.locals.user!.roles.includes('board');
+		if (!isBoard) return fail(403);
+
+		const formData = await event.request.formData();
+		const personId = parseInt(formData.get('personId') as string);
+		const role = formData.get('role') as string;
+
+		if (!personId || !role) return fail(400);
+
+		const existing = await db
+			.select()
+			.from(personRole)
+			.where(
+				and(
+					eq(personRole.person_id, personId),
+					eq(personRole.role, role),
+					isNull(personRole.valid_till)
+				)
+			);
+
+		if (existing.length) return { success: true };
+
+		await db.insert(personRole).values({ person_id: personId, role });
+		return { success: true };
+	},
+
+	stopRole: async (event) => {
+		const isBoard = event.locals.user!.roles.includes('board');
+		if (!isBoard) return fail(403);
+
+		const formData = await event.request.formData();
+		const roleId = parseInt(formData.get('roleId') as string);
+
+		if (!roleId) return fail(400);
+
+		await db
+			.update(personRole)
+			.set({ valid_till: new Date() })
+			.where(eq(personRole.id, roleId));
+		return { success: true };
 	}
-};
-
-export const load: PageServerLoad = async (event) => {
-	return {
-		variables: {
-			isBoard: event.locals.user.roles.includes('board'),
-			isSelf: event.params.identifier === event.locals.user.name
-		}
-	};
 };

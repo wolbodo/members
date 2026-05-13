@@ -1,13 +1,14 @@
 <script lang="ts">
-	import type { PageData } from './$houdini';
-
 	import { datetime } from '$lib/format';
 	import Table from '$lib/Table.svelte';
 	import { searchValue, filterFields } from '$lib/Header/index.svelte';
+	import type { PageServerData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageServerData;
+	}
 
-	$: ({ History } = data);
+	let { data }: Props = $props();
 
 	const hiddenFields = ['password'];
 
@@ -20,17 +21,16 @@
 				.filter(([, value]) => Boolean(value))
 				.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value]);
 		}
-
 		return Object.entries(old_value)
 			.map(([key, value]) => {
-				if (value === new_value?.[key]) {
-					return null;
-				}
-
-				return [key, `${value} -> ${new_value?.[key]}`];
+				if (value === (new_value as Record<string, unknown>)?.[key]) return null;
+				return [key, `${value} -> ${(new_value as Record<string, unknown>)?.[key]}`];
 			})
-			.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value])
-			.filter(Boolean) as (string | [string, unknown])[];
+			.filter(Boolean)
+			.map(([key, value]) => [key, hiddenFields.includes(key as string) ? '****' : value]) as [
+			string,
+			unknown
+		][];
 	};
 </script>
 
@@ -47,35 +47,27 @@
 		</tr>
 	</thead>
 
-	{#if $History.fetching}
-		<tr><td colspan="5">Loading</td></tr>
-	{:else if $History.errors}
-		{#each $History.errors as error}
-			<tr><td colspan="5">{JSON.stringify(error)}</td></tr>
-		{/each}
-	{:else if $History.data}
-		{#each $History.data.history
-			.filter((v) => Boolean(v))
-			.filter( ({ author, person, role }) => filterFields($searchValue, author?.name, person?.name, role) ) as { timestamp, new_values, old_values, role, author, person }}
-			<tr>
-				<td>{datetime(timestamp)}</td>
-				<td>{author?.name ?? ''}</td>
-				<td>{person?.name}</td>
-				<td>{role}</td>
-				<td>
-					{#each changes(old_values, new_values) as change}
-						{#if typeof change === 'string'}
-							<section>{change}</section>
-						{:else}
-							<section><b>{change[0]}</b>: {change[1]}</section>
-						{/if}
-					{/each}
-				</td>
-			</tr>
-		{/each}
+	{#each data.history.filter(({ author, person, role }) =>
+		filterFields($searchValue, author?.name, person?.name, role ?? undefined)
+	) as { timestamp, new_values, old_values, role, author, person }}
+		<tr>
+			<td>{datetime(String(timestamp))}</td>
+			<td>{author?.name ?? ''}</td>
+			<td>{person?.name}</td>
+			<td>{role}</td>
+			<td>
+				{#each changes(old_values as object | null, new_values as object | null) as change}
+					{#if typeof change === 'string'}
+						<section>{change}</section>
+					{:else}
+						<section><b>{change[0]}</b>: {change[1]}</section>
+					{/if}
+				{/each}
+			</td>
+		</tr>
 	{:else}
 		<tr><td colspan="5">No data yet</td></tr>
-	{/if}
+	{/each}
 </Table>
 
 <style>

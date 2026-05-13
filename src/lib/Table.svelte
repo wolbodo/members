@@ -1,5 +1,11 @@
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children?: Snippet } = $props();
+</script>
+
 <table>
-	<slot />
+	{@render children?.()}
 </table>
 
 <style>
@@ -30,7 +36,6 @@
 		background-color: var(--pure-white);
 		border-bottom: 1px solid var(--primary-color);
 	}
-
 	table :global(tr:hover) {
 		background-color: var(--info-5);
 	}

@@ -1,17 +1,25 @@
 <script lang="ts">
-	export let checked: boolean;
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		checked: boolean;
+		children?: Snippet;
+		onchange?: (e: Event) => void;
+		[key: string]: unknown;
+	}
+
+	let { checked = $bindable(), children, onchange, ...rest }: Props = $props();
 </script>
 
 <label>
 	<section>
-		<input type="checkbox" {...$$props} bind:checked on:change />
-		<span />
+		<input type="checkbox" bind:checked {onchange} {...rest} />
+		<span></span>
 	</section>
-	<slot />
+	{@render children?.()}
 </label>
 
 <style>
-	/* The switch - the box around the slider */
 	label {
 		display: inline-block;
 		line-height: 34px;
@@ -22,15 +30,11 @@
 		width: 60px;
 		height: 34px;
 	}
-
-	/* Hide default HTML checkbox */
 	section input {
 		opacity: 0;
 		width: 0;
 		height: 0;
 	}
-
-	/* The slider */
 	span {
 		position: absolute;
 		cursor: pointer;
@@ -39,10 +43,8 @@
 		right: 0;
 		bottom: 0;
 		background-color: var(--neutral-4);
-		-webkit-transition: 0.4s;
 		transition: 0.4s;
 	}
-
 	span:before {
 		position: absolute;
 		content: '';
@@ -51,21 +53,15 @@
 		left: 4px;
 		bottom: 4px;
 		background-color: var(--white);
-		-webkit-transition: 0.4s;
 		transition: 0.4s;
 	}
-
 	input:checked + span {
 		background-color: var(--primary-color);
 	}
-
 	input:focus + span {
 		box-shadow: 0 0 1px var(--primary-color);
 	}
-
 	input:checked + span:before {
-		-webkit-transform: translateX(26px);
-		-ms-transform: translateX(26px);
 		transform: translateX(26px);
 	}
 </style>

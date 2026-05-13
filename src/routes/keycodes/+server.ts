@@ -1,27 +1,14 @@
-import { graphql } from '$houdini';
-import { serverToken } from '$lib/jwt.js';
 import { text, type RequestHandler } from '@sveltejs/kit';
-import { error } from '@sveltejs/kit';
+import { isNotNull } from 'drizzle-orm';
 
-const getCodes = graphql(`
-	query GetCodes {
-		keycodes: auth_person {
-			key_code
-			name
-		}
-	}
-`);
+import { db } from '$lib/server/db';
+import { person } from '$lib/server/schema';
 
-export const GET = (async (event) => {
-	const response = await getCodes.fetch({
-		event
-	});
-	const { data } = response;
-	console.log(response, event.cookies.getAll());
+export const GET = (async () => {
+	const rows = await db
+		.select({ key_code: person.key_code, name: person.name })
+		.from(person)
+		.where(isNotNull(person.key_code));
 
-	if (!data || !data?.keycodes) {
-		throw error(400, `unprocessable keycodes`);
-	}
-
-	return text(data?.keycodes.map(({ key_code, name }) => `${key_code}; ${name}`).join('\n'));
+	return text(rows.map(({ key_code, name }) => `${key_code}; ${name}`).join('\n'));
 }) satisfies RequestHandler;

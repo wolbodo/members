@@ -1,16 +1,9 @@
-import type { auth_person_bool_exp } from '$houdini';
+import { eq, ilike } from 'drizzle-orm';
+import { person } from '$lib/server/schema';
 
-export const where = (identifier: string): auth_person_bool_exp => {
+export const where = (identifier: string) => {
 	if (/^\d+$/.test(identifier)) {
-		return { id: { _eq: parseInt(identifier) } };
-	} else {
-		return {
-			name: { _ilike: identifier },
-			roles: {
-				_or: [{ valid_till: { _gte: 'NOW()' } }, { valid_till: { _is_null: true } }],
-				valid_from: { _lte: 'NOW()' },
-				role: { _eq: 'member' }
-			}
-		};
+		return eq(person.id, parseInt(identifier));
 	}
+	return ilike(person.name, identifier);
 };

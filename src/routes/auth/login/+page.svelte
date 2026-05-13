@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import type { ActionData } from './$types';
 
-	import type { ActionData } from '../$types';
+	interface Props {
+		form: ActionData;
+	}
 
-	export let form: ActionData;
+	let { form }: Props = $props();
 
 	const redirect = $page.url.searchParams.get('redirect');
 </script>

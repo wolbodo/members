@@ -1,28 +1,35 @@
-<script context="module" lang="ts">
+<script module lang="ts">
 	import { writable } from 'svelte/store';
 
 	export const filterFields = (search: RegExp, ...fields: (string | undefined)[]) =>
 		fields.some((field) => field && field.match(search));
+
 	export const searchValue = writable(new RegExp('', 'i'));
 </script>
 
 <script lang="ts">
 	import { page } from '$app/stores';
 	import logo from './logo.svg';
-	import type { PageData } from '../../routes/$types';
 
-	export let user: PageData['user'];
+	interface Props {
+		user: App.Locals['user'];
+	}
+
+	let { user }: Props = $props();
 
 	const focus = (node: HTMLElement) => node.focus();
 
-	let searchOpen = false;
-	let _searchValue = '';
+	let searchOpen = $state(false);
+	let _searchValue = $state('');
 
-	$: {
+	$effect(() => {
 		$searchValue = new RegExp(_searchValue, 'i');
-	}
+	});
 
-	function scale(node: HTMLElement, { delay = 0, duration = 400 }) {
+	function scale(
+		node: HTMLElement,
+		{ delay = 0, duration = 400 }: { delay?: number; duration?: number }
+	) {
 		const o = parseFloat(getComputedStyle(node).width);
 		return {
 			delay,
@@ -30,9 +37,9 @@
 			css: (t: number) => `width: ${t * o}px`
 		};
 	}
+
 	const closeSearch = () => {
-		console.log('close');
-		searchOpen = !searchOpen;
+		searchOpen = false;
 		_searchValue = '';
 	};
 </script>
@@ -41,7 +48,7 @@
 	<nav>
 		<section class="home">
 			<a href="/">
-				<img src={logo} alt="SvelteKit" />
+				<img src={logo} alt="Members" />
 				<h1>Members</h1>
 			</a>
 		</section>
@@ -54,24 +61,17 @@
 						bind:value={_searchValue}
 						use:focus
 						placeholder="Search"
-						on:keydown={(e) => {
-							if (e.code == 'Escape') {
-								closeSearch();
-							} else if (e.code == 'Enter') {
-								console.log('Should goto user or trigger search or whatever', $page);
-							}
+						onkeydown={(e) => {
+							if (e.code === 'Escape') closeSearch();
 						}}
 					/>
 				{/if}
 				<button
 					type="button"
 					class="icon"
-					on:click={() => {
-						if (searchOpen) {
-							closeSearch();
-						} else {
-							searchOpen = true;
-						}
+					onclick={() => {
+						if (searchOpen) closeSearch();
+						else searchOpen = true;
 					}}
 				>
 					{searchOpen ? 'close' : 'search'}
@@ -94,9 +94,7 @@
 					<a href="/m/{user.name}">{user.name}</a>
 				</li>
 
-				<li class:active={$page.url.pathname === '/logout'}>
-					<a href="/auth/logout">Logout</a>
-				</li>
+				<li><a href="/auth/logout">Logout</a></li>
 			</ul>
 		{/if}
 	</nav>
@@ -110,14 +108,12 @@
 		margin-bottom: 0.5rem;
 		background: var(--primary-3);
 	}
-
 	nav {
 		width: 50rem;
 		max-width: 100%;
 		display: flex;
 		--background: rgba(255, 255, 255, 0.7);
 	}
-
 	nav a,
 	nav li button {
 		display: flex;
@@ -136,7 +132,6 @@
 		margin: 0;
 		background: none;
 	}
-
 	.search {
 		position: relative;
 		min-width: 3rem;
@@ -164,7 +159,6 @@
 		background: none;
 		color: var(--primary-1);
 	}
-
 	.search input {
 		height: 3rem;
 		min-width: 3rem;
@@ -172,23 +166,19 @@
 		border-radius: 0;
 		box-shadow: none;
 	}
-
 	nav section {
 		height: 3rem;
 	}
-
 	nav .home {
 		flex-grow: 1;
 		display: flex;
 	}
-
 	nav .home h1 {
 		margin: 0 0.5rem;
 		text-transform: none;
 		color: white;
 		font-size: 1.5rem;
 	}
-
 	nav a {
 		display: flex;
 		align-items: center;
@@ -201,13 +191,11 @@
 	nav a:hover {
 		color: var(--primary-1);
 	}
-
 	nav img {
 		width: 2em;
 		height: 2em;
 		object-fit: contain;
 	}
-
 	ul {
 		position: relative;
 		padding: 0;
@@ -220,12 +208,10 @@
 		background: var(--background);
 		background-size: contain;
 	}
-
 	li {
 		position: relative;
 		height: 100%;
 	}
-
 	li.active::before {
 		--size: 6px;
 		content: '';

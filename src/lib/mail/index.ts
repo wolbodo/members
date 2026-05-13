@@ -1,21 +1,14 @@
-import { serverToken } from '$lib/jwt';
-import { SendMailStore } from '$houdini';
+import { db } from '$lib/server/db';
+import { mailEntries } from '$lib/server/schema';
 import type { RequestEvent } from '@sveltejs/kit';
 
 export { default as templates } from './templates';
 
-const store = new SendMailStore();
-
-export const send = async (event: RequestEvent, personId, template, data) => {
-	await store.mutate(
-		{
-			personId,
-			template,
-			data
-		},
-		{
-			event,
-			metadata: { token: serverToken('send-mail') }
-		}
-	);
+export const send = async (
+	_event: RequestEvent,
+	personId: number,
+	template: string,
+	data: Record<string, unknown>
+) => {
+	await db.insert(mailEntries).values({ person_id: personId, template, data });
 };

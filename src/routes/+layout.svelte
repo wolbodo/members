@@ -1,17 +1,21 @@
 <script lang="ts">
 	import Header from '$lib/Header/index.svelte';
 	import '../app.css';
+	import type { Snippet } from 'svelte';
+	import type { LayoutServerData } from './$types';
 
-	import type { PageData } from './$types';
+	interface Props {
+		data: LayoutServerData;
+		children?: Snippet;
+	}
 
-	export let data: PageData;
-	$: ({ user } = data);
+	let { data, children }: Props = $props();
 </script>
 
-<Header {user} />
+<Header user={data.user} />
 
 <main>
-	<slot />
+	{@render children?.()}
 </main>
 
 <style>

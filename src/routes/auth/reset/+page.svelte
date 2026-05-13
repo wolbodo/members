@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-
 	import type { ActionData } from './$types';
 
-	export let form: ActionData;
+	interface Props {
+		form: ActionData;
+	}
+
+	let { form }: Props = $props();
 </script>
 
 <h1>Set your new password</h1>

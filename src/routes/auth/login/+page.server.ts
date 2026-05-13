@@ -1,14 +1,13 @@
 import { fail, redirect } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
+import { eq, or, ilike, and, isNull, lte } from 'drizzle-orm';
 
-import { GetPasswordStore } from '$houdini';
-
-import { serverToken, createToken } from '$lib/jwt';
+import { db } from '$lib/server/db';
+import { person, personRole } from '$lib/server/schema';
+import { createToken } from '$lib/jwt';
 import type { Actions } from './$types';
-
 import { options as tokenCookieOptions } from '../cookieOptions';
 
-// These are the only roles passed to the token, and in this order.
 const ALL_ROLES = ['member', 'board', 'admin', 'self'] as const;
 
 export const actions = {
@@ -17,56 +16,51 @@ export const actions = {
 		const name = data.get('name') as string;
 		const password = data.get('password') as string;
 
-		const token = serverToken('login');
-		const store = new GetPasswordStore();
-		const result = await store.fetch({
-			event,
-			variables: { name },
-			metadata: { token }
-		});
+		const [found] = await db
+			.select({
+				id: person.id,
+				name: person.name,
+				email: person.email,
+				password: person.password,
+				roles: db.$count(personRole, eq(personRole.person_id, person.id))
+			})
+			.from(person)
+			.where(or(ilike(person.name, name), eq(person.email, name)))
+			.limit(1);
 
-		if (!result.data) {
-			return fail(400, { name, incorrect: true });
-		}
-		const {
-			auth_person: [person]
-		} = result.data;
+		if (!found) return fail(400, { name, incorrect: true });
 
-		if (person && person.password && person.roles.length) {
-			const ok = await bcrypt.compare(password, person.password);
+		const activeRoles = await db
+			.select({ role: personRole.role })
+			.from(personRole)
+			.where(
+				and(
+					eq(personRole.person_id, found.id),
+					isNull(personRole.valid_till),
+					lte(personRole.valid_from, new Date())
+				)
+			);
 
-			if (ok) {
-				// Remove the password else it will end up at the client.
-				delete person.password;
+		if (!found.password || !activeRoles.length) return fail(400, { name, incorrect: true });
 
-				const roles = [...person.roles.map(({ role }) => role), 'self'];
-				const user = {
-					...person,
-					roles: ALL_ROLES.filter((role) => roles.includes(role))
-				};
+		const ok = await bcrypt.compare(password, found.password);
+		if (!ok) return fail(400, { name, incorrect: true });
 
-				user.token = createToken(
-					{
-						...user,
-						id: user.id.toString()
-					},
-					{
-						subject: user.id.toString()
-					}
-				);
+		const roleNames = [...activeRoles.map((r) => r.role), 'self'];
+		const roles = ALL_ROLES.filter((r) => roleNames.includes(r));
 
-				// Redirect to what the redirect param states if it's from the wolbodo domain.
-				const location =
-					data.has('redirect') &&
-					new URL(data.get('redirect') as string).host.endsWith('wolbodo.nl')
-						? data.get('redirect')
-						: '/';
+		const token = createToken(
+			{ id: found.id.toString(), name: found.name, roles },
+			{ subject: found.id.toString() }
+		);
 
-				event.cookies.set('token', user.token, tokenCookieOptions);
-				throw redirect(302, location);
-			}
-		}
+		const location =
+			data.has('redirect') &&
+			new URL(data.get('redirect') as string).host.endsWith('wolbodo.nl')
+				? (data.get('redirect') as string)
+				: '/';
 
-		return fail(400, { name, incorrect: true });
+		event.cookies.set('token', token, tokenCookieOptions);
+		return redirect(302, location);
 	}
 } satisfies Actions;
