@@ -11,7 +11,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - uses: pnpm/action-setup@v4
+      - name: Enable pnpm via corepack
+        run: corepack enable && corepack prepare pnpm@11.0.0 --activate
       - name: Get pnpm store path
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
       - uses: actions/cache@v4
