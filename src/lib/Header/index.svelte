@@ -28,7 +28,7 @@
 
 	function scale(
 		node: HTMLElement,
-		{ delay = 0, duration = 400 }: { delay?: number; duration?: number }
+		{ delay = 0, duration = 400 }: { delay?: number; duration?: number } = {}
 	) {
 		const o = parseFloat(getComputedStyle(node).width);
 		return {

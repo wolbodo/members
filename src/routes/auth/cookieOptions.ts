@@ -1,8 +1,9 @@
 import type { Cookies } from '@sveltejs/kit';
 import { dev } from '$app/environment';
+import { env } from '$env/dynamic/private';
 
-const domain = dev ? undefined : (process.env.COOKIE_DOMAIN || 'wolbodo.nl');
-const secure = process.env.COOKIE_SECURE === 'true';
+const domain = dev ? undefined : (env.COOKIE_DOMAIN || 'wolbodo.nl');
+const secure = env.COOKIE_SECURE === 'true';
 
 type CookieOptions = Parameters<Cookies['set']>[2];
 

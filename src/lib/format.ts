@@ -1,10 +1,13 @@
-import { DateTime, Settings } from 'luxon';
+const dateFmt = new Intl.DateTimeFormat('nl', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const timeFmt = new Intl.DateTimeFormat('nl', { hour: '2-digit', minute: '2-digit', hour12: false });
 
-Settings.defaultLocale = 'nl';
+// Date-only ISO strings are UTC midnight in JS but should be treated as local midnight
+const parse = (dt: string): Date =>
+	/^\d{4}-\d{2}-\d{2}$/.test(dt) ? new Date(`${dt}T00:00:00`) : new Date(dt);
 
-export const datetime = (dt: string) => {
-	const time = DateTime.fromISO(dt);
-	return [time.toLocaleString(), time.toLocaleString(DateTime.TIME_24_SIMPLE)].join(' ');
+export const datetime = (dt: string): string => {
+	const d = parse(dt);
+	return `${dateFmt.format(d)} ${timeFmt.format(d)}`;
 };
 
-export const formatDate = (date: string) => DateTime.fromISO(date).toLocaleString();
+export const formatDate = (dt: string): string => dateFmt.format(parse(dt));

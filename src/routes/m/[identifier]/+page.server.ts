@@ -1,5 +1,5 @@
 import { fail } from '@sveltejs/kit';
-import { eq, and, isNull, lte } from 'drizzle-orm';
+import { eq, and, isNull } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import { person, personRole } from '$lib/server/schema';
@@ -12,30 +12,19 @@ export const load: PageServerLoad = async (event) => {
 		event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
 
 	const [found] = await db
-		.select({
-			id: person.id,
-			name: person.name,
-			firstname: person.firstname,
-			lastname: person.lastname,
-			email: person.email,
-			phone: person.phone,
-			address: person.address,
-			zipcode: person.zipcode,
-			city: person.city,
-			country: person.country,
-			bankaccount: isBoard || isSelf ? person.bankaccount : undefined,
-			key_code: isBoard ? person.key_code : undefined,
-			allow_register: person.allow_register,
-			allow_door: person.allow_door,
-			note: isBoard ? person.note : undefined,
-			created: person.created,
-			modified: person.modified
-		})
+		.select()
 		.from(person)
 		.where(where(event.params.identifier))
 		.limit(1);
 
 	if (!found) return { person: null, roles: [], isBoard, isSelf };
+
+	const redacted = {
+		...found,
+		bankaccount: isBoard || isSelf ? found.bankaccount : null,
+		key_code: isBoard ? found.key_code : null,
+		note: isBoard ? found.note : null
+	};
 
 	const roles = await db
 		.select({
@@ -47,7 +36,7 @@ export const load: PageServerLoad = async (event) => {
 		.from(personRole)
 		.where(eq(personRole.person_id, found.id));
 
-	return { person: found, roles, isBoard, isSelf };
+	return { person: redacted, roles, isBoard, isSelf };
 };
 
 export const actions: Actions = {

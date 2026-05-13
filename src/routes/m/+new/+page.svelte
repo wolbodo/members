@@ -12,12 +12,6 @@
 </script>
 
 <content>
-	{#if form?.errors}
-		{#each form.errors as error}
-			<small class="error">{error.message}</small>
-		{/each}
-	{/if}
-
 	<form method="POST" use:enhance>
 		<Input name="name" value="" class="wide" required />
 		<Input name="firstname" value="" />

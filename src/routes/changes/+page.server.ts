@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { history, person } from '$lib/server/schema';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, inArray } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
 	const rows = await db
@@ -30,9 +30,7 @@ export const load: PageServerLoad = async () => {
 				.select({ id: person.id, name: person.name })
 				.from(person)
 				.where(
-					personIds.length === 1
-						? eq(person.id, personIds[0])
-						: (builder) => builder.in('id', personIds)
+					personIds.length === 1 ? eq(person.id, personIds[0]) : inArray(person.id, personIds)
 				)
 		: [];
 

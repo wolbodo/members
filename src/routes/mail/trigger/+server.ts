@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
-import mjml from 'mjml';
-import { Window } from 'happy-dom';
+import { render } from 'svelte/server';
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
@@ -10,6 +9,7 @@ import { db } from '$lib/server/db';
 import { mailEntries, person } from '$lib/server/schema';
 import templates from '$lib/mail/templates';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transporter = nodemailer.createTransport({
 	host: env.EMAIL_HOST,
 	port: env.EMAIL_PORT,
@@ -17,14 +17,12 @@ const transporter = nodemailer.createTransport({
 	secure: env.EMAIL_SECURE === 'true' || [465].includes(parseInt(env.EMAIL_PORT)),
 	tls: { rejectUnauthorized: false },
 	debug: true
-});
+} as any);
 
 type TemplateKey = keyof typeof templates;
 const isTemplateKey = (key: string): key is TemplateKey => key in templates;
 
-const RE_HEAD = /<!-- HEAD_svelte-irnrro_START -->(?<subject>.+)<!-- HEAD_svelte-irnrro_END -->/;
-
-const window = new Window();
+const stripHtml = (html: string): string => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 
 export const POST = (async (event) => {
 	const body = await event.request.json();
@@ -53,28 +51,25 @@ export const POST = (async (event) => {
 	if (!isTemplateKey(entry.template)) error(400, `Template '${entry.template}' not found`);
 
 	const template = templates[entry.template];
-	const { html: mjmlTemplate, head } = template.default.render(entry);
-	const { subject = 'Email from Wolbodo' } = RE_HEAD.exec(head)?.groups ?? {};
+	const props = { person: { name: entry.personName }, data: entry.data };
+	const { body: html, head } = render(template.default, { props });
 
-	const output = mjml(mjmlTemplate);
-	if (output.errors.length) console.log('Errors in mjml rendering:', output.errors);
-
-	window.document.body.innerHTML = output.html;
-	const text = window.document.body.textContent;
+	const subjectMatch = /<title>([^<]+)<\/title>/.exec(head);
+	const subject = subjectMatch?.[1] ?? 'Email from Wolbodo';
 
 	const messageInfo = await transporter.sendMail({
 		from: '"Wolbodo" <it@wolbodo.nl>',
 		to: entry.personEmail,
 		subject,
-		text: text?.trim(),
-		html: output.html
+		text: stripHtml(html),
+		html
 	});
 
 	console.log('Done mailing', id, messageInfo);
 
 	await db
 		.update(mailEntries)
-		.set({ message_info: messageInfo as Record<string, unknown> })
+		.set({ message_info: messageInfo as unknown as Record<string, unknown> })
 		.where(eq(mailEntries.id, id));
 
 	return json({ mail: id });

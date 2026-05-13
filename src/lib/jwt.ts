@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 
 type ParsedToken = {
 	email: string;
@@ -13,18 +13,13 @@ type ParsedToken = {
 };
 
 type SignPayload = { id: string; name?: string; roles?: string[] };
-type SignOptions = Parameters<typeof jwt.sign>[2];
+type TokenOptions = Omit<SignOptions, 'subject'> & { subject: string };
 
 export function createToken(
 	token: SignPayload,
-	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: SignOptions
+	{ subject, expiresIn = '1 day', issuer = 'auth', ...options }: TokenOptions
 ): string {
-	return jwt.sign(token, env.HASURA_SECRET_KEY, {
-		subject,
-		expiresIn,
-		issuer,
-		...options
-	});
+	return jwt.sign(token, env.JWT_SECRET!, { subject, expiresIn, issuer, ...options });
 }
 
 export function parseToken(token: string): ParsedToken {
@@ -32,18 +27,12 @@ export function parseToken(token: string): ParsedToken {
 }
 
 export async function verifyToken(token: string): Promise<ParsedToken> {
-	return (await jwt.verify(token, env.HASURA_SECRET_KEY)) as ParsedToken;
+	return jwt.verify(token, env.JWT_SECRET!) as unknown as ParsedToken;
 }
 
 export function serverToken(username: string, id = -1, role = 'server'): string {
 	return createToken(
-		{
-			id: id.toString(),
-			name: username,
-			roles: [role]
-		},
-		{
-			subject: '-1'
-		}
+		{ id: id.toString(), name: username, roles: [role] },
+		{ subject: '-1' }
 	);
 }

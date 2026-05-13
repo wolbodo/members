@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 
@@ -13,10 +13,10 @@ export const actions = {
 		const newPassword = data.get('password') as string;
 		const resetToken = data.get('token') as string;
 
-		if (!(newPassword && resetToken)) error(400);
+		if (!(newPassword && resetToken)) return fail(400, { error: 'Invalid request' });
 
 		const { sub, id } = await verifyToken(resetToken);
-		if (sub !== 'password-reset') error(400);
+		if (sub !== 'password-reset') return fail(400, { error: 'Invalid token' });
 
 		const hashed = await bcrypt.hash(newPassword, 10);
 		await db

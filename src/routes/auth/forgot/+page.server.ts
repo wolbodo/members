@@ -12,7 +12,7 @@ export const actions = {
 		const data = await event.request.formData();
 		const email = data.get('email') as string;
 
-		if (!email) return fail(400);
+		if (!email) return fail(400, { error: 'Email is required' });
 
 		const [found] = await db
 			.select({ id: person.id, name: person.name })

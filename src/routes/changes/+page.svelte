@@ -26,7 +26,7 @@
 				if (value === (new_value as Record<string, unknown>)?.[key]) return null;
 				return [key, `${value} -> ${(new_value as Record<string, unknown>)?.[key]}`];
 			})
-			.filter(Boolean)
+			.filter((item): item is string[] => item !== null)
 			.map(([key, value]) => [key, hiddenFields.includes(key as string) ? '****' : value]) as [
 			string,
 			unknown

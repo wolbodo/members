@@ -23,7 +23,7 @@
 		</tr>
 	</thead>
 	{#each data.mails.filter((mail) =>
-		filterFields($searchValue, mail.personName, mail.personEmail, mail.status ?? undefined, mail.template)
+		filterFields($searchValue, mail.personName ?? undefined, mail.personEmail ?? undefined, mail.status ?? undefined, mail.template)
 	) as { status, personName, personEmail, template, created }}
 		<tr>
 			<td>{status}</td>
