@@ -1,11 +1,10 @@
-FROM node:18
+FROM node:22-alpine
 
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN corepack enable && corepack prepare pnpm@11 --activate
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
-COPY pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile --prod
 

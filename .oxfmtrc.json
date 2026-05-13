@@ -1,0 +1,9 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"useTabs": true,
+	"singleQuote": true,
+	"trailingComma": "none",
+	"printWidth": 100,
+	"svelte": true,
+	"ignorePatterns": [".svelte-kit", "build", "node_modules", "static", "$houdini", "pnpm-lock.yaml"]
+}

@@ -12,8 +12,8 @@ type ParsedToken = {
 	sub: string;
 };
 
-type SignPayload = { id: string, name?: string, roles?: string[] }
-type SignOptions = Parameters<typeof jwt.sign>[2]
+type SignPayload = { id: string; name?: string; roles?: string[] };
+type SignOptions = Parameters<typeof jwt.sign>[2];
 
 export function createToken(
 	token: SignPayload,
@@ -32,7 +32,7 @@ export function parseToken(token: string): ParsedToken {
 }
 
 export async function verifyToken(token: string): Promise<ParsedToken> {
-	return await jwt.verify(token, env.HASURA_SECRET_KEY) as ParsedToken;
+	return (await jwt.verify(token, env.HASURA_SECRET_KEY)) as ParsedToken;
 }
 
 export function serverToken(username: string, id = -1, role = 'server'): string {

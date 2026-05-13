@@ -1,27 +1,65 @@
 # Members
 
-## Useful commands:
+Wolbodo members-management app. SvelteKit + Houdini over Hasura + Postgres.
 
-npx hasura cli
-npx houdini generate
-npx hasura metadata apply
+## Stack
 
-Postgres + Postgraphile + svelte
-## Running the backend:
+- Node 22, pnpm 11 (via corepack)
+- SvelteKit + Svelte 4 (frontend)
+- Houdini (GraphQL client)
+- Hasura v2 (GraphQL over Postgres)
+- Postgres 15
+- oxlint + oxfmt (linter + formatter)
 
-- Install docker and docker-compose (v1.29)
-- Install yarn `sudo npm i -g yarn`
-- Copy .env.template to .env and fill it in.
-  - Make sure the `AUTH_JWT_SECRET` has a key property of at least 32 characters
-- Move or copy db/sample/10.fixtures.sql to db/init/10.fixtures.sql
-- docker network create wolbodo
-- If you'd like you can setup [docker-hostmanager](https://github.com/iamluc/docker-hostmanager#usage)
-  Otherwise you'd have to configure ip's in you hosts file
+## Local development
 
-- install docker and docker-compose
-- $: docker-compose build
-- $: docker-compose up graphql
+### Prerequisites
 
-And connect to http://localhost:8080/graphiql in the browser or http://localhost:8080/graphql
+1. Enable corepack and install pnpm 11:
 
+   ```sh
+   corepack enable
+   corepack prepare pnpm@11 --activate
+   ```
 
+2. Copy `.env.template` to `.env` and fill in the values.
+   - `AUTH_JWT_SECRET.key` must be at least 32 characters.
+
+3. Create the shared Docker network once:
+   ```sh
+   docker network create wolbodo
+   ```
+
+### Start the backend
+
+```sh
+docker compose up -d db graphql
+```
+
+Hasura console: http://localhost:8080/console
+
+### Run the app
+
+```sh
+pnpm install
+pnpm dev
+```
+
+## Commands
+
+```sh
+pnpm dev             # start dev server
+pnpm build           # production build
+pnpm preview         # preview production build
+pnpm check           # svelte-check + tsc
+pnpm lint            # oxlint + oxfmt --check
+pnpm format          # oxfmt --write
+pnpm test            # Playwright e2e tests
+pnpm test:unit       # Vitest unit tests
+
+pnpm exec hasura metadata apply   # apply Hasura metadata
+pnpm exec houdini generate        # regenerate Houdini stores from schema
+```
+
+> **Note:** oxlint does not parse `.svelte` files. Svelte-specific checks are
+> covered by `svelte-check` (run via `pnpm check`).

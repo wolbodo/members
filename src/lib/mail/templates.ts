@@ -2,6 +2,6 @@ import * as passwordChangeNotification from './password-change-notification.svel
 import * as passwordReset from './password-reset.svelte';
 
 export default {
-  'password-change-notification': passwordChangeNotification,
-  'password-reset': passwordReset
-}
+	'password-change-notification': passwordChangeNotification,
+	'password-reset': passwordReset
+};
