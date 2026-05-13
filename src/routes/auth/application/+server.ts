@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { application } from '$lib/server/schema';
 import { serverToken } from '$lib/jwt';
+import { safeEqual } from '$lib/safeEqual';
 import { options as tokenCookieOptions } from '../cookieOptions';
 
 export const GET = (async (event) => {
@@ -18,7 +19,7 @@ export const GET = (async (event) => {
 		.where(eq(application.name, name))
 		.limit(1);
 
-	if (!app || app.secret !== secret) error(400);
+	if (!app || !safeEqual(app.secret, secret)) error(400);
 
 	event.cookies.set('token', serverToken(name, -1, app.role), tokenCookieOptions);
 	return text('ok');

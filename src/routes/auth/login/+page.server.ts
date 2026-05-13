@@ -5,6 +5,7 @@ import { eq, or, ilike, and, isNull, lte } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { person, personRole } from '$lib/server/schema';
 import { createToken } from '$lib/jwt';
+import { safeRedirect } from '$lib/safeRedirect';
 import type { Actions } from './$types';
 import { options as tokenCookieOptions } from '../cookieOptions';
 
@@ -54,11 +55,7 @@ export const actions = {
 			{ subject: found.id.toString() }
 		);
 
-		const location =
-			data.has('redirect') &&
-			new URL(data.get('redirect') as string).host.endsWith('wolbodo.nl')
-				? (data.get('redirect') as string)
-				: '/';
+		const location = safeRedirect(data.get('redirect') as string | null);
 
 		event.cookies.set('token', token, tokenCookieOptions);
 		return redirect(302, location);

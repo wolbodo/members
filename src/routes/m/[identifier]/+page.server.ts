@@ -3,19 +3,15 @@ import { eq, and, isNull } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import { person, personRole } from '$lib/server/schema';
+import { hashPassword } from '$lib/hashPassword';
 import type { Actions, PageServerLoad } from './$types';
 import { where } from './where';
 
 export const load: PageServerLoad = async (event) => {
 	const isBoard = event.locals.user!.roles.includes('board');
-	const isSelf =
-		event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
+	const isSelf = event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
 
-	const [found] = await db
-		.select()
-		.from(person)
-		.where(where(event.params.identifier))
-		.limit(1);
+	const [found] = await db.select().from(person).where(where(event.params.identifier)).limit(1);
 
 	if (!found) return { person: null, roles: [], isBoard, isSelf };
 
@@ -42,8 +38,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
 	edit: async (event) => {
 		const isBoard = event.locals.user!.roles.includes('board');
-		const isSelf =
-			event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
+		const isSelf = event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
 
 		if (!isBoard && !isSelf) return fail(403);
 
@@ -57,17 +52,19 @@ export const actions: Actions = {
 
 		const formData = await event.request.formData();
 		const raw = Object.fromEntries(formData.entries()) as Record<string, string>;
-		const { id: _id, ...fields } = raw;
+		const { id: _id, password, ...fields } = raw;
 
 		const updates: Partial<typeof person.$inferInsert> = {};
 
+		if (password) updates.password = await hashPassword(password);
+
 		for (const [key, value] of Object.entries(fields)) {
 			const col = key as keyof typeof existing;
-			if (key === 'password' && !value) continue;
 			if (typeof existing[col] === 'boolean') {
 				(updates as Record<string, unknown>)[key] = key in fields && value === 'on';
 			} else if (value !== String(existing[col])) {
-				(updates as Record<string, unknown>)[key] = typeof value === 'string' ? value.trim() : value;
+				(updates as Record<string, unknown>)[key] =
+					typeof value === 'string' ? value.trim() : value;
 			}
 		}
 
@@ -113,10 +110,7 @@ export const actions: Actions = {
 
 		if (!roleId) return fail(400);
 
-		await db
-			.update(personRole)
-			.set({ valid_till: new Date() })
-			.where(eq(personRole.id, roleId));
+		await db.update(personRole).set({ valid_till: new Date() }).where(eq(personRole.id, roleId));
 		return { success: true };
 	}
 };

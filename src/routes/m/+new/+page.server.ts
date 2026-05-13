@@ -1,7 +1,7 @@
 import { redirect, fail, type Actions } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { person } from '$lib/server/schema';
-import type { Person } from '$lib/server/schema';
+import { hashPassword } from '$lib/hashPassword';
 
 type PersonInsert = Omit<typeof person.$inferInsert, 'id' | 'created' | 'modified'>;
 
@@ -29,7 +29,7 @@ export const actions: Actions = {
 			key_code: raw.key_code ? parseInt(raw.key_code) : null,
 			allow_register: raw.allow_register === 'on',
 			allow_door: raw.allow_door === 'on',
-			password: raw.password || null,
+			password: raw.password ? await hashPassword(raw.password) : null,
 			note: raw.note || null
 		};
 

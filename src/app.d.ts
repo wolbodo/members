@@ -2,10 +2,11 @@
 declare namespace App {
 	interface Locals {
 		user: {
-			email: string;
+			email?: string;
 			name: string;
 			id: string;
 			roles: string[];
+			pwh?: string;
 			iat: number;
 			exp: number;
 			iss: string;

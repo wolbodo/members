@@ -1,9 +1,9 @@
 .github
 .svelte-kit
+.storybook
+storybook-static
 node_modules
 
 migrations
-seeds
-metadata
 
 .pnpm-store
