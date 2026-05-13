@@ -11,6 +11,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"coverage": "vitest run --coverage",
+		"db:push": "drizzle-kit push",
+		"db:studio": "drizzle-kit studio",
 		"lint": "oxlint && oxfmt --check .",
 		"format": "oxfmt --write ."
 	},
