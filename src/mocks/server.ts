@@ -1,7 +1,7 @@
 import { setupServer, type SetupServer } from 'msw/node';
 import { handlers } from './handlers';
 import { browser } from '$app/environment';
-import { env } from '$env/dynamic/public'
+import { env } from '$env/dynamic/public';
 
 let worker: SetupServer | null;
 

@@ -1,0 +1,5 @@
+allowBuilds:
+  '@sveltejs/kit': true
+  esbuild: true
+  msw: true
+  svelte-preprocess: true
