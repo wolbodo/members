@@ -3,7 +3,7 @@ import { eq, and, isNull } from 'drizzle-orm';
 
 import { db } from '$lib/server/db';
 import { person, personRole } from '$lib/server/schema';
-import { hashPassword } from '$lib/hashPassword';
+import { withAuditContext } from '$lib/server/audit';
 import type { Actions, PageServerLoad } from './$types';
 import { where } from './where';
 
@@ -52,14 +52,13 @@ export const actions: Actions = {
 
 		const formData = await event.request.formData();
 		const raw = Object.fromEntries(formData.entries()) as Record<string, string>;
-		const { id: _id, password, ...fields } = raw;
+		const { id: _id, ...fields } = raw;
 
 		const updates: Partial<typeof person.$inferInsert> = {};
 
-		if (password) updates.password = await hashPassword(password);
-
 		for (const [key, value] of Object.entries(fields)) {
 			const col = key as keyof typeof existing;
+			if (key === 'password' && !value) continue;
 			if (typeof existing[col] === 'boolean') {
 				(updates as Record<string, unknown>)[key] = key in fields && value === 'on';
 			} else if (value !== String(existing[col])) {
@@ -70,7 +69,9 @@ export const actions: Actions = {
 
 		if (!Object.keys(updates).length) return { success: true };
 
-		await db.update(person).set(updates).where(eq(person.id, existing.id));
+		await withAuditContext(event, (tx) =>
+			tx.update(person).set(updates).where(eq(person.id, existing.id))
+		);
 		return { success: true };
 	},
 
@@ -97,7 +98,9 @@ export const actions: Actions = {
 
 		if (existing.length) return { success: true };
 
-		await db.insert(personRole).values({ person_id: personId, role });
+		await withAuditContext(event, (tx) =>
+			tx.insert(personRole).values({ person_id: personId, role })
+		);
 		return { success: true };
 	},
 
@@ -110,7 +113,9 @@ export const actions: Actions = {
 
 		if (!roleId) return fail(400);
 
-		await db.update(personRole).set({ valid_till: new Date() }).where(eq(personRole.id, roleId));
+		await withAuditContext(event, (tx) =>
+			tx.update(personRole).set({ valid_till: new Date() }).where(eq(personRole.id, roleId))
+		);
 		return { success: true };
 	}
 };

@@ -1,7 +1,14 @@
 <script lang="ts">
 	import { datetime } from '$lib/format';
-	import Table from '$lib/Table.svelte';
-	import { searchValue, filterFields } from '$lib/Header/index.svelte';
+	import {
+		PageShell,
+		DataTable,
+		ChangeCard,
+		DiffLine,
+		EmptyState,
+		searchState,
+		filterFields
+	} from '$lib';
 	import type { PageServerData } from './$types';
 
 	interface Props {
@@ -10,68 +17,146 @@
 
 	let { data }: Props = $props();
 
-	const hiddenFields = ['password'];
+	const HIDDEN_FIELDS = ['password'];
 
-	const changes = (
-		old_value: object | null,
-		new_value: object | null
-	): (string | [string, unknown])[] => {
+	type DiffField = { field: string; old: string | null; new: string | null };
+
+	function diffFields(
+		old_value: Record<string, unknown> | null,
+		new_value: Record<string, unknown> | null
+	): DiffField[] {
 		if (!old_value) {
 			return Object.entries(new_value ?? {})
-				.filter(([, value]) => Boolean(value))
-				.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value]);
+				.filter(([, v]) => v != null && v !== '')
+				.map(([k, v]) => ({
+					field: k,
+					old: null,
+					new: HIDDEN_FIELDS.includes(k) ? '****' : String(v)
+				}));
 		}
 		return Object.entries(old_value)
-			.map(([key, value]) => {
-				if (value === (new_value as Record<string, unknown>)?.[key]) return null;
-				return [key, `${value} -> ${(new_value as Record<string, unknown>)?.[key]}`];
-			})
-			.filter((item): item is string[] => item !== null)
-			.map(([key, value]) => [key, hiddenFields.includes(key as string) ? '****' : value]) as [
-			string,
-			unknown
-		][];
-	};
+			.filter(([k, v]) => v !== (new_value ?? {})[k])
+			.map(([k, v]) => ({
+				field: k,
+				old: HIDDEN_FIELDS.includes(k) ? '****' : v == null ? null : String(v),
+				new:
+					HIDDEN_FIELDS.includes(k)
+						? '****'
+						: (new_value ?? {})[k] == null
+							? null
+							: String((new_value ?? {})[k])
+			}));
+	}
+
+	let filtered = $derived(
+		filterFields(data.history, searchState.value, [
+			(c) => c.author?.name,
+			(c) => c.person?.name,
+			(c) => c.role
+		])
+	);
 </script>
 
-<h1>Changes</h1>
+<svelte:head>
+	<title>Changes</title>
+</svelte:head>
 
-<Table>
-	<thead>
-		<tr>
-			<th>Time</th>
-			<th>Author</th>
-			<th>Person</th>
-			<th>Role</th>
-			<th>Changes</th>
-		</tr>
-	</thead>
+<PageShell>
+	<div class="title-row">
+		<h1 class="t-heading">Changes</h1>
+		<span class="count t-small">{filtered.length} entries</span>
+	</div>
 
-	{#each data.history.filter(({ author, person, role }) =>
-		filterFields($searchValue, author?.name, person?.name, role ?? undefined)
-	) as { timestamp, new_values, old_values, role, author, person }}
-		<tr>
-			<td>{datetime(String(timestamp))}</td>
-			<td>{author?.name ?? ''}</td>
-			<td>{person?.name}</td>
-			<td>{role}</td>
-			<td>
-				{#each changes(old_values as object | null, new_values as object | null) as change}
-					{#if typeof change === 'string'}
-						<section>{change}</section>
-					{:else}
-						<section><b>{change[0]}</b>: {change[1]}</section>
-					{/if}
-				{/each}
-			</td>
-		</tr>
+	{#if filtered.length === 0}
+		<EmptyState>No changes recorded.</EmptyState>
 	{:else}
-		<tr><td colspan="5">No data yet</td></tr>
-	{/each}
-</Table>
+		<div class="desktop">
+			<DataTable>
+				{#snippet head()}
+					<tr>
+						<th class="col-time">Time</th>
+						<th class="col-who">Author → person</th>
+						<th class="col-role">Role</th>
+						<th>Changes</th>
+					</tr>
+				{/snippet}
+				{#snippet body()}
+					{#each filtered as { timestamp, new_values, old_values, role, author, person }, i (i)}
+						<tr>
+							<td class="td-dim col-time">{datetime(String(timestamp))}</td>
+							<td class="col-who">
+								<span class="td-name">{author?.name ?? '—'}</span>
+								<span class="person t-small"> → {person?.name ?? '—'}</span>
+							</td>
+							<td class="td-dim col-role">{role ?? ''}</td>
+							<td>
+								{#each diffFields(old_values as Record<string, unknown> | null, new_values as Record<string, unknown> | null) as f (f.field)}
+									<DiffLine field={f.field} oldValue={f.old} newValue={f.new} />
+								{/each}
+							</td>
+						</tr>
+					{/each}
+				{/snippet}
+			</DataTable>
+		</div>
+
+		<div class="mobile">
+			{#each filtered as { timestamp, new_values, old_values, author }, i (i)}
+				<ChangeCard
+					author={author?.name ?? '—'}
+					time={datetime(String(timestamp))}
+					fields={diffFields(
+						old_values as Record<string, unknown> | null,
+						new_values as Record<string, unknown> | null
+					)}
+				/>
+			{/each}
+		</div>
+	{/if}
+</PageShell>
 
 <style>
-	td {
-		white-space: nowrap;
+	.title-row {
+		display: flex;
+		align-items: baseline;
+		gap: 12px;
+		margin-bottom: 22px;
+	}
+	.count {
+		color: var(--txt3);
+	}
+	.col-time {
+		width: 130px;
+	}
+	.col-who {
+		width: 200px;
+	}
+	.col-role {
+		width: 80px;
+	}
+	.person {
+		display: block;
+		margin-top: 1px;
+	}
+	.desktop {
+		display: block;
+	}
+	.mobile {
+		display: none;
+		flex-direction: column;
+		gap: 8px;
+	}
+	@media (max-width: 700px) {
+		.col-role {
+			display: none;
+		}
+	}
+	@media (max-width: 520px) {
+		.desktop {
+			display: none;
+		}
+		.mobile {
+			display: flex;
+		}
 	}
 </style>

@@ -1,0 +1,39 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#131110;color:#f0ece8;font-size:13px;line-height:1.5;padding:20px;-webkit-font-smoothing:antialiased}
+</style></head><body>
+<style>
+.sb{display:inline-flex;align-items:center;gap:10px;background:#272422;border:1px solid rgba(255,255,255,.20);border-radius:12px;padding:10px 14px 10px 16px;box-shadow:0 8px 32px rgba(0,0,0,.6);white-space:nowrap;margin-bottom:16px}
+.dot{width:6px;height:6px;border-radius:50%;background:#e8a150;flex-shrink:0}
+.msg{font-size:13px;color:#7c7870}
+.btn{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:7px;border:none;cursor:pointer}
+.bp{background:#00c4a0;color:#111}
+.bg{background:none;color:#7c7870;border:none}
+.sb-ok{border-color:rgba(0,196,160,.35)}
+.sb-ok span{font-size:13px;color:#00c46a;font-weight:600}
+.lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4642;margin-bottom:10px}
+.diff{font-family:'Chivo Mono',monospace;font-size:12px;line-height:1.9;background:#1e1c1a;border-radius:7px;padding:12px 14px;margin-top:14px}
+.df{color:#7c7870}
+.do{color:#e05555;opacity:.75}
+.da{color:#4a4642}
+.dn{color:#00c4a0}
+</style>
+<div class="lbl">Save bar — unsaved</div>
+<div class="sb">
+  <div class="dot"></div>
+  <span class="msg">Unsaved changes</span>
+  <button class="btn bg">Discard</button>
+  <button class="btn bp">Save changes</button>
+</div>
+<br>
+<div class="lbl">Save bar — saved</div>
+<div class="sb sb-ok"><span>✓ Saved</span></div>
+<div class="lbl" style="margin-top:16px">Change diff</div>
+<div class="diff">
+  <div><span class="df">address: </span><span class="do">Ternatestraat 105</span><span class="da"> → </span><span class="dn">Verwersdijk 104</span></div>
+  <div><span class="df">country: </span><span class="do">null</span><span class="da"> → </span><span class="dn">Nederland</span></div>
+  <div><span class="df">password: </span><span class="da">•••• → ••••</span></div>
+</div>
+</body></html>

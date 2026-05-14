@@ -1,6 +1,6 @@
 import nodemailer, { type Transporter } from 'nodemailer';
 import { render } from 'svelte/server';
-import { eq, and, isNull } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 import { env } from '$env/dynamic/private';
 import { db, client } from '$lib/server/db';
@@ -49,11 +49,19 @@ export const processMail = async (
 	deps: { transporter?: Transporter } = {}
 ): Promise<void> => {
 	// Claim the row atomically — only one worker can pick up an unsent entry.
-	const [claimed] = await db
-		.update(mailEntries)
-		.set({ status: 'sending' })
-		.where(and(eq(mailEntries.id, id), isNull(mailEntries.status)))
-		.returning({ id: mailEntries.id });
+	// Guarded: a DB failure here (e.g. schema drift) must not crash the process,
+	// since callers fire this off with `void`.
+	let claimed: { id: number } | undefined;
+	try {
+		[claimed] = await db
+			.update(mailEntries)
+			.set({ status: 'sending' })
+			.where(and(eq(mailEntries.id, id), eq(mailEntries.status, 'new')))
+			.returning({ id: mailEntries.id });
+	} catch (err) {
+		console.error(`mail ${id}: could not claim row:`, err);
+		return;
+	}
 
 	if (!claimed) return;
 
@@ -94,13 +102,16 @@ export const processMail = async (
 			.where(eq(mailEntries.id, id));
 	} catch (err) {
 		console.error(`mail ${id} failed:`, err);
+		// Guard the status write too — if it throws, the rejection would be
+		// unhandled (callers use `void`) and crash the process.
 		await db
 			.update(mailEntries)
 			.set({
 				status: 'error',
 				message_info: { error: err instanceof Error ? err.message : String(err) }
 			})
-			.where(eq(mailEntries.id, id));
+			.where(eq(mailEntries.id, id))
+			.catch((markErr) => console.error(`mail ${id}: could not mark as error:`, markErr));
 	}
 };
 
@@ -114,7 +125,7 @@ export const startMailWorker = async (): Promise<void> => {
 	const pending = await db
 		.select({ id: mailEntries.id })
 		.from(mailEntries)
-		.where(isNull(mailEntries.status));
+		.where(eq(mailEntries.status, 'new'));
 
 	for (const { id } of pending) void processMail(id);
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { ActionData } from './$types';
 
 	interface Props {
@@ -14,7 +14,7 @@
 <form method="post">
 	<label for="password">Password</label>
 	<input id="password" name="password" type="password" />
-	<input type="hidden" name="token" value={$page.url.searchParams.get('token')} />
+	<input type="hidden" name="token" value={page.url.searchParams.get('token')} />
 
 	{#if form?.error}
 		<small>{form.error}</small>

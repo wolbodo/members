@@ -3,8 +3,15 @@ import '../src/app.css';
 
 const preview: Preview = {
 	parameters: {
-		layout: 'centered',
-		controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } }
+		controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
+		backgrounds: {
+			default: 'wolbodo-dark',
+			values: [
+				{ name: 'wolbodo-dark', value: '#131110' },
+				{ name: 'surface', value: '#1e1c1a' },
+				{ name: 'light', value: '#ffffff' }
+			]
+		}
 	}
 };
 

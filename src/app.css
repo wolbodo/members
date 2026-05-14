@@ -1,72 +1,61 @@
-@import '@fontsource/fira-mono';
-@import '@fontsource/righteous';
-@import '@fontsource/rubik';
-@import '@fontsource/material-icons-outlined';
+/* ═══════════════════════════════════════════════════════════════
+   Wolbodo Members — Global styles
+   Only globals belong here:
+     - design tokens (via tokens.css)
+     - layout utilities (via utilities.css)
+     - font imports
+     - reset
+     - scrollbar
+     - typography helpers
+   All component styling lives in scoped <style> blocks inside the
+   component itself.
+   ═══════════════════════════════════════════════════════════════ */
 
+@import './styles/tokens.css';
+@import './styles/utilities.css';
+
+/* ── Fonts ─────────────────────────────────────────────────── */
+@import '@fontsource/outfit/400.css';
+@import '@fontsource/outfit/500.css';
+@import '@fontsource/outfit/600.css';
+@import '@fontsource/outfit/700.css';
+@import '@fontsource/outfit/800.css';
+@import '@fontsource/chivo-mono/400.css';
+@import '@fontsource/chivo-mono/500.css';
+
+/* ── Reset ─────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
 	box-sizing: border-box;
-}
-* {
 	margin: 0;
-}
-:root {
-	--font: 'Rubik', 'Open Sans', 'Helvetica Neue', sans-serif;
-	--font-heading: 'Righteous';
-	--font-mono: 'Fira Mono', monospace;
-
-	/* Danger */
-	--danger-1: #2b1306;
-	--danger-2: #811e01;
-	--danger-3: #d23302;
-	--danger-4: #fe8054;
-	--danger-5: #fcd0c0;
-
-	/* Primary */
-	--primary-1: #071d1c;
-	--primary-2: #044d4b;
-	--primary-3: #01807d;
-	--primary-4: #03bab5;
-	--primary-5: #8bebe6;
-
-	/* Info */
-	--info-1: #061c2b;
-	--info-2: #024a6f;
-	--info-3: #097ab4;
-	--info-4: #30b1fe;
-	--info-5: #c1defb;
-
-	/* Neutral */
-	--neutral-1: #181a1a;
-	--neutral-2: #3f4645;
-	--neutral-3: #697473;
-	--neutral-4: #9fa8a7;
-	--neutral-5: #d7dbda;
-
-	--white: #e8ebf0;
-	--pure-white: #f9fbff;
-
-	--primary-color: var(--primary-3);
-	--accent-color: var(--danger-3);
-	--text-color: var(--neutral-1);
-	--column-width: 42rem;
-	--column-margin-top: 4rem;
-
-	font-family: var(--font);
+	padding: 0;
 }
 
 html,
 body {
 	height: 100%;
 }
+
 body {
-	line-height: 1.5;
-	-webkit-font-smoothing: antialiased;
+	font-family: var(--font-body);
+	background: var(--bg);
+	color: var(--txt);
+	font-size: var(--text-base);
+	line-height: 1.55;
 	min-height: 100vh;
-	background-color: var(--primary-color);
-	background: linear-gradient(180deg, var(--neutral-5) 20%, var(--primary-5) 90%);
+	-webkit-font-smoothing: antialiased;
 }
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+button {
+	font-family: var(--font-body);
+}
+
 img,
 picture,
 video,
@@ -75,203 +64,62 @@ svg {
 	display: block;
 	max-width: 100%;
 }
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	overflow-wrap: break-word;
-}
 
-.icon {
-	font-family: 'Material Icons Outlined';
-	text-transform: none;
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+	width: 5px;
 }
-
-body::before {
-	content: '';
-	width: 80vw;
-	height: 100vh;
-	position: absolute;
-	top: 0;
-	left: 10vw;
-	z-index: -1;
-	background: radial-gradient(
-		50% 50% at 50% 50%,
-		var(--pure-white) 0%,
-		rgba(255, 255, 255, 0) 100%
-	);
-	opacity: 0.05;
+::-webkit-scrollbar-track {
+	background: var(--bg);
 }
-
-#svelte {
-	isolation: isolate;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	overflow: auto;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-	font-family: var(--font-heading);
-}
-
-h1,
-h2,
-p {
-	font-weight: 400;
-	color: var(--neutral-2);
-}
-
-p {
-	line-height: 1.5;
-}
-
-a {
-	color: var(--accent-color);
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-h1 {
-	font-size: 2rem;
-	margin-bottom: 0 0 1em 0;
-}
-
-h2 {
-	font-size: 1rem;
-}
-
-pre {
-	font-size: 16px;
-	font-family: var(--font-mono);
-	background-color: var(--neutral-0);
+::-webkit-scrollbar-thumb {
+	background: var(--bd-m);
 	border-radius: 3px;
-	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
-	padding: 0.5em;
-	overflow-x: auto;
-	color: var(--text-color);
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--bd-h);
 }
 
-input,
-select,
-textarea {
-	font-family: inherit;
-	font-size: inherit;
-	font: inherit;
-	max-width: 400px;
-	width: 100%;
-	padding: 0.5rem;
-	margin: 0.5rem;
-	box-sizing: border-box;
-	border: 1px solid var(--info-5);
-	box-shadow: 0 0 0 4px var(--neutral-4);
-	border-radius: 4px;
-	transition: all 150ms ease;
-	background: var(--pure-white);
+/* ── Typography helpers ───────────────────────────────────── */
+.t-display {
+	font-family: var(--font-body);
+	font-size: var(--text-3xl);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	line-height: 1;
 }
-
-select {
-	height: 45px;
+.t-heading {
+	font-family: var(--font-body);
+	font-size: var(--text-2xl);
+	font-weight: 800;
+	letter-spacing: -0.025em;
 }
-
-input:focus,
-select:focus,
-textarea:focus {
-	outline: none;
-	border-color: var(--info-5);
-}
-
-input:disabled,
-select:disabled,
-textarea:disabled {
-	color: #ccc;
-}
-
-input[readonly],
-select[readonly],
-textarea[readonly] {
-	box-shadow: none;
-}
-
-button,
-a.button {
-	color: #fff;
-	background-color: var(--primary-3);
-	border: none;
+.t-label {
+	font-family: var(--font-body);
+	font-size: var(--text-xs);
+	font-weight: 700;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	letter-spacing: 1.8px;
-	outline: none;
-	border-radius: 4px;
-	display: block;
-	margin-top: 12px;
-	line-height: 1.8;
-	font-size: 12px;
-	padding: 10px 18px;
-	transition: all 150ms ease;
-	cursor: pointer;
+	color: var(--txt3);
 }
-button:disabled,
-a.button:disabled {
-	background-color: var(--neutral-4);
+.t-body {
+	font-size: var(--text-base);
+	line-height: 1.55;
 }
-button:focus:not(:disabled),
-a.button:focus:not(:disabled) {
-	box-shadow: 0 0 0 4px var(--info-3);
+.t-small {
+	font-size: var(--text-sm);
+	color: var(--txt2);
 }
-
-button:hover:not(:disabled),
-a.button:hover:not(:disabled) {
-	background-color: var(--info-4);
+.t-mono {
+	font-family: var(--font-mono);
+	font-size: var(--text-sm);
 }
-
-button.danger,
-a.button.danger {
-	background-color: var(--danger-3);
+.t-dim {
+	color: var(--txt2);
 }
-
-label {
-	display: block;
-	color: var(--text-color);
-	font-weight: bold;
-	margin-top: 20px;
-	margin-bottom: 4px;
-	text-transform: uppercase;
-	font-size: 12px;
-	letter-spacing: 1.9px;
-	line-height: 2;
-	margin: 0.5rem;
-	margin-bottom: 0;
+.t-dimmer {
+	color: var(--txt3);
 }
-label + input {
-	margin-top: 0;
-}
-
-/* used for errors */
-small {
-	display: block;
-	font-size: 12px;
-	color: var(--accent-color);
-	margin-top: 10px;
-}
-
-button:focus:not(:focus-visible) {
-	outline: none;
-}
-
-@media (min-width: 720px) {
-	h1 {
-		font-size: 2.4rem;
-	}
+.t-primary {
+	color: var(--pri);
 }

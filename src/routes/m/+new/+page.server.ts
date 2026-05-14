@@ -1,7 +1,6 @@
 import { redirect, fail, type Actions } from '@sveltejs/kit';
-import { db } from '$lib/server/db';
 import { person } from '$lib/server/schema';
-import { hashPassword } from '$lib/hashPassword';
+import { withAuditContext } from '$lib/server/audit';
 
 type PersonInsert = Omit<typeof person.$inferInsert, 'id' | 'created' | 'modified'>;
 
@@ -26,14 +25,17 @@ export const actions: Actions = {
 			city: raw.city,
 			country: raw.country,
 			bankaccount: raw.bankaccount,
-			key_code: raw.key_code ? parseInt(raw.key_code) : null,
+			key_code: raw.key_code || null,
 			allow_register: raw.allow_register === 'on',
 			allow_door: raw.allow_door === 'on',
-			password: raw.password ? await hashPassword(raw.password) : null,
+			password: raw.password || null,
 			note: raw.note || null
 		};
 
-		const [created] = await db.insert(person).values(insert).returning({ id: person.id });
+		const created = await withAuditContext(event, async (tx) => {
+			const [row] = await tx.insert(person).values(insert).returning({ id: person.id });
+			return row;
+		});
 
 		if (!created) return fail(500);
 		return redirect(302, `/m/${created.id}`);

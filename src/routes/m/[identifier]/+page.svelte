@@ -1,8 +1,22 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Input, RoleSelector } from '$lib/Form';
-	import Toggle from '$lib/Toggle.svelte';
-	import { datetime } from '$lib/format';
+	import { goto } from '$app/navigation';
+	import { datetime, formatDate } from '$lib/format';
+	import {
+		PageShell,
+		ProfileHeader,
+		FormSection,
+		Field,
+		TextInput,
+		TextValue,
+		Textarea,
+		Toggle,
+		Tag,
+		AddTag,
+		Button,
+		SaveBar,
+		EmptyState
+	} from '$lib';
 	import type { PageServerData } from './$types';
 
 	interface Props {
@@ -11,111 +25,325 @@
 
 	let { data }: Props = $props();
 
-	const person = $derived(data.person);
-	const isBoard = $derived(data.isBoard);
-	const isSelf = $derived(data.isSelf);
+	let person = $derived(data.person);
+	let isBoard = $derived(data.isBoard);
+	let isSelf = $derived(data.isSelf);
+	let canEdit = $derived(isBoard || isSelf);
 
-	let edit = $state(false);
+	let activeRoles = $derived(data.roles.filter((r) => !r.valid_till));
+	let pastRoles = $derived(data.roles.filter((r) => r.valid_till));
+	let primaryRole = $derived(activeRoles[0]?.role ?? 'member');
+	let memberRole = $derived(activeRoles.find((r) => r.role === 'member'));
+	let memberSince = $derived(
+		memberRole?.valid_from ? formatDate(String(memberRole.valid_from)) : null
+	);
+
+	let dirty = $state(false);
+	let saved = $state(false);
+	let saveTimer: ReturnType<typeof setTimeout> | null = null;
 </script>
 
-<content>
+<svelte:head>
+	<title>{person?.name ?? 'Member'} — Wolbodo Members</title>
+</svelte:head>
+
+<PageShell maxWidth="800px">
 	{#if !person}
-		<h2>Person not found</h2>
+		<EmptyState>Person not found.</EmptyState>
 	{:else}
+		<Button variant="back" onclick={() => goto('/')}>← members</Button>
+
+		<ProfileHeader
+			name={person.name}
+			realName={[person.firstname, person.lastname].filter(Boolean).join(' ') || undefined}
+			since={memberSince ?? undefined}
+			id={person.id}
+			{primaryRole}
+		/>
+
+		<div class="roles">
+			{#each activeRoles as r (r.id)}
+				{#if isBoard}
+					<form
+						method="post"
+						action="?/stopRole"
+						use:enhance
+						style="display:inline-flex"
+					>
+						<input type="hidden" name="roleId" value={r.id} />
+						<Tag
+							role={r.role}
+							since={r.valid_from ? formatDate(String(r.valid_from)) : undefined}
+							onremove={() => {
+								(document.activeElement as HTMLButtonElement)?.closest('form')?.requestSubmit();
+							}}
+						/>
+					</form>
+				{:else}
+					<Tag
+						role={r.role}
+						since={r.valid_from ? formatDate(String(r.valid_from)) : undefined}
+					/>
+				{/if}
+			{/each}
+
+			{#if isBoard}
+				<form method="post" action="?/addRole" use:enhance style="display:inline-flex">
+					<input type="hidden" name="personId" value={person.id} />
+					<AddTag
+						onadd={(role) => {
+							const form = document.createElement('input');
+							form.type = 'hidden';
+							form.name = 'role';
+							form.value = role;
+							// the form just below contains personId; we submit by appending role
+							const realForm = (document.activeElement as HTMLElement)?.closest('form');
+							if (realForm) {
+								const existing = realForm.querySelector('input[name=role]');
+								if (existing) existing.remove();
+								realForm.appendChild(form);
+								realForm.requestSubmit();
+							}
+						}}
+					/>
+				</form>
+			{/if}
+		</div>
+
 		<form
+			method="post"
 			action="?/edit"
-			method="POST"
 			use:enhance={() =>
 				async ({ result, update }) => {
 					await update();
-					if (result.type === 'success') edit = false;
+					if (result.type === 'success') {
+						dirty = false;
+						saved = true;
+						if (saveTimer) clearTimeout(saveTimer);
+						saveTimer = setTimeout(() => (saved = false), 2500);
+					}
 				}}
+			oninput={() => (dirty = true)}
 		>
+			<input type="hidden" name="id" value={person.id} />
+
+			<FormSection label="Identity">
+				<Field label="Nickname" span2>
+					{#if canEdit && isBoard}
+						<TextInput name="name" value={person.name} />
+					{:else}
+						<TextValue value={person.name} />
+					{/if}
+				</Field>
+				<Field label="First name">
+					{#if canEdit}
+						<TextInput name="firstname" value={person.firstname ?? ''} />
+					{:else}
+						<TextValue value={person.firstname} />
+					{/if}
+				</Field>
+				<Field label="Last name">
+					{#if canEdit}
+						<TextInput name="lastname" value={person.lastname ?? ''} />
+					{:else}
+						<TextValue value={person.lastname} />
+					{/if}
+				</Field>
+			</FormSection>
+
+			<FormSection label="Contact">
+				<Field label="Email">
+					{#if canEdit}
+						<TextInput type="email" name="email" value={person.email ?? ''} />
+					{:else}
+						<TextValue value={person.email} />
+					{/if}
+				</Field>
+				<Field label="Phone">
+					{#if canEdit}
+						<TextInput type="tel" name="phone" value={person.phone ?? ''} />
+					{:else}
+						<TextValue value={person.phone} />
+					{/if}
+				</Field>
+			</FormSection>
+
+			<FormSection label="Location">
+				<Field label="Address" span2>
+					{#if canEdit}
+						<TextInput name="address" value={person.address ?? ''} />
+					{:else}
+						<TextValue value={person.address} />
+					{/if}
+				</Field>
+				<Field label="Zipcode">
+					{#if canEdit}
+						<TextInput name="zipcode" value={person.zipcode ?? ''} />
+					{:else}
+						<TextValue value={person.zipcode} />
+					{/if}
+				</Field>
+				<Field label="City">
+					{#if canEdit}
+						<TextInput name="city" value={person.city ?? ''} />
+					{:else}
+						<TextValue value={person.city} />
+					{/if}
+				</Field>
+				<Field label="Country" span2>
+					{#if canEdit}
+						<TextInput name="country" value={person.country ?? ''} />
+					{:else}
+						<TextValue value={person.country} />
+					{/if}
+				</Field>
+			</FormSection>
+
 			{#if isBoard || isSelf}
-				<button type="button" class:edit class="icon" onclick={() => (edit = !edit)}>
-					{edit ? 'close' : 'mode_edit'}
-				</button>
-			{/if}
-
-			<Input name="name" value={person.name} class="wide" readonly={!edit || !isBoard} required />
-			<Input name="firstname" value={person.firstname} readonly={!edit} />
-			<Input name="lastname" value={person.lastname} readonly={!edit} />
-			<Input name="email" value={person.email} type="email" readonly={!edit} required />
-			<Input name="phone" value={person.phone} type="phone" readonly={!edit} />
-
-			<Input name="address" value={person.address} readonly={!edit} />
-			<Input name="zipcode" value={person.zipcode} readonly={!edit} />
-			<Input name="city" value={person.city} readonly={!edit} />
-			<Input name="country" value={person.country} readonly={!edit} />
-
-			{#if isBoard || isSelf}
-				<Input name="bankaccount" value={person.bankaccount} readonly={!edit} />
+				<FormSection label="System">
+					<Field label="Bank account">
+						{#if canEdit}
+							<TextInput name="bankaccount" value={person.bankaccount ?? ''} />
+						{:else}
+							<TextValue value={person.bankaccount} mono />
+						{/if}
+					</Field>
+					{#if isBoard}
+						<Field label="Key code">
+							{#if canEdit}
+								<TextInput name="key_code" value={person.key_code ?? ''} />
+							{:else}
+								<TextValue value={person.key_code} mono />
+							{/if}
+						</Field>
+					{/if}
+					<Field label="Permissions" span2>
+						<div style="display:flex; gap:20px; padding:6px 0; flex-wrap:wrap;">
+							<Toggle
+								name="allow_register"
+								checked={Boolean(person.allow_register)}
+								disabled={!canEdit}
+							>
+								Allow register
+							</Toggle>
+							<Toggle
+								name="allow_door"
+								checked={Boolean(person.allow_door)}
+								disabled={!canEdit}
+							>
+								Allow door
+							</Toggle>
+						</div>
+					</Field>
+					{#if canEdit}
+						<Field label="New password" span2>
+							<TextInput type="password" name="password" value="" placeholder="Leave empty to keep" />
+						</Field>
+					{/if}
+				</FormSection>
 			{/if}
 
 			{#if isBoard}
-				<Input label="keycode" name="key_code" value={person.key_code} readonly={!edit} />
+				<FormSection label="Notes">
+					<Field label="Note" span2>
+						<Textarea name="note" value={person.note ?? ''} />
+					</Field>
+				</FormSection>
 			{/if}
 
-			<section>
-				<Toggle name="allow_register" checked={Boolean(person.allow_register)} disabled={!edit}
-					>allow register</Toggle
-				>
-				<Toggle name="allow_door" checked={Boolean(person.allow_door)} disabled={!edit}
-					>allow door</Toggle
-				>
-			</section>
-
-			<Input name="password" type="password" readonly={!edit} />
-
-			{#if isBoard}
-				<Input name="note" value={person.note} type="textarea" readonly={!edit} />
+			{#if pastRoles.length > 0}
+				<FormSection label="Role history">
+					<div class="rh" style="grid-column:1/-1">
+						{#each pastRoles as r (r.id)}
+							<div class="rh-item">
+								<span class="rh-role">{r.role}</span>
+								<span class="rh-range t-small">
+									{r.valid_from ? formatDate(String(r.valid_from)) : '?'} →
+									{r.valid_till ? formatDate(String(r.valid_till)) : '?'}
+								</span>
+							</div>
+						{/each}
+					</div>
+				</FormSection>
 			{/if}
 
-			<RoleSelector personId={person.id} roles={data.roles} readonly={!edit || !isBoard} />
+			<div class="meta">
+				<span class="t-dimmer">created: {datetime(String(person.created))}</span>
+				<span class="t-dimmer">modified: {datetime(String(person.modified))}</span>
+			</div>
 
-			<section>
-				<Input name="id" value={person.id} type="hidden" readonly />
-				<b>#{person.id}</b>
-				<p>created: {datetime(String(person.created))}</p>
-				<p>modified: {datetime(String(person.modified))}</p>
-			</section>
-
-			{#if edit}
-				<section class="submit">
-					<button type="submit">Submit</button>
-				</section>
+			{#if canEdit && (dirty || saved)}
+				<div class="save-wrap">
+					{#if saved && !dirty}
+						<SaveBar state="saved" message="Saved" />
+					{:else}
+						<SaveBar
+							state="dirty"
+							message="Unsaved changes"
+							ondiscard={() => location.reload()}
+							onsave={() => {
+								const form = (document.activeElement as HTMLElement)?.closest('form');
+								(form ?? document.querySelector('form[action="?/edit"]'))?.requestSubmit();
+							}}
+						/>
+					{/if}
+				</div>
 			{/if}
 		</form>
 	{/if}
-</content>
+</PageShell>
 
 <style>
-	button.icon {
-		font-size: 1.5rem;
-		padding: 0 0.5rem;
-		grid-column-start: 2;
-		justify-self: end;
-		width: 3rem;
-		height: 3rem;
+	.roles {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px;
+		margin-bottom: 28px;
 	}
-	button.edit {
-		background-color: var(--danger-3);
+	.rh {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin-top: 4px;
 	}
-	form {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		grid-gap: 0.5rem 1rem;
+	.rh-item {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 8px 12px;
+		background: var(--bg-s);
+		border-radius: 7px;
+		opacity: 0.65;
 	}
-	form :global(.wide) {
-		grid-column: span 2;
+	.rh-role {
+		font-size: var(--text-sm);
+		font-weight: 700;
+		min-width: 90px;
 	}
-	.submit {
-		display: grid;
-		grid-template-areas: 'error submit';
-		grid-column: span 2;
+	.meta {
+		display: flex;
+		gap: 16px;
+		flex-wrap: wrap;
+		margin-top: 24px;
+		font-size: var(--text-xs);
 	}
-	.submit > button {
-		grid-area: submit;
-		justify-self: end;
+	.save-wrap {
+		position: fixed;
+		bottom: 24px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 500;
+	}
+	@media (max-width: 600px) {
+		.save-wrap {
+			left: 14px;
+			right: 14px;
+			bottom: 14px;
+			transform: none;
+		}
+		.save-wrap :global(.sb) {
+			width: 100%;
+		}
 	}
 </style>

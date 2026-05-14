@@ -5,8 +5,7 @@ import { createHash } from 'node:crypto';
 import { db } from '$lib/server/db';
 import { person } from '$lib/server/schema';
 import { verifyToken } from '$lib/jwt';
-import { hashPassword } from '$lib/hashPassword';
-import { send } from '$lib/mail';
+import { withAuditContext } from '$lib/server/audit';
 import type { Actions } from './$types';
 
 const pwhFingerprint = (hash: string | null | undefined): string =>
@@ -44,10 +43,14 @@ export const actions = {
 			return fail(400, { error: 'Invalid token' });
 		}
 
-		const hashed = await hashPassword(newPassword);
-		await db.update(person).set({ password: hashed }).where(eq(person.id, personId));
-
-		send(event, personId, 'password-change-notification', {});
+		// The auth.hash_password DB trigger bcrypts the plaintext on UPDATE,
+		// and auth.notify_password_change enqueues the change-notification email.
+		// App code must not pre-hash or pre-enqueue.
+		await withAuditContext(
+			event,
+			(tx) => tx.update(person).set({ password: newPassword }).where(eq(person.id, personId)),
+			{ id: parsed.id, role: 'password-reset' }
+		);
 
 		return redirect(302, '/auth/login');
 	}
