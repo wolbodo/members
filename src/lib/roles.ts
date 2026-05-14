@@ -1,13 +1,11 @@
 export const ROLE_NAMES = [
-	'member',
 	'board',
 	'nerd',
 	'muzikant',
 	'im',
 	'klusser',
 	'wolpop',
-	'schoonmaker',
-	'server'
+	'schoonmaker'
 ] as const;
 
 export type RoleName = (typeof ROLE_NAMES)[number];

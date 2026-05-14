@@ -26,6 +26,9 @@ importers:
       '@fontsource/rubik':
         specifier: ^5.2.8
         version: 5.2.8
+      '@zod4-mock/locale-nl':
+        specifier: ^0.4.0
+        version: 0.4.0
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -48,8 +51,8 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
       zod4-mock:
-        specifier: ^0.2.3
-        version: 0.2.3(zod@4.4.3)
+        specifier: ^0.5.0
+        version: 0.5.0(zod@4.4.3)
     devDependencies:
       '@playwright/test':
         specifier: ^1.60.0
@@ -1456,6 +1459,15 @@ packages:
   '@webcontainer/env@1.1.1':
     resolution: {integrity: sha512-6aN99yL695Hi9SuIk1oC88l9o0gmxL1nGWWQ/kNy81HigJ0FoaoTXpytCj6ItzgyCEwA9kF1wixsTuv5cjsgng==}
 
+  '@zod4-mock/locale-core@0.2.0':
+    resolution: {integrity: sha512-DvSDc3hnMn1Y1c2SAH0hRIvXICGe9jvpRyM5PmqQfm8tDXGWsqCT45ITlgJxkbdket21i+Owjj8guQk88dsGDA==}
+
+  '@zod4-mock/locale-names@0.2.0':
+    resolution: {integrity: sha512-ZLjASadRWro9eDe/nEc6pfgcyWVAs86MYwDt+DuGMk0hMQfPgPRrRptAMYBkO2aNoiBiC0gkKAxcbv9OdpyLOg==}
+
+  '@zod4-mock/locale-nl@0.4.0':
+    resolution: {integrity: sha512-uqtPrNuK+FGuYsiZRbe7UEQyQ/oJRT0EG0sQCd7KZUV50WoGKah1W2ts/TokTWjzbK+NCHuLIy7OJzG5gIxbgw==}
+
   abbrev@2.0.0:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -1490,6 +1502,10 @@ packages:
 
   aria-query@5.3.1:
     resolution: {integrity: sha512-Z/ZeOgVl7bcSYZ/u/rh0fOpvEpq//LZmdbkXyc7syVzjPAhfOa9ebsdTSjEBDU4vs5nC98Kfduj1uFo0qyET3g==}
+    engines: {node: '>= 0.4'}
+
+  aria-query@5.3.2:
+    resolution: {integrity: sha512-COROpnaoap1E2F000S62r6A60uHZnmlvomhfyT2DlTcrY1OrBKn2UhH7qn5wTC9zMvD0AY7csdPSNwKP+7WiQw==}
     engines: {node: '>= 0.4'}
 
   assertion-error@2.0.1:
@@ -1803,8 +1819,8 @@ packages:
   esrap@1.4.9:
     resolution: {integrity: sha512-3OMlcd0a03UGuZpPeUC1HxR3nA23l+HEyCiZw3b3FumJIN9KphoGzDJKMXI1S72jVS1dsenDyQC0kJlO1U9E1g==}
 
-  esrap@2.2.7:
-    resolution: {integrity: sha512-Dl7o7btn2YXca1VXx+PVl+lKuZdHBm8oCFuckUxqchMvNMdHMJ/qF31wtPaVyWvFYLQePkbXJrirWzbAP6Yamw==}
+  esrap@2.2.8:
+    resolution: {integrity: sha512-MPweq2EvEGj8jwOI7Hgycw/QIHzqA1EbAM8lG7p+FBfZbZq/hQ6h3AMsqnu/djzisH1KVWNzbb7LSgIVtMlPSg==}
     peerDependencies:
       '@typescript-eslint/types': ^8.2.0
     peerDependenciesMeta:
@@ -2619,8 +2635,8 @@ packages:
   zimmerframe@1.1.4:
     resolution: {integrity: sha512-B58NGBEoc8Y9MWWCQGl/gq9xBCe4IiKM0a2x7GZdQKOW5Exr8S1W24J6OgM1njK8xCRGvAJIL/MxXHf6SkmQKQ==}
 
-  zod4-mock@0.2.3:
-    resolution: {integrity: sha512-rlEC06MwSY+lGZsyk5xnHsEjhdOXr4/hRJrh6B+bar1jVnD3NUvOpb3b+hta7ycjNPq2r5rEukZQojPXf1HDsA==}
+  zod4-mock@0.5.0:
+    resolution: {integrity: sha512-VZpcQ+IJoBN7/h4envpbDjE6d3hpeTNd5++uQBCWyNluH294DpaGYhnwQbDN2Eo8tzsTyIk6lbmA1kU7BH2DlQ==}
     peerDependencies:
       zod: ^4.4.3
 
@@ -3409,7 +3425,7 @@ snapshots:
   '@testing-library/jest-dom@6.9.1':
     dependencies:
       '@adobe/css-tools': 4.4.4
-      aria-query: 5.3.1
+      aria-query: 5.3.2
       css.escape: 1.5.1
       dom-accessibility-api: 0.6.3
       picocolors: 1.1.1
@@ -3580,6 +3596,17 @@ snapshots:
 
   '@webcontainer/env@1.1.1': {}
 
+  '@zod4-mock/locale-core@0.2.0': {}
+
+  '@zod4-mock/locale-names@0.2.0':
+    dependencies:
+      '@zod4-mock/locale-core': 0.2.0
+
+  '@zod4-mock/locale-nl@0.4.0':
+    dependencies:
+      '@zod4-mock/locale-core': 0.2.0
+      '@zod4-mock/locale-names': 0.2.0
+
   abbrev@2.0.0: {}
 
   acorn@8.16.0: {}
@@ -3601,6 +3628,8 @@ snapshots:
       dequal: 2.0.3
 
   aria-query@5.3.1: {}
+
+  aria-query@5.3.2: {}
 
   assertion-error@2.0.1: {}
 
@@ -3862,7 +3891,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  esrap@2.2.7:
+  esrap@2.2.8:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
@@ -4491,7 +4520,7 @@ snapshots:
       clsx: 2.1.1
       devalue: 5.8.0
       esm-env: 1.2.2
-      esrap: 2.2.7
+      esrap: 2.2.8
       is-reference: 3.0.3
       locate-character: 3.0.0
       magic-string: 0.30.21
@@ -4630,8 +4659,9 @@ snapshots:
 
   zimmerframe@1.1.4: {}
 
-  zod4-mock@0.2.3(zod@4.4.3):
+  zod4-mock@0.5.0(zod@4.4.3):
     dependencies:
+      '@zod4-mock/locale-core': 0.2.0
       zod: 4.4.3
 
   zod@4.4.3: {}

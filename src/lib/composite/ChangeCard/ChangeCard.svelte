@@ -7,13 +7,16 @@
 		new: string | null;
 	}
 
+	import type { Snippet } from 'svelte';
+
 	interface Props {
 		author: string;
 		time: string;
 		fields: DiffField[];
+		children?: Snippet;
 	}
 
-	let { author, time, fields }: Props = $props();
+	let { author, time, fields, children }: Props = $props();
 </script>
 
 <div class="card">
@@ -22,6 +25,7 @@
 		<span class="time">{time}</span>
 	</div>
 	<div class="body">
+		{@render children?.()}
 		{#each fields as f (f.field)}
 			<DiffLine field={f.field} oldValue={f.old} newValue={f.new} />
 		{/each}

@@ -11,26 +11,23 @@ export const load: PageServerLoad = async (event) => {
 	const isBoard = event.locals.user!.roles.includes('board');
 	const isSelf = event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
 
-	const [found] = await db.select().from(person).where(where(event.params.identifier)).limit(1);
+	const found = await db.query.person.findFirst({
+		where: where(event.params.identifier),
+		with: {
+			roles: true
+		}
+	});
 
 	if (!found) return { person: null, roles: [], isBoard, isSelf };
 
-	const redacted = {
-		...found,
-		bankaccount: isBoard || isSelf ? found.bankaccount : null,
-		key_code: isBoard ? found.key_code : null,
-		note: isBoard ? found.note : null
-	};
+	const { roles, ...personData } = found;
 
-	const roles = await db
-		.select({
-			id: personRole.id,
-			role: personRole.role,
-			valid_from: personRole.valid_from,
-			valid_till: personRole.valid_till
-		})
-		.from(personRole)
-		.where(eq(personRole.person_id, found.id));
+	const redacted = {
+		...personData,
+		bankaccount: isBoard || isSelf ? personData.bankaccount : null,
+		key_code: isBoard ? personData.key_code : null,
+		note: isBoard ? personData.note : null
+	};
 
 	return { person: redacted, roles, isBoard, isSelf };
 };

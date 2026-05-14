@@ -1,52 +1,44 @@
-import type { PageServerLoad } from './$types';
-import { db } from '$lib/server/db';
-import { person, personRole } from '$lib/server/schema';
-import { eq, and, isNull, lte, or, isNotNull, asc } from 'drizzle-orm';
-
-const MEMBERS_ONLY_CONDITION = and(
-	or(isNull(personRole.valid_till), lte(personRole.valid_till, new Date())),
-	lte(personRole.valid_from, new Date()),
-	eq(personRole.role, 'member')
-);
+import type { PageServerLoad } from "./$types";
+import { db } from "$lib/server/db";
+import { personRole } from "$lib/server/schema";
 
 export const load: PageServerLoad = async ({ url, locals }) => {
-	const showAll = url.searchParams.has('all');
+  const showAll = url.searchParams.has("all");
 
-	const people = await db
-		.select({
-			id: person.id,
-			name: person.name,
-			email: person.email,
-			phone: person.phone,
-			address: person.address,
-			city: person.city,
-			firstname: person.firstname,
-			lastname: person.lastname
-		})
-		.from(person)
-		.orderBy(asc(person.name));
+  const now = new Date();
 
-	const roles = await db
-		.select()
-		.from(personRole)
-		.where(and(isNull(personRole.valid_till), lte(personRole.valid_from, new Date())));
+  const people = await db.query.person.findMany({
+    where: (person, { exists, and, eq, isNull, lte }) => {
+      if (showAll) return undefined;
+      return exists(
+        db
+          .select()
+          .from(personRole)
+          .where(
+            and(
+              eq(personRole.person_id, person.id),
+              eq(personRole.role, "member"),
+              isNull(personRole.valid_till),
+              lte(personRole.valid_from, now),
+            ),
+          ),
+      );
+    },
+    with: {
+      roles: {
+        where: (role, { and, isNull, lte }) =>
+          and(isNull(role.valid_till), lte(role.valid_from, now)),
+      },
+    },
+    orderBy: (person, { asc }) => [asc(person.name)],
+  });
 
-	const rolesByPerson = new Map<number, string[]>();
-	for (const r of roles) {
-		if (!r.person_id) continue;
-		const list = rolesByPerson.get(r.person_id) ?? [];
-		list.push(r.role);
-		rolesByPerson.set(r.person_id, list);
-	}
-
-	const enriched = people.map((p) => ({
-		...p,
-		roles: (rolesByPerson.get(p.id) ?? []).map((role) => ({ role }))
-	}));
-
-	const filtered = showAll
-		? enriched
-		: enriched.filter((p) => p.roles.some((r) => r.role === 'member'));
-
-	return { people: filtered, user: locals.user };
+  return {
+    people: people.map((p) => ({
+      ...p,
+      roles: [...new Set(p.roles.map((r) => r.role))],
+    })),
+    user: locals.user,
+  };
+  j;
 };

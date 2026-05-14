@@ -92,6 +92,42 @@ export const mailEntries = mail.table('entries', {
 	message_info: jsonb('message_info').default({})
 });
 
+import { relations } from 'drizzle-orm';
+
+export const personRelations = relations(person, ({ many }) => ({
+	roles: many(personRole),
+	history: many(history, { relationName: 'person_history' }),
+	actions: many(history, { relationName: 'author_actions' }),
+	mails: many(mailEntries)
+}));
+
+export const personRoleRelations = relations(personRole, ({ one }) => ({
+	person: one(person, {
+		fields: [personRole.person_id],
+		references: [person.id]
+	})
+}));
+
+export const historyRelations = relations(history, ({ one }) => ({
+	author: one(person, {
+		fields: [history.author_id],
+		references: [person.id],
+		relationName: 'author_actions'
+	}),
+	person: one(person, {
+		fields: [history.person_id],
+		references: [person.id],
+		relationName: 'person_history'
+	})
+}));
+
+export const mailEntriesRelations = relations(mailEntries, ({ one }) => ({
+	person: one(person, {
+		fields: [mailEntries.person_id],
+		references: [person.id]
+	})
+}));
+
 export type Person = typeof person.$inferSelect;
 export type PersonRole = typeof personRole.$inferSelect;
 export type MailEntry = typeof mailEntries.$inferSelect;

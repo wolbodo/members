@@ -1,22 +1,26 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { mailEntries, person } from '$lib/server/schema';
-import { eq, desc } from 'drizzle-orm';
+import { desc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
-	const mails = await db
-		.select({
-			id: mailEntries.id,
-			status: mailEntries.status,
-			template: mailEntries.template,
-			created: mailEntries.created,
-			personName: person.name,
-			personEmail: person.email
-		})
-		.from(mailEntries)
-		.innerJoin(person, eq(mailEntries.person_id, person.id))
-		.orderBy(desc(mailEntries.created))
-		.limit(100);
+	const entries = await db.query.mailEntries.findMany({
+		with: {
+			person: {
+				columns: { name: true, email: true }
+			}
+		},
+		orderBy: (m, { desc }) => [desc(m.created)],
+		limit: 100
+	});
+
+	const mails = entries.map((m) => ({
+		id: m.id,
+		status: m.status,
+		template: m.template,
+		created: m.created,
+		personName: m.person.name,
+		personEmail: m.person.email
+	}));
 
 	return { mails };
 };

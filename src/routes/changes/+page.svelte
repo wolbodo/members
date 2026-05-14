@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { datetime } from '$lib/format';
+	import { datetime } from "$lib/format";
 	import {
 		PageShell,
 		DataTable,
@@ -7,9 +7,9 @@
 		DiffLine,
 		EmptyState,
 		searchState,
-		filterFields
-	} from '$lib';
-	import type { PageServerData } from './$types';
+		filterFields,
+	} from "$lib";
+	import type { PageServerData } from "./$types";
 
 	interface Props {
 		data: PageServerData;
@@ -17,43 +17,53 @@
 
 	let { data }: Props = $props();
 
-	const HIDDEN_FIELDS = ['password'];
+	const HIDDEN_FIELDS = ["password"];
+	const IGNORED_FIELDS = ["modified", "created", "id", "person_id"];
 
 	type DiffField = { field: string; old: string | null; new: string | null };
 
+	function formatValue(k: string, v: unknown): string | null {
+		if (v == null) return null;
+		if (HIDDEN_FIELDS.includes(k)) return "****";
+		const s = String(v);
+		// Detect ISO-like date strings and format them
+		if (s.length > 15 && !isNaN(Date.parse(s)) && /^\d{4}-\d{2}-\d{2}/.test(s)) {
+			return datetime(s);
+		}
+		return s;
+	}
+
 	function diffFields(
 		old_value: Record<string, unknown> | null,
-		new_value: Record<string, unknown> | null
+		new_value: Record<string, unknown> | null,
 	): DiffField[] {
-		if (!old_value) {
-			return Object.entries(new_value ?? {})
-				.filter(([, v]) => v != null && v !== '')
-				.map(([k, v]) => ({
+		const normalize = (v: unknown) => (v == null || v === "" ? null : v);
+
+		const allKeys = new Set([
+			...Object.keys(old_value ?? {}),
+			...Object.keys(new_value ?? {}),
+		]);
+
+		return Array.from(allKeys)
+			.filter((k) => !IGNORED_FIELDS.includes(k))
+			.filter((k) => normalize((old_value ?? {})[k]) !== normalize((new_value ?? {})[k]))
+			.map((k) => {
+				const vOld = (old_value ?? {})[k];
+				const vNew = (new_value ?? {})[k];
+				return {
 					field: k,
-					old: null,
-					new: HIDDEN_FIELDS.includes(k) ? '****' : String(v)
-				}));
-		}
-		return Object.entries(old_value)
-			.filter(([k, v]) => v !== (new_value ?? {})[k])
-			.map(([k, v]) => ({
-				field: k,
-				old: HIDDEN_FIELDS.includes(k) ? '****' : v == null ? null : String(v),
-				new:
-					HIDDEN_FIELDS.includes(k)
-						? '****'
-						: (new_value ?? {})[k] == null
-							? null
-							: String((new_value ?? {})[k])
-			}));
+					old: formatValue(k, vOld),
+					new: formatValue(k, vNew),
+				};
+			});
 	}
 
 	let filtered = $derived(
 		filterFields(data.history, searchState.value, [
 			(c) => c.author?.name,
 			(c) => c.person?.name,
-			(c) => c.role
-		])
+			(c) => c.role,
+		]),
 	);
 </script>
 
@@ -85,11 +95,18 @@
 						<tr>
 							<td class="td-dim col-time">{datetime(String(timestamp))}</td>
 							<td class="col-who">
-								<span class="td-name">{author?.name ?? '—'}</span>
-								<span class="person t-small"> → {person?.name ?? '—'}</span>
+								<span class="td-name">{author?.name ?? "—"}</span>
+								<span class="person t-small"> → {person?.name ?? "—"}</span>
 							</td>
-							<td class="td-dim col-role">{role ?? ''}</td>
+							<td class="td-dim col-role">{role ?? ""}</td>
 							<td>
+								{#if role}
+									{#if !old_values}
+										<div class="role-action add">+ assigned <strong>{role}</strong></div>
+									{:else if (new_values as any)?.valid_till && !(old_values as any)?.valid_till}
+										<div class="role-action remove">- removed <strong>{role}</strong></div>
+									{/if}
+								{/if}
 								{#each diffFields(old_values as Record<string, unknown> | null, new_values as Record<string, unknown> | null) as f (f.field)}
 									<DiffLine field={f.field} oldValue={f.old} newValue={f.new} />
 								{/each}
@@ -101,15 +118,24 @@
 		</div>
 
 		<div class="mobile">
-			{#each filtered as { timestamp, new_values, old_values, author }, i (i)}
+			{#each filtered as { timestamp, new_values, old_values, author, role }, i (i)}
+				{@const fields = diffFields(
+					old_values as Record<string, unknown> | null,
+					new_values as Record<string, unknown> | null,
+				)}
 				<ChangeCard
-					author={author?.name ?? '—'}
+					author={author?.name ?? "—"}
 					time={datetime(String(timestamp))}
-					fields={diffFields(
-						old_values as Record<string, unknown> | null,
-						new_values as Record<string, unknown> | null
-					)}
-				/>
+					{fields}
+				>
+					{#if role}
+						{#if !old_values}
+							<div class="role-action add">+ assigned {role}</div>
+						{:else if (new_values as any)?.valid_till && !(old_values as any)?.valid_till}
+							<div class="role-action remove">- removed {role}</div>
+						{/if}
+					{/if}
+				</ChangeCard>
 			{/each}
 		</div>
 	{/if}
@@ -125,6 +151,17 @@
 	.count {
 		color: var(--txt3);
 	}
+	.role-action {
+		font-weight: 600;
+		font-size: var(--text-sm);
+		margin-bottom: 6px;
+	}
+	.role-action.add {
+		color: var(--pri);
+	}
+	.role-action.remove {
+		color: var(--red);
+	}
 	.col-time {
 		width: 130px;
 	}
@@ -133,10 +170,6 @@
 	}
 	.col-role {
 		width: 80px;
-	}
-	.person {
-		display: block;
-		margin-top: 1px;
 	}
 	.desktop {
 		display: block;
