@@ -61,8 +61,10 @@ jobs:
     runs-on: wlbd
     needs: release
     steps:
+      - uses: actions/checkout@v4
       - name: Deploy services
         run: |
+          cp docker-compose.yml $HOME/projects/members/docker-compose.yml
           cd $HOME/projects/members
           docker compose pull -q
           docker compose up -d
