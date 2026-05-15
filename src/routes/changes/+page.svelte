@@ -18,8 +18,8 @@
 
 	let { data }: Props = $props();
 
-	const HIDDEN_FIELDS: string[] = [];
-	const IGNORED_FIELDS = ['modified', 'created', 'id', 'person_id', 'valid_till', 'valid_from', 'password'];
+	const HIDDEN_FIELDS = ['password'];
+	const IGNORED_FIELDS = ['modified', 'created', 'id', 'person_id', 'valid_till', 'valid_from'];
 
 	type DiffField = { field: string; old: string | null; new: string | null };
 

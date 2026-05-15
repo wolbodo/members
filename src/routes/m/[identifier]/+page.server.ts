@@ -36,6 +36,7 @@ export const load: PageServerLoad = async (event) => {
     bankaccount: isBoard || isSelf ? personData.bankaccount : null,
     key_code: isBoard ? personData.key_code : null,
     note: isBoard || isSelf ? personData.note : null,
+    password: null,
   };
 
   // Prefill the form with the current person's values so the UI starts in sync.
