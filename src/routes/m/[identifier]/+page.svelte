@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import { superForm } from 'sveltekit-superforms';
 	import { datetime, formatDate } from '$lib/format';
 	import {
 		PageShell,
@@ -17,10 +18,10 @@
 		SaveBar,
 		EmptyState
 	} from '$lib';
-	import type { PageServerData } from './$types';
+	import type { PageData } from './$types';
 
 	interface Props {
-		data: PageServerData;
+		data: PageData;
 	}
 
 	let { data }: Props = $props();
@@ -38,7 +39,25 @@
 		memberRole?.valid_from ? formatDate(String(memberRole.valid_from)) : null
 	);
 
-	let dirty = $state(false);
+	const {
+		form: editForm,
+		errors: editErrors,
+		enhance: editEnhance,
+		tainted
+		// svelte-ignore state_referenced_locally
+	} = superForm(data.form, {
+		dataType: 'json',
+		resetForm: false,
+		onUpdated: ({ form }) => {
+			if (form.valid) {
+				saved = true;
+				if (saveTimer) clearTimeout(saveTimer);
+				saveTimer = setTimeout(() => (saved = false), 2500);
+			}
+		}
+	});
+
+	let dirty = $derived(!!$tainted);
 	let saved = $state(false);
 	let saveTimer: ReturnType<typeof setTimeout> | null = null;
 </script>
@@ -102,41 +121,25 @@
 			{/if}
 		</div>
 
-		<form
-			method="post"
-			action="?/edit"
-			use:enhance={() =>
-				async ({ result, update }) => {
-					await update();
-					if (result.type === 'success') {
-						dirty = false;
-						saved = true;
-						if (saveTimer) clearTimeout(saveTimer);
-						saveTimer = setTimeout(() => (saved = false), 2500);
-					}
-				}}
-			oninput={() => (dirty = true)}
-		>
-			<input type="hidden" name="id" value={person.id} />
-
+		<form method="post" action="?/edit" use:editEnhance>
 			<FormSection label="Identity">
-				<Field label="Nickname" span2>
+				<Field label="Nickname" span2 error={$editErrors.name?.[0]}>
 					{#if canEdit && isBoard}
-						<TextInput name="name" value={person.name} />
+						<TextInput bind:value={$editForm.name} />
 					{:else}
 						<TextValue value={person.name} />
 					{/if}
 				</Field>
-				<Field label="First name">
+				<Field label="First name" error={$editErrors.firstname?.[0]}>
 					{#if canEdit}
-						<TextInput name="firstname" value={person.firstname ?? ''} />
+						<TextInput bind:value={$editForm.firstname as string} />
 					{:else}
 						<TextValue value={person.firstname} />
 					{/if}
 				</Field>
-				<Field label="Last name">
+				<Field label="Last name" error={$editErrors.lastname?.[0]}>
 					{#if canEdit}
-						<TextInput name="lastname" value={person.lastname ?? ''} />
+						<TextInput bind:value={$editForm.lastname as string} />
 					{:else}
 						<TextValue value={person.lastname} />
 					{/if}
@@ -144,16 +147,16 @@
 			</FormSection>
 
 			<FormSection label="Contact">
-				<Field label="Email">
+				<Field label="Email" error={$editErrors.email?.[0]}>
 					{#if canEdit}
-						<TextInput type="email" name="email" value={person.email ?? ''} />
+						<TextInput type="email" bind:value={$editForm.email as string} />
 					{:else}
 						<TextValue value={person.email} />
 					{/if}
 				</Field>
-				<Field label="Phone">
+				<Field label="Phone" error={$editErrors.phone?.[0]}>
 					{#if canEdit}
-						<TextInput type="tel" name="phone" value={person.phone ?? ''} />
+						<TextInput type="tel" bind:value={$editForm.phone as string} />
 					{:else}
 						<TextValue value={person.phone} />
 					{/if}
@@ -161,30 +164,30 @@
 			</FormSection>
 
 			<FormSection label="Location">
-				<Field label="Address" span2>
+				<Field label="Address" span2 error={$editErrors.address?.[0]}>
 					{#if canEdit}
-						<TextInput name="address" value={person.address ?? ''} />
+						<TextInput bind:value={$editForm.address as string} />
 					{:else}
 						<TextValue value={person.address} />
 					{/if}
 				</Field>
-				<Field label="Zipcode">
+				<Field label="Zipcode" error={$editErrors.zipcode?.[0]}>
 					{#if canEdit}
-						<TextInput name="zipcode" value={person.zipcode ?? ''} />
+						<TextInput bind:value={$editForm.zipcode as string} />
 					{:else}
 						<TextValue value={person.zipcode} />
 					{/if}
 				</Field>
-				<Field label="City">
+				<Field label="City" error={$editErrors.city?.[0]}>
 					{#if canEdit}
-						<TextInput name="city" value={person.city ?? ''} />
+						<TextInput bind:value={$editForm.city as string} />
 					{:else}
 						<TextValue value={person.city} />
 					{/if}
 				</Field>
-				<Field label="Country" span2>
+				<Field label="Country" span2 error={$editErrors.country?.[0]}>
 					{#if canEdit}
-						<TextInput name="country" value={person.country ?? ''} />
+						<TextInput bind:value={$editForm.country as string} />
 					{:else}
 						<TextValue value={person.country} />
 					{/if}
@@ -193,17 +196,17 @@
 
 			{#if isBoard || isSelf}
 				<FormSection label="System">
-					<Field label="Bank account">
+					<Field label="Bank account" error={$editErrors.bankaccount?.[0]}>
 						{#if canEdit}
-							<TextInput name="bankaccount" value={person.bankaccount ?? ''} />
+							<TextInput bind:value={$editForm.bankaccount as string} />
 						{:else}
 							<TextValue value={person.bankaccount} mono />
 						{/if}
 					</Field>
 					{#if isBoard}
-						<Field label="Key code">
+						<Field label="Key code" error={$editErrors.key_code?.[0]}>
 							{#if canEdit}
-								<TextInput name="key_code" value={person.key_code ?? ''} />
+								<TextInput bind:value={$editForm.key_code as string} />
 							{:else}
 								<TextValue value={person.key_code} mono />
 							{/if}
@@ -211,24 +214,19 @@
 					{/if}
 					<Field label="Permissions" span2>
 						<div style="display:flex; gap:20px; padding:6px 0; flex-wrap:wrap;">
-							<Toggle
-								name="allow_register"
-								checked={Boolean(person.allow_register)}
-								disabled={!canEdit}
-							>
+							<Toggle bind:checked={$editForm.allow_register as boolean} disabled={!canEdit}>
 								Allow register
 							</Toggle>
-							<Toggle name="allow_door" checked={Boolean(person.allow_door)} disabled={!canEdit}>
+							<Toggle bind:checked={$editForm.allow_door as boolean} disabled={!canEdit}>
 								Allow door
 							</Toggle>
 						</div>
 					</Field>
 					{#if canEdit}
-						<Field label="New password" span2>
+						<Field label="New password" span2 error={$editErrors.password?.[0]}>
 							<TextInput
 								type="password"
-								name="password"
-								value=""
+								bind:value={$editForm.password as string}
 								placeholder="Leave empty to keep"
 							/>
 						</Field>
@@ -238,8 +236,8 @@
 
 			{#if isBoard}
 				<FormSection label="Notes">
-					<Field label="Note" span2>
-						<Textarea name="note" value={person.note ?? ''} />
+					<Field label="Note" span2 error={$editErrors.note?.[0]}>
+						<Textarea bind:value={$editForm.note as string} />
 					</Field>
 				</FormSection>
 			{/if}

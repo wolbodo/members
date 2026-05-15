@@ -2,7 +2,7 @@
 	import '../app.css';
 	import type { Snippet } from 'svelte';
 	import { page } from '$app/state';
-	import { AppHeader, UserChip, SearchInput, searchState } from '$lib';
+	import { AppHeader, UserChip } from '$lib';
 	import type { LayoutServerData } from './$types';
 
 	interface Props {
@@ -14,7 +14,6 @@
 
 	let user = $derived(data.user);
 	let path = $derived(page.url.pathname);
-	let showSearch = $derived(path === '/changes' || path === '/mail');
 
 	let nav = $derived(
 		user
@@ -34,16 +33,6 @@
 <div class="root">
 	{#if user}
 		<AppHeader {nav}>
-			{#snippet search()}
-				{#if showSearch}
-					<SearchInput
-						bind:value={searchState.value}
-						placeholder={path === '/mail'
-							? 'Search to, email, template…'
-							: 'Search author, person, role…'}
-					/>
-				{/if}
-			{/snippet}
 			{#snippet trailing()}
 				<UserChip name={user.name}>
 					{#snippet menu()}

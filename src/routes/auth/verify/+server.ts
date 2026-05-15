@@ -1,15 +1,16 @@
 import { verifyToken } from '$lib/jwt';
 import { db } from '$lib/server/db';
 import { person } from '$lib/server/schema';
+import { debug, warn } from '$lib/server/log';
 import { eq } from 'drizzle-orm';
-import { error } from '@sveltejs/kit';
+import { error as httpError } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
 
 export const GET = (async (event) => {
 	const token = event.cookies.get('token');
 
-	if (!token) error(401);
+	if (!token) httpError(401);
 
 	try {
 		const { id, name, roles } = await verifyToken(token);
@@ -27,9 +28,10 @@ export const GET = (async (event) => {
 		});
 		if (row?.email) headers.set('X-Email', row.email);
 
+		debug('auth/verify: verified', { id, name });
 		return new Response(null, { status: 200, headers });
-	} catch (e) {
-		console.error('Error verifying token', e);
-		error(401);
+	} catch (err) {
+		warn('auth/verify: token verification failed', { err });
+		httpError(401);
 	}
 }) satisfies RequestHandler;

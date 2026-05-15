@@ -6,6 +6,7 @@ import { db } from '$lib/server/db';
 import { person } from '$lib/server/schema';
 import { send } from '$lib/mail';
 import { createToken } from '$lib/jwt';
+import { info } from '$lib/server/log';
 import type { Actions } from './$types';
 
 const pwhFingerprint = (hash: string | null | undefined): string =>
@@ -27,7 +28,10 @@ export const actions = {
 			.where(ilike(person.email, email))
 			.limit(1);
 
-		if (!found) return { success: true };
+		if (!found) {
+			info('auth/forgot: reset requested (no match)', { email });
+			return { success: true };
+		}
 
 		const token = createToken(
 			{ id: found.id.toString(), pwh: pwhFingerprint(found.password) },
@@ -35,6 +39,7 @@ export const actions = {
 		);
 
 		send(event, found.id, 'password-reset', { token });
+		info('auth/forgot: reset requested', { id: found.id, email });
 		return { success: true };
 	}
 } satisfies Actions;

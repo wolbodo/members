@@ -1,5 +1,5 @@
 <script lang="ts">
-	type Status = 'sent' | 'pending';
+	type Status = 'sent' | 'pending' | 'error';
 
 	interface Props {
 		status: Status;
@@ -31,5 +31,10 @@
 		color: var(--amber);
 		background: rgba(232, 161, 80, 0.1);
 		border-color: rgba(232, 161, 80, 0.3);
+	}
+	.status-error {
+		color: var(--red);
+		background: rgba(224, 85, 85, 0.1);
+		border-color: rgba(224, 85, 85, 0.3);
 	}
 </style>

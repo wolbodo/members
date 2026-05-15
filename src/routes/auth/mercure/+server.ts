@@ -1,7 +1,8 @@
-import { error } from '@sveltejs/kit';
+import { error as httpError } from '@sveltejs/kit';
 import jwt from 'jsonwebtoken';
 
 import { verifyToken } from '$lib/jwt';
+import { warn } from '$lib/server/log';
 import { env } from '$env/dynamic/private';
 
 import type { RequestHandler } from './$types';
@@ -9,7 +10,7 @@ import type { RequestHandler } from './$types';
 export const GET = (async (event) => {
 	const token = event.cookies.get('token');
 
-	if (!token) error(401, 'invalid token');
+	if (!token) httpError(401, 'invalid token');
 
 	try {
 		const { name, roles } = await verifyToken(token);
@@ -35,8 +36,8 @@ export const GET = (async (event) => {
 		});
 
 		return new Response(null, { headers });
-	} catch (e) {
-		console.error('Error verifying token', e);
-		error(401, 'invalid token');
+	} catch (err) {
+		warn('auth/mercure: token verification failed', { err });
+		httpError(401, 'invalid token');
 	}
 }) satisfies RequestHandler;

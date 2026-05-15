@@ -20,22 +20,20 @@
 			<span class="label">removed</span>
 			<span class="old">{oldValue}</span>
 		{/if}
+	{:else if isPassword}
+		<span class="label">password changed</span>
 	{:else}
 		<span class="field">{field}: </span>
-		{#if isPassword}
-			<span class="pass">•••• → ••••</span>
+		{#if oldValue == null}
+			<span class="null">null</span>
 		{:else}
-			{#if oldValue == null}
-				<span class="null">null</span>
-			{:else}
-				<span class="old">{oldValue}</span>
-			{/if}
-			<span class="arrow"> → </span>
-			{#if newValue == null}
-				<span class="null">null</span>
-			{:else}
-				<span class="new">{newValue}</span>
-			{/if}
+			<span class="old">{oldValue}</span>
+		{/if}
+		<span class="arrow"> → </span>
+		{#if newValue == null}
+			<span class="null">null</span>
+		{:else}
+			<span class="new">{newValue}</span>
 		{/if}
 	{/if}
 </div>
@@ -72,9 +70,5 @@
 		color: var(--txt3);
 		font-style: italic;
 		font-size: 0.9em;
-	}
-	.pass {
-		color: var(--txt3);
-		letter-spacing: 0.12em;
 	}
 </style>

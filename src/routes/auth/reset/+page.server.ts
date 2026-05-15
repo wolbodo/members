@@ -6,6 +6,7 @@ import { db } from '$lib/server/db';
 import { person } from '$lib/server/schema';
 import { verifyToken } from '$lib/jwt';
 import { withAuditContext } from '$lib/server/audit';
+import { info } from '$lib/server/log';
 import type { Actions } from './$types';
 
 const pwhFingerprint = (hash: string | null | undefined): string =>
@@ -52,6 +53,7 @@ export const actions = {
 			{ id: parsed.id, role: 'password-reset' }
 		);
 
+		info('auth/reset: password reset', { id: personId });
 		return redirect(302, '/auth/login');
 	}
 } satisfies Actions;

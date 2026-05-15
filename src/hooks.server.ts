@@ -1,11 +1,12 @@
 import type { Handle, RequestEvent, HandleFetch } from '@sveltejs/kit';
-import { redirect, error } from '@sveltejs/kit';
+import { redirect, error as httpError } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 
 import { verifyToken } from '$lib/jwt';
 import { startMailWorker } from '$lib/server/mail-worker';
+import { debug, warn, error } from '$lib/server/log';
 
-void startMailWorker().catch((e) => console.error('mail worker failed to start', e));
+void startMailWorker().catch((err) => error('mail-worker: failed to start', { err }));
 
 const PUBLIC_ROUTES = new Set(['/keycodes']);
 const isPublic = (id: string | null | undefined): boolean =>
@@ -56,13 +57,17 @@ const authenticateUser = async (event: RequestEvent) => {
 export const handle: Handle = async ({ event, resolve }) => {
 	if (event.route.id && RATE_LIMITED.has(event.route.id)) {
 		const ip = event.getClientAddress();
-		if (!rateLimit(ip)) return error(429, 'Too many requests');
+		if (!rateLimit(ip)) {
+			warn('http: rate limited', { ip, route: event.route.id });
+			return httpError(429, 'Too many requests');
+		}
 	}
 
 	const user = await authenticateUser(event);
 
 	if (!user) {
 		if (!isPublic(event.route.id)) {
+			debug('http: unauth redirect', { route: event.route.id });
 			return redirect(302, '/auth/login');
 		}
 	} else {
@@ -100,7 +105,7 @@ export const handleFetch = (async ({ request, fetch }) => {
 	try {
 		return await fetch(request);
 	} catch (err) {
-		console.error('error in fetch', err);
+		error('http: fetch failed', { url: request.url, method: request.method, err });
 		throw err;
 	}
 }) satisfies HandleFetch;

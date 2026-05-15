@@ -6,6 +6,7 @@
 		ChangeCard,
 		DiffLine,
 		EmptyState,
+		SearchInput,
 		searchState,
 		filterFields
 	} from '$lib';
@@ -34,22 +35,21 @@
 	}
 
 	function diffFields(old_value: unknown, new_value: unknown, role?: string | null): DiffField[] {
-		const normalize = (v: unknown) => (v == null || v === '' ? null : v);
 		const old = (old_value as Record<string, unknown>) ?? {};
 		const curr = (new_value as Record<string, unknown>) ?? {};
 
 		const allKeys = new Set([...Object.keys(old), ...Object.keys(curr)]);
 
+		// Compare on the rendered value so e.g. actual null and the string "null"
+		// (both formatted to null) don't show up as a spurious null → null diff.
 		const fields = Array.from(allKeys)
 			.filter((k) => !IGNORED_FIELDS.includes(k))
-			.filter((k) => normalize(old[k]) !== normalize(curr[k]))
-			.map((k) => {
-				return {
-					field: k,
-					old: formatValue(k, old[k]),
-					new: formatValue(k, curr[k])
-				};
-			});
+			.map((k) => ({
+				field: k,
+				old: formatValue(k, old[k]),
+				new: formatValue(k, curr[k])
+			}))
+			.filter((f) => f.old !== f.new);
 
 		// Inject role change if this is a role history entry
 		if (role) {
@@ -80,6 +80,9 @@
 	<div class="title-row">
 		<h1 class="t-heading">Changes</h1>
 		<span class="count t-small">{filtered.length} entries</span>
+		<div class="search">
+			<SearchInput bind:value={searchState.value} placeholder="Search author, person, role…" />
+		</div>
 	</div>
 
 	{#if filtered.length === 0}
@@ -130,12 +133,18 @@
 <style>
 	.title-row {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		gap: 12px;
 		margin-bottom: 22px;
 	}
 	.count {
 		color: var(--txt3);
+	}
+	.search {
+		margin-left: auto;
+		flex: 0 1 180px;
+		min-width: 0;
+		overflow: hidden;
 	}
 	.col-time {
 		width: 130px;

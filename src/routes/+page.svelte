@@ -71,7 +71,9 @@
 		</Tabs>
 
 		{#if isBoard}
-			<Button variant="primary" onclick={() => goto('/m/+new')}>+ New member</Button>
+			<Button variant="primary" onclick={() => goto('/m/+new')}
+				>+<span class="btn-label"> New member</span></Button
+			>
 		{/if}
 	</div>
 
@@ -171,21 +173,21 @@
 	}
 	.pills {
 		display: flex;
-		flex-wrap: nowrap;
+		flex-wrap: wrap;
 		gap: 5px;
 		align-items: center;
-		overflow-x: auto;
-		padding-bottom: 2px;
-		scrollbar-width: none;
-	}
-	.pills::-webkit-scrollbar {
-		display: none;
 	}
 	.roles {
 		display: flex;
 		gap: 4px;
-		flex-wrap: nowrap;
+		flex-wrap: wrap;
 		align-items: center;
+	}
+	:global(.col-email) {
+		max-width: 160px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 	.desktop {
 		display: block;
@@ -212,6 +214,9 @@
 		}
 		.mobile {
 			display: flex;
+		}
+		.btn-label {
+			display: none;
 		}
 	}
 </style>

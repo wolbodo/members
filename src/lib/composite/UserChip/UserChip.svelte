@@ -73,6 +73,14 @@
 	.caret {
 		opacity: 0.4;
 	}
+	@media (max-width: 600px) {
+		.uc {
+			padding: 4px 8px 4px 4px;
+		}
+		.name {
+			display: none;
+		}
+	}
 	.menu {
 		position: absolute;
 		top: calc(100% + 6px);

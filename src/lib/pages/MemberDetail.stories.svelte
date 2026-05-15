@@ -2,6 +2,8 @@
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import { fn } from 'storybook/test';
 	import { z } from 'zod';
+	import { defaults } from 'sveltekit-superforms';
+	import { zod4 } from 'sveltekit-superforms/adapters';
 	import MemberDetailPage from '../../routes/m/[identifier]/+page.svelte';
 	import StoryLayout from './_StoryLayout.svelte';
 	import { world } from '../mocks/world';
@@ -12,8 +14,10 @@
 		type PageRole
 	} from '../mocks/schemas';
 	import { mockUser } from '../mocks/user';
+	import { PersonSchema } from '../schemas/person';
 
 	const user = mockUser({ name: 'Klaas', roles: ['board', 'self'] });
+	const form = defaults(zod4(PersonSchema));
 
 	const person = world.generate(PagePersonDetailSchema) as PagePersonDetail;
 	const roles = world.generate(z.array(PageRoleSchema).min(3).max(3)) as PageRole[];
@@ -54,7 +58,7 @@
 <Story
 	name="Board viewing member"
 	args={{
-		data: { person, roles: [...roles, pastRole], isBoard: true, isSelf: false }
+		data: { person, roles: [...roles, pastRole], isBoard: true, isSelf: false, user, form }
 	}}
 >
 	{#snippet template(args)}
@@ -67,7 +71,7 @@
 <Story
 	name="Self (read-only fields where board-gated)"
 	args={{
-		data: { person, roles, isBoard: false, isSelf: true }
+		data: { person, roles, isBoard: false, isSelf: true, user, form }
 	}}
 >
 	{#snippet template(args)}
@@ -77,7 +81,10 @@
 	{/snippet}
 </Story>
 
-<Story name="Not found" args={{ data: { person: null, roles: [], isBoard: true, isSelf: false } }}>
+<Story
+	name="Not found"
+	args={{ data: { person: null, roles: [], isBoard: true, isSelf: false, user, form } }}
+>
 	{#snippet template(args)}
 		<StoryLayout {user}>
 			<MemberDetailPage {...args} />

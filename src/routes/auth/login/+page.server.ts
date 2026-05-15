@@ -5,6 +5,7 @@ import { eq, or, ilike, and, isNull, lte } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { person, personRole } from '$lib/server/schema';
 import { createToken } from '$lib/jwt';
+import { info, warn } from '$lib/server/log';
 import { safeRedirect } from '$lib/safeRedirect';
 import type { Actions } from './$types';
 import { options as tokenCookieOptions } from '../cookieOptions';
@@ -29,7 +30,10 @@ export const actions = {
 			.where(or(ilike(person.name, name), eq(person.email, name)))
 			.limit(1);
 
-		if (!found) return fail(400, { name, incorrect: true });
+		if (!found) {
+			warn('auth/login: failed (unknown user)', { name });
+			return fail(400, { name, incorrect: true });
+		}
 
 		const activeRoles = await db
 			.select({ role: personRole.role })
@@ -42,10 +46,19 @@ export const actions = {
 				)
 			);
 
-		if (!found.password || !activeRoles.length) return fail(400, { name, incorrect: true });
+		if (!found.password || !activeRoles.length) {
+			warn('auth/login: failed (no password or no active roles)', {
+				id: found.id,
+				name: found.name
+			});
+			return fail(400, { name, incorrect: true });
+		}
 
 		const ok = await bcrypt.compare(password, found.password);
-		if (!ok) return fail(400, { name, incorrect: true });
+		if (!ok) {
+			warn('auth/login: failed (bad password)', { id: found.id, name: found.name });
+			return fail(400, { name, incorrect: true });
+		}
 
 		const roleNames = [...activeRoles.map((r) => r.role), 'self'];
 		const roles = ALL_ROLES.filter((r) => roleNames.includes(r));
@@ -58,6 +71,7 @@ export const actions = {
 		const location = safeRedirect(data.get('redirect') as string | null);
 
 		event.cookies.set('token', token, tokenCookieOptions);
+		info('auth/login: ok', { id: found.id, name: found.name, roles, redirect: location });
 		return redirect(302, location);
 	}
 } satisfies Actions;

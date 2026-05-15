@@ -148,5 +148,11 @@
 			padding: 5px 9px;
 			font-size: var(--text-sm);
 		}
+		.nav .link:first-child {
+			display: none;
+		}
+		.search {
+			min-width: 100px;
+		}
 	}
 </style>

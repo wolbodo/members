@@ -52,7 +52,7 @@
 	}
 	.top {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: space-between;
 		gap: 8px;
 		margin-bottom: 3px;
@@ -66,7 +66,7 @@
 	.roles {
 		display: flex;
 		gap: 3px;
-		flex-wrap: nowrap;
+		flex-wrap: wrap;
 		justify-content: flex-end;
 	}
 	.sub {

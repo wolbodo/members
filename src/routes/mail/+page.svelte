@@ -6,6 +6,7 @@
 		MailCard,
 		Badge,
 		EmptyState,
+		SearchInput,
 		searchState,
 		filterFields
 	} from '$lib';
@@ -26,9 +27,8 @@
 		])
 	);
 
-	/** The mail table has only two visual states: delivered vs. not-yet. */
-	const badgeStatus = (status: string | null): 'sent' | 'pending' =>
-		status === 'sent' ? 'sent' : 'pending';
+	const badgeStatus = (status: string | null): 'sent' | 'pending' | 'error' =>
+		status === 'sent' ? 'sent' : status === 'error' ? 'error' : 'pending';
 </script>
 
 <svelte:head>
@@ -39,6 +39,9 @@
 	<div class="title-row">
 		<h1 class="t-heading">Mail</h1>
 		<span class="count t-small">{filtered.length} entries</span>
+		<div class="search">
+			<SearchInput bind:value={searchState.value} placeholder="Search to, email, template…" />
+		</div>
 	</div>
 
 	{#if filtered.length === 0}
@@ -89,12 +92,18 @@
 <style>
 	.title-row {
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		gap: 12px;
 		margin-bottom: 22px;
 	}
 	.count {
 		color: var(--txt3);
+	}
+	.search {
+		margin-left: auto;
+		flex: 0 1 180px;
+		min-width: 0;
+		overflow: hidden;
 	}
 	.col-status {
 		width: 90px;

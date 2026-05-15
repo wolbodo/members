@@ -6,7 +6,7 @@
 		email: string;
 		template: string;
 		time: string;
-		status: 'sent' | 'pending';
+		status: 'sent' | 'pending' | 'error';
 	}
 
 	let { to, email, template, time, status }: Props = $props();

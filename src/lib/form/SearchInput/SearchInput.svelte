@@ -35,6 +35,7 @@
 		height: 38px;
 		max-width: 380px;
 		flex: 1;
+		min-width: 0;
 		transition: border-color var(--t-fast);
 	}
 	.srch:focus-within {
@@ -46,6 +47,7 @@
 	}
 	input {
 		flex: 1;
+		min-width: 0;
 		background: none;
 		border: none;
 		color: var(--txt);

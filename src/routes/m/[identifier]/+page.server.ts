@@ -1,9 +1,13 @@
 import { fail } from '@sveltejs/kit';
 import { eq, and, isNull } from 'drizzle-orm';
+import { superValidate, setError } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
 
 import { db } from '$lib/server/db';
 import { person, personRole } from '$lib/server/schema';
 import { withAuditContext } from '$lib/server/audit';
+import { PersonSchema } from '$lib/schemas/person';
+import { warn } from '$lib/server/log';
 import type { Actions, PageServerLoad } from './$types';
 import { where } from './where';
 
@@ -18,7 +22,10 @@ export const load: PageServerLoad = async (event) => {
 		}
 	});
 
-	if (!found) return { person: null, roles: [], isBoard, isSelf };
+	if (!found) {
+		const form = await superValidate(zod4(PersonSchema));
+		return { person: null, roles: [], isBoard, isSelf, form };
+	}
 
 	const { roles, ...personData } = found;
 
@@ -29,47 +36,52 @@ export const load: PageServerLoad = async (event) => {
 		note: isBoard ? personData.note : null
 	};
 
-	return { person: redacted, roles, isBoard, isSelf };
+	// Prefill the form with the current person's values so the UI starts in sync.
+	const form = await superValidate(redacted, zod4(PersonSchema), { errors: false });
+	return { person: redacted, roles, isBoard, isSelf, form };
 };
 
 export const actions: Actions = {
 	edit: async (event) => {
 		const isBoard = event.locals.user!.roles.includes('board');
 		const isSelf = event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
-
 		if (!isBoard && !isSelf) return fail(403);
+
+		const form = await superValidate(event, zod4(PersonSchema));
+		if (!form.valid) return fail(400, { form });
 
 		const [existing] = await db
 			.select()
 			.from(person)
 			.where(where(event.params.identifier))
 			.limit(1);
-
 		if (!existing) return fail(404);
 
-		const formData = await event.request.formData();
-		const raw = Object.fromEntries(formData.entries()) as Record<string, string>;
-		const { id: _id, ...fields } = raw;
-
+		// Diff against existing — only ship changed columns through audit context.
 		const updates: Partial<typeof person.$inferInsert> = {};
-
-		for (const [key, value] of Object.entries(fields)) {
+		for (const [key, next] of Object.entries(form.data)) {
+			if (next === undefined) continue;
 			const col = key as keyof typeof existing;
-			if (key === 'password' && !value) continue;
-			if (typeof existing[col] === 'boolean') {
-				(updates as Record<string, unknown>)[key] = key in fields && value === 'on';
-			} else if (value !== String(existing[col])) {
-				(updates as Record<string, unknown>)[key] =
-					typeof value === 'string' ? value.trim() : value;
-			}
+			if (key === 'password' && next === null) continue; // empty password = keep
+			const prev = existing[col] ?? null;
+			if (next !== prev) (updates as Record<string, unknown>)[key] = next;
 		}
 
-		if (!Object.keys(updates).length) return { success: true };
+		if (!Object.keys(updates).length) return { form };
 
-		await withAuditContext(event, (tx) =>
-			tx.update(person).set(updates).where(eq(person.id, existing.id))
-		);
-		return { success: true };
+		try {
+			await withAuditContext(event, (tx) =>
+				tx.update(person).set(updates).where(eq(person.id, existing.id))
+			);
+		} catch (err) {
+			const pgErr = err as { code?: string };
+			if (pgErr.code === '23505') {
+				return setError(form, 'email', 'already in use');
+			}
+			warn('m/[identifier]: unexpected db error on edit', { err });
+			throw err;
+		}
+		return { form };
 	},
 
 	addRole: async (event) => {
