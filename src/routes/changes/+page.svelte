@@ -18,12 +18,12 @@
 	let { data }: Props = $props();
 
 	const HIDDEN_FIELDS = ["password"];
-	const IGNORED_FIELDS = ["modified", "created", "id", "person_id"];
+	const IGNORED_FIELDS = ["modified", "created", "id", "person_id", "valid_till", "valid_from"];
 
 	type DiffField = { field: string; old: string | null; new: string | null };
 
 	function formatValue(k: string, v: unknown): string | null {
-		if (v == null) return null;
+		if (v == null || v === "null") return null;
 		if (HIDDEN_FIELDS.includes(k)) return "****";
 		const s = String(v);
 		// Detect ISO-like date strings and format them
@@ -34,28 +34,37 @@
 	}
 
 	function diffFields(
-		old_value: Record<string, unknown> | null,
-		new_value: Record<string, unknown> | null,
+		old_value: unknown,
+		new_value: unknown,
+		role?: string | null,
 	): DiffField[] {
 		const normalize = (v: unknown) => (v == null || v === "" ? null : v);
+		const old = (old_value as Record<string, unknown>) ?? {};
+		const curr = (new_value as Record<string, unknown>) ?? {};
 
-		const allKeys = new Set([
-			...Object.keys(old_value ?? {}),
-			...Object.keys(new_value ?? {}),
-		]);
+		const allKeys = new Set([...Object.keys(old), ...Object.keys(curr)]);
 
-		return Array.from(allKeys)
+		const fields = Array.from(allKeys)
 			.filter((k) => !IGNORED_FIELDS.includes(k))
-			.filter((k) => normalize((old_value ?? {})[k]) !== normalize((new_value ?? {})[k]))
+			.filter((k) => normalize(old[k]) !== normalize(curr[k]))
 			.map((k) => {
-				const vOld = (old_value ?? {})[k];
-				const vNew = (new_value ?? {})[k];
 				return {
 					field: k,
-					old: formatValue(k, vOld),
-					new: formatValue(k, vNew),
+					old: formatValue(k, old[k]),
+					new: formatValue(k, curr[k]),
 				};
 			});
+
+		// Inject role change if this is a role history entry
+		if (role) {
+			if (!old_value) {
+				fields.unshift({ field: "role", old: null, new: role });
+			} else if ((curr as any)?.valid_till && !(old as any)?.valid_till) {
+				fields.unshift({ field: "role", old: role, new: null });
+			}
+		}
+
+		return fields;
 	}
 
 	let filtered = $derived(
@@ -100,14 +109,7 @@
 							</td>
 							<td class="td-dim col-role">{role ?? ""}</td>
 							<td>
-								{#if role}
-									{#if !old_values}
-										<div class="role-action add">+ assigned <strong>{role}</strong></div>
-									{:else if (new_values as any)?.valid_till && !(old_values as any)?.valid_till}
-										<div class="role-action remove">- removed <strong>{role}</strong></div>
-									{/if}
-								{/if}
-								{#each diffFields(old_values as Record<string, unknown> | null, new_values as Record<string, unknown> | null) as f (f.field)}
+								{#each diffFields(old_values, new_values, role) as f (f.field)}
 									<DiffLine field={f.field} oldValue={f.old} newValue={f.new} />
 								{/each}
 							</td>
@@ -119,23 +121,11 @@
 
 		<div class="mobile">
 			{#each filtered as { timestamp, new_values, old_values, author, role }, i (i)}
-				{@const fields = diffFields(
-					old_values as Record<string, unknown> | null,
-					new_values as Record<string, unknown> | null,
-				)}
 				<ChangeCard
 					author={author?.name ?? "—"}
 					time={datetime(String(timestamp))}
-					{fields}
-				>
-					{#if role}
-						{#if !old_values}
-							<div class="role-action add">+ assigned {role}</div>
-						{:else if (new_values as any)?.valid_till && !(old_values as any)?.valid_till}
-							<div class="role-action remove">- removed {role}</div>
-						{/if}
-					{/if}
-				</ChangeCard>
+					fields={diffFields(old_values, new_values, role)}
+				/>
 			{/each}
 		</div>
 	{/if}
@@ -150,17 +140,6 @@
 	}
 	.count {
 		color: var(--txt3);
-	}
-	.role-action {
-		font-weight: 600;
-		font-size: var(--text-sm);
-		margin-bottom: 6px;
-	}
-	.role-action.add {
-		color: var(--pri);
-	}
-	.role-action.remove {
-		color: var(--red);
 	}
 	.col-time {
 		width: 130px;
