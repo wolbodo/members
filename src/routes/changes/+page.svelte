@@ -18,8 +18,8 @@
 
 	let { data }: Props = $props();
 
-	const HIDDEN_FIELDS = ['password'];
-	const IGNORED_FIELDS = ['modified', 'created', 'id', 'person_id', 'valid_till', 'valid_from'];
+	const HIDDEN_FIELDS: string[] = [];
+	const IGNORED_FIELDS = ['modified', 'created', 'id', 'person_id', 'valid_till', 'valid_from', 'password'];
 
 	type DiffField = { field: string; old: string | null; new: string | null };
 
@@ -59,13 +59,10 @@
 					: f.old !== f.new
 			);
 
-		// Inject role change if this is a role history entry
-		if (role) {
-			if (!old_value) {
-				fields.unshift({ field: 'role', old: null, new: role });
-			} else if (curr.valid_till && !old.valid_till) {
-				fields.unshift({ field: 'role', old: role, new: null });
-			}
+		// For role removals the valid_till change is hidden (IGNORED_FIELDS), so surface it explicitly.
+		// Adds are handled automatically — the role field appears in the INSERT's new_values diff.
+		if (('role' in old || 'role' in curr) && curr.valid_till && !old.valid_till) {
+			fields.unshift({ field: 'role', old: (old.role as string) ?? null, new: null });
 		}
 
 		return fields;
