@@ -40,8 +40,12 @@
 
 		const allKeys = new Set([...Object.keys(old), ...Object.keys(curr)]);
 
+		const normalize = (v: unknown) => (v == null || v === 'null' ? null : v);
+
 		// Compare on the rendered value so e.g. actual null and the string "null"
 		// (both formatted to null) don't show up as a spurious null → null diff.
+		// For hidden fields compare raw values — both hashes mask to '****' so
+		// formatted comparison would always consider them equal.
 		const fields = Array.from(allKeys)
 			.filter((k) => !IGNORED_FIELDS.includes(k))
 			.map((k) => ({
@@ -49,7 +53,11 @@
 				old: formatValue(k, old[k]),
 				new: formatValue(k, curr[k])
 			}))
-			.filter((f) => f.old !== f.new);
+			.filter((f) =>
+				HIDDEN_FIELDS.includes(f.field)
+					? normalize(old[f.field]) !== normalize(curr[f.field])
+					: f.old !== f.new
+			);
 
 		// Inject role change if this is a role history entry
 		if (role) {
