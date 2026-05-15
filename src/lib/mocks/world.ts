@@ -14,11 +14,7 @@ import {
 
 const ROLES = ['member', 'board', 'nerd', 'muzikant', 'im', 'klusser', 'wolpop'] as const;
 const CITIES = ['Delft', 'Rotterdam', 'Den Haag', 'Utrecht', 'Leiden'] as const;
-const MAIL_TEMPLATES = [
-	'password-reset',
-	'password-change-notification',
-	'welcome'
-] as const;
+const MAIL_TEMPLATES = ['password-reset', 'password-change-notification', 'welcome'] as const;
 
 function fmtDate(d: Date): string {
 	return `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
@@ -81,7 +77,7 @@ export const world = createWorld({ seed: 42 })
 				const count = ctx.prng.int(1, 3);
 				const picked = new Set<string>(['member']);
 				while (picked.size < count) picked.add(ROLES[ctx.prng.int(0, ROLES.length - 1)]);
-				return [...picked].map((role) => ({ role }));
+				return [...picked];
 			}
 		}
 	})
@@ -93,10 +89,12 @@ export const world = createWorld({ seed: 42 })
 			email: (ctx) => ctx.gen.internet.email(),
 			phone: (ctx) => `06-${ctx.prng.int(10_000_000, 99_999_999)}`,
 			address: (ctx) => `${ctx.gen.location.street()} ${ctx.prng.int(1, 220)}`,
-			zipcode: (ctx) => `${ctx.prng.int(1000, 9999)} ${ctx.gen.string.alphanumeric(2).toUpperCase()}`,
+			zipcode: (ctx) =>
+				`${ctx.prng.int(1000, 9999)} ${ctx.gen.string.alphanumeric(2).toUpperCase()}`,
 			city: (ctx) => CITIES[ctx.prng.int(0, CITIES.length - 1)],
 			country: () => 'Nederland',
-			bankaccount: (ctx) => `NL${ctx.prng.int(10, 99)}WLBD${ctx.prng.int(1_000_000_000, 9_999_999_999)}`,
+			bankaccount: (ctx) =>
+				`NL${ctx.prng.int(10, 99)}WLBD${ctx.prng.int(1_000_000_000, 9_999_999_999)}`,
 			key_code: (ctx) => String(ctx.prng.int(1000, 9999)),
 			allow_register: (ctx) => ctx.prng.int(0, 1) === 1,
 			allow_door: (ctx) => ctx.prng.int(0, 1) === 1,

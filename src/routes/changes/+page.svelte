@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { datetime } from "$lib/format";
+	import { datetime } from '$lib/format';
 	import {
 		PageShell,
 		DataTable,
@@ -7,9 +7,9 @@
 		DiffLine,
 		EmptyState,
 		searchState,
-		filterFields,
-	} from "$lib";
-	import type { PageServerData } from "./$types";
+		filterFields
+	} from '$lib';
+	import type { PageServerData } from './$types';
 
 	interface Props {
 		data: PageServerData;
@@ -17,14 +17,14 @@
 
 	let { data }: Props = $props();
 
-	const HIDDEN_FIELDS = ["password"];
-	const IGNORED_FIELDS = ["modified", "created", "id", "person_id", "valid_till", "valid_from"];
+	const HIDDEN_FIELDS = ['password'];
+	const IGNORED_FIELDS = ['modified', 'created', 'id', 'person_id', 'valid_till', 'valid_from'];
 
 	type DiffField = { field: string; old: string | null; new: string | null };
 
 	function formatValue(k: string, v: unknown): string | null {
-		if (v == null || v === "null") return null;
-		if (HIDDEN_FIELDS.includes(k)) return "****";
+		if (v == null || v === 'null') return null;
+		if (HIDDEN_FIELDS.includes(k)) return '****';
 		const s = String(v);
 		// Detect ISO-like date strings and format them
 		if (s.length > 15 && !isNaN(Date.parse(s)) && /^\d{4}-\d{2}-\d{2}/.test(s)) {
@@ -33,12 +33,8 @@
 		return s;
 	}
 
-	function diffFields(
-		old_value: unknown,
-		new_value: unknown,
-		role?: string | null,
-	): DiffField[] {
-		const normalize = (v: unknown) => (v == null || v === "" ? null : v);
+	function diffFields(old_value: unknown, new_value: unknown, role?: string | null): DiffField[] {
+		const normalize = (v: unknown) => (v == null || v === '' ? null : v);
 		const old = (old_value as Record<string, unknown>) ?? {};
 		const curr = (new_value as Record<string, unknown>) ?? {};
 
@@ -51,16 +47,16 @@
 				return {
 					field: k,
 					old: formatValue(k, old[k]),
-					new: formatValue(k, curr[k]),
+					new: formatValue(k, curr[k])
 				};
 			});
 
 		// Inject role change if this is a role history entry
 		if (role) {
 			if (!old_value) {
-				fields.unshift({ field: "role", old: null, new: role });
-			} else if ((curr as any)?.valid_till && !(old as any)?.valid_till) {
-				fields.unshift({ field: "role", old: role, new: null });
+				fields.unshift({ field: 'role', old: null, new: role });
+			} else if (curr.valid_till && !old.valid_till) {
+				fields.unshift({ field: 'role', old: role, new: null });
 			}
 		}
 
@@ -71,8 +67,8 @@
 		filterFields(data.history, searchState.value, [
 			(c) => c.author?.name,
 			(c) => c.person?.name,
-			(c) => c.role,
-		]),
+			(c) => c.role
+		])
 	);
 </script>
 
@@ -104,10 +100,10 @@
 						<tr>
 							<td class="td-dim col-time">{datetime(String(timestamp))}</td>
 							<td class="col-who">
-								<span class="td-name">{author?.name ?? "—"}</span>
-								<span class="person t-small"> → {person?.name ?? "—"}</span>
+								<span class="td-name">{author?.name ?? '—'}</span>
+								<span class="person t-small"> → {person?.name ?? '—'}</span>
 							</td>
-							<td class="td-dim col-role">{role ?? ""}</td>
+							<td class="td-dim col-role">{role ?? ''}</td>
 							<td>
 								{#each diffFields(old_values, new_values, role) as f (f.field)}
 									<DiffLine field={f.field} oldValue={f.old} newValue={f.new} />
@@ -122,7 +118,7 @@
 		<div class="mobile">
 			{#each filtered as { timestamp, new_values, old_values, author, role }, i (i)}
 				<ChangeCard
-					author={author?.name ?? "—"}
+					author={author?.name ?? '—'}
 					time={datetime(String(timestamp))}
 					fields={diffFields(old_values, new_values, role)}
 				/>

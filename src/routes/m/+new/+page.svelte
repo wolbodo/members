@@ -1,15 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import {
-		PageShell,
-		FormSection,
-		Field,
-		TextInput,
-		Textarea,
-		Toggle,
-		Button
-	} from '$lib';
+	import { PageShell, FormSection, Field, TextInput, Textarea, Toggle, Button } from '$lib';
 	import type { ActionData } from './$types';
 
 	interface Props {

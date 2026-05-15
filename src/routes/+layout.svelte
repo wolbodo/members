@@ -38,7 +38,9 @@
 				{#if showSearch}
 					<SearchInput
 						bind:value={searchState.value}
-						placeholder={path === '/mail' ? 'Search to, email, template…' : 'Search author, person, role…'}
+						placeholder={path === '/mail'
+							? 'Search to, email, template…'
+							: 'Search author, person, role…'}
 					/>
 				{/if}
 			{/snippet}

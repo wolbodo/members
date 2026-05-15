@@ -20,16 +20,7 @@
 	}: Props = $props();
 </script>
 
-<input
-	class="glass"
-	{type}
-	{name}
-	{placeholder}
-	{readonly}
-	{disabled}
-	bind:value
-	{...rest}
-/>
+<input class="glass" {type} {name} {placeholder} {readonly} {disabled} bind:value {...rest} />
 
 <style>
 	.glass {

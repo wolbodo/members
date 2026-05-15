@@ -11,7 +11,7 @@ import {
 	index,
 	check
 } from 'drizzle-orm/pg-core';
-import { sql } from 'drizzle-orm';
+import { sql, relations } from 'drizzle-orm';
 
 const auth = pgSchema('auth');
 const mail = pgSchema('mail');
@@ -91,8 +91,6 @@ export const mailEntries = mail.table('entries', {
 	data: jsonb('data').default({}),
 	message_info: jsonb('message_info').default({})
 });
-
-import { relations } from 'drizzle-orm';
 
 export const personRelations = relations(person, ({ many }) => ({
 	roles: many(personRole),

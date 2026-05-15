@@ -1,8 +1,6 @@
 import { expect, it } from 'vitest';
 import { datetime, formatDate } from './format';
 
-const date = '';
-
 it.each`
 	date                          | expected
 	${'2000-10-15T12:34:56.789Z'} | ${'15-10-2000 14:34'}

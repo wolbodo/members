@@ -20,6 +20,7 @@
 	// one ended role for the history section
 	const pastRole: PageRole = {
 		id: 99,
+		person_id: person.id,
 		role: 'wolpop',
 		valid_from: new Date(2018, 8, 1),
 		valid_till: new Date(2021, 5, 30)

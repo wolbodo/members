@@ -7,8 +7,8 @@
 
 	let { field, oldValue, newValue }: Props = $props();
 
-	let isPassword = $derived(field === "password");
-	let isRole = $derived(field === "role");
+	let isPassword = $derived(field === 'password');
+	let isRole = $derived(field === 'role');
 </script>
 
 <div class="line">
@@ -16,14 +16,9 @@
 		{#if !oldValue}
 			<span class="label">added</span>
 			<span class="new">{newValue}</span>
-		{:else if newValue == null}
+		{:else}
 			<span class="label">removed</span>
 			<span class="old">{oldValue}</span>
-		{:else}
-			<span class="label">changed role</span>
-			<span class="old">{oldValue}</span>
-			<span class="arrow"> → </span>
-			<span class="new">{newValue}</span>
 		{/if}
 	{:else}
 		<span class="field">{field}: </span>

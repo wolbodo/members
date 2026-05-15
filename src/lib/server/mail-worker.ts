@@ -23,7 +23,9 @@ export const buildMessage = (
 	props: { person: { name: string }; data: unknown }
 ): RenderedMessage => {
 	if (!isTemplateKey(templateKey)) throw new Error(`unknown template '${templateKey}'`);
-	const { body: html, head } = render(templates[templateKey].default, { props });
+	const { body: html, head } = render(templates[templateKey].default, {
+		props
+	});
 	// svelte-email emits <title> into the body via its own <Head>; svelte/server
 	// only fills `head` when <svelte:head> is used. Search both.
 	const subject = /<title>([^<]+)<\/title>/.exec(head + html)?.[1] ?? 'Email from Wolbodo';
@@ -48,6 +50,7 @@ export const processMail = async (
 	id: number,
 	deps: { transporter?: Transporter } = {}
 ): Promise<void> => {
+	console.log('Processing email', id);
 	// Claim the row atomically — only one worker can pick up an unsent entry.
 	// Guarded: a DB failure here (e.g. schema drift) must not crash the process,
 	// since callers fire this off with `void`.
@@ -108,7 +111,9 @@ export const processMail = async (
 			.update(mailEntries)
 			.set({
 				status: 'error',
-				message_info: { error: err instanceof Error ? err.message : String(err) }
+				message_info: {
+					error: err instanceof Error ? err.message : String(err)
+				}
 			})
 			.where(eq(mailEntries.id, id))
 			.catch((markErr) => console.error(`mail ${id}: could not mark as error:`, markErr));

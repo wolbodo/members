@@ -64,12 +64,7 @@
 		<div class="roles">
 			{#each activeRoles as r (r.id)}
 				{#if isBoard}
-					<form
-						method="post"
-						action="?/stopRole"
-						use:enhance
-						style="display:inline-flex"
-					>
+					<form method="post" action="?/stopRole" use:enhance style="display:inline-flex">
 						<input type="hidden" name="roleId" value={r.id} />
 						<Tag
 							role={r.role}
@@ -80,10 +75,7 @@
 						/>
 					</form>
 				{:else}
-					<Tag
-						role={r.role}
-						since={r.valid_from ? formatDate(String(r.valid_from)) : undefined}
-					/>
+					<Tag role={r.role} since={r.valid_from ? formatDate(String(r.valid_from)) : undefined} />
 				{/if}
 			{/each}
 
@@ -226,18 +218,19 @@
 							>
 								Allow register
 							</Toggle>
-							<Toggle
-								name="allow_door"
-								checked={Boolean(person.allow_door)}
-								disabled={!canEdit}
-							>
+							<Toggle name="allow_door" checked={Boolean(person.allow_door)} disabled={!canEdit}>
 								Allow door
 							</Toggle>
 						</div>
 					</Field>
 					{#if canEdit}
 						<Field label="New password" span2>
-							<TextInput type="password" name="password" value="" placeholder="Leave empty to keep" />
+							<TextInput
+								type="password"
+								name="password"
+								value=""
+								placeholder="Leave empty to keep"
+							/>
 						</Field>
 					{/if}
 				</FormSection>

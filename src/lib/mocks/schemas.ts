@@ -54,11 +54,7 @@ export const MailSchema = z.object({
 	status: z.enum(['pending', 'sent']),
 	to: z.string(),
 	email: z.string().email(),
-	template: z.enum([
-		'password-reset',
-		'password-change-notification',
-		'welcome'
-	]),
+	template: z.enum(['password-reset', 'password-change-notification', 'welcome']),
 	time: z.date()
 });
 export type Mail = z.infer<typeof MailSchema>;
@@ -77,8 +73,18 @@ export const PageMemberSchema = z.object({
 	email: z.string().nullable(),
 	phone: z.string().nullable(),
 	address: z.string().nullable(),
+	zipcode: z.string().nullable(),
 	city: z.string().nullable(),
-	roles: z.array(z.object({ role: z.string() }))
+	country: z.string().nullable(),
+	bankaccount: z.string().nullable(),
+	key_code: z.string().nullable(),
+	allow_register: z.boolean(),
+	allow_door: z.boolean(),
+	password: z.string().nullable(),
+	note: z.string().nullable(),
+	created: z.date().nullable(),
+	modified: z.date().nullable(),
+	roles: z.array(z.string())
 });
 export type PageMember = z.infer<typeof PageMemberSchema>;
 
@@ -108,8 +114,9 @@ export type PagePersonDetail = z.infer<typeof PagePersonDetailSchema>;
 /** A `personRole` row as returned to the member-detail route. */
 export const PageRoleSchema = z.object({
 	id: z.number().int().positive(),
+	person_id: z.number().int().positive().nullable(),
 	role: z.string(),
-	valid_from: z.date(),
+	valid_from: z.date().nullable(),
 	valid_till: z.date().nullable()
 });
 export type PageRole = z.infer<typeof PageRoleSchema>;

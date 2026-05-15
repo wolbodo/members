@@ -9,24 +9,11 @@
 		[key: string]: unknown;
 	}
 
-	let {
-		checked = $bindable(),
-		disabled = false,
-		children,
-		onchange,
-		...rest
-	}: Props = $props();
+	let { checked = $bindable(), disabled = false, children, onchange, ...rest }: Props = $props();
 </script>
 
 <label class="tog" class:disabled>
-	<input
-		type="checkbox"
-		class="visually-hidden"
-		bind:checked
-		{disabled}
-		{onchange}
-		{...rest}
-	/>
+	<input type="checkbox" class="visually-hidden" bind:checked {disabled} {onchange} {...rest} />
 	<span class="track" class:on={checked}>
 		<span class="thumb"></span>
 	</span>

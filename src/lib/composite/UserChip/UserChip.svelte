@@ -32,14 +32,7 @@
 	<button class="uc" type="button" onclick={toggle} aria-expanded={open}>
 		<Avatar initial={name.charAt(0)} />
 		<span class="name">{name}</span>
-		<svg
-			class="caret"
-			width="10"
-			height="6"
-			viewBox="0 0 10 6"
-			fill="none"
-			aria-hidden="true"
-		>
+		<svg class="caret" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
 			<path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
 		</svg>
 	</button>

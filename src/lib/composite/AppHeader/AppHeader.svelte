@@ -20,14 +20,7 @@
 
 <header class="app-header">
 	<a class="brand" href={brandHref}>
-		<svg
-			class="wmark"
-			width="18"
-			height="14"
-			viewBox="0 0 22 17"
-			fill="none"
-			aria-hidden="true"
-		>
+		<svg class="wmark" width="18" height="14" viewBox="0 0 22 17" fill="none" aria-hidden="true">
 			<path
 				d="M1.5 2.5L5.5 14.5L11 5.5L16.5 14.5L20.5 2.5"
 				stroke="currentColor"

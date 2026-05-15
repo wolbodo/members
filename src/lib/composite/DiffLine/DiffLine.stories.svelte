@@ -13,18 +13,13 @@
 	args={{ field: 'address', oldValue: 'Ternatestraat 105', newValue: 'Verwersdijk 104' }}
 />
 
-<Story
-	name="From null"
-	args={{ field: 'country', oldValue: null, newValue: 'Nederland' }}
-/>
+<Story name="From null" args={{ field: 'country', oldValue: null, newValue: 'Nederland' }} />
 
 <Story name="Password" args={{ field: 'password', oldValue: 'x', newValue: 'y' }} />
 
 <Story name="Block">
 	{#snippet template()}
-		<div
-			style="background: var(--bg-s); border-radius:7px; padding:12px 14px; max-width:480px;"
-		>
+		<div style="background: var(--bg-s); border-radius:7px; padding:12px 14px; max-width:480px;">
 			<DiffLine field="address" oldValue="Ternatestraat 105" newValue="Verwersdijk 104" />
 			<DiffLine field="country" oldValue={null} newValue="Nederland" />
 			<DiffLine field="password" oldValue="x" newValue="y" />

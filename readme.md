@@ -17,6 +17,7 @@ Wolbodo members-management app and SSO gateway.
 ### Prerequisites
 
 1. Enable corepack and install pnpm 11:
+
    ```sh
    corepack enable
    corepack prepare pnpm@11 --activate

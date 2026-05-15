@@ -1,465 +1,442 @@
 {
-  "id": "f821a4a4-696d-4cdd-bc50-0b954ba78edf",
-  "prevId": "139465f6-98c3-42ee-bf9c-d83464393b9c",
-  "version": "7",
-  "dialect": "postgresql",
-  "tables": {
-    "auth.application": {
-      "name": "application",
-      "schema": "auth",
-      "columns": {
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "role": {
-          "name": "role",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "secret": {
-          "name": "secret",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "auth.history": {
-      "name": "history",
-      "schema": "auth",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "timestamp": {
-          "name": "timestamp",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "old_values": {
-          "name": "old_values",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "new_values": {
-          "name": "new_values",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "role": {
-          "name": "role",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "author_id": {
-          "name": "author_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "person_id": {
-          "name": "person_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "history_author_id_person_id_fk": {
-          "name": "history_author_id_person_id_fk",
-          "tableFrom": "history",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "tableTo": "person",
-          "schemaTo": "auth",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
-        },
-        "history_person_id_person_id_fk": {
-          "name": "history_person_id_person_id_fk",
-          "tableFrom": "history",
-          "columnsFrom": [
-            "person_id"
-          ],
-          "tableTo": "person",
-          "schemaTo": "auth",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "set null"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "mail.entries": {
-      "name": "entries",
-      "schema": "mail",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "person_id": {
-          "name": "person_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "status",
-          "typeSchema": "mail",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'new'"
-        },
-        "template": {
-          "name": "template",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created": {
-          "name": "created",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "data": {
-          "name": "data",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'{}'::jsonb"
-        },
-        "message_info": {
-          "name": "message_info",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'{}'::jsonb"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "entries_person_id_person_id_fk": {
-          "name": "entries_person_id_person_id_fk",
-          "tableFrom": "entries",
-          "columnsFrom": [
-            "person_id"
-          ],
-          "tableTo": "person",
-          "schemaTo": "auth",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "auth.person": {
-      "name": "person",
-      "schema": "auth",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "firstname": {
-          "name": "firstname",
-          "type": "varchar(512)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "lastname": {
-          "name": "lastname",
-          "type": "varchar(512)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "address": {
-          "name": "address",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "zipcode": {
-          "name": "zipcode",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "city": {
-          "name": "city",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "country": {
-          "name": "country",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "bankaccount": {
-          "name": "bankaccount",
-          "type": "varchar(80)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "key_code": {
-          "name": "key_code",
-          "type": "varchar(80)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "allow_register": {
-          "name": "allow_register",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "allow_door": {
-          "name": "allow_door",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
-        "password": {
-          "name": "password",
-          "type": "varchar(1024)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "note": {
-          "name": "note",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created": {
-          "name": "created",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "modified": {
-          "name": "modified",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "person_email_idx": {
-          "name": "person_email_idx",
-          "columns": [
-            {
-              "expression": "email",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
-        },
-        "person_id_idx": {
-          "name": "person_id_idx",
-          "columns": [
-            {
-              "expression": "id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "person_email_unique": {
-          "name": "person_email_unique",
-          "columns": [
-            "email"
-          ],
-          "nullsNotDistinct": false
-        }
-      },
-      "policies": {},
-      "checkConstraints": {
-        "is_email": {
-          "name": "is_email",
-          "value": "\"auth\".\"person\".\"email\" ~ '^\\S+?@([a-zA-Z0-9][a-zA-Z0-9-]*\\.)+(xn--[a-zA-Z0-9-]{4,}|[a-zA-Z]{2,})$'"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "auth.person_role": {
-      "name": "person_role",
-      "schema": "auth",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "person_id": {
-          "name": "person_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "role": {
-          "name": "role",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "valid_from": {
-          "name": "valid_from",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "valid_till": {
-          "name": "valid_till",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "person_role_person_id_idx": {
-          "name": "person_role_person_id_idx",
-          "columns": [
-            {
-              "expression": "person_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "with": {},
-          "method": "btree",
-          "concurrently": false
-        }
-      },
-      "foreignKeys": {
-        "person_role_person_id_person_id_fk": {
-          "name": "person_role_person_id_person_id_fk",
-          "tableFrom": "person_role",
-          "columnsFrom": [
-            "person_id"
-          ],
-          "tableTo": "person",
-          "schemaTo": "auth",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    }
-  },
-  "enums": {
-    "mail.status": {
-      "name": "status",
-      "schema": "mail",
-      "values": [
-        "new",
-        "sent",
-        "error",
-        "sending"
-      ]
-    }
-  },
-  "schemas": {},
-  "views": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
-  "_meta": {
-    "columns": {},
-    "schemas": {},
-    "tables": {}
-  }
+	"id": "f821a4a4-696d-4cdd-bc50-0b954ba78edf",
+	"prevId": "139465f6-98c3-42ee-bf9c-d83464393b9c",
+	"version": "7",
+	"dialect": "postgresql",
+	"tables": {
+		"auth.application": {
+			"name": "application",
+			"schema": "auth",
+			"columns": {
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"role": {
+					"name": "role",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"secret": {
+					"name": "secret",
+					"type": "uuid",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "gen_random_uuid()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"auth.history": {
+			"name": "history",
+			"schema": "auth",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"timestamp": {
+					"name": "timestamp",
+					"type": "timestamp",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"old_values": {
+					"name": "old_values",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"new_values": {
+					"name": "new_values",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"role": {
+					"name": "role",
+					"type": "varchar",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"author_id": {
+					"name": "author_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"person_id": {
+					"name": "person_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"history_author_id_person_id_fk": {
+					"name": "history_author_id_person_id_fk",
+					"tableFrom": "history",
+					"columnsFrom": ["author_id"],
+					"tableTo": "person",
+					"schemaTo": "auth",
+					"columnsTo": ["id"],
+					"onUpdate": "no action",
+					"onDelete": "no action"
+				},
+				"history_person_id_person_id_fk": {
+					"name": "history_person_id_person_id_fk",
+					"tableFrom": "history",
+					"columnsFrom": ["person_id"],
+					"tableTo": "person",
+					"schemaTo": "auth",
+					"columnsTo": ["id"],
+					"onUpdate": "no action",
+					"onDelete": "set null"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"mail.entries": {
+			"name": "entries",
+			"schema": "mail",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"person_id": {
+					"name": "person_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"status": {
+					"name": "status",
+					"type": "status",
+					"typeSchema": "mail",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'new'"
+				},
+				"template": {
+					"name": "template",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created": {
+					"name": "created",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "now()"
+				},
+				"data": {
+					"name": "data",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'{}'::jsonb"
+				},
+				"message_info": {
+					"name": "message_info",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'{}'::jsonb"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"entries_person_id_person_id_fk": {
+					"name": "entries_person_id_person_id_fk",
+					"tableFrom": "entries",
+					"columnsFrom": ["person_id"],
+					"tableTo": "person",
+					"schemaTo": "auth",
+					"columnsTo": ["id"],
+					"onUpdate": "no action",
+					"onDelete": "no action"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		},
+		"auth.person": {
+			"name": "person",
+			"schema": "auth",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"firstname": {
+					"name": "firstname",
+					"type": "varchar(512)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"lastname": {
+					"name": "lastname",
+					"type": "varchar(512)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"email": {
+					"name": "email",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"phone": {
+					"name": "phone",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"address": {
+					"name": "address",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"zipcode": {
+					"name": "zipcode",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"city": {
+					"name": "city",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"country": {
+					"name": "country",
+					"type": "varchar(255)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"bankaccount": {
+					"name": "bankaccount",
+					"type": "varchar(80)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"key_code": {
+					"name": "key_code",
+					"type": "varchar(80)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"allow_register": {
+					"name": "allow_register",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"allow_door": {
+					"name": "allow_door",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"password": {
+					"name": "password",
+					"type": "varchar(1024)",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"note": {
+					"name": "note",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created": {
+					"name": "created",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "now()"
+				},
+				"modified": {
+					"name": "modified",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "now()"
+				}
+			},
+			"indexes": {
+				"person_email_idx": {
+					"name": "person_email_idx",
+					"columns": [
+						{
+							"expression": "email",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"with": {},
+					"method": "btree",
+					"concurrently": false
+				},
+				"person_id_idx": {
+					"name": "person_id_idx",
+					"columns": [
+						{
+							"expression": "id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"with": {},
+					"method": "btree",
+					"concurrently": false
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {
+				"person_email_unique": {
+					"name": "person_email_unique",
+					"columns": ["email"],
+					"nullsNotDistinct": false
+				}
+			},
+			"policies": {},
+			"checkConstraints": {
+				"is_email": {
+					"name": "is_email",
+					"value": "\"auth\".\"person\".\"email\" ~ '^\\S+?@([a-zA-Z0-9][a-zA-Z0-9-]*\\.)+(xn--[a-zA-Z0-9-]{4,}|[a-zA-Z]{2,})$'"
+				}
+			},
+			"isRLSEnabled": false
+		},
+		"auth.person_role": {
+			"name": "person_role",
+			"schema": "auth",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"person_id": {
+					"name": "person_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"role": {
+					"name": "role",
+					"type": "varchar",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"valid_from": {
+					"name": "valid_from",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "now()"
+				},
+				"valid_till": {
+					"name": "valid_till",
+					"type": "timestamp with time zone",
+					"primaryKey": false,
+					"notNull": false
+				}
+			},
+			"indexes": {
+				"person_role_person_id_idx": {
+					"name": "person_role_person_id_idx",
+					"columns": [
+						{
+							"expression": "person_id",
+							"isExpression": false,
+							"asc": true,
+							"nulls": "last"
+						}
+					],
+					"isUnique": false,
+					"with": {},
+					"method": "btree",
+					"concurrently": false
+				}
+			},
+			"foreignKeys": {
+				"person_role_person_id_person_id_fk": {
+					"name": "person_role_person_id_person_id_fk",
+					"tableFrom": "person_role",
+					"columnsFrom": ["person_id"],
+					"tableTo": "person",
+					"schemaTo": "auth",
+					"columnsTo": ["id"],
+					"onUpdate": "no action",
+					"onDelete": "cascade"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {},
+			"policies": {},
+			"checkConstraints": {},
+			"isRLSEnabled": false
+		}
+	},
+	"enums": {
+		"mail.status": {
+			"name": "status",
+			"schema": "mail",
+			"values": ["new", "sent", "error", "sending"]
+		}
+	},
+	"schemas": {},
+	"views": {},
+	"sequences": {},
+	"roles": {},
+	"policies": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
 }

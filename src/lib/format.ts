@@ -1,5 +1,13 @@
-const dateFmt = new Intl.DateTimeFormat('nl', { day: '2-digit', month: '2-digit', year: 'numeric' });
-const timeFmt = new Intl.DateTimeFormat('nl', { hour: '2-digit', minute: '2-digit', hour12: false });
+const dateFmt = new Intl.DateTimeFormat('nl', {
+	day: '2-digit',
+	month: '2-digit',
+	year: 'numeric'
+});
+const timeFmt = new Intl.DateTimeFormat('nl', {
+	hour: '2-digit',
+	minute: '2-digit',
+	hour12: false
+});
 
 // Date-only ISO strings are UTC midnight in JS but should be treated as local midnight
 const parse = (dt: string): Date =>

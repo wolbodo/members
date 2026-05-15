@@ -13,14 +13,7 @@
 </script>
 
 <div class="srch">
-	<svg
-		class="icon"
-		width="14"
-		height="14"
-		viewBox="0 0 14 14"
-		fill="none"
-		aria-hidden="true"
-	>
+	<svg class="icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
 		<circle cx="5.8" cy="5.8" r="4" stroke="currentColor" stroke-width="1.5" />
 		<path d="M9 9L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
 	</svg>

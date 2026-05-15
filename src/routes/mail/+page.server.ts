@@ -1,6 +1,5 @@
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { desc } from 'drizzle-orm';
 
 export const load: PageServerLoad = async () => {
 	const entries = await db.query.mailEntries.findMany({
