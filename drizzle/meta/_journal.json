@@ -15,6 +15,13 @@
 			"when": 1778742541947,
 			"tag": "0001_hasura_cleanup",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1778844000000,
+			"tag": "0002_role_name_in_history",
+			"breakpoints": true
 		}
 	]
 }
