@@ -1,80 +1,130 @@
-import { PersonStore, EditPersonStore, type auth_person_set_input } from '$houdini';
 import { fail } from '@sveltejs/kit';
-import type { Actions } from './$types';
-import type { PageServerLoad } from './$types';
+import { eq, and, isNull } from 'drizzle-orm';
+import { superValidate, setError } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
+
+import { db } from '$lib/server/db';
+import { person, personRole } from '$lib/server/schema';
+import { withAuditContext } from '$lib/server/audit';
+import { PersonSchema } from '$lib/schemas/person';
+import { warn } from '$lib/server/log';
+import type { Actions, PageServerLoad } from './$types';
 import { where } from './where';
-const queryPerson = new PersonStore();
 
-type FilterProperties<T, TFieldType> = {
-	[K in keyof T as T[K] extends TFieldType ? K : never]: T[K];
+export const load: PageServerLoad = async (event) => {
+	const isBoard = event.locals.user!.roles.includes('board');
+	const isSelf = event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
+
+	const found = await db.query.person.findFirst({
+		where: where(event.params.identifier),
+		with: {
+			roles: true
+		}
+	});
+
+	if (!found) {
+		const form = await superValidate(zod4(PersonSchema));
+		return { person: null, roles: [], isBoard, isSelf, form };
+	}
+
+	const { roles, ...personData } = found;
+
+	const redacted = {
+		...personData,
+		bankaccount: isBoard || isSelf ? personData.bankaccount : null,
+		key_code: isBoard ? personData.key_code : null,
+		note: isBoard ? personData.note : null
+	};
+
+	// Prefill the form with the current person's values so the UI starts in sync.
+	const form = await superValidate(redacted, zod4(PersonSchema), { errors: false });
+	return { person: redacted, roles, isBoard, isSelf, form };
 };
-
-type BooleanKey = keyof FilterProperties<auth_person_set_input, boolean | null | undefined>;
 
 export const actions: Actions = {
 	edit: async (event) => {
-		const isBoard = event.locals.user.roles.includes('board');
-		const isSelf =
-			event.params.identifier.toLocaleLowerCase() === event.locals.user.name.toLocaleLowerCase();
-		const { data: queryData } = await queryPerson.fetch({
-			event,
-			variables: {
-				where: where(event.params.identifier),
-				isBoard
-			}
-		});
+		const isBoard = event.locals.user!.roles.includes('board');
+		const isSelf = event.params.identifier.toLowerCase() === event.locals.user!.name.toLowerCase();
+		if (!isBoard && !isSelf) return fail(403);
 
-		if (!queryData) {
-			throw fail(400);
+		const form = await superValidate(event, zod4(PersonSchema));
+		if (!form.valid) return fail(400, { form });
+
+		const [existing] = await db
+			.select()
+			.from(person)
+			.where(where(event.params.identifier))
+			.limit(1);
+		if (!existing) return fail(404);
+
+		// Diff against existing — only ship changed columns through audit context.
+		const updates: Partial<typeof person.$inferInsert> = {};
+		for (const [key, next] of Object.entries(form.data)) {
+			if (next === undefined) continue;
+			const col = key as keyof typeof existing;
+			if (key === 'password' && next === null) continue; // empty password = keep
+			const prev = existing[col] ?? null;
+			if (next !== prev) (updates as Record<string, unknown>)[key] = next;
 		}
 
-		const {
-			auth_person: [person]
-		} = queryData;
+		if (!Object.keys(updates).length) return { form };
+
+		try {
+			await withAuditContext(event, (tx) =>
+				tx.update(person).set(updates).where(eq(person.id, existing.id))
+			);
+		} catch (err) {
+			const pgErr = err as { code?: string };
+			if (pgErr.code === '23505') {
+				return setError(form, 'email', 'already in use');
+			}
+			warn('m/[identifier]: unexpected db error on edit', { err });
+			throw err;
+		}
+		return { form };
+	},
+
+	addRole: async (event) => {
+		const isBoard = event.locals.user!.roles.includes('board');
+		if (!isBoard) return fail(403);
 
 		const formData = await event.request.formData();
+		const personId = parseInt(formData.get('personId') as string);
+		const role = formData.get('role') as string;
 
-		const { id: userId, ...dirtyData } = Object.fromEntries(
-			Array.from(formData.entries())
-				.filter(([key, value]) => {
-					if (key === 'password' && value === '') return false;
-					if (key === 'id') return true;
+		if (!personId || !role) return fail(400);
 
-					if (person[key as keyof typeof person] !== value) return true;
-				})
-				.map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value])
-		) as auth_person_set_input;
+		const existing = await db
+			.select()
+			.from(personRole)
+			.where(
+				and(
+					eq(personRole.person_id, personId),
+					eq(personRole.role, role),
+					isNull(personRole.valid_till)
+				)
+			);
 
-		// Fix all boolean keys
+		if (existing.length) return { success: true };
 
-		for (const [key, value] of Object.entries(person)) {
-			if (typeof value === 'boolean') {
-				const booleanKey = key as BooleanKey;
-				dirtyData[booleanKey] = booleanKey in dirtyData;
-			}
-		}
-
-		console.log('Updating', dirtyData);
-
-		const editPerson = new EditPersonStore();
-		return await editPerson.mutate(
-			{
-				id: parseInt(userId as string),
-				data: dirtyData
-			},
-			{
-				event,
-				metadata: { isBoard, isSelf }
-			}
+		await withAuditContext(event, (tx) =>
+			tx.insert(personRole).values({ person_id: personId, role })
 		);
-	}
-};
+		return { success: true };
+	},
 
-export const load: PageServerLoad = async (event) => {
-	return {
-		variables: {
-			isBoard: event.locals.user.roles.includes('board'),
-			isSelf: event.params.identifier === event.locals.user.name
-		}
-	};
+	stopRole: async (event) => {
+		const isBoard = event.locals.user!.roles.includes('board');
+		if (!isBoard) return fail(403);
+
+		const formData = await event.request.formData();
+		const roleId = parseInt(formData.get('roleId') as string);
+
+		if (!roleId) return fail(400);
+
+		await withAuditContext(event, (tx) =>
+			tx.update(personRole).set({ valid_till: new Date() }).where(eq(personRole.id, roleId))
+		);
+		return { success: true };
+	}
 };

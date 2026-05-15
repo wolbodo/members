@@ -1,13 +1,15 @@
-<script>
+<script lang="ts">
 	import Template from './Template.svelte';
 
-	export let person;
+	interface Props {
+		person: { name: string };
+	}
+
+	let { person }: Props = $props();
 </script>
 
 <Template subject="Your password has changed">
-	<h1 slot="header">Hi {person.name},</h1>
+	{#snippet header()}Hi {person.name},{/snippet}
 
-	<mj-column>
-		<mj-text> Just letting you know, your Wolbodo password has changed. </mj-text>
-	</mj-column>
+	Just letting you know, your Wolbodo password has changed.
 </Template>

@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#131110;color:#f0ece8;font-size:13px;line-height:1.5;padding:20px;-webkit-font-smoothing:antialiased}
+</style></head><body>
+<style>
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4642;margin-bottom:10px}
+.btn{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;padding:8px 16px;border-radius:7px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-primary{background:#00c4a0;color:#111}
+.btn-outline{background:none;color:#7c7870;border:1px solid rgba(255,255,255,.12)}
+.btn-ghost{background:none;border:none;color:#7c7870;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:4px 0}
+.btn-disabled{opacity:.45}
+.back{background:none;border:none;color:#4a4642;font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;cursor:pointer;letter-spacing:.02em;text-transform:uppercase;padding:0}
+</style>
+<div class="lbl">Buttons</div>
+<div class="row">
+  <button class="btn btn-primary">Save changes</button>
+  <button class="btn btn-primary btn-disabled">Saving…</button>
+  <button class="btn btn-outline">Cancel</button>
+  <button class="btn btn-ghost">Discard</button>
+  <button class="back">← members</button>
+</div>
+<div class="lbl">With icon</div>
+<div class="row">
+  <button class="btn btn-primary">+ New member</button>
+  <button class="btn btn-outline">+ Add role</button>
+</div>
+</body></html>

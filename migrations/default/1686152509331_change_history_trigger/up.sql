@@ -1,4 +1,0 @@
-CREATE OR REPLACE TRIGGER log_history
-  AFTER INSERT OR UPDATE
-  ON auth.person
-  FOR EACH ROW EXECUTE FUNCTION auth.change_trigger();

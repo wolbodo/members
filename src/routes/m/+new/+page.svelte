@@ -1,72 +1,114 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
-	import { enhance } from '$app/forms';
-	import { Input } from '$lib/Form';
-	import Toggle from '$lib/Toggle.svelte';
+	import { goto } from '$app/navigation';
+	import { superForm } from 'sveltekit-superforms';
+	import { PageShell, FormSection, Field, TextInput, Textarea, Toggle, Button, SaveBar } from '$lib';
+	import type { PageData } from './$types';
 
-	export let form: ActionData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
+
+	// svelte-ignore state_referenced_locally
+	const { form, errors, enhance } = superForm(data.form, { resetForm: false });
 </script>
 
-<content>
-	{#if form?.errors}
-		{#each form?.errors as error}
-			<small class="error">{error.message}</small>
-		{/each}
-	{/if}
+<svelte:head>
+	<title>New member — Wolbodo Members</title>
+</svelte:head>
 
-	{#if form?.data}
-		<!-- this message is ephemeral; it exists because the page was rendered in       response to a form submission. it will vanish if the user reloads -->
-		<p>Successfully created user, {form?.data?.person?.name}</p>
-	{:else}
-		<form method="POST" use:enhance>
-			<Input name="name" value={form?.variables?.person.name || ''} class="wide" required />
-			<Input name="firstname" value={form?.variables?.person.firstname || ''} />
-			<Input name="lastname" value={form?.variables?.person.lastname || ''} />
-			<Input name="email" value={form?.variables?.person.email || ''} type="email" required />
-			<Input name="phone" value={form?.variables?.person.phone || ''} type="phone" />
+<PageShell maxWidth="800px">
+	<Button variant="back" onclick={() => goto('/')}>← members</Button>
 
-			<Input name="address" value={form?.variables?.person.address || ''} />
-			<Input name="zipcode" value={form?.variables?.person.zipcode || ''} />
-			<Input name="city" value={form?.variables?.person.city || ''} />
-			<Input name="country" value={form?.variables?.person.country || ''} />
+	<h1 class="t-heading" style="margin-bottom: 22px;">New member</h1>
 
-			<Input name="bankaccount" value={form?.variables?.person.bankaccount || ''} />
-			<Input label="keycode" name="key_code" value={form?.variables?.person.key_code || ''} />
-			<Toggle name="allow_register" checked={Boolean(form?.variables?.person.allow_register)}
-				>allow register</Toggle
-			>
-			<Toggle name="allow_door" checked={Boolean(form?.variables?.person.allow_door)}
-				>allow door</Toggle
-			>
+	<form method="post" use:enhance>
+		<FormSection label="Identity">
+			<Field label="Nickname" span2 error={$errors.name?.[0]}>
+				<TextInput name="name" bind:value={$form.name} />
+			</Field>
+			<Field label="First name" error={$errors.firstname?.[0]}>
+				<TextInput name="firstname" bind:value={$form.firstname as string} />
+			</Field>
+			<Field label="Last name" error={$errors.lastname?.[0]}>
+				<TextInput name="lastname" bind:value={$form.lastname as string} />
+			</Field>
+		</FormSection>
 
-			<Input name="password" value={form?.variables?.person.password || ''} type="password" />
-			<Input name="note" value={form?.variables?.person.note || ''} type="textarea" />
+		<FormSection label="Contact">
+			<Field label="Email" error={$errors.email?.[0]}>
+				<TextInput type="email" name="email" bind:value={$form.email as string} />
+			</Field>
+			<Field label="Phone" error={$errors.phone?.[0]}>
+				<TextInput type="tel" name="phone" bind:value={$form.phone as string} />
+			</Field>
+		</FormSection>
 
-			<section class="submit">
-				<button type="submit">Submit</button>
-			</section>
-		</form>
-	{/if}
-</content>
+		<FormSection label="Location">
+			<Field label="Address" span2 error={$errors.address?.[0]}>
+				<TextInput name="address" bind:value={$form.address as string} />
+			</Field>
+			<Field label="Zipcode" error={$errors.zipcode?.[0]}>
+				<TextInput name="zipcode" bind:value={$form.zipcode as string} />
+			</Field>
+			<Field label="City" error={$errors.city?.[0]}>
+				<TextInput name="city" bind:value={$form.city as string} />
+			</Field>
+			<Field label="Country" span2 error={$errors.country?.[0]}>
+				<TextInput name="country" bind:value={$form.country as string} />
+			</Field>
+		</FormSection>
+
+		<FormSection label="System">
+			<Field label="Bank account" error={$errors.bankaccount?.[0]}>
+				<TextInput name="bankaccount" bind:value={$form.bankaccount as string} />
+			</Field>
+			<Field label="Key code" error={$errors.key_code?.[0]}>
+				<TextInput name="key_code" bind:value={$form.key_code as string} />
+			</Field>
+			<Field label="Permissions" span2>
+				<div style="display:flex; gap:20px; padding:6px 0; flex-wrap:wrap;">
+					<Toggle name="allow_register" bind:checked={$form.allow_register}>Allow register</Toggle>
+					<Toggle name="allow_door" bind:checked={$form.allow_door}>Allow door</Toggle>
+				</div>
+			</Field>
+			<Field label="Password" span2 error={$errors.password?.[0]}>
+				<TextInput type="password" name="password" bind:value={$form.password as string} />
+			</Field>
+		</FormSection>
+
+		<FormSection label="Notes">
+			<Field label="Note" span2 error={$errors.note?.[0]}>
+				<Textarea name="note" bind:value={$form.note as string} />
+			</Field>
+		</FormSection>
+
+		<div class="save-wrap">
+			<SaveBar
+				state="dirty"
+				message="New member"
+				saveLabel="Create member"
+				onsave={() => document.querySelector('form')?.requestSubmit()}
+			/>
+		</div>
+	</form>
+</PageShell>
 
 <style>
-	form {
-		display: grid;
-
-		grid-template-columns: 1fr 1fr;
-		grid-gap: 0.5rem 1rem;
+	.save-wrap {
+		position: fixed;
+		bottom: 24px;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 500;
 	}
-	form :global(.wide) {
-		grid-column: span 2;
-	}
-
-	.submit {
-		display: grid;
-		grid-template-areas: 'submit';
-		grid-column: span 2;
-	}
-	.submit > button {
-		grid-area: submit;
-		justify-self: end;
+	@media (max-width: 600px) {
+		.save-wrap {
+			left: 14px;
+			right: 14px;
+			bottom: 14px;
+			transform: none;
+		}
 	}
 </style>

@@ -2,21 +2,26 @@
 node_modules
 /build
 /.svelte-kit
-.pnpm-store/
 /package
+.pnpm-store/
+
+# Env
 .env
 .env.*
 !.env.example
-.vercel
-.output
+
+# Tooling output
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+coverage/
+storybook-static/
 
-
+# Local-only
 docker-compose.override.yml
-yarn-error.log
-
-$houdini
-coverage
-seeds/
 local/
+
+# Adapter outputs (kept defensively in case the adapter changes)
+.vercel
+.output
+yarn-error.log
+.claude/settings.json

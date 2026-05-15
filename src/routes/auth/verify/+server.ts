@@ -1,26 +1,37 @@
 import { verifyToken } from '$lib/jwt';
-import { error } from '@sveltejs/kit';
+import { db } from '$lib/server/db';
+import { person } from '$lib/server/schema';
+import { debug, warn } from '$lib/server/log';
+import { eq } from 'drizzle-orm';
+import { error as httpError } from '@sveltejs/kit';
 
 import type { RequestHandler } from './$types';
-
-// The verify endpoint is called when nginx wants to authenticate an [auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html)
 
 export const GET = (async (event) => {
 	const token = event.cookies.get('token');
 
-	if (!token) throw error(401);
+	if (!token) httpError(401);
 
 	try {
-		const { name, email } = await verifyToken(token);
-		return new Response(null, {
-			status: 200,
-			headers: {
-				'X-User': name,
-				'X-Email': email
-			}
+		const { id, name, roles } = await verifyToken(token);
+
+		const [row] = await db
+			.select({ email: person.email })
+			.from(person)
+			.where(eq(person.id, parseInt(id)))
+			.limit(1);
+
+		const headers = new Headers({
+			'X-User': name,
+			'X-User-Id': id,
+			'X-Roles': (roles ?? []).join(',')
 		});
-	} catch (e) {
-		console.error('Error verifying token', e);
-		throw error(401);
+		if (row?.email) headers.set('X-Email', row.email);
+
+		debug('auth/verify: verified', { id, name });
+		return new Response(null, { status: 200, headers });
+	} catch (err) {
+		warn('auth/verify: token verification failed', { err });
+		httpError(401);
 	}
 }) satisfies RequestHandler;

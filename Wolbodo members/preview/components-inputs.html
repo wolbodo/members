@@ -1,0 +1,28 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:#131110;color:#f0ece8;font-size:13px;line-height:1.5;padding:20px;-webkit-font-smoothing:antialiased}
+</style></head><body>
+<style>
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:20px}
+.field{display:flex;flex-direction:column;gap:4px}
+.lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#4a4642}
+.glass{width:100%;background:rgba(255,255,255,.04);border:none;border-bottom:1.5px solid transparent;color:#f0ece8;font-family:'Outfit',sans-serif;font-size:14px;padding:5px 6px;outline:none;border-radius:4px 4px 0 0}
+.glass.focused{background:rgba(0,196,160,.10);border-bottom-color:#00c4a0}
+.glass.idle{border-bottom-color:rgba(255,255,255,.12)}
+.val{font-size:14px;color:#f0ece8;padding:5px 3px}
+.search{display:flex;align-items:center;gap:8px;background:#1e1c1a;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:0 12px;height:38px}
+.search input{flex:1;background:none;border:none;color:#f0ece8;font-family:'Outfit',sans-serif;font-size:14px;outline:none}
+.row2{display:flex;gap:14px;align-items:flex-start}
+</style>
+<div class="grid">
+  <div class="field"><div class="lbl">Nickname</div><input class="glass idle" value="Klaas" /></div>
+  <div class="field"><div class="lbl">Email</div><input class="glass focused" value="klaas@debeer.nl" /></div>
+  <div class="field"><div class="lbl">Notes</div><div class="val">—</div></div>
+</div>
+<div class="search" style="max-width:360px">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5.8" cy="5.8" r="4" stroke="#4a4642" stroke-width="1.5"/><path d="M9 9L12.5 12.5" stroke="#4a4642" stroke-width="1.5" stroke-linecap="round"/></svg>
+  <input placeholder="Search name, email, role…" />
+</div>
+</body></html>

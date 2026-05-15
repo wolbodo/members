@@ -1,85 +1,179 @@
 <script lang="ts">
-	import type { PageData } from './$houdini';
-
 	import { datetime } from '$lib/format';
-	import Table from '$lib/Table.svelte';
-	import { searchValue, filterFields } from '$lib/Header/index.svelte';
+	import {
+		PageShell,
+		DataTable,
+		ChangeCard,
+		DiffLine,
+		EmptyState,
+		SearchInput,
+		searchState,
+		filterFields
+	} from '$lib';
+	import type { PageServerData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageServerData;
+	}
 
-	$: ({ History } = data);
+	let { data }: Props = $props();
 
-	const hiddenFields = ['password'];
+	const HIDDEN_FIELDS = ['password'];
+	const IGNORED_FIELDS = ['modified', 'created', 'id', 'person_id', 'valid_till', 'valid_from'];
 
-	const changes = (
-		old_value: object | null,
-		new_value: object | null
-	): (string | [string, unknown])[] => {
-		if (!old_value) {
-			return Object.entries(new_value ?? {})
-				.filter(([, value]) => Boolean(value))
-				.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value]);
+	type DiffField = { field: string; old: string | null; new: string | null };
+
+	function formatValue(k: string, v: unknown): string | null {
+		if (v == null || v === 'null') return null;
+		if (HIDDEN_FIELDS.includes(k)) return '****';
+		const s = String(v);
+		// Detect ISO-like date strings and format them
+		if (s.length > 15 && !isNaN(Date.parse(s)) && /^\d{4}-\d{2}-\d{2}/.test(s)) {
+			return datetime(s);
+		}
+		return s;
+	}
+
+	function diffFields(old_value: unknown, new_value: unknown, role?: string | null): DiffField[] {
+		const old = (old_value as Record<string, unknown>) ?? {};
+		const curr = (new_value as Record<string, unknown>) ?? {};
+
+		const allKeys = new Set([...Object.keys(old), ...Object.keys(curr)]);
+
+		// Compare on the rendered value so e.g. actual null and the string "null"
+		// (both formatted to null) don't show up as a spurious null → null diff.
+		const fields = Array.from(allKeys)
+			.filter((k) => !IGNORED_FIELDS.includes(k))
+			.map((k) => ({
+				field: k,
+				old: formatValue(k, old[k]),
+				new: formatValue(k, curr[k])
+			}))
+			.filter((f) => f.old !== f.new);
+
+		// Inject role change if this is a role history entry
+		if (role) {
+			if (!old_value) {
+				fields.unshift({ field: 'role', old: null, new: role });
+			} else if (curr.valid_till && !old.valid_till) {
+				fields.unshift({ field: 'role', old: role, new: null });
+			}
 		}
 
-		return Object.entries(old_value)
-			.map(([key, value]) => {
-				if (value === new_value?.[key]) {
-					return null;
-				}
+		return fields;
+	}
 
-				return [key, `${value} -> ${new_value?.[key]}`];
-			})
-			.map(([key, value]) => [key, hiddenFields.includes(key) ? '****' : value])
-			.filter(Boolean) as (string | [string, unknown])[];
-	};
+	let filtered = $derived(
+		filterFields(data.history, searchState.value, [
+			(c) => c.author?.name,
+			(c) => c.person?.name,
+			(c) => c.role
+		])
+	);
 </script>
 
-<h1>Changes</h1>
+<svelte:head>
+	<title>Changes</title>
+</svelte:head>
 
-<Table>
-	<thead>
-		<tr>
-			<th>Time</th>
-			<th>Author</th>
-			<th>Person</th>
-			<th>Role</th>
-			<th>Changes</th>
-		</tr>
-	</thead>
+<PageShell>
+	<div class="title-row">
+		<h1 class="t-heading">Changes</h1>
+		<span class="count t-small">{filtered.length} entries</span>
+		<div class="search">
+			<SearchInput bind:value={searchState.value} placeholder="Search author, person, role…" />
+		</div>
+	</div>
 
-	{#if $History.fetching}
-		<tr><td colspan="5">Loading</td></tr>
-	{:else if $History.errors}
-		{#each $History.errors as error}
-			<tr><td colspan="5">{JSON.stringify(error)}</td></tr>
-		{/each}
-	{:else if $History.data}
-		{#each $History.data.history
-			.filter((v) => Boolean(v))
-			.filter( ({ author, person, role }) => filterFields($searchValue, author?.name, person?.name, role) ) as { timestamp, new_values, old_values, role, author, person }}
-			<tr>
-				<td>{datetime(timestamp)}</td>
-				<td>{author?.name ?? ''}</td>
-				<td>{person?.name}</td>
-				<td>{role}</td>
-				<td>
-					{#each changes(old_values, new_values) as change}
-						{#if typeof change === 'string'}
-							<section>{change}</section>
-						{:else}
-							<section><b>{change[0]}</b>: {change[1]}</section>
-						{/if}
-					{/each}
-				</td>
-			</tr>
-		{/each}
+	{#if filtered.length === 0}
+		<EmptyState>No changes recorded.</EmptyState>
 	{:else}
-		<tr><td colspan="5">No data yet</td></tr>
+		<div class="desktop">
+			<DataTable>
+				{#snippet head()}
+					<tr>
+						<th class="col-time">Time</th>
+						<th class="col-who">Author → person</th>
+						<th class="col-role">Role</th>
+						<th>Changes</th>
+					</tr>
+				{/snippet}
+				{#snippet body()}
+					{#each filtered as { timestamp, new_values, old_values, role, author, person }, i (i)}
+						<tr>
+							<td class="td-dim col-time">{datetime(String(timestamp))}</td>
+							<td class="col-who">
+								<span class="td-name">{author?.name ?? '—'}</span>
+								<span class="person t-small"> → {person?.name ?? '—'}</span>
+							</td>
+							<td class="td-dim col-role">{role ?? ''}</td>
+							<td>
+								{#each diffFields(old_values, new_values, role) as f (f.field)}
+									<DiffLine field={f.field} oldValue={f.old} newValue={f.new} />
+								{/each}
+							</td>
+						</tr>
+					{/each}
+				{/snippet}
+			</DataTable>
+		</div>
+
+		<div class="mobile">
+			{#each filtered as { timestamp, new_values, old_values, author, role }, i (i)}
+				<ChangeCard
+					author={author?.name ?? '—'}
+					time={datetime(String(timestamp))}
+					fields={diffFields(old_values, new_values, role)}
+				/>
+			{/each}
+		</div>
 	{/if}
-</Table>
+</PageShell>
 
 <style>
-	td {
-		white-space: nowrap;
+	.title-row {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 22px;
+	}
+	.count {
+		color: var(--txt3);
+	}
+	.search {
+		margin-left: auto;
+		flex: 0 1 180px;
+		min-width: 0;
+		overflow: hidden;
+	}
+	.col-time {
+		width: 130px;
+	}
+	.col-who {
+		width: 200px;
+	}
+	.col-role {
+		width: 80px;
+	}
+	.desktop {
+		display: block;
+	}
+	.mobile {
+		display: none;
+		flex-direction: column;
+		gap: 8px;
+	}
+	@media (max-width: 700px) {
+		.col-role {
+			display: none;
+		}
+	}
+	@media (max-width: 520px) {
+		.desktop {
+			display: none;
+		}
+		.mobile {
+			display: flex;
+		}
 	}
 </style>

@@ -1,6 +1,14 @@
 {
 	"$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
-	"ignorePatterns": [".svelte-kit", "build", "node_modules", "static", "$houdini", "**/*.svelte"],
+	"ignorePatterns": [
+		".svelte-kit",
+		"build",
+		"node_modules",
+		"static",
+		"$houdini",
+		"**/*.svelte",
+		"Wolbodo members"
+	],
 	"env": {
 		"browser": true,
 		"node": true,

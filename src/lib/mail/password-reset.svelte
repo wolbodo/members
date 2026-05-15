@@ -1,21 +1,21 @@
-<script>
+<script lang="ts">
+	import { Link } from 'svelte-email';
 	import Template from './Template.svelte';
 	import { env } from '$env/dynamic/public';
-	export let person;
-	export let data;
 
-	$: resetLink = `${env.PUBLIC_URL}/auth/reset?token=${data.token}`;
+	interface Props {
+		person: { name: string };
+		data: { token: string };
+	}
+
+	let { person, data }: Props = $props();
+
+	const resetLink = $derived(`${env.PUBLIC_URL}/auth/reset?token=${data.token}`);
 </script>
 
 <Template subject="Reset your password">
-	<h1 slot="header">Hi {person.name},</h1>
+	{#snippet header()}Hi {person.name},{/snippet}
 
-	<mj-column>
-		<mj-text>
-			You, or someone else has requested a password reset. Please follow <a href={resetLink}
-				>this link</a
-			> to proceed.
-		</mj-text>
-		<mj-text>This link will be valid for 30 minutes</mj-text>
-	</mj-column>
+	You or someone else requested a password reset. Follow
+	<Link href={resetLink}>this link</Link> to proceed. This link is valid for 30 minutes.
 </Template>

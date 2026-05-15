@@ -1,11 +1,15 @@
-import type { CookieSerializeOptions } from 'cookie';
+import type { Cookies } from '@sveltejs/kit';
+import { dev } from '$app/environment';
+import { env } from '$env/dynamic/private';
 
-const domain = process.env.COOKIE_DOMAIN || 'wolbodo.nl';
-const secure = process.env.COOKIE_SECURE === 'true';
+const domain = dev ? undefined : env.COOKIE_DOMAIN || 'wolbodo.nl';
+const secure = env.COOKIE_SECURE === 'true';
 
-export const options: CookieSerializeOptions = {
-	domain,
+type CookieOptions = Parameters<Cookies['set']>[2];
+
+export const options: CookieOptions = {
+	...(domain ? { domain } : {}),
 	secure,
 	path: '/',
-	sameSite: 'none'
+	sameSite: dev ? 'lax' : 'none'
 };

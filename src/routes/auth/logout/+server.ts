@@ -8,5 +8,5 @@ import { options as tokenCookieOptions } from '../cookieOptions';
 export const GET = (async (event) => {
 	event.cookies.delete('token', tokenCookieOptions);
 
-	throw redirect(302, '/');
+	return redirect(302, '/');
 }) satisfies RequestHandler;

@@ -1,23 +1,57 @@
 <script lang="ts">
-	import Header from '$lib/Header/index.svelte';
 	import '../app.css';
+	import type { Snippet } from 'svelte';
+	import { page } from '$app/state';
+	import { AppHeader, UserChip } from '$lib';
+	import type { LayoutServerData } from './$types';
 
-	import type { PageData } from './$types';
+	interface Props {
+		data: LayoutServerData;
+		children?: Snippet;
+	}
 
-	export let data: PageData;
-	$: ({ user } = data);
+	let { data, children }: Props = $props();
+
+	let user = $derived(data.user);
+	let path = $derived(page.url.pathname);
+
+	let nav = $derived(
+		user
+			? [
+					{ label: 'Members', href: '/', active: path === '/' || path.startsWith('/m/') },
+					...(user.roles?.includes('board')
+						? [
+								{ label: 'Changes', href: '/changes', active: path === '/changes' },
+								{ label: 'Mail', href: '/mail', active: path === '/mail' }
+							]
+						: [])
+				]
+			: []
+	);
 </script>
 
-<Header {user} />
+<div class="root">
+	{#if user}
+		<AppHeader {nav}>
+			{#snippet trailing()}
+				<UserChip name={user.name}>
+					{#snippet menu()}
+						<a href="/m/{user.name}">My profile</a>
+						<hr />
+						<a href="/auth/logout" class="danger">Log out</a>
+					{/snippet}
+				</UserChip>
+			{/snippet}
+		</AppHeader>
+	{/if}
 
-<main>
-	<slot />
-</main>
+	{@render children?.()}
+</div>
 
 <style>
-	main {
-		padding: 1rem;
-		box-sizing: border-box;
-		margin: 0 auto;
+	.root {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
 	}
 </style>

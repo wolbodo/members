@@ -1,0 +1,168 @@
+import nodemailer, { type Transporter } from 'nodemailer';
+import { render } from 'svelte/server';
+import { eq, and } from 'drizzle-orm';
+
+import { env } from '$env/dynamic/private';
+import { db, client } from '$lib/server/db';
+import { mailEntries, person } from '$lib/server/schema';
+import { debug, info, warn, error } from '$lib/server/log';
+import templates from '$lib/mail/templates';
+
+type TemplateKey = keyof typeof templates;
+const isTemplateKey = (key: string): key is TemplateKey => key in templates;
+
+export const stripHtml = (html: string): string =>
+	html
+		.replace(/<[^>]+>/g, ' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+
+export type RenderedMessage = { subject: string; html: string; text: string };
+
+export const buildMessage = (
+	templateKey: string,
+	props: { person: { name: string }; data: unknown }
+): RenderedMessage => {
+	if (!isTemplateKey(templateKey)) throw new Error(`unknown template '${templateKey}'`);
+	const { body: html, head } = render(templates[templateKey].default, {
+		props
+	});
+	// svelte-email emits <title> into the body via its own <Head>; svelte/server
+	// only fills `head` when <svelte:head> is used. Search both.
+	const subject = /<title>([^<]+)<\/title>/.exec(head + html)?.[1] ?? 'Email from Wolbodo';
+	return { subject, html, text: stripHtml(html) };
+};
+
+let _transporter: Transporter | null = null;
+const getTransporter = (): Transporter => {
+	if (_transporter) return _transporter;
+	const port = parseInt(env.EMAIL_PORT ?? '587');
+	_transporter = nodemailer.createTransport({
+		host: env.EMAIL_HOST,
+		port,
+		auth: { type: 'login', user: env.EMAIL_USER, pass: env.EMAIL_PASS },
+		secure: env.EMAIL_SECURE === 'true' || port === 465,
+		tls: { rejectUnauthorized: false }
+	} as Parameters<typeof nodemailer.createTransport>[0]);
+	return _transporter;
+};
+
+export const processMail = async (
+	id: number,
+	deps: { transporter?: Transporter } = {}
+): Promise<void> => {
+	const start = Date.now();
+	// Claim the row atomically — only one worker can pick up an unsent entry.
+	// Guarded: a DB failure here (e.g. schema drift) must not crash the process,
+	// since callers fire this off with `void`.
+	let claimed: { id: number } | undefined;
+	try {
+		[claimed] = await db
+			.update(mailEntries)
+			.set({ status: 'sending' })
+			.where(and(eq(mailEntries.id, id), eq(mailEntries.status, 'new')))
+			.returning({ id: mailEntries.id });
+	} catch (err) {
+		error('mail-worker: claim failed', { id, err });
+		return;
+	}
+
+	if (!claimed) {
+		debug('mail-worker: skipped (already claimed)', { id });
+		return;
+	}
+
+	try {
+		const [entry] = await db
+			.select({
+				data: mailEntries.data,
+				template: mailEntries.template,
+				personName: person.name,
+				personEmail: person.email
+			})
+			.from(mailEntries)
+			.innerJoin(person, eq(mailEntries.person_id, person.id))
+			.where(eq(mailEntries.id, id))
+			.limit(1);
+
+		if (!entry) throw new Error(`mail ${id}: row vanished`);
+		if (!entry.personEmail) throw new Error(`mail ${id}: no email for ${entry.personName}`);
+
+		info('mail-worker: sending', { id, template: entry.template, to: entry.personEmail });
+
+		const message = buildMessage(entry.template, {
+			person: { name: entry.personName },
+			data: entry.data
+		});
+
+		const transporter = deps.transporter ?? getTransporter();
+		const messageInfo = await transporter.sendMail({
+			from: env.EMAIL_FROM ?? '"Wolbodo" <it@wolbodo.nl>',
+			to: entry.personEmail,
+			...message
+		});
+
+		await db
+			.update(mailEntries)
+			.set({
+				status: 'sent',
+				message_info: messageInfo as unknown as Record<string, unknown>
+			})
+			.where(eq(mailEntries.id, id));
+
+		info('mail-worker: sent', { id, template: entry.template, ms: Date.now() - start });
+	} catch (err) {
+		error('mail-worker: send failed', { id, ms: Date.now() - start, err });
+		// Guard the status write too — if it throws, the rejection would be
+		// unhandled (callers use `void`) and crash the process.
+		await db
+			.update(mailEntries)
+			.set({
+				status: 'error',
+				message_info: {
+					error: err instanceof Error ? err.message : String(err)
+				}
+			})
+			.where(eq(mailEntries.id, id))
+			.catch((markErr) => error('mail-worker: could not mark as error', { id, err: markErr }));
+	}
+};
+
+// Survives HMR: a module-scoped flag would reset every time SvelteKit
+// re-evaluates this file, stacking another listener on the singleton pg client.
+const g = globalThis as typeof globalThis & { __mailWorkerStarted?: boolean };
+
+export const startMailWorker = async (): Promise<void> => {
+	if (g.__mailWorkerStarted) return;
+	g.__mailWorkerStarted = true;
+
+	info('mail-worker: starting', { host: env.EMAIL_HOST, port: env.EMAIL_PORT ?? '587' });
+
+	// Reconcile rows left in 'sending' by a previous crash. The email may or
+	// may not have actually been delivered — we can't tell — so mark as 'error'
+	// rather than leaving them indeterminate or risking a double-send.
+	const stuck = await db
+		.update(mailEntries)
+		.set({ status: 'error', message_info: { error: 'worker crashed mid-send' } })
+		.where(eq(mailEntries.status, 'sending'))
+		.returning({ id: mailEntries.id });
+
+	if (stuck.length) warn('mail-worker: reconciled stuck sending rows', { count: stuck.length });
+
+	// Catch-up sweep — anything queued while the worker was down.
+	const pending = await db
+		.select({ id: mailEntries.id })
+		.from(mailEntries)
+		.where(eq(mailEntries.status, 'new'));
+
+	if (pending.length) info('mail-worker: catching up', { pending: pending.length });
+	for (const { id } of pending) void processMail(id);
+
+	await client.listen('mail_entries_new', (payload) => {
+		const id = parseInt(payload ?? '');
+		if (Number.isFinite(id)) void processMail(id);
+		else warn('mail-worker: ignoring NOTIFY with invalid id', { payload });
+	});
+
+	info('mail-worker: listening', { channel: 'mail_entries_new' });
+};

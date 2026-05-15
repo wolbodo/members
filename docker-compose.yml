@@ -11,14 +11,13 @@ services:
     image: wolbodo/members:latest
     restart: always
     depends_on:
-      - graphql
+      - db
     networks: [external, default]
     command: node .
     expose:
       - 80
     env_file: .env
     environment:
-      PUBLIC_GRAPHQL_ENDPOINT: https://graphql.wolbodo.nl/v1/graphql
       PORT: 80
       VIRTUAL_HOST: members.wolbodo.nl, member.wolbodo.nl, people.wolbodo.nl, mensen.wolbodo.nl, menschen.wolbodo.nl, leden.wolbodo.nl
       CERT_NAME: wildcard
@@ -32,24 +31,3 @@ services:
     env_file: .env
     volumes:
       - members-db:/var/lib/postgresql/data
-
-  graphql:
-    image: hasura/graphql-engine:v2.21.0
-    restart: unless-stopped
-    networks: [external, default]
-    depends_on:
-      - db
-    expose:
-      - 80
-    env_file: .env
-    command: >
-      /bin/sh -c "
-      graphql-engine serve --server-port 80 --enable-console
-      "
-    volumes:
-      - ./migrations:/hasura-migrations:ro
-      - ./metadata:/hasura-metadata:ro
-    environment:
-      VIRTUAL_HOST: graphql.wolbodo.nl
-      CERT_NAME: wildcard
-      HASURA_GRAPHQL_DATABASE_URL: postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/$POSTGRES_DB

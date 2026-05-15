@@ -1,39 +1,59 @@
-import { error, redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { createHash } from 'node:crypto';
 
-import { graphql } from '$houdini';
-
-import { serverToken, verifyToken } from '$lib/jwt';
+import { db } from '$lib/server/db';
+import { person } from '$lib/server/schema';
+import { verifyToken } from '$lib/jwt';
+import { withAuditContext } from '$lib/server/audit';
+import { info } from '$lib/server/log';
 import type { Actions } from './$types';
 
-const changePassword = graphql(`
-	mutation changePassword($id: Int!, $password: String!) {
-		update_auth_person(where: { id: { _eq: $id } }, _set: { password: $password }) {
-			affected_rows
-		}
-	}
-`);
+const pwhFingerprint = (hash: string | null | undefined): string =>
+	createHash('sha256')
+		.update(hash ?? '')
+		.digest('hex')
+		.slice(0, 16);
 
 export const actions = {
 	default: async (event) => {
 		const data = await event.request.formData();
-		const password = data.get('password') as string;
+		const newPassword = data.get('password') as string;
 		const resetToken = data.get('token') as string;
 
-		if (!(password && resetToken)) {
-			throw error(400);
+		if (!(newPassword && resetToken)) return fail(400, { error: 'Invalid request' });
+
+		let parsed;
+		try {
+			parsed = await verifyToken(resetToken);
+		} catch {
+			return fail(400, { error: 'Invalid token' });
 		}
-		const { sub, id } = await verifyToken(resetToken);
 
-		if (sub !== 'password-reset') throw error(400);
+		if (parsed.sub !== 'password-reset') return fail(400, { error: 'Invalid token' });
 
-		changePassword.mutate(
-			{ id: parseInt(id), password },
-			{
-				event,
-				metadata: { token: serverToken('password-reset', parseInt(id)) }
-			}
+		const personId = parseInt(parsed.id);
+		const [existing] = await db
+			.select({ password: person.password })
+			.from(person)
+			.where(eq(person.id, personId))
+			.limit(1);
+
+		if (!existing) return fail(400, { error: 'Invalid token' });
+		if (parsed.pwh !== pwhFingerprint(existing.password)) {
+			return fail(400, { error: 'Invalid token' });
+		}
+
+		// The auth.hash_password DB trigger bcrypts the plaintext on UPDATE,
+		// and auth.notify_password_change enqueues the change-notification email.
+		// App code must not pre-hash or pre-enqueue.
+		await withAuditContext(
+			event,
+			(tx) => tx.update(person).set({ password: newPassword }).where(eq(person.id, personId)),
+			{ id: parsed.id, role: 'password-reset' }
 		);
 
-		throw redirect(302, '/');
+		info('auth/reset: password reset', { id: personId });
+		return redirect(302, '/auth/login');
 	}
 } satisfies Actions;

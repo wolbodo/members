@@ -1,11 +1,7 @@
-<script context="module">
-	export const load = () => {
-		return {
-			stuff: {
-				currentRole: 'board'
-			}
-		};
-	};
+<script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children?: Snippet } = $props();
 </script>
 
-<slot />
+{@render children?.()}

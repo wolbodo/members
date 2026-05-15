@@ -1,0 +1,85 @@
+/* ═══════════════════════════════════════════════════════════════
+   Wolbodo Members — Design tokens
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+	/* ── Fonts ───────────────────────────────────────────────── */
+	--font-body: 'Outfit', sans-serif;
+	--font-mono: 'Chivo Mono', monospace;
+
+	/* ── Background surfaces ─────────────────────────────────── */
+	--bg: #131110; /* page canvas */
+	--bg-s: #1e1c1a; /* surface / card */
+	--bg-c: #272422; /* elevated / dropdown */
+	--bg-h: #302d2a; /* hovered row */
+
+	/* ── Borders ─────────────────────────────────────────────── */
+	--bd: rgba(255, 255, 255, 0.07); /* subtle divider */
+	--bd-m: rgba(255, 255, 255, 0.12); /* default border */
+	--bd-h: rgba(255, 255, 255, 0.2); /* hover border */
+
+	/* ── Primary (Wolbodo pink) ──────────────────────────────── */
+	/* Brand override of the reference kit's teal.            */
+	--pri: #e05593;
+	--pri-bg: rgba(224, 85, 147, 0.1);
+	--pri-bd: rgba(224, 85, 147, 0.35);
+
+	/* ── Text ────────────────────────────────────────────────── */
+	--txt: #f0ece8; /* primary text */
+	--txt2: #7c7870; /* secondary / dimmed */
+	--txt3: #4a4642; /* placeholder / disabled */
+
+	/* ── Semantic colours ────────────────────────────────────── */
+	--red: #e05555;
+	--green: #00c46a;
+	--amber: #e8a150;
+	--purple: #9b7fff;
+
+	/* ── Role palette ────────────────────────────────────────── */
+	/* Role identities are independent of brand — kept as-is. */
+	--role-member: #00c4a0;
+	--role-board: #9b7fff;
+	--role-nerd: #4db6ff;
+	--role-muzikant: #e8a150;
+	--role-im: #e05593;
+	--role-klusser: #b5cc3a;
+	--role-wolpop: #ff6b6b;
+	--role-schoonmaker: #6bc5ff;
+	--role-server: #aaa888;
+
+	/* ── Radii ───────────────────────────────────────────────── */
+	--r-sm: 4px; /* chip, small badge */
+	--r-md: 7px; /* button */
+	--r-lg: 10px; /* card, table-wrap, dropdown */
+	--r-pill: 20px; /* pill, user chip, role tag */
+
+	/* ── Spacing scale ───────────────────────────────────────── */
+	--sp-1: 4px;
+	--sp-2: 8px;
+	--sp-3: 12px;
+	--sp-4: 16px;
+	--sp-5: 20px;
+	--sp-6: 24px;
+	--sp-7: 28px;
+	--sp-8: 32px;
+
+	/* ── Shadows ─────────────────────────────────────────────── */
+	--shadow-dropdown: 0 8px 28px rgba(0, 0, 0, 0.5);
+	--shadow-float: 0 8px 32px rgba(0, 0, 0, 0.6);
+	--shadow-glow-pri: 0 0 16px rgba(224, 85, 147, 0.1);
+
+	/* ── Transitions ─────────────────────────────────────────── */
+	--t-fast: 0.15s ease;
+	--t-base: 0.18s ease;
+	--t-slow: 0.2s ease;
+
+	/* ── Type scale ──────────────────────────────────────────── */
+	--text-xs: 11px;
+	--text-sm: 12px;
+	--text-md: 13px;
+	--text-base: 14px;
+	--text-lg: 16px;
+	--text-xl: 22px;
+	--text-2xl: 26px;
+	--text-3xl: 38px;
+}
