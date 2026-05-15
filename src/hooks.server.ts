@@ -85,13 +85,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		response.headers.append('Access-Control-Allow-Credentials', 'true');
 	}
 
-	// Vite HMR injects inline scripts and uses eval; relax script-src in dev only.
-	response.headers.set(
-		'Content-Security-Policy',
-		`default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' ${
-			dev ? "'unsafe-inline' 'unsafe-eval'" : ''
-		}; base-uri 'self'; frame-ancestors 'none'`
-	);
 	response.headers.set('X-Content-Type-Options', 'nosniff');
 	response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
 	if (!dev) {
