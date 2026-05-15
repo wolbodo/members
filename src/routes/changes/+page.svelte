@@ -24,7 +24,7 @@
 	type DiffField = { field: string; old: string | null; new: string | null };
 
 	function formatValue(k: string, v: unknown): string | null {
-		if (v == null || v === 'null') return null;
+		if (v == null || v === 'null' || v === '') return null;
 		if (HIDDEN_FIELDS.includes(k)) return '****';
 		const s = String(v);
 		// Detect ISO-like date strings and format them
