@@ -214,10 +214,10 @@
 					{/if}
 					<Field label="Permissions" span2>
 						<div style="display:flex; gap:20px; padding:6px 0; flex-wrap:wrap;">
-							<Toggle bind:checked={$editForm.allow_register as boolean} disabled={!canEdit}>
+							<Toggle bind:checked={$editForm.allow_register as boolean} disabled={!isBoard}>
 								Allow register
 							</Toggle>
-							<Toggle bind:checked={$editForm.allow_door as boolean} disabled={!canEdit}>
+							<Toggle bind:checked={$editForm.allow_door as boolean} disabled={!isBoard}>
 								Allow door
 							</Toggle>
 						</div>
@@ -234,10 +234,14 @@
 				</FormSection>
 			{/if}
 
-			{#if isBoard}
+			{#if isBoard || isSelf}
 				<FormSection label="Notes">
 					<Field label="Note" span2 error={$editErrors.note?.[0]}>
-						<Textarea bind:value={$editForm.note as string} />
+						{#if isBoard}
+							<Textarea bind:value={$editForm.note as string} />
+						{:else}
+							<TextValue value={person.note} />
+						{/if}
 					</Field>
 				</FormSection>
 			{/if}
